@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "skipLibCheck": true,
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "downlevelIteration": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "jsx": "react",
+    "paths": {
+      "*": [
+        "node_modules/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "server/**/*"
+  ]
+}
