@@ -17,8 +17,17 @@ type UserSkills = {
 
 type Hackathon = {
     name: string,
+    isFinished: boolean,
     place: string,
     participantsCount: number,
+    participants: User[]
+    prizes: Prize[]
+}
+
+type Prize = {
+    name: string,
+    count: number,
+    winners: User[]
 }
 
 type UserActions = {
