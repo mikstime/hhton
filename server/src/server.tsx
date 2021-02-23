@@ -2,7 +2,7 @@ import express, {Request, Response} from 'express';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import {ServerStyleSheets} from '@material-ui/core/styles';
-import {MainSSR} from '../../src/App';
+import {MainSSR} from '../../src/root';
 import * as fs from "fs";
 import * as path from "path";
 import {JSDOM} from "jsdom";

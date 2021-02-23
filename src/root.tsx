@@ -1,19 +1,23 @@
 import React from 'react'
 import {ThemeProvider} from '@material-ui/core'
-import styled, {ThemeProvider as TP} from 'styled-components'
+import {ThemeProvider as TP} from 'styled-components'
 import {
   BrowserRouter,
 } from 'react-router-dom'
 
 import { SnackbarProvider} from 'notistack';
 import {MuiTheme} from './style/theme'
+import {AppStateProvider} from './components/tools/use-app-state'
+import {App} from './components/app'
 
-export const Main: React.FC = () => {
+const Main: React.FC = () => {
   return <ThemeProvider theme={MuiTheme}>
     <TP theme={MuiTheme}>
       <BrowserRouter>
         <SnackbarProvider maxSnack={3}>
-          <App/>
+          <AppStateProvider>
+            <App/>
+          </AppStateProvider>
         </SnackbarProvider>
       </BrowserRouter>
     </TP>
@@ -28,22 +32,6 @@ export const MainSSR: React.FC = () => {
     }
   }, [])
   return <Main/>
-}
-
-const Root = styled.div`
-  background-color: #ffffff;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: stretch;
-`
-
-
-const App: React.FC = () => {
-  return <Root>
-    Hello World
-  </Root>
 }
 
 export default MainSSR
