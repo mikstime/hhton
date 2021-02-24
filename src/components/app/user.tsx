@@ -10,7 +10,7 @@ export const UserApp: React.FC = () => {
     return <Grid container direction='column'>
         <Grid item container alignItems='stretch'>
             <Plate item md={4}>
-                avatar
+                avatar (user id: {user.id})
             </Plate>
             <Grid item container md spacing={1} direction='column'>
                 <Plate item>
