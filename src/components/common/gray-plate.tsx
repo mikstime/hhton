@@ -1,11 +1,15 @@
 import React from 'react'
-import {Grid, GridProps, Paper} from '@material-ui/core'
+import {Plate, PlateProps} from './plate'
+import {makeStyles} from '@material-ui/core'
 
-export const GrayPlate: React.FC<GridProps> = ({children, ...props}) => {
-    return <Grid {...props}>
-        <Paper elevation={4}>
-                {children}
-        </Paper>
-    </Grid>
-
+const useStyles = makeStyles({
+    root: {
+        backgroundColor: '#F0F2F5',
+        padding: '12px 16px 12px 16px',
+        marginTop: 36,
+    },
+})
+export const GrayPlate: React.FC<PlateProps> = (props) => {
+    const classes = useStyles()
+    return <Plate classes={classes} {...props}/>
 }

@@ -10,6 +10,16 @@ type User = {
     id: string
 }
 
+type UserOptional = {
+    firstName?: string,
+    lastName?: string,
+    jobName?: string,
+    bio?: string,
+    skills?: UserSkills,
+    hackathons?: Hackathon[],
+    id?: string
+}
+
 type UserSkills = {
     description: string,
     tags: string[]
@@ -31,27 +41,37 @@ type Prize = {
 }
 
 type UserActions = {
-    change: (id: string) => any
+    change: (newUser: UserOptional) => any,
+    set: (newUser: User) => any,
+}
+
+export const NULL_USER = {
+    firstName: '',
+    lastName: '',
+    bio: '',
+    jobName: '',
+    id: '-1',
+    skills: {
+        tags: [],
+        description: ''
+    },
+    hackathons: [],
 }
 
 export const _useAppState: () => {user: User & UserActions} = () => {
 
-    const [id, setId] = useState('1')
+    const [user, setUser] = useState<User>(NULL_USER)
     return {
         user: {
-            firstName: 'Michael',
-            lastName: 'Balitsky',
-            bio: 'Born in Moscow',
-            jobName: 'jobless',
-            id: id,
-            skills: {
-                tags: ['Javascript','Javascript','Javascript','Javascript','Javascript','Javascript',],
-                description: 'Very confident person'
+            ...user,
+            set: (newUser: User) => {
+                //@ts-ignore
+                setUser({...newUser})
             },
-            change: (id: string) => {
-                setId(id)
+            change: (newUser: UserOptional) => {
+                //@ts-ignore
+                setUser({...user, ...newUser})
             },
-            hackathons: []
-        },
+        }
     }
 }

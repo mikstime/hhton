@@ -1,33 +1,45 @@
 import React from 'react'
 import {Grid, Typography} from '@material-ui/core'
-import {GrayPlate, Plate, SecondaryText, Title} from '../common'
+import {
+    AvatarPlate,
+    GrayPlate,
+    Title, FlexSpace
+} from '../common'
 import {useAppState} from '../tools/use-app-state'
+import styled from 'styled-components'
+import {BoldText, CaptionText, SecondaryText} from '../common/typography'
+import {BioPlate, InfoPlate, JobPlate} from '../common/item-plate'
 
+const UserNameGrid = styled(Grid)`
+  padding: 12px 0 0 12px !important;
+`
 export const UserApp: React.FC = () => {
 
     const {user} = useAppState()
 
     return <Grid container direction='column'>
-        <Grid item container alignItems='stretch'>
-            <Plate item md={4}>
-                avatar (user id: {user.id})
-            </Plate>
-            <Grid item container md spacing={1} direction='column'>
-                <Plate item>
+        <Grid item container spacing={2}>
+            <Grid item container md={4}>
+                <AvatarPlate>
+                    avatar (user id: {user.id})
+                </AvatarPlate>
+            </Grid>
+            <Grid item container md spacing={3} direction='column'>
+                <UserNameGrid item>
                     <Typography>
-                        Место работы: {user.jobName}
+                        {user.firstName} {user.lastName}
                     </Typography>
-                </Plate>
-                <Plate item>
-                    <Typography>
-                    {user.bio}
-                    </Typography>
-                </Plate>
-                <Plate item>
-                    <Typography>
-                    Подробная информация
-                    </Typography>
-                </Plate>
+                </UserNameGrid>
+                <Grid item>
+                    <JobPlate text={`Место работы: ${user.jobName}`}/>
+                </Grid>
+                <Grid item>
+                    <BioPlate text={user.bio}/>
+                </Grid>
+                <Grid item>
+                    <InfoPlate textPlate={CaptionText}
+                               text='Подробная информация'/>
+                </Grid>
             </Grid>
         </Grid>
         <Grid item container>
@@ -43,9 +55,18 @@ export const UserApp: React.FC = () => {
                     </SecondaryText>
                 </Grid>
             </Grid>
-            <GrayPlate item md={5}>
-                {user.skills.tags.join(' ')}
-            </GrayPlate>
+            <Grid item xs md={5} container wrap='nowrap'>
+                <FlexSpace/>
+                <Grid item>
+                    <GrayPlate>
+                        <Grid container spacing={1}>
+                            {user.skills.tags.map((e, i) => <Grid
+                                item><BoldText
+                                key={i}>{e}</BoldText></Grid>)}
+                        </Grid>
+                    </GrayPlate>
+                </Grid>
+            </Grid>
         </Grid>
         <Grid item container direction='column'>
             <Grid item>

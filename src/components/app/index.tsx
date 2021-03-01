@@ -7,11 +7,13 @@ import {FeedApp} from './feed'
 import {Container} from '@material-ui/core'
 import styled from 'styled-components'
 import {DevTools} from '../tools/dev-tools'
+import {useFetcher} from '../tools/use-fetcher'
 
 const RootContainer = styled(Container)`
   min-height: 100vh;
 `
 export const App: React.FC = () => {
+    useFetcher()
     return <RootContainer>
         <DevTools/>
         <Switch>

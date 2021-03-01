@@ -1,11 +1,16 @@
 import React from 'react'
-import {Grid, GridProps, Paper} from '@material-ui/core'
+import {PaperProps, Paper} from '@material-ui/core'
+import styled from 'styled-components'
 
-export const Plate: React.FC<GridProps> = ({children, ...props}) => {
-    return <Grid {...props}>
-        <Paper elevation={4}>
-            {children}
-        </Paper>
-    </Grid>
+export type PlateProps = {
+    padding?: number,
+} & PaperProps
 
+
+const PaddedPaper = styled(Paper)`
+  flex: 1;
+  padding: ${(p: PlateProps) => p.padding || 0}px
+`
+export const Plate: React.FC<PlateProps> = ({...props}) => {
+    return <PaddedPaper elevation={0} {...props}/>
 }
