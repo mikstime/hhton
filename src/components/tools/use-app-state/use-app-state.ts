@@ -55,10 +55,10 @@ export const NULL_USER = {
     jobName: '',
     id: '-1',
     skills: {
-        tags: [],
+        tags: [] as string[],
         description: ''
     },
-    hackathons: [],
+    hackathons: [] as Hackathon[],
 }
 
 export const _useAppState: () => {user: User & UserActions} = () => {

@@ -30,7 +30,7 @@
   "scripts": {
     "build:react": "react-scripts build",
     "build:server": "tsc --build tsconfig.server.json",
-    "build": "npm run build:react; npm run build:server",
+    "build": "npm run build:react",
     "start:react": "react-scripts start",
     "start:ssr": "node dist/server/src/index.js",
     "debug:ssr": "ts-node-dev --project tsconfig.server.json server/src/index.tsx",

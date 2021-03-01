@@ -9,6 +9,7 @@ export const useFetcher = () => {
     const appState = useAppState()
 
     const [isFetching, setIsFetching] = useState(false)
+
     useEffect(() => {
         (async () => {
             if(!isFetching) {
