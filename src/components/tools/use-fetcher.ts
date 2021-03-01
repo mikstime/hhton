@@ -23,7 +23,7 @@ export const useFetcher = () => {
                 }
             }
         })()
-        //@ts-ignore
+        //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [appState.user.id])
 
     return null
