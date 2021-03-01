@@ -21,6 +21,7 @@ export const fetchUser = async (id: string) => {
             lastName: 'Фамилия',
             bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
             jobName: 'Тинькофф',
+            avatar: "http://loremflickr.com/400/400",
             id: id,
             skills: {
                 tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],

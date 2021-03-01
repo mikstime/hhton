@@ -20,7 +20,7 @@ export const UserApp: React.FC = () => {
     return <Grid container direction='column'>
         <Grid item container spacing={2}>
             <Grid item container md={4}>
-                <AvatarPlate>
+                <AvatarPlate src={user.avatar}>
                     avatar (user id: {user.id})
                 </AvatarPlate>
             </Grid>

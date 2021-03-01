@@ -23,6 +23,7 @@ export const useFetcher = () => {
                 }
             }
         })()
+        //@ts-ignore
     }, [appState.user.id])
 
     return null

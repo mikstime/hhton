@@ -7,10 +7,12 @@ import {FlexSpace} from '../common'
 export const DevTools: React.FC = () => {
 
     const [isOpen, setIsOpen] = useState(false)
+    const [value, setValue] = useState('')
     const {user} = useAppState()
     return <Grid container spacing={1}>
         <Button onClick={() => setIsOpen(!isOpen)}>Dev Tools</Button>
-        <Grid container alignItems='center' spacing={2} style={{background: '#f2f2f2', marginBottom: 40}}>
+        <Grid container alignItems='center' spacing={2}
+              style={{background: '#f2f2f2', marginBottom: 40}}>
             {isOpen && <Fragment><Grid item>Меню разработчика: </Grid>
               <Grid item><Link to={'/user'}>user</Link></Grid>
               <Grid item><Link to={'/event'}>event</Link></Grid>
@@ -22,8 +24,17 @@ export const DevTools: React.FC = () => {
                 disabled={!user.firstName}
                 style={{border: '1px solid red'}}
                 placeholder='1'
+                value={value}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        user.change({id: value})
+                    }
+                }}
+                onChange={e => setValue(e.target.value)}
                 onBlur={(e) => {
-                    user.change({id: e.target.value})
+                    if(e && e.target) {
+                        user.change({id: e.target.value})
+                    }
                 }}
               />
             </Fragment>

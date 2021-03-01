@@ -5,6 +5,7 @@ type User = {
     lastName: string,
     jobName: string,
     bio: string,
+    avatar: string,
     skills: UserSkills,
     hackathons: Hackathon[],
     id: string
@@ -15,6 +16,7 @@ type UserOptional = {
     lastName?: string,
     jobName?: string,
     bio?: string,
+    avatar?: string,
     skills?: UserSkills,
     hackathons?: Hackathon[],
     id?: string
@@ -49,6 +51,7 @@ export const NULL_USER = {
     firstName: '',
     lastName: '',
     bio: '',
+    avatar: '',
     jobName: '',
     id: '-1',
     skills: {
