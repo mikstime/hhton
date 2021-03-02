@@ -2,36 +2,35 @@ import React from 'react'
 import {ButtonProps, Container, Grid, Typography} from '@material-ui/core'
 import {
     AvatarPlate,
-    Title, FlexSpace
+    Title,
 } from '../common'
 import {useAppState} from '../tools/use-app-state'
 import styled from 'styled-components'
 import {CaptionText, SecondaryText} from '../common/typography'
 import {InfoPlate, JobPlate} from '../common/item-plate'
-import Image from 'material-ui-image'
 import {SecondaryButton} from '../common/buttons'
 
 const EventNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
 `
 
-const Background = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 279px;
-`
-
-const StyledImage = styled(Image)`
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding-top: 0 !important;
-  display: flex;
-`
+// const Background = styled.div`
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   right: 0;
+//   height: 279px;
+// `
+//
+// const StyledImage = styled(Image)`
+//   position: absolute;
+//   z-index: 0;
+//   top: 0;
+//   left: 0;
+//   right: 0;
+//   padding-top: 0 !important;
+//   display: flex;
+// `
 const RootContainer = styled(Container)`
   min-height: 100vh;
 `

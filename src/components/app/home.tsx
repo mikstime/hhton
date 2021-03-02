@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import {Container, Grid, Typography} from '@material-ui/core'
 import {SecondaryButton} from '../common/buttons'
