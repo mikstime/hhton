@@ -1,20 +1,16 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import {Switch, Route} from 'react-router-dom'
 import {UserApp} from './user'
 import {EventApp} from './event'
 import {TeamApp} from './team'
 import {FeedApp} from './feed'
-import {Container} from '@material-ui/core'
-import styled from 'styled-components'
 import {DevTools} from '../tools/dev-tools'
 import {useFetcher} from '../tools/use-fetcher'
+import {HomeApp} from './home'
 
-const RootContainer = styled(Container)`
-  min-height: 100vh;
-`
 export const App: React.FC = () => {
     useFetcher()
-    return <RootContainer>
+    return <Fragment>
         <DevTools/>
         <Switch>
             <Route path='/user'>
@@ -29,6 +25,9 @@ export const App: React.FC = () => {
             <Route path='/feed'>
                 <FeedApp/>
             </Route>
+            <Route>
+                <HomeApp/>
+            </Route>
         </Switch>
-    </RootContainer>
+    </Fragment>
 }

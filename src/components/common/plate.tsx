@@ -9,7 +9,7 @@ export type PlateProps = {
 
 const PaddedPaper = styled(Paper)`
   flex: 1;
-  padding: ${(p: PlateProps) => p.padding || 0}px
+  ${(p: PlateProps) => p.padding ? `padding: ${p.padding}px` : ''}
 `
 export const Plate: React.FC<PlateProps> = ({...props}) => {
     return <PaddedPaper elevation={0} {...props}/>

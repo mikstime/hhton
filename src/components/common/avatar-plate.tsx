@@ -16,19 +16,21 @@ const AvatarGrid: React.FC<{src: string} & GridProps> = ({src, ...rest}) => {
     </Grid>
 }
 
-const StyledButton = styled(PrimaryButton)`
-  margin-top: 16px !important;
-`
-export const AvatarPlate: React.FC<{src: string} & PlateProps> = ({src, ...rest}) => {
+export const AvatarPlate: React.FC<{
+    src: string,
+    styledButton?: React.ElementType<any>
+} & PlateProps> = ({src, styledButton = PrimaryButton, ...rest}) => {
+    const ButtonElement = styledButton
     return <Plate elevation={4} padding={24} {...rest}>
         <Root>
             <Grid container direction='column' style={{flex: 1}}>
                 <AvatarGrid src={src} container xs/>
                 <Grid item container>
                 </Grid>
-                <StyledButton>
+                <div style={{height: 16}}/>
+                <ButtonElement>
                     Объединиться
-                </StyledButton>
+                </ButtonElement>
             </Grid>
         </Root>
     </Plate>

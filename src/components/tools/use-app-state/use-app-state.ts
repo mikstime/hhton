@@ -29,11 +29,34 @@ type UserSkills = {
 
 type Hackathon = {
     name: string,
+    id: string,
+    logo: string,
+    background: string,
+    founderId: string,
     isFinished: boolean,
     place: string,
     participantsCount: number,
     participants: User[]
-    prizes: Prize[]
+    prizes: Prize[],
+    settings: HackathonSettings,
+}
+
+type HackathonOptional = {
+    name?: string,
+    id?: string,
+    logo?: string,
+    background?: string,
+    founderId?: string,
+    isFinished?: boolean,
+    place?: string,
+    participantsCount?: number,
+    participants?: User[]
+    prizes?: Prize[],
+    settings?: HackathonSettings,
+}
+
+type HackathonSettings = {
+
 }
 
 type Prize = {
@@ -42,10 +65,17 @@ type Prize = {
     winners: User[]
 }
 
+type HackathonActions = {
+    change: (newUser: HackathonOptional) => any,
+    set: (newUser: Hackathon) => any,
+}
+
+
 type UserActions = {
     change: (newUser: UserOptional) => any,
     set: (newUser: User) => any,
 }
+
 
 export const NULL_USER = {
     firstName: '',
@@ -61,9 +91,24 @@ export const NULL_USER = {
     hackathons: [] as Hackathon[],
 }
 
-export const _useAppState: () => {user: User & UserActions} = () => {
+export const NULL_HACKATHON = {
+    name: '',
+    id: '-1',
+    logo: '',
+    background: '',
+    isFinished: false,
+    place: '',
+    founderId : '-1',
+    participantsCount: 0,
+    participants: [],
+    prizes: [],
+    settings: {},
+}
+
+export const _useAppState: () => {user: User & UserActions, event: Hackathon & HackathonActions} = () => {
 
     const [user, setUser] = useState<User>(NULL_USER)
+    const [event, setEvent] = useState<Hackathon>(NULL_HACKATHON)
     return {
         user: {
             ...user,
@@ -75,6 +120,17 @@ export const _useAppState: () => {user: User & UserActions} = () => {
                 //@ts-ignore
                 setUser({...user, ...newUser})
             },
-        }
+        },
+        event: {
+            ...event,
+            set: (newEvent: Hackathon) => {
+                //@ts-ignore
+                setEvent({...newEvent})
+            },
+            change: (newEvent: HackathonOptional) => {
+                //@ts-ignore
+                setEvent({...user, ...newEvent})
+            },
+        },
     }
 }
