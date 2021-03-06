@@ -6,10 +6,15 @@ import {FlexSpace} from '../common'
 
 export const DevTools: React.FC = () => {
 
-    const [isOpen, setIsOpen] = useState(process.env.NODE_ENV === 'development')
+    const [isOpen, setIsOpen] = useState(true)
     const [userId, setUserId] = useState('')
     const [eventId, setEventId] = useState('')
     const {user, event} = useAppState()
+
+    if (process.env.NODE_ENV === 'production') {
+        return <div style={{height: 78}}/>
+    }
+
     return <Container><Grid container spacing={1}>
         <Button onClick={() => setIsOpen(!isOpen)}>Dev Tools</Button>
         <Grid container alignItems='center' spacing={2}

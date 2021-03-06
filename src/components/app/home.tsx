@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import {Container, Grid, Typography} from '@material-ui/core'
 import {SecondaryButton} from '../common/buttons'
 import firstTriangle from '../../assets/home/first-triangle.svg'
+import {Link} from 'react-router-dom'
 
 const RootContainer = styled(Container)`
   height: 100vh;
@@ -33,9 +34,11 @@ export const HomeApp: React.FC = () => {
                         </Typography>
                     </Grid>
                     <Grid item>
+                        <Link to='/event' style={{textDecoration: 'none'}}>
                         <SecondaryButton style={{marginTop: 48}}>
                             Я хочу организовать мероприятие
                         </SecondaryButton>
+                        </Link>
                     </Grid>
                 </Grid>
             </RootContainer>

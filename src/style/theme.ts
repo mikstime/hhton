@@ -63,6 +63,7 @@ const MuiTheme = createMuiTheme({
 MuiTheme.shadows[4] = '0 2px 48px rgba(0,0,0,.08)'
 MuiTheme.shadows[8] = '0 2px 24px rgba(0,0,0,.16)'
 MuiTheme.shadows[2] = 'none'//'0 2px 24px rgba(0,0,0,.16)'
+MuiTheme.shadows[6] = 'none'//'0 2px 24px rgba(0,0,0,.16)'
 export {
     MuiTheme
 }

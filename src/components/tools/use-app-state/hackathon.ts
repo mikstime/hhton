@@ -14,6 +14,9 @@ export type Hackathon = {
     participants: User[]
     prizes: Prize[],
     settings: HackathonSettings,
+    isNullEvent?: boolean,
+    isNotFoundEvent?: boolean,
+    isParticipating?: boolean,
 }
 
 
@@ -29,6 +32,9 @@ export type HackathonOptional = {
     participants?: User[]
     prizes?: Prize[],
     settings?: HackathonSettings,
+    isNullEvent?: boolean,
+    isNotFoundEvent?: boolean,
+    isParticipating?: boolean,
 }
 
 export type HackathonSettings = {}
@@ -52,7 +58,8 @@ export const NULL_HACKATHON = {
     participantsCount: 0,
     participants: [],
     prizes: [],
-    settings: {}
+    settings: {},
+    isNullEvent: true,
 }
 
 
@@ -71,12 +78,10 @@ export const useHackathon = () => {
     return {
         ...hackathon,
         set: (newEvent: Hackathon) => {
-            //@ts-ignore
             setHackathon({...newEvent})
         },
         change: (newEvent: HackathonOptional) => {
-            //@ts-ignore
-            setHackathon({...newEvent, ...newEvent})
+            setHackathon({...hackathon, ...newEvent})
         },
         join: () => {
 

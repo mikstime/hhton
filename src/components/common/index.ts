@@ -4,6 +4,8 @@ import {FlexSpace, Root} from './reusable'
 import {AvatarPlate} from './avatar-plate'
 import {ItemPlate} from './item-plate'
 import {Title, AdditionalText, MainText, SubTitle} from './typography'
+import {Modal, ModalProps} from './modal'
+
 export {
     Plate,
     GrayPlate,
@@ -15,4 +17,6 @@ export {
     MainText,
     SubTitle,
     Root,
+    Modal
 }
+export type { ModalProps }
