@@ -1,5 +1,7 @@
 import React from 'react'
 import {_useAppState} from './use-app-state'
+import {NULL_USER} from './user'
+import {NULL_HACKATHON} from './hackathon'
 
 export type UseAppStateType = ReturnType<typeof _useAppState>
 //@ts-ignore
@@ -18,4 +20,9 @@ export const useAppState: () => UseAppStateType = () => {
         throw new Error('useAppState must be used within a AppStateProvider')
     }
     return context as UseAppStateType
+}
+
+export {
+    NULL_USER,
+    NULL_HACKATHON,
 }

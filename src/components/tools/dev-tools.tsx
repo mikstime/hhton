@@ -1,5 +1,5 @@
 import React, {Fragment, useState} from 'react'
-import {Button, Grid, InputBase, Typography} from '@material-ui/core'
+import {Button, Container, Grid, InputBase, Typography} from '@material-ui/core'
 import {Link} from 'react-router-dom'
 import {useAppState} from './use-app-state'
 import {FlexSpace} from '../common'
@@ -10,7 +10,7 @@ export const DevTools: React.FC = () => {
     const [userId, setUserId] = useState('')
     const [eventId, setEventId] = useState('')
     const {user, event} = useAppState()
-    return <Grid container spacing={1}>
+    return <Container><Grid container spacing={1}>
         <Button onClick={() => setIsOpen(!isOpen)}>Dev Tools</Button>
         <Grid container alignItems='center' spacing={2}
               style={{background: '#f2f2f2', marginBottom: 40}}>
@@ -23,7 +23,7 @@ export const DevTools: React.FC = () => {
               <FlexSpace/>
               <Typography>User id:</Typography>
               <InputBase
-                disabled={!user.firstName}
+                disabled={user.isNullUser && !user.notFound}
                 style={{border: '1px solid red'}}
                 placeholder='1'
                 value={userId}
@@ -34,7 +34,7 @@ export const DevTools: React.FC = () => {
                 }}
                 onChange={e => setUserId(e.target.value)}
                 onBlur={(e) => {
-                    if(e && e.target) {
+                    if (e && e.target) {
                         user.change({id: e.target.value})
                     }
                 }}
@@ -52,7 +52,7 @@ export const DevTools: React.FC = () => {
                 }}
                 onChange={e => setEventId(e.target.value)}
                 onBlur={(e) => {
-                    if(e && e.target) {
+                    if (e && e.target) {
                         event.change({id: e.target.value})
                     }
                 }}
@@ -61,4 +61,5 @@ export const DevTools: React.FC = () => {
             }
         </Grid>
     </Grid>
+    </Container>
 }

@@ -1,27 +1,30 @@
 import {useEffect, useState} from 'react'
 import {useAppState} from './use-app-state'
 import {fetchEvent, fetchUser} from '../../model/api'
-import {NULL_HACKATHON, NULL_USER} from './use-app-state/use-app-state'
+import {NULL_HACKATHON, NULL_USER} from './use-app-state'
 
 
 export const useFetcher = () => {
 
     const appState = useAppState()
 
-    const [isFetching, setIsFetching] = useState(false)
+    const [isFetchingId, setIsFetchingId] = useState<string | null>(null)
     const [isFetchingEvent, setIsFetchingEvent] = useState(false)
 
     useEffect(() => {
         (async () => {
-            if(!isFetching) {
-                setIsFetching(true)
-
-                appState.user.set(NULL_USER)
+            if (appState.user.id !== isFetchingId && appState.user.id !== '-1') {
+                setIsFetchingId(appState.user.id)
                 const user = await fetchUser(appState.user.id)
 
                 if (user) {
                     appState.user.set(user)
-                    setIsFetching(false)
+                } else {
+                    appState.user.set({
+                        ...NULL_USER,
+                        id: appState.user.id,
+                        notFound: true
+                    })
                 }
             }
         })()
@@ -30,7 +33,7 @@ export const useFetcher = () => {
 
     useEffect(() => {
         (async () => {
-            if(!isFetchingEvent) {
+            if (!isFetchingEvent) {
                 setIsFetchingEvent(true)
 
                 appState.event.set(NULL_HACKATHON)

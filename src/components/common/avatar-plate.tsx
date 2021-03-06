@@ -1,6 +1,5 @@
 import React from 'react'
 import {Plate, PlateProps} from './plate'
-import {PrimaryButton} from './buttons'
 import {Grid, GridProps} from '@material-ui/core'
 import styled from 'styled-components'
 import Image from 'material-ui-image'
@@ -18,9 +17,8 @@ const AvatarGrid: React.FC<{src: string} & GridProps> = ({src, ...rest}) => {
 
 export const AvatarPlate: React.FC<{
     src: string,
-    styledButton?: React.ElementType<any>
-} & PlateProps> = ({src, styledButton = PrimaryButton, ...rest}) => {
-    const ButtonElement = styledButton
+} & PlateProps> = ({src, children, ...rest}) => {
+
     return <Plate elevation={4} padding={24} {...rest}>
         <Root>
             <Grid container direction='column' style={{flex: 1}}>
@@ -28,9 +26,7 @@ export const AvatarPlate: React.FC<{
                 <Grid item container>
                 </Grid>
                 <div style={{height: 16}}/>
-                <ButtonElement>
-                    Объединиться
-                </ButtonElement>
+                {children}
             </Grid>
         </Root>
     </Plate>

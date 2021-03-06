@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {Container, Grid, Typography} from '@material-ui/core'
 import {
     AvatarPlate,
@@ -9,6 +9,10 @@ import {useAppState} from '../tools/use-app-state'
 import styled from 'styled-components'
 import {BoldText, CaptionText, SecondaryText} from '../common/typography'
 import {BioPlate, InfoPlate, JobPlate} from '../common/item-plate'
+import {UniteButton} from '../user/unite-button'
+import {NotFound} from './notfound'
+import {useParams} from 'react-router-dom'
+import notFoundIcon from '../../assets/notfound.svg'
 
 const UserNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
@@ -19,16 +23,35 @@ const RootContainer = styled(Container)`
 `
 
 export const UserApp: React.FC = () => {
+    //@ts-ignore
+    const {userId} = useParams()
+    const {user, cUser} = useAppState()
 
-    const {user} = useAppState()
+    useEffect(() => {
+        if(userId) {
+            user.change({id: userId})
+        } else {
+            user.change({id: cUser.id})
+        }
+    }, [userId])
+
+    if (user.notFound) {
+        return <NotFound
+            title='Пользователь не найден'
+            message='Попробуйте поискать в другом месте'
+            icon={notFoundIcon}
+        />
+    }
 
     return <RootContainer>
         <Grid container direction='column'>
             <Grid item container spacing={2}>
                 <Grid item container md={4}>
-                    <AvatarPlate src={user.avatar}/>
+                    <AvatarPlate src={user.avatar}>
+                        <UniteButton/>
+                    </AvatarPlate>
                 </Grid>
-                <Grid item container md spacing={3} direction='column'>
+                <Grid item container md spacing={2} direction='column'>
                     <UserNameGrid item>
                         <Typography>
                             {user.firstName} {user.lastName}
@@ -65,8 +88,9 @@ export const UserApp: React.FC = () => {
                         <GrayPlate>
                             <Grid container spacing={1}>
                                 {user.skills.tags.map((e, i) => <Grid
-                                    item><BoldText
-                                    key={i}>{e}</BoldText></Grid>)}
+                                    key={i} item>
+                                    <BoldText>{e}</BoldText>
+                                </Grid>)}
                             </Grid>
                         </GrayPlate>
                     </Grid>

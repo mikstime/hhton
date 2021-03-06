@@ -1,5 +1,5 @@
 import React from 'react'
-import {ButtonProps, Container, Grid, Typography} from '@material-ui/core'
+import {Container, Grid, Typography} from '@material-ui/core'
 import {
     AvatarPlate,
     Title,
@@ -8,7 +8,7 @@ import {useAppState} from '../tools/use-app-state'
 import styled from 'styled-components'
 import {CaptionText, SecondaryText} from '../common/typography'
 import {InfoPlate, JobPlate} from '../common/item-plate'
-import {SecondaryButton} from '../common/buttons'
+import {ParticipateButton} from '../event/participate-button'
 
 const EventNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
@@ -40,12 +40,6 @@ const Root = styled.div`
   height: 100%;
 `
 
-const LogoButton: React.FC<ButtonProps> = (props) => {
-    const {event} = useAppState()
-    return <SecondaryButton disabled={event.isFinished}>
-        Участвовать
-    </SecondaryButton>
-}
 export const EventApp: React.FC = () => {
 
     const {event} = useAppState()
@@ -56,8 +50,9 @@ export const EventApp: React.FC = () => {
                 <Grid style={{zIndex: 3}} container direction='column'>
                     <Grid item container spacing={2}>
                         <Grid item container md={4}>
-                            <AvatarPlate styledButton={LogoButton}
-                                         src={event.logo}/>
+                            <AvatarPlate src={event.logo}>
+                                <ParticipateButton/>
+                            </AvatarPlate>
                         </Grid>
                         <Grid item container md spacing={3} direction='column'>
                             <EventNameGrid item>

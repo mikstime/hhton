@@ -13,6 +13,9 @@ export const App: React.FC = () => {
     return <Fragment>
         <DevTools/>
         <Switch>
+            <Route path='/user/:userId'>
+                <UserApp/>
+            </Route>
             <Route path='/user'>
                 <UserApp/>
             </Route>
