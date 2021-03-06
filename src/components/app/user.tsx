@@ -28,11 +28,12 @@ export const UserApp: React.FC = () => {
     const {user, cUser} = useAppState()
 
     useEffect(() => {
-        if(userId) {
+        if (userId) {
             user.change({id: userId})
         } else {
             user.change({id: cUser.id})
         }
+        //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userId])
 
     if (user.notFound) {

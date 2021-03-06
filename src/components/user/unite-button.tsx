@@ -18,7 +18,7 @@ const useUnite = () => {
 
         const id = user.id + cUser.id
         setActionId(id)
-
+        //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user, cUser, actionId, setActionId])
 
     useEffect(() => {
@@ -35,6 +35,7 @@ const useUnite = () => {
             }
             setActionId(null)
         })
+        //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [actionId])
 
     return {
