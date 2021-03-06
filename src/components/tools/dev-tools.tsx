@@ -12,7 +12,7 @@ export const DevTools: React.FC = () => {
     const {user, event} = useAppState()
 
     if (process.env.NODE_ENV === 'production') {
-        return <div style={{height: 78}}/>
+        return null
     }
 
     return <Container><Grid container spacing={1}>

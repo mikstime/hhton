@@ -6,6 +6,101 @@ import {NULL_USER} from '../components/tools/use-app-state'
 import {User} from '../components/tools/use-app-state/user'
 const useMock = true
 
+
+const TEST_USERS: User[] = [
+    {
+        id: '13',
+        firstName: 'Имя',
+        lastName: 'Фамилия',
+        inTeam: true,
+        avatar: 'http://loremflickr.com/1000/1000',
+        isInvited: false,
+        bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
+        jobName: 'Тинькофф',
+        skills: {
+            tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
+            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+        },
+        hackathons: [],
+    },
+    {
+        id: '14',
+        firstName: 'Имя',
+        lastName: 'Фамилия2',
+        inTeam: false,
+        avatar: 'http://loremflickr.com/1000/1000',
+        isInvited: false,
+        bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
+        jobName: 'Тинькофф',
+        skills: {
+            tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
+            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+        },
+        hackathons: [],
+    },
+    {
+        id: '11',
+        firstName: 'Имя',
+        lastName: 'Фамилия3',
+        inTeam: true,
+        avatar: 'http://loremflickr.com/1000/1000',
+        isInvited: false,
+        bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
+        jobName: 'Тинькофф',
+        skills: {
+            tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
+            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+        },
+        hackathons: [],
+    },
+    {
+        id: '113',
+        firstName: 'Имя',
+        lastName: 'Фамилия',
+        inTeam: true,
+        avatar: 'http://loremflickr.com/1000/1000',
+        isInvited: false,
+        bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
+        jobName: 'Тинькофф',
+        skills: {
+            tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
+            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+        },
+        hackathons: [],
+    },
+    {
+        id: '112',
+        firstName: 'Имя',
+        lastName: 'Фамилия2',
+        inTeam: false,
+        avatar: 'http://loremflickr.com/1000/1000',
+        isInvited: false,
+        bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
+        jobName: 'Тинькофф',
+        skills: {
+            tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
+            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+        },
+        hackathons: [],
+    },
+    {
+        id: '111',
+        firstName: 'Имя',
+        lastName: 'Фамилия3',
+        inTeam: true,
+        avatar: 'http://loremflickr.com/1000/1000',
+        isInvited: false,
+        bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
+        jobName: 'Тинькофф',
+        skills: {
+            tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
+            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+        },
+        hackathons: [],
+    },
+]
+
+
 export const fetchUser = async (id: string) => {
     if (!useMock) {
         const user = await fetch(`${HOST_DOMAIN}/api/user/${id}`)
@@ -22,6 +117,11 @@ export const fetchUser = async (id: string) => {
         if(id.length > 3)
             return null
 
+        const user = TEST_USERS.find(u => u.id === id)
+
+        if(user) {
+            return user
+        }
         return {
             firstName: 'Имя' + id,
             lastName: 'Фамилия',
@@ -104,100 +204,8 @@ export const findUsers = async (userId: string) => {
         return []
     } else {
         await sleep(300)
-        const users =  [
-            {
-                id: '13',
-                firstName: 'Имя',
-                lastName: 'Фамилия',
-                inTeam: true,
-                avatar: 'http://loremflickr.com/1000/1000',
-                isInvited: false,
-                bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-                jobName: 'Тинькофф',
-                skills: {
-                    tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
-                    description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-                },
-                hackathons: [],
-            },
-            {
-                id: '14',
-                firstName: 'Имя',
-                lastName: 'Фамилия2',
-                inTeam: false,
-                avatar: 'http://loremflickr.com/1000/1000',
-                isInvited: false,
-                bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-                jobName: 'Тинькофф',
-                skills: {
-                    tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
-                    description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-                },
-                hackathons: [],
-            },
-            {
-                id: '11',
-                firstName: 'Имя',
-                lastName: 'Фамилия3',
-                inTeam: true,
-                avatar: 'http://loremflickr.com/1000/1000',
-                isInvited: false,
-                bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-                jobName: 'Тинькофф',
-                skills: {
-                    tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
-                    description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-                },
-                hackathons: [],
-            },
-            {
-                id: '113',
-                firstName: 'Имя',
-                lastName: 'Фамилия',
-                inTeam: true,
-                avatar: 'http://loremflickr.com/1000/1000',
-                isInvited: false,
-                bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-                jobName: 'Тинькофф',
-                skills: {
-                    tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
-                    description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-                },
-                hackathons: [],
-            },
-            {
-                id: '112',
-                firstName: 'Имя',
-                lastName: 'Фамилия2',
-                inTeam: false,
-                avatar: 'http://loremflickr.com/1000/1000',
-                isInvited: false,
-                bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-                jobName: 'Тинькофф',
-                skills: {
-                    tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
-                    description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-                },
-                hackathons: [],
-            },
-            {
-                id: '111',
-                firstName: 'Имя',
-                lastName: 'Фамилия3',
-                inTeam: true,
-                avatar: 'http://loremflickr.com/1000/1000',
-                isInvited: false,
-                bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-                jobName: 'Тинькофф',
-                skills: {
-                    tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
-                    description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-                },
-                hackathons: [],
-            },
-        ] as User[]
 
-        return users.filter(u => u.id.startsWith(userId))
+        return TEST_USERS.filter(u => u.id.startsWith(userId))
     }
 }
 
@@ -221,5 +229,17 @@ export const getSkills = async (job: string) => {
     } else {
         await sleep(300)
         return ['React', 'Angular', 'TypeScript']
+    }
+}
+
+
+export const getFeed = async (query: string, since?: string) => {
+    if (!useMock) {
+        console.log(query, since)
+        //@TODO implement
+        return [] as string[]
+    } else {
+        await sleep(300)
+        return TEST_USERS.map(u => u.id)
     }
 }

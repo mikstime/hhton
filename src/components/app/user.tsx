@@ -1,5 +1,10 @@
 import React, {useEffect} from 'react'
-import {Container, Grid, Typography} from '@material-ui/core'
+import {
+    Container,
+    Grid,
+    GridProps,
+    Typography
+} from '@material-ui/core'
 import {
     AvatarPlate,
     GrayPlate,
@@ -19,10 +24,11 @@ const UserNameGrid = styled(Grid)`
 `
 
 const RootContainer = styled(Container)`
-  min-height: 100vh;
+  margin-top: 70px;
+  min-height: calc(100vh - 70px);
 `
 
-export const UserApp: React.FC = () => {
+export const UserApp: React.FC<GridProps> = ({...rest}) => {
     //@ts-ignore
     const {userId} = useParams()
     const {user, cUser} = useAppState()
@@ -45,7 +51,7 @@ export const UserApp: React.FC = () => {
     }
 
     return <RootContainer>
-        <Grid container direction='column'>
+        <Grid container direction='column' {...rest}>
             <Grid item container spacing={2}>
                 <Grid item container md={4}>
                     <AvatarPlate src={user.avatar}>

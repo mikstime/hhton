@@ -187,7 +187,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
     }, [selectedJob, close, history, jobs, selectedSkills, skills])
 
     return <Modal back={back} canGoBack
-                  gridProps={{item: true, md: 8, sm: 8, xs: 10}}
+                  gridProps={{item: true, md: 8, sm: 10, xs: 12}}
                   onClose={props.close}{...props}>
         <Slide direction="right" in>
             <Grid container direction='column'>
@@ -275,7 +275,7 @@ const SearchUser: React.FC<UseSearchModalType & MProps> = ({...props}) => {
     }, [value, field])
 
     return <Modal back={props.actions.back} canGoBack
-                  gridProps={{item: true, md: 8, sm: 8, xs: 10}}
+                  gridProps={{item: true, md: 8, sm: 10, xs: 12}}
                   onClose={props.close}{...props}>
         <Slide direction="right" in>
             <Grid container direction='column'>
@@ -291,7 +291,7 @@ const SearchUser: React.FC<UseSearchModalType & MProps> = ({...props}) => {
                             zIndex: 5
                         }}
                     >
-                        <Grid container alignItems='baseline'>
+                        <Grid container alignItems='baseline' wrap='nowrap'>
                             <Typography
                                 style={{marginLeft: '8px'}}>@</Typography>
                             <InputBase

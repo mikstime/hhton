@@ -32,7 +32,8 @@ const EventNameGrid = styled(Grid)`
 //   display: flex;
 // `
 const RootContainer = styled(Container)`
-  min-height: 100vh;
+  min-height: calc(100vh - 70px);
+  margin-top: 70px;
 `
 
 const Root = styled.div`
