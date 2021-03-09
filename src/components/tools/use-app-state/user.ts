@@ -17,15 +17,22 @@ export type User = {
     firstName: string,
     lastName: string,
     jobName: string,
-    notFound?: boolean,
     bio: string,
     inTeam: boolean,
     isInvited: boolean,
     avatar: string,
     skills: UserSkills,
-    hackathons: Hackathon[],
+    hackathons: Hackathon[], // история участий
     id: string,
+    team?: Team[],
     isNullUser?: boolean,
+    notFound?: boolean,
+    inMyTeam?: boolean,
+}
+
+
+export type Team = {
+    members: User[],
 }
 
 

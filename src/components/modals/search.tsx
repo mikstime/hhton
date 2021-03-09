@@ -179,8 +179,10 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
         const fskills = skills.filter((s, i) => selectedSkills[i])
         if(fskills.length) {
             history.push(`/feed?j=${fjob}&skills=${fskills.join('|')}`)
-        } else {
+        } else if(fjob){
             history.push(`/feed?j=${fjob}`)
+        } else {
+            history.push(`/feed`)
         }
         close()
 
@@ -230,8 +232,8 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
                     }
                 </div>
                 {
-                    selectedJob >= 0 && <Grid item container justify='flex-end'>
-                      <PrimaryButton onClick={showFeed}>Показать</PrimaryButton>
+                    <Grid item container justify='flex-end'>
+                      <PrimaryButton onClick={showFeed}>{selectedJob >= 0 ? 'Показать' : 'Показать всех'}</PrimaryButton>
                     </Grid>
                 }
             </Grid>

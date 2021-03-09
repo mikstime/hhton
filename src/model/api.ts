@@ -3,7 +3,8 @@ import {sleep} from '../utils'
 import background from '../assets/background.png'
 import logo from '../assets/logo.png'
 import {NULL_USER} from '../components/tools/use-app-state'
-import {User} from '../components/tools/use-app-state/user'
+import {Team, User} from '../components/tools/use-app-state/user'
+
 const useMock = true
 
 
@@ -21,7 +22,7 @@ const TEST_USERS: User[] = [
             tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
             description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
-        hackathons: [],
+        hackathons: []
     },
     {
         id: '14',
@@ -36,7 +37,7 @@ const TEST_USERS: User[] = [
             tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
             description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
-        hackathons: [],
+        hackathons: []
     },
     {
         id: '11',
@@ -51,7 +52,7 @@ const TEST_USERS: User[] = [
             tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
             description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
-        hackathons: [],
+        hackathons: []
     },
     {
         id: '113',
@@ -66,7 +67,7 @@ const TEST_USERS: User[] = [
             tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
             description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
-        hackathons: [],
+        hackathons: []
     },
     {
         id: '112',
@@ -81,7 +82,7 @@ const TEST_USERS: User[] = [
             tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
             description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
-        hackathons: [],
+        hackathons: []
     },
     {
         id: '111',
@@ -96,11 +97,14 @@ const TEST_USERS: User[] = [
             tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
             description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
-        hackathons: [],
-    },
+        hackathons: []
+    }
 ]
 
-
+/**
+ * Получить информацию о пользователе, включая информацию об участии пользователя в хакатонах
+ * @param id
+ */
 export const fetchUser = async (id: string) => {
     if (!useMock) {
         const user = await fetch(`${HOST_DOMAIN}/api/user/${id}`)
@@ -114,12 +118,12 @@ export const fetchUser = async (id: string) => {
         }
     } else {
         await sleep(300)
-        if(id.length > 3)
+        if (id.length > 3)
             return null
 
         const user = TEST_USERS.find(u => u.id === id)
 
-        if(user) {
+        if (user) {
             return user
         }
         return {
@@ -135,11 +139,29 @@ export const fetchUser = async (id: string) => {
                 tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
                 description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
             },
-            hackathons: [],
+            hackathons: []
         }
     }
 }
 
+/**
+ * Проверить, отправил ли один пользователь приглашение другому
+ * @param inviterId
+ * @param inviteeId
+ */
+export const isInvited = async (inviterId: string, inviteeId: string) => {
+    if (!useMock) {
+        return true
+    } else {
+        await sleep(300)
+        return false
+    }
+}
+
+/**
+ * Получить информацию о мероприятии
+ * @param id
+ */
 export const fetchEvent = async (id: string) => {
     if (!useMock) {
         const event = await fetch(`${HOST_DOMAIN}/api/event/${id}`)
@@ -163,24 +185,51 @@ export const fetchEvent = async (id: string) => {
             participants: new Array(270).map(() => NULL_USER),
             prizes: [],
             settings: {},
+            isParticipating: false
         }
     }
 }
 
+/**
+ * Проверить, участвует ли пользователь в мероприятии.
+ * Вернуть true, если участвует
+ * @param userId
+ * @param eventId
+ */
+export const isParticipating = async (userId: string, eventId: string) => {
+    if (!useMock) {
+        return true
+    } else {
+        await sleep(300)
+        return true
+    }
+}
+
+
+/**
+ * Пригласить пользователя в команду. Возвращает true в случае успеха
+ * @param inviterId
+ * @param inviteeId
+ */
 export const invitePerson = async (inviterId: string, inviteeId: string) => {
     if (!useMock) {
         console.log(inviteeId, inviterId)
         //@TODO implement
+        return true
     } else {
         await sleep(300)
         return true
     }
 }
 
-
+/**
+ * Записаться на мероприятие. Возвращает true в случае успеха
+ * @param userId
+ * @param eventId
+ */
 export const joinEvent = async (userId: string, eventId: string) => {
     if (!useMock) {
-        console.log(userId,eventId)
+        console.log(userId, eventId)
         //@TODO implement
     } else {
         await sleep(300)
@@ -188,9 +237,14 @@ export const joinEvent = async (userId: string, eventId: string) => {
     }
 }
 
+/**
+ * Покинуть мероприятие. Возвращает true в случае успеха
+ * @param userId
+ * @param eventId
+ */
 export const leaveEvent = async (userId: string, eventId: string) => {
     if (!useMock) {
-        console.log(userId,eventId)
+        console.log(userId, eventId)
         //@TODO implement
     } else {
         await sleep(300)
@@ -198,19 +252,24 @@ export const leaveEvent = async (userId: string, eventId: string) => {
     }
 }
 
-export const findUsers = async (userId: string) => {
+/**
+ * Поиск пользователей по строке. Возвращает массив пользователей
+ * @param query
+ */
+export const findUsers = async (query: string) => {
     if (!useMock) {
         //@TODO implement
         return []
     } else {
         await sleep(300)
-
-        return TEST_USERS.filter(u => u.id.startsWith(userId))
+        return TEST_USERS.filter(u => u.id.startsWith(query))
     }
 }
 
-
-export const getJobs = async () => {
+/**
+ * Возвращает массив доступных специализаций
+ */
+export const getJobs: () => Promise<string[]> = async () => {
     if (!useMock) {
         //@TODO implement
         return []
@@ -220,7 +279,10 @@ export const getJobs = async () => {
     }
 }
 
-
+/**
+ * Возвращает массив строк
+ * @param job – название работы,
+ */
 export const getSkills = async (job: string) => {
     if (!useMock) {
         console.log(job)
@@ -232,14 +294,38 @@ export const getSkills = async (job: string) => {
     }
 }
 
-
-export const getFeed = async (query: string, since?: string) => {
+/**
+ * Возвращает массив id пользователей
+ * @param query – строка типа j=Frontend&skills=Angular|TypeScript
+ * @param sinceId
+ */
+export const getFeed:
+    (query: string, sinceId?: string) => Promise<string[]>
+    = async (query: string, sinceId?: string) => {
     if (!useMock) {
-        console.log(query, since)
+        console.log(query, sinceId)
         //@TODO implement
-        return [] as string[]
+        return []
     } else {
         await sleep(300)
         return TEST_USERS.map(u => u.id)
+    }
+}
+
+/**
+ * Возвращает объект типа Team
+ * @param userId - id пользователя, чью команду запрашиваем
+ */
+export const getTeam = async (userId: string) => {
+    if (!useMock) {
+        //@TODO implement
+        return {
+            members: []
+        }
+    } else {
+        await sleep(300)
+        return {
+            members: TEST_USERS.slice(0, 3)
+        }
     }
 }
