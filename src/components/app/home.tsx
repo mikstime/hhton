@@ -27,16 +27,29 @@ export const HomeApp: React.FC = () => {
             <RootContainer>
                 <Grid style={{height: '100vh'}} container direction='column' justify='center'>
                     <Grid item>
-                        <Typography style={{fontSize: '3.5rem'}}>Создавайте
-                            командные<br/>
-                            мероприятия в пару<br/>
-                            кликов
+                        <Typography style={{fontSize: '3.5rem'}}>
+                            Команда Фиксики
                         </Typography>
+                        <Typography style={{fontSize: '1.5rem'}}>
+                            Балицкий Михаил – React, TS (Frontend разработчик)
+                        </Typography>
+                        <Typography style={{fontSize: '1.5rem'}}>
+                            Елизаров Олег – Golang, PostgreSQL (Backend разработчик)
+                        </Typography>
+                        <Typography style={{fontSize: '1.5rem'}}>
+                            Куклин Сергей - Golang, JS (Fullstack разработчик)
+                        </Typography>
+                        {/*<Typography style={{fontSize: '3.5rem'}}>Создавайте*/}
+                        {/*    командные<br/>*/}
+                        {/*    мероприятия в пару<br/>*/}
+                        {/*    кликов*/}
+                        {/*</Typography>*/}
                     </Grid>
                     <Grid item>
                         <Link to='/event' style={{textDecoration: 'none'}}>
                         <SecondaryButton style={{marginTop: 48}}>
-                            Я хочу организовать мероприятие
+                            К мероприятию
+                            {/*Я хочу организовать мероприятие*/}
                         </SecondaryButton>
                         </Link>
                     </Grid>
