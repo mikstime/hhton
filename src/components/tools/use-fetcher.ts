@@ -1,29 +1,39 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {useAppState} from './use-app-state'
-import {fetchEvent, fetchUser} from '../../model/api'
+import {fetchEvent, fetchUser, getTeam} from '../../model/api'
 import {NULL_HACKATHON, NULL_USER} from './use-app-state'
 
 
-let isFetchingId = '-1'
+// let isFetchingId = '-1'
 
 export const useFetcher = () => {
 
+    const isFetchingId = useRef('-1')
     const appState = useAppState()
 
     const [isFetchingEvent, setIsFetchingEvent] = useState(false)
 
     useEffect(() => {
         (async () => {
-            if (appState.user.id !== isFetchingId && appState.user.id !== '-1') {
-                isFetchingId = appState.user.id
+            if (appState.user.id !== isFetchingId.current && appState.user.id !== '-1') {
+                isFetchingId.current = appState.user.id
+                appState.user.set(NULL_USER)
                 const user = await fetchUser(appState.user.id)
 
                 if (user) {
-                    if (isFetchingId === appState.user.id) {
+                    if (isFetchingId.current === appState.user.id) {
                         appState.user.set(user)
+                        const team = await getTeam(user)
+                        if(isFetchingId.current === appState.user.id) {
+                            console.log(appState.cUser.id, team.members)
+                            if(~team.members.findIndex((v) => v.id === appState.cUser.id)) {
+                                appState.user.change({inMyTeam: true})
+                            }
+                            appState.user.change({team})
+                        }
                     }
                 } else {
-                    if (isFetchingId === appState.user.id) {
+                    if (isFetchingId.current === appState.user.id) {
                         appState.user.set({
                             ...NULL_USER,
                             id: appState.user.id,

@@ -14,12 +14,12 @@ export const _useAppState: () => {
     const user = useUser()
     const cUser = useUser()
     const event = useHackathon()
+
     return {
         user,
         event,
         cUser: {
-            ...cUser,
-            id: '123',
+            ...cUser
         }
     }
 }

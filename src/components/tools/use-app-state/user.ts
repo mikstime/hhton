@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useCallback, useReducer} from 'react'
 import {Hackathon} from './hackathon'
 
 export type UserSkills = {
@@ -18,13 +18,12 @@ export type User = {
     lastName: string,
     jobName: string,
     bio: string,
-    inTeam: boolean,
     isInvited: boolean,
     avatar: string,
     skills: UserSkills,
     hackathons: Hackathon[], // история участий
     id: string,
-    team?: Team[],
+    team?: Team,
     isNullUser?: boolean,
     notFound?: boolean,
     inMyTeam?: boolean,
@@ -42,13 +41,14 @@ export type UserOptional = {
     jobName?: string,
     notFound?: boolean,
     bio?: string,
-    inTeam?: boolean,
+    team?: Team,
     isInvited?: boolean,
     avatar?: string,
     skills?: UserSkills,
     hackathons?: Hackathon[],
     id?: string
     isNullUser?: boolean
+    inMyTeam?: boolean,
 }
 
 
@@ -57,7 +57,6 @@ export const NULL_USER = {
     lastName: '',
     bio: '',
     avatar: '',
-    inTeam: false,
     isInvited: true,
     notFound: false,
     jobName: '',
@@ -67,22 +66,39 @@ export const NULL_USER = {
         description: ''
     },
     hackathons: [],
-    isNullUser: true,
+    isNullUser: true
 } as User
+
+type UserAction =
+    | { type: 'change', newUser: UserOptional }
+    | { type: 'set', newUser: User }
+
+const userReducer = (user: User, action: UserAction) => {
+    switch (action.type) {
+        case 'change':
+            return {...user, ...action.newUser}
+        case 'set':
+            return {...action.newUser}
+        default:
+            throw new Error()
+    }
+}
 
 export const useUser = () => {
 
-    const [user, setUser] = useState<User>(NULL_USER)
+    const [user, dispatch] = useReducer(userReducer, NULL_USER);
+
+    const change = useCallback((newUser: UserOptional) => {
+        dispatch({type: 'change', newUser})
+    }, [dispatch])
+
+    const set = useCallback((newUser: User) => {
+        dispatch({type: 'set', newUser})
+    }, [dispatch])
 
     return {
         ...user,
-        set: (newUser: User) => {
-            //@ts-ignore
-            setUser({...newUser})
-        },
-        change: (newUser: UserOptional) => {
-            //@ts-ignore
-            setUser({...user, ...newUser})
-        }
+        set,
+        change
     } as User & UserActions
 }

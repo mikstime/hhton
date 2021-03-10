@@ -8,11 +8,11 @@ import {
     Title
 } from '../common'
 import {
-    Avatar, Chip, createStyles,
+    Avatar, Chip,
     Grid,
-    InputBase, makeStyles,
+    InputBase,
     Omit,
-    Slide, Theme,
+    Slide,
     Typography, Zoom
 } from '@material-ui/core'
 import {SearchButton} from '../event/search-button'
@@ -22,6 +22,7 @@ import {User} from '../tools/use-app-state/user'
 import {Link} from 'react-router-dom'
 import {PrimaryButton} from '../common/buttons'
 import {useHistory} from 'react-router-dom'
+import {useChipStyles} from '../common/skill-chip'
 
 
 const _useSearchModal = () => {
@@ -83,63 +84,10 @@ export const SearchModal: React.FC<UseSearchModalType & MProps> = (props) => {
     return <SearchStart {...props}/>
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            display: 'flex',
-            // justifyContent: 'center',
-            flexWrap: 'wrap',
-            margin: '16px -16px 16px -16px',
-            '& > *': {
-                margin: theme.spacing(1),
-                borderRadius: 8,
-                background: 'white',
-                boxShadow: theme.shadows[4],
-                color: theme.palette.primary.main,
-                cursor: 'pointer',
-                '&:hover': {
-                    background: 'white'
-                },
-                '&:active': {
-                    background: '#F7F8FA',
-                    boxShadow: 'none'
-                },
-                '&:focus': {
-                    background: 'white'
-                }
-            }
-        },
-        selected: {
-            background: '#F7F8FA',
-            boxShadow: 'none',
-            '&:hover': {
-                background: '#F7F8FA',
-                boxShadow: 'none'
-            },
-            '&:focus': {
-                background: '#F7F8FA',
-                boxShadow: 'none'
-            },
-            '&:active': {
-                background: '#F7F8FA',
-                boxShadow: 'none'
-            }
-        },
-        notSelected: {
-            opacity: 0.3,
-            '&:hover': {
-                background: 'white'
-            },
-            '&:active': {
-                background: '#F7F8FA'
-            }
-        }
-    })
-)
 
 const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, close}, ...props}) => {
 
-    const classes = useStyles()
+    const classes = useChipStyles()
 
     const [jobs, setJobs] = useState<string[]>([])
     const [selectedJob, selectJob] = useState(-1)
@@ -147,8 +95,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
     const [skills, setSkills] = useState<string[]>([])
     const [selectedSkills, selectSkills] = useState<boolean[]>([])
 
-    const history = useHistory();
-    // const [hasSelected, setHasSelected] = useState(false)
+    const history = useHistory()
 
     useEffect(() => {
         (async () => {
@@ -170,16 +117,12 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
         })()
     }, [selectedJob, jobs])
 
-    // useEffect(() => {
-    //     setHasSelected(selectedSkills.includes(true))
-    // }, [selectedSkills])
-
     const showFeed = useCallback(() => {
         const fjob = jobs[selectedJob]
         const fskills = skills.filter((s, i) => selectedSkills[i])
-        if(fskills.length) {
+        if (fskills.length) {
             history.push(`/feed?j=${fjob}&skills=${fskills.join('|')}`)
-        } else if(fjob){
+        } else if (fjob) {
             history.push(`/feed?j=${fjob}`)
         } else {
             history.push(`/feed`)
@@ -233,7 +176,8 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
                 </div>
                 {
                     <Grid item container justify='flex-end'>
-                      <PrimaryButton onClick={showFeed}>{selectedJob >= 0 ? 'Показать' : 'Показать всех'}</PrimaryButton>
+                        <PrimaryButton
+                            onClick={showFeed}>{selectedJob >= 0 ? 'Показать' : 'Показать всех'}</PrimaryButton>
                     </Grid>
                 }
             </Grid>

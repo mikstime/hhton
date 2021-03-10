@@ -3,7 +3,7 @@ import {sleep} from '../utils'
 import background from '../assets/background.png'
 import logo from '../assets/logo.png'
 import {NULL_USER} from '../components/tools/use-app-state'
-import {Team, User} from '../components/tools/use-app-state/user'
+import {User} from '../components/tools/use-app-state/user'
 
 const useMock = true
 
@@ -13,7 +13,6 @@ const TEST_USERS: User[] = [
         id: '13',
         firstName: 'Имя',
         lastName: 'Фамилия',
-        inTeam: true,
         avatar: 'http://loremflickr.com/1000/1000',
         isInvited: false,
         bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
@@ -28,7 +27,6 @@ const TEST_USERS: User[] = [
         id: '14',
         firstName: 'Имя',
         lastName: 'Фамилия2',
-        inTeam: false,
         avatar: 'http://loremflickr.com/1000/1000',
         isInvited: false,
         bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
@@ -43,7 +41,6 @@ const TEST_USERS: User[] = [
         id: '11',
         firstName: 'Имя',
         lastName: 'Фамилия3',
-        inTeam: true,
         avatar: 'http://loremflickr.com/1000/1000',
         isInvited: false,
         bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
@@ -58,7 +55,6 @@ const TEST_USERS: User[] = [
         id: '113',
         firstName: 'Имя',
         lastName: 'Фамилия',
-        inTeam: true,
         avatar: 'http://loremflickr.com/1000/1000',
         isInvited: false,
         bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
@@ -73,7 +69,6 @@ const TEST_USERS: User[] = [
         id: '112',
         firstName: 'Имя',
         lastName: 'Фамилия2',
-        inTeam: false,
         avatar: 'http://loremflickr.com/1000/1000',
         isInvited: false,
         bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
@@ -88,7 +83,6 @@ const TEST_USERS: User[] = [
         id: '111',
         firstName: 'Имя',
         lastName: 'Фамилия3',
-        inTeam: true,
         avatar: 'http://loremflickr.com/1000/1000',
         isInvited: false,
         bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
@@ -129,7 +123,6 @@ export const fetchUser = async (id: string) => {
         return {
             firstName: 'Имя' + id,
             lastName: 'Фамилия',
-            inTeam: true,
             isInvited: false,
             bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
             jobName: 'Тинькофф',
@@ -320,12 +313,21 @@ export const getTeam = async (userId: string) => {
     if (!useMock) {
         //@TODO implement
         return {
-            members: []
+            members: [] as User[]
         }
     } else {
         await sleep(300)
         return {
-            members: TEST_USERS.slice(0, 3)
+            members: TEST_USERS.slice(1, 3)
         }
+    }
+}
+
+export const signIn = async () => {
+    if(!useMock) {
+        return null
+    } else {
+        await sleep(300)
+        return TEST_USERS[0]
     }
 }

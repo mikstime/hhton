@@ -4,6 +4,7 @@ import {
     Typography,
     TypographyProps
 } from '@material-ui/core'
+import {User} from '../tools/use-app-state/user'
 
 const useStyles = makeStyles({
     h1: {
@@ -44,4 +45,10 @@ export const SecondaryText: React.FC<TypographyProps> = (props) => {
 }
 export const CaptionText: React.FC<TypographyProps> = (props) => {
     return <Typography variant='caption' {...props}/>
+}
+
+export const NameTypography: React.FC<{user: User} & TypographyProps> = ({user, ...props}) => {
+    return <Typography {...props} style={{minHeight: 24,...(props.style || {})}}>
+        {user.firstName} {user.lastName}
+    </Typography>
 }

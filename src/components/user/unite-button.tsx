@@ -1,8 +1,9 @@
 import React, {useCallback, useEffect, useState} from 'react'
-import {PrimaryButton} from '../common/buttons'
+import {PrimaryButton, SecondaryButton} from '../common/buttons'
 import {useAppState} from '../tools/use-app-state'
 import {invitePerson} from '../../model/api'
 import {useSnackbar} from 'notistack'
+import {Link} from 'react-router-dom'
 
 const useUnite = () => {
     const {user, cUser} = useAppState()
@@ -30,7 +31,7 @@ const useUnite = () => {
             } else {
                 enqueueSnackbar('Не удалось предложить объединиться', {
                     variant: 'error',
-                    preventDuplicate: true,
+                    preventDuplicate: true
                 })
             }
             setActionId(null)
@@ -40,7 +41,7 @@ const useUnite = () => {
 
     return {
         onClick,
-        isFetching: actionId === user.id + cUser.id,
+        isFetching: actionId === user.id + cUser.id
     }
 }
 
@@ -49,9 +50,9 @@ export const UniteButton: React.FC = () => {
 
     const {onClick, isFetching} = useUnite()
 
-    const {user} = useAppState()
+    const {cUser, user} = useAppState()
 
-    if (user.isNullUser) {
+    if (user.isNullUser || !user.team) {
         return <PrimaryButton disabled/>
     }
 
@@ -67,7 +68,15 @@ export const UniteButton: React.FC = () => {
         </PrimaryButton>
     }
 
+    if (user.inMyTeam || user.id === cUser.id) {
+        return <Link to='/team' style={{textDecoration: 'none'}}>
+            <SecondaryButton style={{width: '100%'}}>
+                Управление командой
+            </SecondaryButton>
+        </Link>
+    }
+
     return <PrimaryButton onClick={onClick}>
-        {user.inTeam ? 'Присоединиться' : 'Объединиться'}
+        {user.team ? 'Присоединиться' : 'Объединиться'}
     </PrimaryButton>
 }

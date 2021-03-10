@@ -1,9 +1,9 @@
 import {createMuiTheme} from "@material-ui/core";
 
-const FONT_BLACK = '#222222'
-const FONT_GRAY = '#6D7885'
-const MAIN_BLUE = '#3E74DB'
-const MAIN_GREEN = '#42C13D'
+export const FONT_BLACK = '#222222'
+export const FONT_GRAY = '#6D7885'
+export const MAIN_BLUE = '#3E74DB'
+export const MAIN_GREEN = '#42C13D'
 const MuiTheme = createMuiTheme({
     palette: {
         primary: {

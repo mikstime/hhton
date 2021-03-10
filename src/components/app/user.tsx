@@ -3,7 +3,6 @@ import {
     Container,
     Grid,
     GridProps,
-    Typography
 } from '@material-ui/core'
 import {
     AvatarPlate,
@@ -12,12 +11,18 @@ import {
 } from '../common'
 import {useAppState} from '../tools/use-app-state'
 import styled from 'styled-components'
-import {BoldText, CaptionText, SecondaryText} from '../common/typography'
+import {
+    BoldText,
+    CaptionText,
+    NameTypography,
+    SecondaryText
+} from '../common/typography'
 import {BioPlate, InfoPlate, JobPlate} from '../common/item-plate'
 import {UniteButton} from '../user/unite-button'
 import {NotFound} from './notfound'
 import {useParams} from 'react-router-dom'
 import notFoundIcon from '../../assets/notfound.svg'
+import {TeamDescription} from '../user/team-description'
 
 const UserNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
@@ -40,7 +45,7 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
             user.change({id: cUser.id})
         }
         //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userId])
+    }, [userId, cUser.id])
 
     if (user.notFound) {
         return <NotFound
@@ -56,16 +61,15 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                 <Grid item container md={4}>
                     <AvatarPlate src={user.avatar}>
                         <UniteButton/>
+                        <TeamDescription/>
                     </AvatarPlate>
                 </Grid>
                 <Grid item container md spacing={2} direction='column'>
                     <UserNameGrid item>
-                        <Typography>
-                            {user.firstName} {user.lastName}
-                        </Typography>
+                        <NameTypography user={user}/>
                     </UserNameGrid>
                     <Grid item>
-                        <JobPlate text={`Место работы: ${user.jobName}`}/>
+                        <JobPlate text={user.jobName ? `Место работы: ${user.jobName}`: ''}/>
                     </Grid>
                     <Grid item>
                         <BioPlate text={user.bio}/>

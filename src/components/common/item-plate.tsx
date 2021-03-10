@@ -25,9 +25,9 @@ export const ItemPlate: React.FC<ItemPlateProps> = (
     const TextPlate = textPlate
     return <PaddedPlate {...rest}>
         <Grid container wrap='nowrap'>
-            {frontIcon &&
+            {frontIcon && text &&
             <SvgIcon style={{marginRight: 12}} component={frontIcon}/>}
-            <TextPlate>{text}</TextPlate>
+            <TextPlate style={{minHeight: '24px'}}>{text}</TextPlate>
             {postIcon && <IconButton component={postIcon}/>}
         </Grid>
     </PaddedPlate>

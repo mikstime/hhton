@@ -23,9 +23,7 @@ export const AvatarPlate: React.FC<{
         <Root>
             <Grid container direction='column' style={{flex: 1}}>
                 <AvatarGrid src={src} container/>
-                <Grid item container>
-                </Grid>
-                <div style={{height: 16}}/>
+                {children && <div style={{height: 16}}/>}
                 {children}
             </Grid>
         </Root>
