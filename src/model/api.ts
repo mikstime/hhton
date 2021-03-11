@@ -189,8 +189,6 @@ const lackEvent = {
     isParticipating: false
 }
 export const fetchEvent = async (id: string) => {
-    // TODO Запрашивает -1 евент
-    id = '1'
     if (!mockImplemented) {
         const event = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${id}`)
 
