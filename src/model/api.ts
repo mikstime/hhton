@@ -1,4 +1,4 @@
-import {HOST_DOMAIN} from '../config/network'
+import {HOST_DOMAIN, PREFIX} from '../config/network'
 import {sleep} from '../utils'
 import background from '../assets/background.png'
 import logo from '../assets/logo.png'
@@ -6,11 +6,12 @@ import {NULL_USER} from '../components/tools/use-app-state'
 import {User} from '../components/tools/use-app-state/user'
 
 const useMock = true
+const mockImplemented = false
 
 
 const TEST_USERS: User[] = [
     {
-        id: '13',
+        id: '1',
         firstName: 'Имя',
         lastName: 'Фамилия',
         avatar: 'http://loremflickr.com/1000/1000',
@@ -99,12 +100,25 @@ const TEST_USERS: User[] = [
  * Получить информацию о пользователе, включая информацию об участии пользователя в хакатонах
  * @param id
  */
+const lackUser = {
+    isInvited: false,
+    bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
+    jobName: 'Тинькофф',
+    avatar: 'http://loremflickr.com/1000/1000',
+    skills: {
+        tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
+        description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+    },
+    hackathons: []
+}
 export const fetchUser = async (id: string) => {
-    if (!useMock) {
-        const user = await fetch(`${HOST_DOMAIN}/api/user/${id}`)
+    if (!mockImplemented) {
+        const user = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${id}`)
 
         if (user.ok) {
             const json = await user.json()
+
+            Object.assign(json, lackUser)
 
             return {...json}
         } else {
@@ -143,8 +157,18 @@ export const fetchUser = async (id: string) => {
  * @param inviteeId
  */
 export const isInvited = async (inviterId: string, inviteeId: string) => {
-    if (!useMock) {
-        return true
+    // TODO нехватает евента
+    const eventId = '1'
+    if (!mockImplemented) {
+        const invited = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invited/user/${inviteeId}`)
+
+        if (invited.ok) {
+            const json = await invited.json()
+
+            return json.isInvited
+        } else {
+            return false
+        }
     } else {
         await sleep(300)
         return false
@@ -155,12 +179,25 @@ export const isInvited = async (inviterId: string, inviteeId: string) => {
  * Получить информацию о мероприятии
  * @param id
  */
+const lackEvent = {
+    logo: logo,
+    background: background,
+    isFinished: false,
+    participants: new Array(270).map(() => NULL_USER),
+    prizes: [],
+    settings: {},
+    isParticipating: false
+}
 export const fetchEvent = async (id: string) => {
-    if (!useMock) {
-        const event = await fetch(`${HOST_DOMAIN}/api/event/${id}`)
+    // TODO Запрашивает -1 евент
+    id = '1'
+    if (!mockImplemented) {
+        const event = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${id}`)
 
         if (event.ok) {
             const json = await event.json()
+
+            Object.assign(json, lackEvent)
 
             return {...json}
         } else {
@@ -190,8 +227,23 @@ export const fetchEvent = async (id: string) => {
  * @param eventId
  */
 export const isParticipating = async (userId: string, eventId: string) => {
-    if (!useMock) {
-        return true
+    if (!mockImplemented) {
+        // TODO переделать под нормальую ручку
+        const event = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}`)
+
+        if (event.ok) {
+            const json = await event.json()
+
+            json.feed.users.forEach((u: { id: string }, i: any) => {
+                if (u.id === userId) {
+                    return true
+                }
+            })
+
+            return false
+        } else {
+            return null
+        }
     } else {
         await sleep(300)
         return true
@@ -205,10 +257,18 @@ export const isParticipating = async (userId: string, eventId: string) => {
  * @param inviteeId
  */
 export const invitePerson = async (inviterId: string, inviteeId: string) => {
-    if (!useMock) {
-        console.log(inviteeId, inviterId)
-        //@TODO implement
-        return true
+    // TODO нет eventId и silent мода
+    const eventId = '1'
+    if (!mockImplemented) {
+        const invite = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${inviteeId}/invite`,
+            {
+                method: 'POST',
+                body: JSON.stringify({
+                    silent: false,
+                })
+            })
+
+        return (invite.ok && invite.status === 200)
     } else {
         await sleep(300)
         return true
@@ -221,9 +281,20 @@ export const invitePerson = async (inviterId: string, inviteeId: string) => {
  * @param eventId
  */
 export const joinEvent = async (userId: string, eventId: string) => {
-    if (!useMock) {
-        console.log(userId, eventId)
-        //@TODO implement
+    if (!mockImplemented) {
+        const join = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/join`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify({
+                    uid: parseInt(userId),
+                    tid: 0
+                })
+            })
+
+        return (join.ok && join.status === 200)
     } else {
         await sleep(300)
         return true
@@ -237,8 +308,8 @@ export const joinEvent = async (userId: string, eventId: string) => {
  */
 export const leaveEvent = async (userId: string, eventId: string) => {
     if (!useMock) {
-        console.log(userId, eventId)
-        //@TODO implement
+        // TODO нет ручки
+        console.log("Нет ручки")
     } else {
         await sleep(300)
         return true
@@ -295,9 +366,10 @@ export const getSkills = async (job: string) => {
 export const getFeed:
     (query: string, sinceId?: string) => Promise<string[]>
     = async (query: string, sinceId?: string) => {
+    // TODO нет евента или id фида
+    // TODO нет ручки, чтобы получить фид от евента
     if (!useMock) {
         console.log(query, sinceId)
-        //@TODO implement
         return []
     } else {
         await sleep(300)
@@ -310,10 +382,23 @@ export const getFeed:
  * @param userId - id пользователя, чью команду запрашиваем
  */
 export const getTeam = async (userId: string) => {
-    if (!useMock) {
-        //@TODO implement
-        return {
-            members: [] as User[]
+    // TODO нет евента
+    const eventId = '1'
+    if (!mockImplemented) {
+        const team = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${userId}/team`)
+
+        if (team.ok) {
+            const json = await team.json()
+
+            console.log(json)
+
+            return {
+                members: json as User[]
+            }
+        } else {
+            return {
+                members: [] as User[]
+            }
         }
     } else {
         await sleep(300)
