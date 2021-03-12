@@ -13,11 +13,11 @@ const useStyles = makeStyles({
         textTransform: 'none',
     }
 })
-export const InviteButton = () => {
+export const InviteButton: React.FC = ({children}) => {
     const classes = useStyles()
     return <Button className={classes.button}>
         <AdditionalText className={classes.text}>
-            Я знаю, кого позвать
+            {children}
         </AdditionalText>
     </Button>
 }

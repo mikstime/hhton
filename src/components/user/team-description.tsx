@@ -1,5 +1,4 @@
 import React from 'react'
-import {useAppState} from '../tools/use-app-state'
 import {AdditionalText, MainText} from '../common'
 import {Grid, useTheme} from '@material-ui/core'
 import Image from 'material-ui-image'
@@ -21,12 +20,11 @@ const TeamItem: React.FC<{ user: User }> = ({user}) => {
         </Link>
     </Grid>
 }
-export const TeamDescription: React.FC = () => {
+export const TeamDescription: React.FC<{noName?: boolean, user: User}> = ({user, noName}) => {
 
-    const {user} = useAppState()
     const theme = useTheme()
 
-    if (user.team) {
+    if (!user.isNullUser && user.team) {
         if(user.team.members.length > 1) {
             return <Grid item container direction='column'>
                 <MainText style={{marginTop: 12, color: theme.typography.body2.color}}>
@@ -38,7 +36,7 @@ export const TeamDescription: React.FC = () => {
         } else {
             return <Grid item container direction='column'>
                 <AdditionalText style={{marginTop: 12}} align='center'>
-                    {user.firstName} {user.lastName} сейчас без команды
+                    {noName ?`Сейчас без команды` : `${user.firstName} ${user.lastName} сейчас без команды`}
                 </AdditionalText>
             </Grid>
         }

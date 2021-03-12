@@ -193,7 +193,8 @@ const SearchStart: React.FC<UseSearchModalType & MProps> = ({state: {onSmartClic
                 Не знаете, кого пригласить к себе в команду?
             </Typography>
             <SearchButton onClick={onSmartClick}/>
-            <Grid item onClick={onUserClick}><InviteButton/>
+            <Grid item onClick={onUserClick}>
+                <InviteButton>Я знаю, кого позвать</InviteButton>
             </Grid>
         </Grid>
     </Modal>
