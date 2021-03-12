@@ -388,8 +388,6 @@ export const getTeam = async (userId: string) => {
         if (team.ok) {
             const json = await team.json()
 
-            console.log(json)
-
             return {
                 members: json as User[]
             }
