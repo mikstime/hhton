@@ -23,7 +23,7 @@ export const useFetcher = () => {
                 if (user) {
                     if (isFetchingId.current === appState.user.id) {
                         appState.user.set(user)
-                        const team = await getTeam(appState.event.id, user)
+                        const team = await getTeam(appState.event.id, user.id)
                         if(isFetchingId.current === appState.user.id) {
                             if(~team.members.findIndex((v) => v.id === appState.cUser.id)) {
                                 appState.user.change({inMyTeam: true})

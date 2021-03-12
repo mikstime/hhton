@@ -49,7 +49,7 @@ export type Prize = {
 
 export const NULL_HACKATHON = {
     name: '',
-    id: '-1',
+    id: '1',
     logo: '',
     background: '',
     isFinished: false,
