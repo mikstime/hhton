@@ -21,7 +21,7 @@ const RootContainer = styled(Container)`
   min-height: calc(100vh - 70px);
 `
 const VoteIcon: React.FC<{ active: boolean }> = ({active, ...props}) => {
-    return active ? <KickActiveIcon/> : <KickIcon/>
+    return active ? <KickActiveIcon {...props}/> : <KickIcon {...props}/>
 }
 export const useChipStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -114,7 +114,7 @@ export const TeamApp: React.FC = () => {
 }
 
 const TeamMember: React.FC<{user: User}> = ({user}) => {
-    const [didVote, setDidVote] = useState(false)
+    const [didVote] = useState(false)
     return <Grid item container spacing={2}>
         <Grid item md={2} xs={4}>
             <Link to={`/user/${user.id}`}
@@ -138,7 +138,7 @@ const TeamMember: React.FC<{user: User}> = ({user}) => {
 }
 
 const TeamInvitee: React.FC<{user: User}> = ({user}) => {
-    const [didVote, setDidVote] = useState(false)
+    const [didVote] = useState(false)
     return <Grid item container spacing={2}>
         <Grid item md={2} xs={4}>
             <Link to={`/user/${user.id}`}
@@ -162,7 +162,7 @@ const TeamInvitee: React.FC<{user: User}> = ({user}) => {
 }
 
 const PersonInvitee: React.FC<{user: User}> = ({user}) => {
-    const [didVote, setDidVote] = useState(false)
+    const [didVote] = useState(false)
     return <Grid item container spacing={2}>
         <Grid item md={2} xs={4}>
             <Link to={`/user/${user.id}`}

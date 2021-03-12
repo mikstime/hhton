@@ -30,6 +30,7 @@ export const FeedApp: React.FC = () => {
                 setUsers(users)
             }
         })()
+        //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location, setUsers])
 
     const nextUser = useCallback(() => {
