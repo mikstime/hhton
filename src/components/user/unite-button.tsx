@@ -6,7 +6,7 @@ import {useSnackbar} from 'notistack'
 import {Link} from 'react-router-dom'
 
 const useUnite = () => {
-    const {user, cUser} = useAppState()
+    const {event, user, cUser} = useAppState()
     const [actionId, setActionId] = useState<string | null>(null)
 
 
@@ -25,7 +25,7 @@ const useUnite = () => {
     useEffect(() => {
         if (actionId === null) return
 
-        invitePerson(user.id, cUser.id).then((wasInvited?: boolean) => {
+        invitePerson(event.id, user.id, cUser.id).then((wasInvited?: boolean) => {
             if (wasInvited) {
                 user.change({isInvited: true})
             } else {

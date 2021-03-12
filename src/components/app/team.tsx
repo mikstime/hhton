@@ -1,24 +1,28 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {
     Chip,
     Container,
     createStyles,
-    Grid,
+    Grid, IconButton,
     makeStyles,
     Theme
 } from '@material-ui/core'
-import {AvatarPlate, SubTitle} from '../common'
+import {AvatarPlate, FlexSpace, SubTitle} from '../common'
 import {useAppState} from '../tools/use-app-state'
 import {NameTypography} from '../common/typography'
 import styled from 'styled-components'
 import {User} from '../tools/use-app-state/user'
 import {Link} from 'react-router-dom'
+import {ReactComponent as KickIcon} from '../../assets/kick.svg'
+import {ReactComponent as KickActiveIcon} from '../../assets/kick_active.svg'
 
 const RootContainer = styled(Container)`
   margin-top: 70px;
   min-height: calc(100vh - 70px);
 `
-
+const VoteIcon: React.FC<{ active: boolean }> = ({active, ...props}) => {
+    return active ? <KickActiveIcon/> : <KickIcon/>
+}
 export const useChipStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
@@ -78,7 +82,39 @@ const Skills: React.FC<{ user: User }> = ({user}) => {
     </div>
 }
 
-const Person: React.FC<{ user: User }> = ({user}) => {
+export const TeamApp: React.FC = () => {
+
+    const {cUser} = useAppState()
+    return <RootContainer> <Grid container direction='column'>
+        <SubTitle style={{marginBottom: 24}}>Название команды</SubTitle>
+        <Grid container spacing={3} direction='column'>
+            {cUser.team && cUser.team.members.map((u, i) => (
+                <TeamMember key={i} user={u}/>
+            ))
+            }
+        </Grid>
+        <SubTitle style={{marginBottom: 24, marginTop: 36}}>Хотят в
+            команду</SubTitle>
+        <Grid container spacing={3} direction='column'>
+            {cUser.team && cUser.team.members.map((u, i) => (
+                <TeamInvitee key={i} user={u}/>
+            ))
+            }
+        </Grid>
+        <SubTitle style={{marginBottom: 24, marginTop: 36}}>Приглашают к
+            себе</SubTitle>
+        <Grid container spacing={3} direction='column'>
+            {cUser.team && cUser.team.members.map((u, i) => (
+                <PersonInvitee key={i} user={u}/>
+            ))
+            }
+        </Grid>
+    </Grid>
+    </RootContainer>
+}
+
+const TeamMember: React.FC<{user: User}> = ({user}) => {
+    const [didVote, setDidVote] = useState(false)
     return <Grid item container spacing={2}>
         <Grid item md={2} xs={4}>
             <Link to={`/user/${user.id}`}
@@ -87,8 +123,12 @@ const Person: React.FC<{ user: User }> = ({user}) => {
             </Link>
         </Grid>
         <Grid item xs md={6} container spacing={2} direction='column'>
-            <Grid item>
+            <Grid item container>
                 <NameTypography user={user}/>
+                <FlexSpace/>
+                <IconButton>
+                    <VoteIcon active={didVote}/>
+                </IconButton>
             </Grid>
             <Grid item>
                 <Skills user={user}/>
@@ -96,31 +136,51 @@ const Person: React.FC<{ user: User }> = ({user}) => {
         </Grid>
     </Grid>
 }
-export const TeamApp: React.FC = () => {
 
-    const {cUser} = useAppState()
-    return <RootContainer> <Grid container direction='column'>
-        <SubTitle style={{marginBottom: 24}}>Название команды</SubTitle>
-        <Grid container spacing={3} direction='column'>
-            {cUser.team && cUser.team.members.map((u, i) => (
-                <Person key={i} user={u}/>
-            ))
-            }
+const TeamInvitee: React.FC<{user: User}> = ({user}) => {
+    const [didVote, setDidVote] = useState(false)
+    return <Grid item container spacing={2}>
+        <Grid item md={2} xs={4}>
+            <Link to={`/user/${user.id}`}
+                  style={{textDecoration: 'none'}}>
+                <AvatarPlate padding={12} src={user.avatar}/>
+            </Link>
         </Grid>
-        <SubTitle style={{marginBottom: 24, marginTop: 36}}>Хотят в команду</SubTitle>
-        <Grid container spacing={3} direction='column'>
-            {cUser.team && cUser.team.members.map((u, i) => (
-                <Person key={i} user={u}/>
-            ))
-            }
-        </Grid>
-        <SubTitle style={{marginBottom: 24, marginTop: 36}}>Приглашают к себе</SubTitle>
-        <Grid container spacing={3} direction='column'>
-            {cUser.team && cUser.team.members.map((u, i) => (
-                <Person key={i} user={u}/>
-            ))
-            }
+        <Grid item xs md={6} container spacing={2} direction='column'>
+            <Grid item container>
+                <NameTypography user={user}/>
+                <FlexSpace/>
+                <IconButton>
+                    <VoteIcon active={didVote}/>
+                </IconButton>
+            </Grid>
+            <Grid item>
+                <Skills user={user}/>
+            </Grid>
         </Grid>
     </Grid>
-    </RootContainer>
+}
+
+const PersonInvitee: React.FC<{user: User}> = ({user}) => {
+    const [didVote, setDidVote] = useState(false)
+    return <Grid item container spacing={2}>
+        <Grid item md={2} xs={4}>
+            <Link to={`/user/${user.id}`}
+                  style={{textDecoration: 'none'}}>
+                <AvatarPlate padding={12} src={user.avatar}/>
+            </Link>
+        </Grid>
+        <Grid item xs md={6} container spacing={2} direction='column'>
+            <Grid item container>
+                <NameTypography user={user}/>
+                <FlexSpace/>
+                <IconButton>
+                    <VoteIcon active={didVote}/>
+                </IconButton>
+            </Grid>
+            <Grid item>
+                <Skills user={user}/>
+            </Grid>
+        </Grid>
+    </Grid>
 }
