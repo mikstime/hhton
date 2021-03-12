@@ -23,6 +23,9 @@ export const App: React.FC = () => {
             <Route path='/user'>
                 <UserApp/>
             </Route>
+            <Route path='/event/:eventId'>
+                <EventApp/>
+            </Route>
             <Route path='/event'>
                 <EventApp/>
             </Route>

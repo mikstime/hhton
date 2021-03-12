@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {Container, Grid, Typography} from '@material-ui/core'
 import {
     AvatarPlate,
@@ -9,6 +9,9 @@ import styled from 'styled-components'
 import {CaptionText, SecondaryText} from '../common/typography'
 import {InfoPlate, JobPlate} from '../common/item-plate'
 import {ParticipateButton} from '../event/participate-button'
+import {useParams} from 'react-router'
+import {NotFound} from './notfound'
+import notFoundIcon from '../../assets/notfound.svg'
 
 const EventNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
@@ -42,8 +45,26 @@ const Root = styled.div`
 `
 
 export const EventApp: React.FC = () => {
+    //@ts-ignore
+    const {eventId} = useParams()
+    const {event, cEvent} = useAppState()
 
-    const {event} = useAppState()
+    useEffect(() => {
+        if (eventId) {
+            event.change({id: eventId})
+        } else {
+            event.change({id: cEvent.id})
+        }
+        //eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [eventId, cEvent.id])
+
+    if (event.notFound) {
+        return <NotFound
+            title='Мероприятие не найдено'
+            message='Попробуйте поискать в другом месте'
+            icon={notFoundIcon}
+        />
+    }
 
     return <Root>
         <RootContainer>

@@ -1,5 +1,5 @@
 import {User} from './user'
-import {useState} from 'react'
+import {useCallback, useReducer} from 'react'
 
 
 export type Hackathon = {
@@ -15,7 +15,7 @@ export type Hackathon = {
     prizes: Prize[],
     settings: HackathonSettings,
     isNullEvent?: boolean,
-    isNotFoundEvent?: boolean,
+    notFound?: boolean,
     isParticipating?: boolean,
 }
 
@@ -33,7 +33,7 @@ export type HackathonOptional = {
     prizes?: Prize[],
     settings?: HackathonSettings,
     isNullEvent?: boolean,
-    isNotFoundEvent?: boolean,
+    notFound?: boolean,
     isParticipating?: boolean,
 }
 
@@ -49,7 +49,7 @@ export type Prize = {
 
 export const NULL_HACKATHON = {
     name: '',
-    id: '1',
+    id: '-1',
     logo: '',
     background: '',
     isFinished: false,
@@ -64,30 +64,45 @@ export const NULL_HACKATHON = {
 
 
 export type HackathonActions = {
-    change: (newUser: HackathonOptional) => any,
-    set: (newUser: Hackathon) => any,
-    join: () => any,
-    leave: () => any,
+    change: (newEvent: HackathonOptional) => any,
+    set: (newEvent: Hackathon) => any,
+    // join: (user: User) => any,
+    // leave: (user: User) => any,
 }
 
+type HackathonAction =
+    | { type: 'change', newEvent: HackathonOptional }
+    | { type: 'set', newEvent: Hackathon }
+    | { type: 'join', user: User }
+    | { type: 'leave', user: User }
+
+const eventReducer = (event: Hackathon, action: HackathonAction) => {
+    switch (action.type) {
+        case 'change':
+            return {...event, ...action.newEvent}
+        case 'set':
+            return {...action.newEvent}
+        default:
+            throw new Error()
+    }
+}
 
 export const useHackathon = () => {
 
-    const [hackathon, setHackathon] = useState<Hackathon>(NULL_HACKATHON)
+    const [event, dispatch] = useReducer(eventReducer, NULL_HACKATHON);
+
+    const change = useCallback((newEvent: HackathonOptional) => {
+        dispatch({type: 'change', newEvent})
+    }, [dispatch])
+
+    const set = useCallback((newEvent: Hackathon) => {
+        dispatch({type: 'set', newEvent})
+    }, [dispatch])
 
     return {
-        ...hackathon,
-        set: (newEvent: Hackathon) => {
-            setHackathon({...newEvent})
-        },
-        change: (newEvent: HackathonOptional) => {
-            setHackathon({...hackathon, ...newEvent})
-        },
-        join: () => {
-
-        },
-        leave: () => {
-
-        }
+        ...event,
+        set,
+        change
     } as Hackathon & HackathonActions
+
 }

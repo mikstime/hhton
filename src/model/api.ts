@@ -174,10 +174,6 @@ export const isInvited = async (eventId: string, inviterId: string, inviteeId: s
     }
 }
 
-/**
- * Получить информацию о мероприятии
- * @param id
- */
 const lackEvent = {
     logo: logo,
     background: background,
@@ -187,6 +183,11 @@ const lackEvent = {
     settings: {},
     isParticipating: false
 }
+
+/**
+ * Получить информацию о мероприятии
+ * @param id
+ */
 export const fetchEvent = async (id: string) => {
     if (!mockImplemented) {
         const event = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${id}`)
@@ -202,10 +203,15 @@ export const fetchEvent = async (id: string) => {
         }
     } else {
         await sleep(300)
+        if (id.length > 3)
+            return null
+
         return {
             name: 'Хакатон',
             logo: logo,
+            id,
             background: background,
+            founderId: '123',
             isFinished: false,
             place: 'Москва, Лубянка 13',
             participantsCount: 270,
@@ -230,12 +236,11 @@ export const isParticipating = async (eventId: string, userId: string) => {
 
         if (event.ok) {
             const json = await event.json()
-
-            json.feed.users.forEach((u: { id: string }, i: any) => {
+            for(let u of json.feed.users) {
                 if (u.id === userId) {
                     return true
                 }
-            })
+            }
 
             return false
         } else {
@@ -255,13 +260,13 @@ export const isParticipating = async (eventId: string, userId: string) => {
  * @param inviteeId
  * @param mode
  */
-export const invitePerson = async (eventId: string, inviterId: string, inviteeId: string, mode: 'silent'|'default' = 'default') => {
+export const invitePerson = async (eventId: string, inviterId: string, inviteeId: string, mode: 'silent' | 'default' = 'default') => {
     if (!mockImplemented) {
         const invite = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${inviteeId}/invite`,
             {
                 method: 'POST',
                 body: JSON.stringify({
-                    silent: mode === 'silent',
+                    silent: mode === 'silent'
                 })
             })
 
@@ -306,7 +311,7 @@ export const joinEvent = async (userId: string, eventId: string) => {
 export const leaveEvent = async (userId: string, eventId: string) => {
     if (!useMock) {
         // TODO нет ручки
-        console.log("Нет ручки")
+        console.log('Нет ручки', userId, eventId)
     } else {
         await sleep(300)
         return true
@@ -403,7 +408,7 @@ export const getTeam = async (eventId: string, userId: string) => {
 }
 
 export const signIn = async () => {
-    if(!useMock) {
+    if (!useMock) {
         return null
     } else {
         await sleep(300)
