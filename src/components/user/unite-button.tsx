@@ -62,18 +62,18 @@ export const UniteButton: React.FC = () => {
         </PrimaryButton>
     }
 
-    if (user.isInvited) {
-        return <PrimaryButton disabled>
-            Заявка отправлена
-        </PrimaryButton>
-    }
-
     if (user.inMyTeam || user.id === cUser.id) {
         return <Link to='/team' style={{textDecoration: 'none'}}>
             <SecondaryButton style={{width: '100%'}}>
                 Управление командой
             </SecondaryButton>
         </Link>
+    }
+
+    if (user.isInvited) {
+        return <PrimaryButton disabled>
+            Заявка отправлена
+        </PrimaryButton>
     }
 
     return <PrimaryButton onClick={onClick}>

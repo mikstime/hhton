@@ -4,6 +4,7 @@ import {Grid, useTheme} from '@material-ui/core'
 import Image from 'material-ui-image'
 import {User} from '../tools/use-app-state/user'
 import {Link} from 'react-router-dom'
+import {useAppState} from '../tools/use-app-state'
 
 const TeamItem: React.FC<{ user: User }> = ({user}) => {
     return <Grid item container alignItems='center'>
@@ -13,21 +14,25 @@ const TeamItem: React.FC<{ user: User }> = ({user}) => {
             borderRadius: '50%',
             margin: '8px 8px 0 0'
         }} src={user.avatar}/>
-        <Link to={`/user/${user.id}`} style={{textDecoration: 'none', marginTop: 8}}>
-        <AdditionalText>
+        <Link to={`/user/${user.id}`}
+              style={{textDecoration: 'none', marginTop: 8}}>
+            <AdditionalText>
                 {user.firstName} {user.lastName}
-        </AdditionalText>
+            </AdditionalText>
         </Link>
     </Grid>
 }
-export const TeamDescription: React.FC<{noName?: boolean, user: User}> = ({user, noName}) => {
+export const TeamDescription: React.FC<{ noName?: boolean, user: User }> = ({user, noName}) => {
 
     const theme = useTheme()
-
+    const {cUser} = useAppState()
     if (!user.isNullUser && user.team) {
-        if(user.team.members && user.team.members.length > 1) {
+        if (user.team.members && user.team.members.length > 1) {
             return <Grid item container direction='column'>
-                <MainText style={{marginTop: 12, color: theme.typography.body2.color}}>
+                <MainText style={{
+                    marginTop: 12,
+                    color: theme.typography.body2.color
+                }}>
                     В команде с
                 </MainText>
                 {user.team.members.filter(u => u.id !== user.id).map(u =>
@@ -36,7 +41,7 @@ export const TeamDescription: React.FC<{noName?: boolean, user: User}> = ({user,
         } else {
             return <Grid item container direction='column'>
                 <AdditionalText style={{marginTop: 12}} align='center'>
-                    {noName ?`Сейчас без команды` : `${user.firstName} ${user.lastName} сейчас без команды`}
+                    {noName ? `Сейчас без команды` : cUser.id === user.id ? `Вы сейчас без команды` : `${user.firstName} ${user.lastName} сейчас без команды`}
                 </AdditionalText>
             </Grid>
         }

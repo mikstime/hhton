@@ -11,9 +11,9 @@ export const DevTools: React.FC = () => {
     const [eventId, setEventId] = useState('')
     const {user, event} = useAppState()
 
-    if (process.env.NODE_ENV === 'production') {
-        return null
-    }
+    // if (process.env.NODE_ENV === 'production') {
+    //     return null
+    // }
 
     return <Container><Grid container spacing={1}>
         <Button onClick={() => setIsOpen(!isOpen)}>Dev Tools</Button>
