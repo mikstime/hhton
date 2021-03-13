@@ -19,7 +19,7 @@ const RootContainer = styled(Container)`
 export const TeamApp: React.FC = () => {
 
     const {cUser, invites} = useAppState()
-    // console.log(...invites.team)
+
     return <RootContainer> <Grid container direction='column'>
         <SubTitle style={{marginBottom: 24}}>Название команды</SubTitle>
         <Grid container spacing={3} direction='column'>

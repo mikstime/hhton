@@ -92,22 +92,6 @@ export const useFetcher = () => {
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [appState.event.id])
-    // useEffect(() => {
-    //     (async () => {
-    //         if (!isFetchingEvent) {
-    //             setIsFetchingEvent(true)
-    //
-    //             appState.event.set(NULL_HACKATHON)
-    //             const event = await fetchEvent(appState.event.id)
-    //
-    //             if (event) {
-    //                 appState.event.set(event)
-    //                 setIsFetchingEvent(false)
-    //             }
-    //         }
-    //     })()
-    //     //eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [appState.event.id])
 
     return null
 }

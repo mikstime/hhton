@@ -3,7 +3,7 @@ import {sleep} from '../utils'
 import background from '../assets/background.png'
 import logo from '../assets/logo.png'
 import {NULL_USER} from '../components/tools/use-app-state'
-import {Team, User} from '../components/tools/use-app-state/user'
+import {User} from '../components/tools/use-app-state/user'
 
 const useMock = true
 const mockImplemented = false
@@ -119,8 +119,12 @@ export const fetchUser = async (id: string) => {
             const json = await user.json()
 
             Object.assign(json, lackUser)
-
-            return {...json}
+            if(json.team) {
+                if(!json.team.members) {
+                    json.team.members = []
+                }
+            }
+            return json
         } else {
             return null
         }
@@ -342,7 +346,6 @@ export const getJobs: () => Promise<string[]> = async () => {
         if (job.ok) {
             const json = await job.json()
             let result = [] as string[]
-            console.log(json)
             if(json) {
                 json.forEach((v: { name: any }) => {
                     result.push(v.name)
@@ -432,11 +435,16 @@ export const getTeam = async (eventId: string, userId: string) => {
         if (team.ok) {
             const json = await team.json()
 
-            console.log(json)
-
-            return {
-                members: json as User[],
+            if(json) {
+                return {
+                    members: json as User[],
+                }
+            } else {
+                return {
+                    members: [] as User[],
+                }
             }
+
         } else {
             return {
                 members: [] as User[],
@@ -454,8 +462,7 @@ export const signIn = async () => {
     if(!useMock) {
         return null
     } else {
-        await sleep(300)
-        return TEST_USERS[0]
+        return await fetchUser('2')
     }
 }
 
@@ -465,18 +472,18 @@ export const signIn = async () => {
  * @param userId - id активного пользователя
  */
 export const teamInvites = async (eventId: string, userId: string) => {
-    if (!mockImplemented) {
+    if (!mockImplemented && userId) {
         const teams = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/teams`)
 
         if (teams.ok) {
             const json = await teams.json()
             let result = [] as User[]
 
-            json.forEach((v: { members: any[] }) => {
-                result.push(v.members[0])
-            })
-
-            console.log(result)
+            if(json) {
+                json.forEach((v: { members: any[] }) => {
+                    result.push(v.members[0])
+                })
+            }
 
             return result
         } else {
@@ -494,15 +501,14 @@ export const teamInvites = async (eventId: string, userId: string) => {
  * @param userId - id активного пользователя
  */
 export const personalInvites = async (eventId: string, userId: string) => {
-    if (!mockImplemented) {
+    if (!mockImplemented && userId) {
         const users = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/users`)
 
         if (users.ok) {
             const json = await users.json()
 
-            console.log(json)
 
-            return json as User[]
+            return json || [] as User[]
         } else {
             return []
         }
