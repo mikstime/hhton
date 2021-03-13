@@ -365,7 +365,7 @@ export const getJobs: () => Promise<string[]> = async () => {
  */
 export const getSkills = async (job: string) => {
     if (!mockImplemented) {
-        const skill = await fetch(`${HOST_DOMAIN}${PREFIX}/job/${job}/skills`)
+        const skill = await fetch(`${HOST_DOMAIN}${PREFIX}/job/${encodeURIComponent(job)}/skills`)
 
         if (skill.ok) {
             const json = await skill.json()
