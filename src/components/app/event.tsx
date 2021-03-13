@@ -78,14 +78,14 @@ export const EventApp: React.FC = () => {
                         </Grid>
                         <Grid item container md spacing={3} direction='column'>
                             <EventNameGrid item>
-                                <Typography>
+                                <Typography style={{minHeight: 24}}>
                                     {event.name}
                                 </Typography>
                             </EventNameGrid>
                             <Grid style={{height: 130}} item/>
                             <Grid item>
                                 <JobPlate elevation={4}
-                                          text='Подробная информация'/>
+                                          text={event.place ? `Место проведения: ${event.place}`: ''}/>
                             </Grid>
                             <Grid item>
                                 <InfoPlate elevation={4} textPlate={CaptionText}

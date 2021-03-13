@@ -392,11 +392,11 @@ export const getTeam = async (eventId: string, userId: string) => {
             console.log(json)
 
             return {
-                members: json as User[]
+                members: json as User[],
             }
         } else {
             return {
-                members: [] as User[]
+                members: [] as User[],
             }
         }
     } else {
