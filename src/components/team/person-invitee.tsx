@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react'
 import {User} from '../tools/use-app-state/user'
-import {Box, Grid, Grow} from '@material-ui/core'
+import {Box, Grid} from '@material-ui/core'
 import {AvatarPlate} from '../common'
 import {PrimaryButton} from '../common/buttons'
 import {InviteButton} from '../event/invite-button'
@@ -8,38 +8,51 @@ import {NameTypography} from '../common/typography'
 import {TeamDescription} from '../user/team-description'
 import {acceptInvite, declineInvite} from '../../model/api'
 import {useAppState} from '../tools/use-app-state'
+import {useSnackbar} from 'notistack'
 
 const useInviteActions = (user: User) => {
     const [isFetching, setIsFetching] = useState(false)
     const [fading, setFading] = useState(true)
     const {event, cUser, invites} = useAppState()
+
+    const {enqueueSnackbar} = useSnackbar()
+
     const submit = useCallback(async () => {
         setIsFetching(true)
         const didAccept = await acceptInvite(event.id, cUser.id, user.id)
-        if(didAccept) {
-        } else {
+        if (didAccept) {
+            setIsFetching(false)
+            setFading(false)
 
+            const inv = invites.team.filter(t => t.id !== user.id)
+            invites.change({team: inv})
+            setIsFetching(false)
+
+
+        } else {
+            setIsFetching(false)
+            enqueueSnackbar(`Не удалось принять заявку`, {
+                variant: 'error',
+            })
         }
-        setIsFetching(false)
-    }, [cUser.id, event.id, user.id])
+    }, [cUser.id, event.id, user.id, invites])
 
     const decline = useCallback(async () => {
         setIsFetching(true)
         const didDecline = await declineInvite(event.id, cUser.id, user.id)
-        if(didDecline) {
+        if (didDecline) {
             setIsFetching(false)
             setFading(false)
-            setTimeout(() => {
-                const inv = invites.team.filter(t => t.id !== user.id)
-                // console.log(...invites.team)
-                // console.log(...inv, user.id)
-                invites.change({team: inv})
-                // invites.change
-            }, 500)
-        } else {
 
+            const inv = invites.team.filter(t => t.id !== user.id)
+            invites.change({team: inv})
+            enqueueSnackbar(`Заявка отклонена`, {})
+        } else {
+            setIsFetching(false)
+            enqueueSnackbar(`Не удалось отклонить заявку`, {
+                variant: 'error',
+            })
         }
-        setIsFetching(false)
     }, [cUser.id, event.id, user.id, invites])
     return {
         isFetching,
@@ -48,10 +61,12 @@ const useInviteActions = (user: User) => {
         decline
     }
 }
+
+
 export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
 
-    const {isFetching, submit, decline, fading} = useInviteActions(user)
-    return <Grow in={fading}><Grid item container spacing={2}
+    const {isFetching, submit, decline} = useInviteActions(user)
+    return <Grid item container spacing={2}
                  style={{overflow: 'visible'}}>
         <Grid item container md={6} xs={9} sm={6}>
             <AvatarPlate direction='row' src={user.avatar}
@@ -61,7 +76,9 @@ export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
                                      <Box clone
                                           paddingRight={{xs: 0, sm: '22px'}}>
                                          <Grid container item xs={12} sm={8}>
-                                             <PrimaryButton onClick={submit} disabled={isFetching} style={{flex: 1}}>
+                                             <PrimaryButton onClick={submit}
+                                                            disabled={isFetching}
+                                                            style={{flex: 1}}>
                                                  Объединиться
                                              </PrimaryButton>
                                          </Grid>
@@ -70,7 +87,8 @@ export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
                                           paddingTop={{xs: '8px', sm: 0}}>
                                          <Grid container item xs={12} sm={4}
                                                justify='center'>
-                                             <InviteButton onClick={decline} disabled={isFetching} >
+                                             <InviteButton onClick={decline}
+                                                           disabled={isFetching}>
                                                  Отклонить
                                              </InviteButton>
                                          </Grid>
@@ -90,5 +108,4 @@ export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
         <Grid item container md={6} xs={12} sm={6}>
         </Grid>
     </Grid>
-    </Grow>
 }

@@ -1,7 +1,8 @@
 import React from 'react'
 import {
+    Box,
     Container,
-    Grid,
+    Grid, Grow
 } from '@material-ui/core'
 import {SubTitle} from '../common'
 import {useAppState} from '../tools/use-app-state'
@@ -23,9 +24,10 @@ export const TeamApp: React.FC = () => {
         <SubTitle style={{marginBottom: 24}}>Название команды</SubTitle>
         <Grid container spacing={3} direction='column'>
             {cUser.team && cUser.team.members.map((u, i) => (
-                <TeamMember key={i} user={u}/>
+                <Grow key={i} in><TeamMember user={u}/></Grow>
             ))
             }
+            {(!cUser.team || !cUser.team.members.length) && <Grow in><TeamMember user={cUser}/></Grow>}
         </Grid>
         <SubTitle style={{marginBottom: 24, marginTop: 36}}>Хотят в
             команду</SubTitle>
@@ -39,12 +41,13 @@ export const TeamApp: React.FC = () => {
             себе</SubTitle>
         {invites.team && <Grid spacing={2} container item>
             {
-                invites.team.map((u, i) => (
-                    <PersonInvitee key={i} user={u}/>
+                invites.team.map((u) => (
+                    <PersonInvitee key={u.id} user={u}/>
                 ))
             }
         </Grid>
         }
+        <Box height='150px' width='100%'/>
     </Grid>
     </RootContainer>
 }
