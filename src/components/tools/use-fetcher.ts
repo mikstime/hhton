@@ -56,6 +56,7 @@ export const useFetcher = () => {
                 appState.event.change({isParticipating: !!participating})
             }
         })()
+        //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [appState.cUser.id, appState.event.id])
 
     useEffect(() => {
@@ -65,6 +66,7 @@ export const useFetcher = () => {
                 appState.user.change({isInvited: !!invited})
             }
         })()
+        //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [appState.cUser.id, appState.user.id])
 
     useEffect(() => {

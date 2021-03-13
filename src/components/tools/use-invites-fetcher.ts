@@ -1,15 +1,10 @@
 import {useEffect} from 'react'
 import {useAppState} from './use-app-state'
-import {
-    getTeam,
-    personalInvites,
-    teamInvites
-} from '../../model/api'
 
 
 export const useInvitesFetcher = () => {
 
-    const {cUser, cEvent, invites} = useAppState()
+    const {cUser, cEvent} = useAppState()
 
     useEffect(() => {
         (async () => {

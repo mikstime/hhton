@@ -1,5 +1,5 @@
 import {useEffect} from 'react'
-import {getTeam, isParticipating, signIn} from '../../model/api'
+import {getTeam, signIn} from '../../model/api'
 import {useAppState} from './use-app-state'
 
 export const useAuth = () => {

@@ -153,6 +153,7 @@ export const fetchUser = async (id: string) => {
 
 /**
  * Проверить, отправил ли один пользователь приглашение другому
+ * @param eventId
  * @param inviterId
  * @param inviteeId
  */
@@ -223,7 +224,7 @@ export const fetchEvent = async (id: string) => {
 export const isParticipating = async (eventId: string, userId: string) => {
     if (!mockImplemented) {
         const event = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${userId}/events`)
-        console.log(event)
+
         if (event.ok) {
             const json = await event.json()
             for (let u of json) {
@@ -244,8 +245,10 @@ export const isParticipating = async (eventId: string, userId: string) => {
 
 /**
  * Пригласить пользователя в команду. Возвращает true в случае успеха
+ * @param eventId
  * @param inviterId
  * @param inviteeId
+ * @param mode
  */
 export const invitePerson = async (eventId: string, inviterId: string, inviteeId: string, mode: 'silent' | 'default' = 'default') => {
     if (!mockImplemented) {
@@ -256,7 +259,6 @@ export const invitePerson = async (eventId: string, inviterId: string, inviteeId
                     silent: mode === 'silent'
                 })
             })
-        console.log(invite)
         return (invite.ok && invite.status === 200)
     } else {
         await sleep(300)
@@ -339,13 +341,13 @@ export const getJobs: () => Promise<string[]> = async () => {
 
         if (job.ok) {
             const json = await job.json()
-            let result
+            let result = [] as string[]
 
             json.forEach((v: { name: any }) => {
                 result.push(v.name)
             })
 
-            return result as any
+            return result
         } else {
             return []
         }
@@ -365,7 +367,7 @@ export const getSkills = async (job: string) => {
 
         if (skill.ok) {
             const json = await skill.json()
-            let result
+            let result = [] as string[]
 
             json.forEach((v: { name: any }) => {
                 result.push(v.name)
@@ -383,12 +385,14 @@ export const getSkills = async (job: string) => {
 
 /**
  * Возвращает массив id пользователей
+ * @param eventId
  * @param query – строка типа j=Frontend&skills=Angular|TypeScript
  * @param sinceId
  */
 export const getFeed = async (eventId: string, query: string, sinceId?: string) => {
     if (!mockImplemented) {
         // TODO получать id сразу
+        console.log(query, sinceId)
         const event = await fetchEvent(eventId)
         if (event === null) {
             return []
@@ -403,7 +407,6 @@ export const getFeed = async (eventId: string, query: string, sinceId?: string) 
             json.users.forEach((v: { id: any }) => {
                 result.push(v.id)
             })
-
             return result
         } else {
             return []
@@ -416,6 +419,7 @@ export const getFeed = async (eventId: string, query: string, sinceId?: string) 
 
 /**
  * Возвращает объект типа Team
+ * @param eventId
  * @param userId - id пользователя, чью команду запрашиваем
  */
 export const getTeam = async (eventId: string, userId: string) => {
