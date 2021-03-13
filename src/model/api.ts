@@ -437,7 +437,7 @@ export const getTeam = async (eventId: string, userId: string) => {
 
             if(json) {
                 return {
-                    members: json as User[],
+                    members: json.members.map((u: User) => ({...lackUser, ...u})) as User[],
                 }
             } else {
                 return {
@@ -481,7 +481,7 @@ export const teamInvites = async (eventId: string, userId: string) => {
 
             if(json) {
                 json.forEach((v: { members: any[] }) => {
-                    result.push(v.members[0])
+                    result.push({...lackUser, ...v.members[0]})
                 })
             }
 
@@ -507,8 +507,10 @@ export const personalInvites = async (eventId: string, userId: string) => {
         if (users.ok) {
             const json = await users.json()
 
-
-            return json || [] as User[]
+            if(json) {
+                return json.map((u: User) => ({...lackUser, ...u}))
+            }
+            return [] as User[]
         } else {
             return []
         }

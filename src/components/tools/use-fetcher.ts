@@ -69,6 +69,7 @@ export const useFetcher = () => {
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [appState.cUser.id, appState.user.id])
 
+
     useEffect(() => {
         (async () => {
             if (appState.event.id !== isFetchingEventId.current && appState.event.id !== '-1') {

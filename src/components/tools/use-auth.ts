@@ -4,13 +4,14 @@ import {useAppState} from './use-app-state'
 
 export const useAuth = () => {
 
-    const {event, cUser} = useAppState()
+    const {cEvent, event, cUser} = useAppState()
 
     useEffect(() => {
         (async () => {
             const user = await signIn()
             if (user) {
                 cUser.set(user)
+                cEvent.change({id: '1'})
                 event.change({id: '1'})
 
             }

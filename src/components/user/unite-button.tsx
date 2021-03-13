@@ -61,7 +61,6 @@ export const UniteButton: React.FC = () => {
             Подождите...
         </PrimaryButton>
     }
-
     if (user.inMyTeam || user.id === cUser.id) {
         return <Link to='/team' style={{textDecoration: 'none'}}>
             <SecondaryButton style={{width: '100%'}}>
