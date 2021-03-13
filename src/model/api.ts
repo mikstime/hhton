@@ -342,10 +342,12 @@ export const getJobs: () => Promise<string[]> = async () => {
         if (job.ok) {
             const json = await job.json()
             let result = [] as string[]
-
-            json.forEach((v: { name: any }) => {
-                result.push(v.name)
-            })
+            console.log(json)
+            if(json) {
+                json.forEach((v: { name: any }) => {
+                    result.push(v.name)
+                })
+            }
 
             return result
         } else {
@@ -368,12 +370,13 @@ export const getSkills = async (job: string) => {
         if (skill.ok) {
             const json = await skill.json()
             let result = [] as string[]
+            if(json) {
+                json.forEach((v: { name: any }) => {
+                    result.push(v.name)
+                })
+            }
 
-            json.forEach((v: { name: any }) => {
-                result.push(v.name)
-            })
-
-            return result as any
+            return result
         } else {
             return []
         }
