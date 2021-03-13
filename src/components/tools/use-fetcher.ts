@@ -28,11 +28,13 @@ export const useFetcher = () => {
                     if (isFetchingId.current === appState.user.id) {
                         appState.user.set(user)
                         const team = appState.event.id !== '-1' ? await getTeam(appState.event.id, user.id): {members: []}
-                        if(isFetchingId.current === appState.user.id) {
-                            if(~team.members.findIndex((v) => v.id === appState.cUser.id)) {
-                                appState.user.change({inMyTeam: true})
+                        if(team.members.length) {
+                            if(isFetchingId.current === appState.user.id) {
+                                if(~team.members.findIndex((v) => v.id === appState.cUser.id)) {
+                                    appState.user.change({inMyTeam: true})
+                                }
+                                appState.user.change({team})
                             }
-                            appState.user.change({team})
                         }
                     }
                 } else {

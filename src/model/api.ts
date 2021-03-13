@@ -434,7 +434,6 @@ export const getTeam = async (eventId: string, userId: string) => {
 
         if (team.ok) {
             const json = await team.json()
-
             if(json) {
                 return {
                     members: json.members.map((u: User) => ({...lackUser, ...u})) as User[],

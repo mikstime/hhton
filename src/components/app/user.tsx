@@ -36,16 +36,18 @@ const RootContainer = styled(Container)`
 export const UserApp: React.FC<GridProps> = ({...rest}) => {
     //@ts-ignore
     const {userId} = useParams()
-    const {user, cUser} = useAppState()
+    const {user, event, cUser} = useAppState()
 
     useEffect(() => {
         if (userId) {
             user.change({id: userId})
         } else {
-            user.change({id: cUser.id})
+            if(cUser.id !== '-1') {
+                user.change({id: cUser.id.toString()})
+            }
         }
         //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userId, cUser.id])
+    }, [userId, cUser.id, event.id])
 
     if (user.notFound) {
         return <NotFound

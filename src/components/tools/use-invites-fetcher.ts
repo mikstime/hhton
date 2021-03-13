@@ -31,7 +31,7 @@ export const useInvitesFetcher = () => {
 
     useEffect(() => {
         (async () => {
-            if (cUser.id !== '-1') {
+            if (cUser.id !== '-1' && cEvent.id !== '-1') {
                 const team = await getTeam(cEvent.id, cUser.id)
                 if (team) {
                     cUser.change({team})
