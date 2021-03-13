@@ -227,11 +227,11 @@ export const isParticipating = async (eventId: string, userId: string) => {
         if (event.ok) {
             const json = await event.json()
 
-            json.forEach((u: { id: string }) => {
+            for (let u of json) {
                 if (u.id.toString() === eventId) {
                     return true
                 }
-            })
+            }
 
             return false
         } else {
