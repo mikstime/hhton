@@ -481,7 +481,11 @@ export const teamInvites = async (eventId: string, userId: string) => {
 
             if(json) {
                 json.forEach((v: { members: any[] }) => {
-                    result.push({...lackUser, ...v.members[0]})
+                    if(v.members) {
+                        result.push({...lackUser, ...v.members[0]})
+                    } else {
+                        console.log('members is null')
+                    }
                 })
             }
 
