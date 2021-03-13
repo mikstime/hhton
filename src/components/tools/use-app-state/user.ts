@@ -32,14 +32,12 @@ export type User = {
 
 export type Team = {
     members: User[],
-    invites?: {
-        personal: Invite[],
-        team: Invite[]
-    }
 }
 
-export type Invite = {
 
+export type Invites = {
+    personal: User[],
+    team: Team[]
 }
 
 export type UserOptional = {
