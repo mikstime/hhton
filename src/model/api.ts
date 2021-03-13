@@ -488,3 +488,36 @@ export const personalInvites = async (eventId: string, userId: string) => {
         return TEST_USERS.slice(1,3)
     }
 }
+
+/**
+ *
+ * @param eventId
+ * @param inviteeId - current user!!!
+ * @param inviterId
+ */
+export const acceptInvite = async (eventId: string, inviteeId: string, inviterId: string) => {
+    if(!useMock) {
+        console.log(eventId, inviterId, inviteeId)
+        return []
+    } else {
+        await sleep(300)
+        return true
+    }
+}
+
+
+/**
+ *
+ * @param eventId
+ * @param inviteeId - current user!!!
+ * @param inviterId
+ */
+export const declineInvite = async (eventId: string, inviteeId: string, inviterId: string) => {
+    if(!useMock) {
+        console.log(eventId, inviterId, inviteeId)
+        return []
+    } else {
+        await sleep(300)
+        return true
+    }
+}

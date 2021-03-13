@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, makeStyles} from '@material-ui/core'
+import {Button, ButtonProps, makeStyles} from '@material-ui/core'
 import {AdditionalText} from '../common'
 
 const useStyles = makeStyles({
@@ -13,9 +13,9 @@ const useStyles = makeStyles({
         textTransform: 'none',
     }
 })
-export const InviteButton: React.FC = ({children}) => {
+export const InviteButton: React.FC<ButtonProps> = ({children, ...rest}) => {
     const classes = useStyles()
-    return <Button className={classes.button}>
+    return <Button {...rest} className={classes.button + (rest.className ? ' ' + rest.className:  '')}>
         <AdditionalText className={classes.text}>
             {children}
         </AdditionalText>

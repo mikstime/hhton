@@ -46,7 +46,7 @@ export const FeedApp: React.FC = () => {
             setCurrent(current + 1)
             setKey(Math.random())
         })()
-    }, [current, users, location, setCurrent, setIsFetching])
+    }, [current, users, location, setCurrent, setIsFetching, event.id])
 
     useEffect(() => {
         if (users.length > 0) {
