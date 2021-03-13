@@ -9,6 +9,7 @@ export const useChipStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             display: 'flex',
+            minHeight: 48,
             flexWrap: 'wrap',
             margin: '16px -16px 16px -16px',
             '& > *': {
