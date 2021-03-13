@@ -7,7 +7,6 @@ import {InviteButton} from '../event/invite-button'
 import {NameTypography} from '../common/typography'
 import {TeamDescription} from '../user/team-description'
 
-
 export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
     return <Grid item container spacing={2}
                  style={{overflow: 'visible'}}>

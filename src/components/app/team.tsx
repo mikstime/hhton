@@ -17,7 +17,7 @@ const RootContainer = styled(Container)`
 
 export const TeamApp: React.FC = () => {
 
-    const {cUser} = useAppState()
+    const {cUser, invites} = useAppState()
     return <RootContainer> <Grid container direction='column'>
         <SubTitle style={{marginBottom: 24}}>Название команды</SubTitle>
         <Grid container spacing={3} direction='column'>
@@ -29,7 +29,7 @@ export const TeamApp: React.FC = () => {
         <SubTitle style={{marginBottom: 24, marginTop: 36}}>Хотят в
             команду</SubTitle>
         <Grid container spacing={3} direction='column'>
-            {cUser.team && cUser.team.members.map((u, i) => (
+            {invites.personal.map((u, i) => (
                 <TeamInvitee key={i} user={u}/>
             ))
             }
@@ -38,13 +38,8 @@ export const TeamApp: React.FC = () => {
             себе</SubTitle>
         {cUser.team && <Grid spacing={2} container item>
             {
-                cUser.team.members.map((u, i) => (
+                invites.team.map((u, i) => (
                     <PersonInvitee key={i} user={u}/>
-                ))
-            }
-            {
-                cUser.team.members.map((u, i) => (
-                    <PersonInvitee key={i + '1'} user={u}/>
                 ))
             }
         </Grid>

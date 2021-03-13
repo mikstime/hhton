@@ -8,10 +8,12 @@ import {DevTools} from '../tools/dev-tools'
 import {HomeApp} from './home'
 import {useFetcher} from '../tools/use-fetcher'
 import {useAuth} from '../tools/use-auth'
+import {useInvitesFetcher} from '../tools/use-invites-fetcher'
 
 export const App: React.FC = () => {
 
     useFetcher()
+    useInvitesFetcher()
     useAuth()
 
     return <Fragment>

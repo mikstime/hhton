@@ -415,3 +415,33 @@ export const signIn = async () => {
         return TEST_USERS[0]
     }
 }
+
+/**
+ *
+ * @param eventId - id события
+ * @param userId - id активного пользователя
+ */
+export const teamInvites = async (eventId: string, userId: string) => {
+    console.log(eventId, userId)
+    if(!useMock) {
+        return []
+    } else {
+        await sleep(300)
+        return TEST_USERS.slice(2,4)
+    }
+}
+
+/**
+ *
+ * @param eventId - id события
+ * @param userId - id активного пользователя
+ */
+export const personalInvites = async (eventId: string, userId: string) => {
+    console.log(eventId, userId)
+    if(!useMock) {
+        return []
+    } else {
+        await sleep(300)
+        return TEST_USERS.slice(1,3)
+    }
+}
