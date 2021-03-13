@@ -462,7 +462,7 @@ export const signIn = async () => {
     if(!useMock) {
         return null
     } else {
-        return await fetchUser('2')
+        return await fetchUser('1')
     }
 }
 
