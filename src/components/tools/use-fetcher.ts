@@ -1,17 +1,15 @@
-import {useEffect, useRef, useState} from 'react'
+import {useEffect, useRef} from 'react'
 import {useAppState} from './use-app-state'
 import {fetchEvent, fetchUser, getTeam} from '../../model/api'
 import {NULL_HACKATHON, NULL_USER} from './use-app-state'
 
 
-// let isFetchingId = '-1'
-
 export const useFetcher = () => {
 
     const isFetchingId = useRef('-1')
-    const appState = useAppState()
+    const isFetchingEventId = useRef('-1')
 
-    const [isFetchingEvent, setIsFetchingEvent] = useState(false)
+    const appState = useAppState()
 
     useEffect(() => {
         (async () => {
@@ -23,9 +21,8 @@ export const useFetcher = () => {
                 if (user) {
                     if (isFetchingId.current === appState.user.id) {
                         appState.user.set(user)
-                        const team = await getTeam(user)
+                        const team = await getTeam(appState.event.id, user.id)
                         if(isFetchingId.current === appState.user.id) {
-                            console.log(appState.cUser.id, team.members)
                             if(~team.members.findIndex((v) => v.id === appState.cUser.id)) {
                                 appState.user.change({inMyTeam: true})
                             }
@@ -46,22 +43,47 @@ export const useFetcher = () => {
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [appState.user.id])
 
+
     useEffect(() => {
         (async () => {
-            if (!isFetchingEvent) {
-                setIsFetchingEvent(true)
-
+            if (appState.event.id !== isFetchingEventId.current && appState.event.id !== '-1') {
+                isFetchingEventId.current = appState.event.id
                 appState.event.set(NULL_HACKATHON)
                 const event = await fetchEvent(appState.event.id)
 
                 if (event) {
-                    appState.event.set(event)
-                    setIsFetchingEvent(false)
+                    if (isFetchingEventId.current === appState.event.id) {
+                        appState.event.set(event)
+                    }
+                } else {
+                    if (isFetchingEventId.current === appState.event.id) {
+                        appState.event.set({
+                            ...NULL_HACKATHON,
+                            id: appState.event.id,
+                            notFound: true
+                        })
+                    }
                 }
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [appState.event.id])
+    // useEffect(() => {
+    //     (async () => {
+    //         if (!isFetchingEvent) {
+    //             setIsFetchingEvent(true)
+    //
+    //             appState.event.set(NULL_HACKATHON)
+    //             const event = await fetchEvent(appState.event.id)
+    //
+    //             if (event) {
+    //                 appState.event.set(event)
+    //                 setIsFetchingEvent(false)
+    //             }
+    //         }
+    //     })()
+    //     //eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [appState.event.id])
 
     return null
 }

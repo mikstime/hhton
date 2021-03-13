@@ -35,6 +35,11 @@ export type Team = {
 }
 
 
+export type Invites = {
+    personal: User[],
+    team: Team[]
+}
+
 export type UserOptional = {
     firstName?: string,
     lastName?: string,

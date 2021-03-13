@@ -1,4 +1,4 @@
-import {HOST_DOMAIN, PREFIX} from '../config/network'
+import {HOST_DOMAIN} from '../config/network'
 import {sleep} from '../utils'
 import background from '../assets/background.png'
 import logo from '../assets/logo.png'
@@ -20,7 +20,7 @@ const TEST_USERS: User[] = [
         jobName: 'Тинькофф',
         skills: {
             tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
         hackathons: []
     },
@@ -34,7 +34,7 @@ const TEST_USERS: User[] = [
         jobName: 'Тинькофф',
         skills: {
             tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
         hackathons: []
     },
@@ -48,7 +48,7 @@ const TEST_USERS: User[] = [
         jobName: 'Тинькофф',
         skills: {
             tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
         hackathons: []
     },
@@ -62,7 +62,7 @@ const TEST_USERS: User[] = [
         jobName: 'Тинькофф',
         skills: {
             tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
         hackathons: []
     },
@@ -76,7 +76,7 @@ const TEST_USERS: User[] = [
         jobName: 'Тинькофф',
         skills: {
             tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
         hackathons: []
     },
@@ -90,7 +90,7 @@ const TEST_USERS: User[] = [
         jobName: 'Тинькофф',
         skills: {
             tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
         hackathons: []
     }
@@ -156,9 +156,7 @@ export const fetchUser = async (id: string) => {
  * @param inviterId
  * @param inviteeId
  */
-export const isInvited = async (inviterId: string, inviteeId: string) => {
-    // TODO нехватает евента
-    const eventId = '1'
+export const isInvited = async (eventId: string, inviterId: string, inviteeId: string) => {
     if (!mockImplemented) {
         const invited = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invited/user/${inviteeId}`)
 
@@ -175,10 +173,6 @@ export const isInvited = async (inviterId: string, inviteeId: string) => {
     }
 }
 
-/**
- * Получить информацию о мероприятии
- * @param id
- */
 const lackEvent = {
     logo: logo,
     background: background,
@@ -188,14 +182,16 @@ const lackEvent = {
     settings: {},
     isParticipating: false
 }
+/**
+ * Получить информацию о мероприятии
+ * @param id
+ */
 export const fetchEvent = async (id: string) => {
     if (!mockImplemented) {
         const event = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${id}`)
 
         if (event.ok) {
             const json = await event.json()
-
-            Object.assign(json, lackEvent)
 
             return {...json}
         } else {
@@ -254,15 +250,13 @@ export const isParticipating = async (userId: string, eventId: string) => {
  * @param inviterId
  * @param inviteeId
  */
-export const invitePerson = async (inviterId: string, inviteeId: string) => {
-    // TODO нет eventId и silent мода
-    const eventId = '1'
+export const invitePerson = async (eventId: string, inviterId: string, inviteeId: string, mode: 'silent' | 'default' = 'default') => {
     if (!mockImplemented) {
         const invite = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${inviteeId}/invite`,
             {
                 method: 'POST',
                 body: JSON.stringify({
-                    silent: false,
+                    silent: mode === 'silent'
                 })
             })
 
@@ -361,13 +355,10 @@ export const getSkills = async (job: string) => {
  * @param query – строка типа j=Frontend&skills=Angular|TypeScript
  * @param sinceId
  */
-export const getFeed:
-    (query: string, sinceId?: string) => Promise<string[]>
-    = async (query: string, sinceId?: string) => {
-    // TODO нет евента или id фида
+export const getFeed = async (eventId: string, query: string, sinceId?: string) => {
     // TODO нет ручки, чтобы получить фид от евента
     if (!useMock) {
-        console.log(query, sinceId)
+        console.log(eventId, query, sinceId)
         return []
     } else {
         await sleep(300)
@@ -379,21 +370,21 @@ export const getFeed:
  * Возвращает объект типа Team
  * @param userId - id пользователя, чью команду запрашиваем
  */
-export const getTeam = async (userId: string) => {
-    // TODO нет евента
-    const eventId = '1'
+export const getTeam = async (eventId: string, userId: string) => {
     if (!mockImplemented) {
         const team = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${userId}/team`)
 
         if (team.ok) {
             const json = await team.json()
 
+            console.log(json)
+
             return {
-                members: json as User[]
+                members: json as User[],
             }
         } else {
             return {
-                members: [] as User[]
+                members: [] as User[],
             }
         }
     } else {

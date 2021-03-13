@@ -8,18 +8,19 @@ import {
 export const _useAppState: () => {
     cUser: User & UserActions,
     user: User & UserActions,
-    event: Hackathon & HackathonActions
+    event: Hackathon & HackathonActions,
+    cEvent: Hackathon & HackathonActions
 } = () => {
 
     const user = useUser()
     const cUser = useUser()
     const event = useHackathon()
+    const cEvent = useHackathon()
 
     return {
         user,
         event,
-        cUser: {
-            ...cUser
-        }
+        cEvent,
+        cUser,
     }
 }

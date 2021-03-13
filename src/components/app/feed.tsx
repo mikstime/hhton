@@ -22,14 +22,15 @@ export const FeedApp: React.FC = () => {
 
     const [isFetching, setIsFetching] = useState(false)
 
-    const {user} = useAppState()
+    const {event, user} = useAppState()
     useEffect(() => {
         (async () => {
-            const users = await getFeed(location.search)
+            const users = await getFeed(event.id, location.search)
             if (users.length) {
                 setUsers(users)
             }
         })()
+        //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location, setUsers])
 
     const nextUser = useCallback(() => {

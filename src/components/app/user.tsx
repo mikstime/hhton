@@ -61,7 +61,7 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                 <Grid item container md={4}>
                     <AvatarPlate src={user.avatar}>
                         <UniteButton/>
-                        <TeamDescription/>
+                        <TeamDescription user={user}/>
                     </AvatarPlate>
                 </Grid>
                 <Grid item container md spacing={2} direction='column'>
