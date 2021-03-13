@@ -35,7 +35,7 @@ const useInviteActions = (user: User) => {
                 variant: 'error',
             })
         }
-    }, [cUser.id, event.id, user.id, invites])
+    }, [cUser.id, event.id, user.id, invites, enqueueSnackbar])
 
     const decline = useCallback(async () => {
         setIsFetching(true)
@@ -53,7 +53,7 @@ const useInviteActions = (user: User) => {
                 variant: 'error',
             })
         }
-    }, [cUser.id, event.id, user.id, invites])
+    }, [cUser.id, event.id, user.id, invites, enqueueSnackbar])
     return {
         isFetching,
         fading,

@@ -398,7 +398,6 @@ export const getSkills = async (job: string) => {
 export const getFeed = async (eventId: string, query: string, sinceId?: string) => {
     if (!mockImplemented) {
         // TODO получать id сразу
-        console.log(query, sinceId)
         const event = await fetchEvent(eventId)
         if (event === null) {
             return []
@@ -419,6 +418,7 @@ export const getFeed = async (eventId: string, query: string, sinceId?: string) 
         }
     } else {
         await sleep(300)
+        console.log(query, sinceId)
         return TEST_USERS.map(u => u.id)
     }
 }
