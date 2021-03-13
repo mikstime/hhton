@@ -21,7 +21,7 @@ export const DevTools: React.FC = () => {
               style={{background: '#f2f2f2', marginBottom: 40}}>
             {isOpen && <Fragment><Grid item>Меню разработчика: </Grid>
               <Grid item><Link to={'/user'}>user</Link></Grid>
-              <Grid item><Link to={'/event'}>event</Link></Grid>
+              <Grid item><Link to={'/event/1'}>event</Link></Grid>
               <Grid item><Link to={'/team'}>team</Link></Grid>
               <Grid item><Link to={'/feed'}>feed</Link></Grid>
               <Grid item><Link to={'/home'}>home</Link></Grid>

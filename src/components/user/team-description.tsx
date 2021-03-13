@@ -25,7 +25,7 @@ export const TeamDescription: React.FC<{noName?: boolean, user: User}> = ({user,
     const theme = useTheme()
 
     if (!user.isNullUser && user.team) {
-        if(user.team.members.length > 1) {
+        if(user.team.members && user.team.members.length > 1) {
             return <Grid item container direction='column'>
                 <MainText style={{marginTop: 12, color: theme.typography.body2.color}}>
                     В команде с

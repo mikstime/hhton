@@ -1,5 +1,5 @@
 import {useEffect} from 'react'
-import {getTeam, signIn} from '../../model/api'
+import {getTeam, isParticipating, signIn} from '../../model/api'
 import {useAppState} from './use-app-state'
 
 export const useAuth = () => {
@@ -12,7 +12,7 @@ export const useAuth = () => {
             if (user) {
                 cUser.set(user)
                 event.change({id: '1'})
-                const team = await getTeam(event.id, user.id)
+                const team = await getTeam('1', user.id)
                 if (team) {
                     cUser.change({team})
                 }

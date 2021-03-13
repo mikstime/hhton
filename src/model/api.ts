@@ -193,7 +193,7 @@ export const fetchEvent = async (id: string) => {
         if (event.ok) {
             const json = await event.json()
 
-            return {...json}
+            return {...lackEvent, ...json, id: json.id.toString()}
         } else {
             return null
         }
@@ -223,10 +223,9 @@ export const fetchEvent = async (id: string) => {
 export const isParticipating = async (eventId: string, userId: string) => {
     if (!mockImplemented) {
         const event = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${userId}/events`)
-
+        console.log(event)
         if (event.ok) {
             const json = await event.json()
-
             for (let u of json) {
                 if (u.id.toString() === eventId) {
                     return true
@@ -257,7 +256,7 @@ export const invitePerson = async (eventId: string, inviterId: string, inviteeId
                     silent: mode === 'silent'
                 })
             })
-
+        console.log(invite)
         return (invite.ok && invite.status === 200)
     } else {
         await sleep(300)
@@ -459,8 +458,8 @@ export const signIn = async () => {
  * @param userId - id активного пользователя
  */
 export const teamInvites = async (eventId: string, userId: string) => {
-    console.log(eventId, userId)
     if(!useMock) {
+        console.log(eventId, userId)
         return []
     } else {
         await sleep(300)
@@ -474,8 +473,8 @@ export const teamInvites = async (eventId: string, userId: string) => {
  * @param userId - id активного пользователя
  */
 export const personalInvites = async (eventId: string, userId: string) => {
-    console.log(eventId, userId)
     if(!useMock) {
+        console.log(eventId, userId)
         return []
     } else {
         await sleep(300)
