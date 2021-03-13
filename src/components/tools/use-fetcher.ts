@@ -1,6 +1,12 @@
 import {useEffect, useRef} from 'react'
 import {useAppState} from './use-app-state'
-import {fetchEvent, fetchUser, getTeam, isParticipating} from '../../model/api'
+import {
+    fetchEvent,
+    fetchUser,
+    getTeam,
+    isInvited,
+    isParticipating
+} from '../../model/api'
 import {NULL_HACKATHON, NULL_USER} from './use-app-state'
 
 
@@ -51,6 +57,15 @@ export const useFetcher = () => {
             }
         })()
     }, [appState.cUser.id, appState.event.id])
+
+    useEffect(() => {
+        (async () => {
+            if (appState.user.id !== '-1' && appState.cUser.id !== '-1') {
+                const invited = await isInvited(appState.event.id, appState.cUser.id, appState.user.id);
+                appState.user.change({isInvited: !!invited})
+            }
+        })()
+    }, [appState.cUser.id, appState.user.id])
 
     useEffect(() => {
         (async () => {
