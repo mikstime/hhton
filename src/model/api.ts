@@ -3,7 +3,7 @@ import {sleep} from '../utils'
 import background from '../assets/background.png'
 import logo from '../assets/logo.png'
 import {NULL_USER} from '../components/tools/use-app-state'
-import {User} from '../components/tools/use-app-state/user'
+import {Team, User} from '../components/tools/use-app-state/user'
 
 const useMock = true
 const mockImplemented = false
@@ -465,9 +465,23 @@ export const signIn = async () => {
  * @param userId - id активного пользователя
  */
 export const teamInvites = async (eventId: string, userId: string) => {
-    if(!useMock) {
-        console.log(eventId, userId)
-        return []
+    if (!mockImplemented) {
+        const teams = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/teams`)
+
+        if (teams.ok) {
+            const json = await teams.json()
+            let result = [] as User[]
+
+            json.forEach((v: { members: any[] }) => {
+                result.push(v.members[0])
+            })
+
+            console.log(result)
+
+            return result
+        } else {
+            return []
+        }
     } else {
         await sleep(300)
         return TEST_USERS.slice(2,4)
@@ -480,9 +494,18 @@ export const teamInvites = async (eventId: string, userId: string) => {
  * @param userId - id активного пользователя
  */
 export const personalInvites = async (eventId: string, userId: string) => {
-    if(!useMock) {
-        console.log(eventId, userId)
-        return []
+    if (!mockImplemented) {
+        const users = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/users`)
+
+        if (users.ok) {
+            const json = await users.json()
+
+            console.log(json)
+
+            return json as User[]
+        } else {
+            return []
+        }
     } else {
         await sleep(300)
         return TEST_USERS.slice(1,3)
@@ -496,9 +519,16 @@ export const personalInvites = async (eventId: string, userId: string) => {
  * @param inviterId
  */
 export const acceptInvite = async (eventId: string, inviteeId: string, inviterId: string) => {
-    if(!useMock) {
-        console.log(eventId, inviterId, inviteeId)
-        return []
+    if (!mockImplemented) {
+        const join = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/team/join`,
+        {
+            method: 'POST',
+            body: JSON.stringify({
+                uid1: inviterId,
+                uid2: inviteeId
+            })
+        })
+        return (join.ok && join.status === 200)
     } else {
         await sleep(300)
         return true
@@ -513,9 +543,12 @@ export const acceptInvite = async (eventId: string, inviteeId: string, inviterId
  * @param inviterId
  */
 export const declineInvite = async (eventId: string, inviteeId: string, inviterId: string) => {
-    if(!useMock) {
-        console.log(eventId, inviterId, inviteeId)
-        return []
+    if (!mockImplemented) {
+        const decline = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${inviterId}/decline`,
+            {
+                method: 'POST',
+            })
+        return (decline.ok && decline.status === 200)
     } else {
         await sleep(300)
         return true
