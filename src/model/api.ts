@@ -1,4 +1,4 @@
-import {HOST_DOMAIN} from '../config/network'
+import {HOST_DOMAIN, PREFIX} from '../config/network'
 import {sleep} from '../utils'
 import background from '../assets/background.png'
 import logo from '../assets/logo.png'
@@ -220,16 +220,15 @@ export const fetchEvent = async (id: string) => {
  * @param userId
  * @param eventId
  */
-export const isParticipating = async (userId: string, eventId: string) => {
+export const isParticipating = async (eventId: string, userId: string) => {
     if (!mockImplemented) {
-        // TODO переделать под нормальую ручку
-        const event = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}`)
+        const event = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${userId}/events`)
 
         if (event.ok) {
             const json = await event.json()
 
-            json.feed.users.forEach((u: { id: string }, i: any) => {
-                if (u.id === userId) {
+            json.forEach((u: { id: string }) => {
+                if (u.id.toString() === eventId) {
                     return true
                 }
             })
@@ -243,7 +242,6 @@ export const isParticipating = async (userId: string, eventId: string) => {
         return true
     }
 }
-
 
 /**
  * Пригласить пользователя в команду. Возвращает true в случае успеха
@@ -299,9 +297,20 @@ export const joinEvent = async (userId: string, eventId: string) => {
  * @param eventId
  */
 export const leaveEvent = async (userId: string, eventId: string) => {
-    if (!useMock) {
-        // TODO нет ручки
-        console.log("Нет ручки")
+    if (!mockImplemented) {
+        const leave = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/leave`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify({
+                    uid: parseInt(userId),
+                    tid: 0
+                })
+            })
+
+        return (leave.ok && leave.status === 200)
     } else {
         await sleep(300)
         return true
@@ -326,9 +335,21 @@ export const findUsers = async (query: string) => {
  * Возвращает массив доступных специализаций
  */
 export const getJobs: () => Promise<string[]> = async () => {
-    if (!useMock) {
-        //@TODO implement
-        return []
+    if (!mockImplemented) {
+        const job = await fetch(`${HOST_DOMAIN}${PREFIX}/job`)
+
+        if (job.ok) {
+            const json = await job.json()
+            let result
+
+            json.forEach((v: { name: any }) => {
+                result.push(v.name)
+            })
+
+            return result as any
+        } else {
+            return []
+        }
     } else {
         await sleep(300)
         return ['Frontend', 'Backend', '3D designer', 'Product Manager', 'UX/UI', 'DevOps', 'Другое']
@@ -340,10 +361,21 @@ export const getJobs: () => Promise<string[]> = async () => {
  * @param job – название работы,
  */
 export const getSkills = async (job: string) => {
-    if (!useMock) {
-        console.log(job)
-        //@TODO implement
-        return []
+    if (!mockImplemented) {
+        const skill = await fetch(`${HOST_DOMAIN}${PREFIX}/job/${job}/skills`)
+
+        if (skill.ok) {
+            const json = await skill.json()
+            let result
+
+            json.forEach((v: { name: any }) => {
+                result.push(v.name)
+            })
+
+            return result as any
+        } else {
+            return []
+        }
     } else {
         await sleep(300)
         return ['React', 'Angular', 'TypeScript']
@@ -356,10 +388,27 @@ export const getSkills = async (job: string) => {
  * @param sinceId
  */
 export const getFeed = async (eventId: string, query: string, sinceId?: string) => {
-    // TODO нет ручки, чтобы получить фид от евента
-    if (!useMock) {
-        console.log(eventId, query, sinceId)
-        return []
+    if (!mockImplemented) {
+        // TODO получать id сразу
+        const event = await fetchEvent(eventId)
+        if (event === null) {
+            return []
+        }
+
+        const feed = await fetch(`${HOST_DOMAIN}${PREFIX}/feed/${event.feed.id}`)
+
+        if (feed.ok) {
+            const json = await feed.json()
+            let result: any[] = []
+
+            json.users.forEach((v: { id: any }) => {
+                result.push(v.id)
+            })
+
+            return result
+        } else {
+            return []
+        }
     } else {
         await sleep(300)
         return TEST_USERS.map(u => u.id)
