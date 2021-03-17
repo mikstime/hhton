@@ -1,6 +1,6 @@
 import React from 'react'
 import {Plate, PlateProps} from './plate'
-import {Box, Grid, GridDirection, GridProps} from '@material-ui/core'
+import {Grid, GridDirection, GridProps} from '@material-ui/core'
 import styled from 'styled-components'
 import Image from 'material-ui-image'
 import {Root} from './reusable'
@@ -26,9 +26,8 @@ export const AvatarPlate: React.FC<{
             <Grid container direction={direction}
                   style={{flex: 1, ...(avatarProps.style || {})}}>
                 {direction === 'row' ?
-                    <Box clone paddingRight={{xs: 0, sm: '22px'}}>
-                        <AvatarGrid xs={12} sm={8} item src={src} container {...avatarProps}/>
-                    </Box> :
+                        <AvatarGrid xs={12} sm={7} item src={src} container {...avatarProps}/>
+                    :
                     <AvatarGrid xs={12} item src={src} container {...avatarProps}/>
                 }
                 {children && direction === 'column' &&

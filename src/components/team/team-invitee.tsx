@@ -68,14 +68,14 @@ export const TeamInvitee: React.FC<{ user: User }> = ({user}) => {
     const {isFetching, submit, decline} = useInviteActions(user)
 
     return <Grid item container spacing={2}>
-        <Grid item md={4} xs={9} sm={4}>
+        <Grid item md={5} xs={9} sm={5}>
             <Link to={`/user/${user.id}`}
                   style={{textDecoration: 'none'}}>
                 <AvatarPlate padding={24} src={user.avatar}/>
             </Link>
         </Grid>
         <Box clone order={{xs: 3, sm: 2, md: 2}}>
-            <Grid item xs md={6} sm={6} container spacing={2}
+            <Grid item xs md={5} sm={5} container spacing={2}
                   direction='column'>
                 <Grid item container>
                     <NameTypography user={user}/>

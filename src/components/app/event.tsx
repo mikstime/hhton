@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import {Container, Grid, Typography} from '@material-ui/core'
+import {Grid, Typography} from '@material-ui/core'
 import {
     AvatarPlate,
     Title,
@@ -34,15 +34,6 @@ const EventNameGrid = styled(Grid)`
 //   padding-top: 0 !important;
 //   display: flex;
 // `
-const RootContainer = styled(Container)`
-  min-height: calc(100vh - 70px);
-  margin-top: 70px;
-`
-
-const Root = styled.div`
-  width: 100%;
-  height: 100%;
-`
 
 export const EventApp: React.FC = () => {
     //@ts-ignore
@@ -66,12 +57,10 @@ export const EventApp: React.FC = () => {
         />
     }
 
-    return <Root>
-        <RootContainer>
-            <Grid container style={{position: 'relative'}}>
+    return <Grid container style={{position: 'relative'}}>
                 <Grid style={{zIndex: 3}} container direction='column'>
                     <Grid item container spacing={2}>
-                        <Grid item container md={4}>
+                        <Grid item container md={5}>
                             <AvatarPlate src={event.logo}>
                                 <ParticipateButton/>
                             </AvatarPlate>
@@ -110,6 +99,4 @@ export const EventApp: React.FC = () => {
                     </Grid>
                 </Grid>
             </Grid>
-        </RootContainer>
-    </Root>
 }

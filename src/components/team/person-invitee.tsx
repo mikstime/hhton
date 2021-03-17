@@ -32,7 +32,7 @@ const useInviteActions = (user: User) => {
         } else {
             setIsFetching(false)
             enqueueSnackbar(`Не удалось принять заявку`, {
-                variant: 'error',
+                variant: 'error'
             })
         }
     }, [cUser.id, event.id, user.id, invites, enqueueSnackbar])
@@ -50,7 +50,7 @@ const useInviteActions = (user: User) => {
         } else {
             setIsFetching(false)
             enqueueSnackbar(`Не удалось отклонить заявку`, {
-                variant: 'error',
+                variant: 'error'
             })
         }
     }, [cUser.id, event.id, user.id, invites, enqueueSnackbar])
@@ -68,40 +68,40 @@ export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
     const {isFetching, submit, decline} = useInviteActions(user)
     return <Grid item container spacing={2}
                  style={{overflow: 'visible'}}>
-        <Grid item container md={6} xs={9} sm={6}>
+        <Grid item container md={8} xs={9} sm={8}>
             <AvatarPlate direction='row' src={user.avatar}
                          afterChildren={
                              <Box clone paddingTop={2} flex='1'>
                                  <Grid container item xs={12}>
-                                     <Box clone
-                                          paddingRight={{xs: 0, sm: '22px'}}>
-                                         <Grid container item xs={12} sm={8}>
+                                         <Grid container item xs={12} sm={7}>
                                              <PrimaryButton onClick={submit}
                                                             disabled={isFetching}
                                                             style={{flex: 1}}>
                                                  Объединиться
                                              </PrimaryButton>
                                          </Grid>
-                                     </Box>
-                                     <Box clone
-                                          paddingTop={{xs: '8px', sm: 0}}>
-                                         <Grid container item xs={12} sm={4}
-                                               justify='center'>
-                                             <InviteButton onClick={decline}
-                                                           disabled={isFetching}>
-                                                 Отклонить
-                                             </InviteButton>
-                                         </Grid>
+                                     <Box clone paddingLeft={2}>
+                                     <Grid container item xs={12} sm={5}
+                                           justify='center'>
+                                         <InviteButton onClick={decline}
+                                                       disabled={isFetching}>
+                                             Отклонить
+                                         </InviteButton>
+                                     </Grid>
                                      </Box>
                                  </Grid>
                              </Box>}
-                         avatarProps={{wrap: 'nowrap', xs: 12, sm: 8}}>
+                         avatarProps={{wrap: 'nowrap', xs: 12, sm: 7}}>
                 <Grid xs sm={4} item container
                       direction='column'>
-                    <Grid item container justify='center'>
-                        <NameTypography user={user}/>
-                    </Grid>
-                    <TeamDescription noName user={user}/>
+                    <Box paddingLeft={2}>
+                        <Grid item container>
+                            <NameTypography user={user}/>
+                        </Grid>
+                    </Box>
+                    <Box paddingLeft={2}>
+                        <TeamDescription noName user={user}/>
+                    </Box>
                 </Grid>
             </AvatarPlate>
         </Grid>

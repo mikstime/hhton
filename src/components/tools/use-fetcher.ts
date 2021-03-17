@@ -27,7 +27,7 @@ export const useFetcher = () => {
                 if (user) {
                     if (isFetchingId.current === appState.user.id) {
                         appState.user.set(user)
-                        const team = appState.event.id !== '-1' ? await getTeam(appState.event.id, user.id): {members: []}
+                        const team = appState.event.id !== '-1' ? await getTeam(appState.event.id, user.id): {name: '', members: []}
                         if(team.members.length) {
                             if(isFetchingId.current === appState.user.id) {
                                 if(~team.members.findIndex((v) => v.id === appState.cUser.id)) {

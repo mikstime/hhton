@@ -46,7 +46,7 @@ export const HomeApp: React.FC = () => {
                         {/*</Typography>*/}
                     </Grid>
                     <Grid item>
-                        <Link to='/event' style={{textDecoration: 'none'}}>
+                        <Link to='/event/1' style={{textDecoration: 'none'}}>
                         <SecondaryButton style={{marginTop: 48}}>
                             К мероприятию
                             {/*Я хочу организовать мероприятие*/}

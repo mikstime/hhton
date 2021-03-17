@@ -32,6 +32,7 @@ export type User = {
 
 export type Team = {
     members: User[],
+    name: string,
 }
 
 

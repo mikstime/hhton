@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react'
 import {
-    Container,
+    Box,
     Grid,
-    GridProps,
+    GridProps
 } from '@material-ui/core'
 import {
     AvatarPlate,
@@ -13,25 +13,21 @@ import {useAppState} from '../tools/use-app-state'
 import styled from 'styled-components'
 import {
     BoldText,
-    CaptionText,
     NameTypography,
     SecondaryText
 } from '../common/typography'
-import {BioPlate, InfoPlate, JobPlate} from '../common/item-plate'
+import {BioPlate, JobPlate} from '../common/item-plate'
 import {UniteButton} from '../user/unite-button'
 import {NotFound} from './notfound'
 import {useParams} from 'react-router-dom'
 import notFoundIcon from '../../assets/notfound.svg'
 import {TeamDescription} from '../user/team-description'
+import {EditUserButton} from '../user/edit-user-button'
 
 const UserNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
 `
 
-const RootContainer = styled(Container)`
-  margin-top: 70px;
-  min-height: calc(100vh - 70px);
-`
 
 export const UserApp: React.FC<GridProps> = ({...rest}) => {
     //@ts-ignore
@@ -57,18 +53,20 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
         />
     }
 
-    return <RootContainer>
-        <Grid container direction='column' {...rest}>
+    return <Grid container direction='column' {...rest}>
             <Grid item container spacing={2}>
-                <Grid item container md={4}>
+                <Grid item container md={5}>
                     <AvatarPlate src={user.avatar}>
                         <UniteButton/>
                         <TeamDescription user={user}/>
                     </AvatarPlate>
                 </Grid>
                 <Grid item container md spacing={2} direction='column'>
-                    <UserNameGrid item>
+                    <UserNameGrid item container alignItems='center'>
                         <NameTypography user={user}/>
+                        <Box clone marginLeft='12px'>
+                        <EditUserButton/>
+                        </Box>
                     </UserNameGrid>
                     <Grid item>
                         <JobPlate text={user.jobName ? `Место работы: ${user.jobName}`: ''}/>
@@ -76,10 +74,10 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                     <Grid item>
                         <BioPlate text={user.bio}/>
                     </Grid>
-                    <Grid item>
-                        <InfoPlate textPlate={CaptionText}
-                                   text='Подробная информация'/>
-                    </Grid>
+                    {/*<Grid item>*/}
+                    {/*    <InfoPlate textPlate={CaptionText}*/}
+                    {/*               text='Подробная информация'/>*/}
+                    {/*</Grid>*/}
                 </Grid>
             </Grid>
             <Grid item container>
@@ -120,5 +118,4 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                 </Grid>
             </Grid>
         </Grid>
-    </RootContainer>
 }

@@ -40,7 +40,7 @@ export const Modal: React.FC<ModalProps> = ({children, canGoBack, cantClose, gri
                 <Grid container {...gridProps}
                       style={
                           {
-                              overflowY: 'scroll',
+                              overflowY: 'auto',
                               maxHeight: '90vh',
                               marginTop: '10vh',
                               paddingBottom: '10vh',
