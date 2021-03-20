@@ -25,7 +25,7 @@ const useUnite = () => {
     useEffect(() => {
         if (actionId === null) return
 
-        invitePerson(event.id, user.id, cUser.id).then((wasInvited?: boolean) => {
+        invitePerson(event.id, cUser.id, user.id).then((wasInvited?: boolean) => {
             if (wasInvited) {
                 user.change({isInvited: true})
             } else {
