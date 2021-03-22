@@ -1,6 +1,6 @@
 import {
     Team,
-    User, UserOptional
+    User, UserOptional, UserSkills
 } from '../components/tools/use-app-state/user'
 import {
     Hackathon, Prize

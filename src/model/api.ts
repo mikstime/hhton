@@ -605,8 +605,31 @@ export const declineInvite = async (eventId: string, inviteeId: string, inviterI
  */
 export const modifyUser = async (user: UserOptional & { id: string }) => {
     if (!useMock) {
-        //@TODO implement (with Convert)
-        return false
+        let success = true
+        const backUser = Convert.user.toBackend(user)
+
+        const modifyRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${user.id}`,
+            {
+                method: 'PUT',
+                body: JSON.stringify(backUser)
+            })
+
+        success = modifyRequest.ok && modifyRequest.status === 200
+        if (!success) {
+            return false
+        }
+
+        if (backUser.skills != null) {
+            const modifySkillsRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${user.id}/skills`,
+                {
+                    method: 'POST',
+                    body: JSON.stringify(backUser.skills)
+                })
+
+            success = modifySkillsRequest.ok && modifySkillsRequest.status === 200
+        }
+
+        return success
     } else {
         await sleep(300)
         return true
