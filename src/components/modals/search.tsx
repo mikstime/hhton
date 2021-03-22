@@ -18,7 +18,7 @@ import {
 import {SearchButton} from '../event/search-button'
 import {InviteButton} from '../event/invite-button'
 import {findUsers, getJobs, getSkills} from '../../model/api'
-import {User} from '../tools/use-app-state/user'
+import {User, UserSkill} from '../tools/use-app-state/user'
 import {Link} from 'react-router-dom'
 import {PrimaryButton} from '../common/buttons'
 import {useHistory} from 'react-router-dom'
@@ -92,7 +92,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
     const [jobs, setJobs] = useState<string[]>([])
     const [selectedJob, selectJob] = useState(-1)
 
-    const [skills, setSkills] = useState<string[]>([])
+    const [skills, setSkills] = useState<UserSkill[]>([])
     const [selectedSkills, selectSkills] = useState<boolean[]>([])
 
     const history = useHistory()
@@ -119,7 +119,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
 
     const showFeed = useCallback(() => {
         const fjob = jobs[selectedJob]
-        const fskills = skills.filter((s, i) => selectedSkills[i])
+        const fskills = skills.filter((s, i) => selectedSkills[i]).map(s => s.name)
         if (fskills.length) {
             history.push(`/feed?job=${fjob}&skill=${fskills.join('&skill=')}`)
         } else if (fjob) {
@@ -161,7 +161,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
                 }
                 <div className={classes.root}>
                     {
-                        skills.map((j, i) => <Zoom key={j} in><Chip
+                        skills.map((j, i) => <Zoom key={j.id} in><Chip
                             onClick={
                                 () => {
                                     const selected = [...selectedSkills]
@@ -170,7 +170,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
                                 }
                             }
                             className={selectedSkills[i] ? classes.selected : ''}
-                            label={j}
+                            label={j.name}
                         /></Zoom>)
                     }
                 </div>
