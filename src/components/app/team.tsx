@@ -13,7 +13,6 @@ import {PersonInvitee} from '../team/person-invitee'
 export const TeamApp: React.FC = () => {
 
     const {cUser, invites} = useAppState()
-
     return <Grid container direction='column'>
         <SubTitle style={{marginBottom: 24}}>{(cUser.team && cUser.team.name) || 'Ваша комнада'}</SubTitle>
         <Grid container spacing={3} direction='column'>

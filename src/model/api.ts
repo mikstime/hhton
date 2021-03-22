@@ -235,6 +235,7 @@ export const fetchEvent = async (id: string) => {
         return {
             name: 'Хакатон',
             logo: logo,
+            description: 'Замечательный хакатон',
             background: background,
             isFinished: false,
             place: 'Москва, Лубянка 13',
@@ -514,7 +515,7 @@ export const teamInvites = async (eventId: string, userId: string) => {
         if (teams.ok) {
             const json = await teams.json()
             let result = [] as User[]
-
+            console.log(json)
             if (json) {
                 json.forEach((v: { members: any[] }) => {
                     if (v.members) {

@@ -31,19 +31,18 @@ const UserNameGrid = styled(Grid)`
 export const UserApp: React.FC<GridProps> = ({...rest}) => {
     //@ts-ignore
     const {userId} = useParams()
-    const {user, event, cUser} = useAppState()
+    const {user, cEvent, cUser} = useAppState()
 
     useEffect(() => {
         if (userId) {
             user.change({id: userId})
         } else {
             if(cUser.id !== '-1') {
-                user.change({id: cUser.id.toString()})
+                user.change({id: cUser.id})
             }
         }
         //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userId, cUser.id, event.id])
-
+    }, [userId, cUser.id, cEvent.id])
     if (user.notFound) {
         return <NotFound
             title='Пользователь не найден'
@@ -79,7 +78,7 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                 <Grid item container direction='column' md>
                     <Grid item>
                         <Title>
-                            Профессиональные навыки
+                            Профессиональные навыки<EditUserButton/>
                         </Title>
                     </Grid>
                     <Grid item>

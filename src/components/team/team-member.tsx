@@ -13,6 +13,7 @@ import {AvatarPlate} from '../common'
 import {NameTypography} from '../common/typography'
 import {ReactComponent as KickActiveIcon} from '../../assets/kick_active.svg'
 import {ReactComponent as KickIcon} from '../../assets/kick.svg'
+import {useAppState} from '../tools/use-app-state'
 
 
 const VoteIcon: React.FC<{ active: boolean }> = ({active, ...props}) => {
@@ -74,13 +75,17 @@ export const useChipStyles = makeStyles((theme: Theme) =>
 const Skills: React.FC<{ user: User }> = ({user}) => {
     const classes = useChipStyles()
     return <div className={classes.root} style={{margin: '0px -8px 0px -8px'}}>
-        {user.skills.tags.map((s, i) => <Chip key={s.name + i} label={s.name}/>)}
+        {user.skills.tags.map((s, i) => <Chip key={s.name + i}
+                                              label={s.name}/>)}
     </div>
 }
 
 
 export const TeamMember: React.FC<{ user: User }> = ({user}) => {
     const [didVote] = useState(false)
+
+    const {cUser} = useAppState()
+
     return <Grid item container spacing={2}>
         <Grid item md={5} xs={9} sm={5}>
             <Link to={`/user/${user.id}`}
@@ -104,12 +109,14 @@ export const TeamMember: React.FC<{ user: User }> = ({user}) => {
                   direction='column'
                   justify='center' alignItems='center'>
                 <Grid item>
+                    {user.id !== cUser.id &&
                     <IconButton>
-                        <Box clone width={{xs: '24px', md: '48px'}}
-                             height={{xs: '24px', md: '48px'}}>
-                            <VoteIcon active={didVote}/>
-                        </Box>
+                      <Box clone width={{xs: '24px', md: '48px'}}
+                           height={{xs: '24px', md: '48px'}}>
+                        <VoteIcon active={didVote}/>
+                      </Box>
                     </IconButton>
+                    }
                 </Grid>
             </Grid>
         </Box>
