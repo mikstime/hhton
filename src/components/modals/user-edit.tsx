@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react'
-import {AdditionalText, GrayPlate, Modal, ModalProps} from '../common'
+import {AdditionalText, GrayPlate, Modal, ModalProps, Plate} from '../common'
 import {
     Button,
     Grid,
@@ -31,8 +31,9 @@ const _useUserEditModal = () => {
     }
 }
 
-const GrayField: React.FC<{label: string, inputProps?: InputBaseProps}> = ({label, inputProps = {}}) => {
-    return <Grid item xs container alignItems='baseline' spacing={2}> <Grid xs={12} sm={4} item>
+const GrayField: React.FC<{ label: string, inputProps?: InputBaseProps }> = ({label, inputProps = {}}) => {
+    return <Grid item xs container alignItems='baseline' spacing={2}> <Grid
+        xs={12} sm={4} item>
         <Typography variant='body2' style={{color: '#6F7985'}} align='right'>
             {label}
         </Typography>
@@ -41,6 +42,25 @@ const GrayField: React.FC<{label: string, inputProps?: InputBaseProps}> = ({labe
             <InputBase {...inputProps} style={{
                 background: 'white',
                 borderRadius: 8,
+                paddingLeft: 12,
+                paddingRight: 12,
+                display: 'block',
+                height: 32,
+                ...(inputProps.style || {})
+            }}/>
+        </Grid>
+    </Grid>
+}
+
+const WhiteField: React.FC<{ label: string, inputProps?: InputBaseProps }> = ({label, inputProps = {}}) => {
+    return <Grid item xs container alignItems='baseline'>
+        <Grid item>
+            <Typography variant='body2' style={{color: '#6F7985'}}>
+                {label}
+            </Typography>
+        </Grid>
+        <Grid item xs>
+            <InputBase fullWidth {...inputProps} style={{
                 paddingLeft: 12,
                 paddingRight: 12,
                 display: 'block',
@@ -84,10 +104,37 @@ export const UserEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({
             </AdditionalText>
             <GrayPlate style={{marginTop: 16}}>
                 <Grid container spacing={4}>
-                    <GrayField label='имя'/>
-                    <GrayField label='Фамилия'/>
+                    <GrayField label='имя' inputProps={{
+                        placeholder: 'Василий'
+                    }}/>
+                    <GrayField label='Фамилия' inputProps={{
+                        placeholder: 'Петров'
+                    }}/>
                 </Grid>
             </GrayPlate>
+            <Plate elevation={4} padding={8} style={{marginTop: 16}}>
+                <WhiteField label='Место работы' inputProps={{
+                    placeholder: 'Тинькофф'
+                }}/>
+            </Plate>
+            <Typography variant='h2' style={{fontSize: 22, marginTop: 24}}>
+                Социальные сети
+            </Typography>
+            <Plate elevation={4} padding={8} style={{marginTop: 16}}>
+                <WhiteField label='Вконтакте' inputProps={{
+                    placeholder: 'Тинькофф'
+                }}/>
+            </Plate>
+            <Plate elevation={4} padding={8} style={{marginTop: 16}}>
+                <WhiteField label='Телеграм' inputProps={{
+                    placeholder: 'Тинькофф'
+                }}/>
+            </Plate>
+            <Plate elevation={4} padding={8} style={{marginTop: 16}}>
+                <WhiteField label='Github' inputProps={{
+                    placeholder: 'Тинькофф'
+                }}/>
+            </Plate>
             <Grid container direction='row' justify='flex-end'
                   style={{marginTop: 32}} spacing={1}>
                 <Grid item>
