@@ -4,7 +4,7 @@ import background from '../assets/background.png'
 import logo from '../assets/logo.png'
 import {NULL_USER} from '../components/tools/use-app-state'
 import {User, UserOptional, UserSkill,} from '../components/tools/use-app-state/user'
-import Convert, {BackendHackathon, Jobs} from './backend'
+import Convert, {BackendHackathon} from './backend'
 import {HackathonOptional} from '../components/tools/use-app-state/hackathon'
 
 const useMock = true
@@ -21,7 +21,23 @@ const TEST_USERS: User[] = [
         bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
         jobName: 'Тинькофф',
         skills: {
-            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {name: 'React', jobId: '1', id: '1'}, {name: 'Angular', jobId: '1', id: '1'}, {name: 'CSS', jobId: '1', id: '1'}, {name: 'Backend', jobId: '1', id: '1'}, {name: 'Node.js', jobId: '1', id: '1'}, {name: 'Golang', jobId: '1', id: '1'}, {name: 'Postgres', jobId: '1', id: '1'}],
+            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
+                name: 'React',
+                jobId: '1',
+                id: '1'
+            }, {name: 'Angular', jobId: '1', id: '1'}, {
+                name: 'CSS',
+                jobId: '1',
+                id: '1'
+            }, {name: 'Backend', jobId: '1', id: '1'}, {
+                name: 'Node.js',
+                jobId: '1',
+                id: '1'
+            }, {name: 'Golang', jobId: '1', id: '1'}, {
+                name: 'Postgres',
+                jobId: '1',
+                id: '1'
+            }],
             description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
         hackathons: [],
@@ -39,7 +55,23 @@ const TEST_USERS: User[] = [
         bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
         jobName: 'Тинькофф',
         skills: {
-            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {name: 'React', jobId: '1', id: '1'}, {name: 'Angular', jobId: '1', id: '1'}, {name: 'CSS', jobId: '1', id: '1'}, {name: 'Backend', jobId: '1', id: '1'}, {name: 'Node.js', jobId: '1', id: '1'}, {name: 'Golang', jobId: '1', id: '1'}, {name: 'Postgres', jobId: '1', id: '1'}],
+            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
+                name: 'React',
+                jobId: '1',
+                id: '1'
+            }, {name: 'Angular', jobId: '1', id: '1'}, {
+                name: 'CSS',
+                jobId: '1',
+                id: '1'
+            }, {name: 'Backend', jobId: '1', id: '1'}, {
+                name: 'Node.js',
+                jobId: '1',
+                id: '1'
+            }, {name: 'Golang', jobId: '1', id: '1'}, {
+                name: 'Postgres',
+                jobId: '1',
+                id: '1'
+            }],
             description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
         hackathons: [],
@@ -57,7 +89,23 @@ const TEST_USERS: User[] = [
         bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
         jobName: 'Тинькофф',
         skills: {
-            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {name: 'React', jobId: '1', id: '1'}, {name: 'Angular', jobId: '1', id: '1'}, {name: 'CSS', jobId: '1', id: '1'}, {name: 'Backend', jobId: '1', id: '1'}, {name: 'Node.js', jobId: '1', id: '1'}, {name: 'Golang', jobId: '1', id: '1'}, {name: 'Postgres', jobId: '1', id: '1'}],
+            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
+                name: 'React',
+                jobId: '1',
+                id: '1'
+            }, {name: 'Angular', jobId: '1', id: '1'}, {
+                name: 'CSS',
+                jobId: '1',
+                id: '1'
+            }, {name: 'Backend', jobId: '1', id: '1'}, {
+                name: 'Node.js',
+                jobId: '1',
+                id: '1'
+            }, {name: 'Golang', jobId: '1', id: '1'}, {
+                name: 'Postgres',
+                jobId: '1',
+                id: '1'
+            }],
             description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
         hackathons: [],
@@ -75,7 +123,23 @@ const TEST_USERS: User[] = [
         bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
         jobName: 'Тинькофф',
         skills: {
-            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {name: 'React', jobId: '1', id: '1'}, {name: 'Angular', jobId: '1', id: '1'}, {name: 'CSS', jobId: '1', id: '1'}, {name: 'Backend', jobId: '1', id: '1'}, {name: 'Node.js', jobId: '1', id: '1'}, {name: 'Golang', jobId: '1', id: '1'}, {name: 'Postgres', jobId: '1', id: '1'}],
+            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
+                name: 'React',
+                jobId: '1',
+                id: '1'
+            }, {name: 'Angular', jobId: '1', id: '1'}, {
+                name: 'CSS',
+                jobId: '1',
+                id: '1'
+            }, {name: 'Backend', jobId: '1', id: '1'}, {
+                name: 'Node.js',
+                jobId: '1',
+                id: '1'
+            }, {name: 'Golang', jobId: '1', id: '1'}, {
+                name: 'Postgres',
+                jobId: '1',
+                id: '1'
+            }],
             description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
         hackathons: [],
@@ -93,7 +157,23 @@ const TEST_USERS: User[] = [
         bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
         jobName: 'Тинькофф',
         skills: {
-            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {name: 'React', jobId: '1', id: '1'}, {name: 'Angular', jobId: '1', id: '1'}, {name: 'CSS', jobId: '1', id: '1'}, {name: 'Backend', jobId: '1', id: '1'}, {name: 'Node.js', jobId: '1', id: '1'}, {name: 'Golang', jobId: '1', id: '1'}, {name: 'Postgres', jobId: '1', id: '1'}],
+            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
+                name: 'React',
+                jobId: '1',
+                id: '1'
+            }, {name: 'Angular', jobId: '1', id: '1'}, {
+                name: 'CSS',
+                jobId: '1',
+                id: '1'
+            }, {name: 'Backend', jobId: '1', id: '1'}, {
+                name: 'Node.js',
+                jobId: '1',
+                id: '1'
+            }, {name: 'Golang', jobId: '1', id: '1'}, {
+                name: 'Postgres',
+                jobId: '1',
+                id: '1'
+            }],
             description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
         hackathons: [],
@@ -111,7 +191,23 @@ const TEST_USERS: User[] = [
         bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
         jobName: 'Тинькофф',
         skills: {
-            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {name: 'React', jobId: '1', id: '1'}, {name: 'Angular', jobId: '1', id: '1'}, {name: 'CSS', jobId: '1', id: '1'}, {name: 'Backend', jobId: '1', id: '1'}, {name: 'Node.js', jobId: '1', id: '1'}, {name: 'Golang', jobId: '1', id: '1'}, {name: 'Postgres', jobId: '1', id: '1'}],
+            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
+                name: 'React',
+                jobId: '1',
+                id: '1'
+            }, {name: 'Angular', jobId: '1', id: '1'}, {
+                name: 'CSS',
+                jobId: '1',
+                id: '1'
+            }, {name: 'Backend', jobId: '1', id: '1'}, {
+                name: 'Node.js',
+                jobId: '1',
+                id: '1'
+            }, {name: 'Golang', jobId: '1', id: '1'}, {
+                name: 'Postgres',
+                jobId: '1',
+                id: '1'
+            }],
             description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
         hackathons: [],
@@ -132,7 +228,23 @@ const lackUser = {
     jobName: 'Тинькофф',
     avatar: 'http://loremflickr.com/1000/1000',
     skills: {
-        tags: [{name: 'Frontend', jobId: '1', id: '1'}, {name: 'React', jobId: '1', id: '1'}, {name: 'Angular', jobId: '1', id: '1'}, {name: 'CSS', jobId: '1', id: '1'}, {name: 'Backend', jobId: '1', id: '1'}, {name: 'Node.js', jobId: '1', id: '1'}, {name: 'Golang', jobId: '1', id: '1'}, {name: 'Postgres', jobId: '1', id: '1'}],
+        tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
+            name: 'React',
+            jobId: '1',
+            id: '1'
+        }, {name: 'Angular', jobId: '1', id: '1'}, {
+            name: 'CSS',
+            jobId: '1',
+            id: '1'
+        }, {name: 'Backend', jobId: '1', id: '1'}, {
+            name: 'Node.js',
+            jobId: '1',
+            id: '1'
+        }, {name: 'Golang', jobId: '1', id: '1'}, {
+            name: 'Postgres',
+            jobId: '1',
+            id: '1'
+        }],
         description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
     },
     hackathons: []
@@ -167,7 +279,23 @@ export const fetchUser = async (id: string) => {
             avatar: 'http://loremflickr.com/1000/1000',
             id: id,
             skills: {
-                tags: [{name: 'Frontend', jobId: '1', id: '1'}, {name: 'React', jobId: '1', id: '1'}, {name: 'Angular', jobId: '1', id: '1'}, {name: 'CSS', jobId: '1', id: '1'}, {name: 'Backend', jobId: '1', id: '1'}, {name: 'Node.js', jobId: '1', id: '1'}, {name: 'Golang', jobId: '1', id: '1'}, {name: 'Postgres', jobId: '1', id: '1'}],
+                tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
+                    name: 'React',
+                    jobId: '1',
+                    id: '1'
+                }, {name: 'Angular', jobId: '1', id: '1'}, {
+                    name: 'CSS',
+                    jobId: '1',
+                    id: '1'
+                }, {name: 'Backend', jobId: '1', id: '1'}, {
+                    name: 'Node.js',
+                    jobId: '1',
+                    id: '1'
+                }, {name: 'Golang', jobId: '1', id: '1'}, {
+                    name: 'Postgres',
+                    jobId: '1',
+                    id: '1'
+                }],
                 description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
             },
             hackathons: [],
@@ -407,7 +535,11 @@ export const getSkills = async (job: string) => {
         }
     } else {
         await sleep(300)
-        return [{name: 'React', jobId: '1', id: '1'}, {name: 'Angular', jobId: '1', id: '1'}, {name: 'CSS', jobId: '1', id: '1'}]
+        return [{name: 'React', jobId: '1', id: '1'}, {
+            name: 'Angular',
+            jobId: '1',
+            id: '1'
+        }, {name: 'CSS', jobId: '1', id: '1'}]
     }
 }
 
@@ -495,19 +627,29 @@ export const teamInvites = async (eventId: string, userId: string) => {
 
         if (teams.ok) {
             const json = await teams.json()
-            let result = [] as User[]
+            const parsedTeams = await Promise.all(
+                json.map((t: { id: number }) => fetch(`${HOST_DOMAIN}${PREFIX}/team/${t.id}`))
+            )
+            //@ts-ignore
+            const teams1 = await Promise.all(parsedTeams.map(p => p.json()))
+            if (teams1) {
+                let result = [] as User[]
 
-            if (json) {
-                json.forEach((v: { members: any[] }) => {
-                    if (v.members) {
-                        result.push({...lackUser, ...v.members[0]})
-                    } else {
-                        console.log('members is null')
-                    }
-                })
+                if (teams1) {
+                    //@ts-ignore
+                    teams1.forEach((v: { members: BackendUser[] }) => {
+                        if (v.members) {
+                            result.push(Convert.user.toFrontend(v.members[0]))
+                        } else {
+                            console.log('members is null')
+                        }
+                    })
+                }
+
+                return result
             }
 
-            return result
+            return []
         } else {
             return []
         }

@@ -22,19 +22,17 @@ export const useFetcher = () => {
             if (appState.user.id !== isFetchingId.current && appState.user.id !== '-1') {
                 isFetchingId.current = appState.user.id
                 appState.user.set(NULL_USER)
+
                 const user = await fetchUser(appState.user.id)
 
                 if (user) {
                     if (isFetchingId.current === appState.user.id) {
                         appState.user.set(user)
-                        const team = appState.event.id !== '-1' ? await getTeam(appState.event.id, user.id): {name: '', members: []}
-                        if(team.members.length) {
-                            if(isFetchingId.current === appState.user.id) {
-                                if(~team.members.findIndex((v) => v.id === appState.cUser.id)) {
-                                    appState.user.change({inMyTeam: true})
-                                }
-                                appState.user.change({team})
-                            }
+                        const team = appState.cEvent.id !== '-1' ?
+                            await getTeam(appState.cEvent.id, user.id) : user.team
+
+                        if (isFetchingId.current === appState.user.id) {
+                            appState.user.change({team})
                         }
                     }
                 } else {
@@ -54,7 +52,7 @@ export const useFetcher = () => {
     useEffect(() => {
         (async () => {
             if (appState.cUser.id !== '-1' && appState.event.id !== '-1') {
-                const participating = await isParticipating(appState.event.id, appState.cUser.id);
+                const participating = await isParticipating(appState.event.id, appState.cUser.id)
                 appState.event.change({isParticipating: !!participating})
             }
         })()
@@ -64,7 +62,7 @@ export const useFetcher = () => {
     useEffect(() => {
         (async () => {
             if (appState.user.id !== '-1' && appState.cUser.id !== '-1') {
-                const invited = await isInvited(appState.event.id, appState.cUser.id, appState.user.id);
+                const invited = await isInvited(appState.event.id, appState.cUser.id, appState.user.id)
                 appState.user.change({isInvited: !!invited})
             }
         })()

@@ -68,12 +68,12 @@ export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
     const {isFetching, submit, decline} = useInviteActions(user)
     return <Grid item container spacing={2}
                  style={{overflow: 'visible'}}>
-        <Grid item container md={8} xs={9} sm={8}>
+        <Grid item container md={8} xs={9} sm={12}>
             <AvatarPlate direction='row' src={user.avatar}
                          afterChildren={
                              <Box clone paddingTop={2} flex='1'>
                                  <Grid container item xs={12}>
-                                         <Grid container item xs={12} sm={7}>
+                                         <Grid container item xs={12} sm={6} md={7}>
                                              <PrimaryButton onClick={submit}
                                                             disabled={isFetching}
                                                             style={{flex: 1}}>
@@ -81,7 +81,7 @@ export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
                                              </PrimaryButton>
                                          </Grid>
                                      <Box clone paddingLeft={2}>
-                                     <Grid container item xs={12} sm={5}
+                                     <Grid container item xs={12} sm={6} md={5}
                                            justify='center'>
                                          <InviteButton onClick={decline}
                                                        disabled={isFetching}>
@@ -91,8 +91,8 @@ export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
                                      </Box>
                                  </Grid>
                              </Box>}
-                         avatarProps={{wrap: 'nowrap', xs: 12, sm: 7}}>
-                <Grid xs sm={4} item container
+                         avatarProps={{wrap: 'nowrap', xs: 12, sm: 6, md: 7}}>
+                <Grid xs sm={6} md={5} item container
                       direction='column'>
                     <Box paddingLeft={2}>
                         <Grid item container>
@@ -105,7 +105,8 @@ export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
                 </Grid>
             </AvatarPlate>
         </Grid>
-        <Grid item container md={6} xs={12} sm={6}>
+        <Grid item container md={4} xs={12} sm={6}>
+        {/*    //@TODO some more info*/}
         </Grid>
     </Grid>
 }

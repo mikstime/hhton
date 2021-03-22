@@ -21,7 +21,7 @@ import {useChipStyles} from '../common/skill-chip'
 import {getJobs, getSkills} from '../../model/api'
 import {UserSkill} from '../tools/use-app-state/user'
 
-const _useUserEditModal = () => {
+const _useEventEditModal = () => {
     const [isOpen, setIsOpen] = useState(false)
     const [onSubmit, setOnSubmit] = useState<Function | undefined>(undefined)
 
@@ -147,8 +147,8 @@ const Skills: React.FC = () => {
             if (jobs[selectedJob]) {
                 const aSkills = await getSkills(jobs[selectedJob])
                 if(!skills[jobs[selectedJob]]?.length) {
-                setSkills({...skills, [jobs[selectedJob]]: aSkills})
-                selectSkills({...selectedSkills, [jobs[selectedJob]]: aSkills.map(() => false)})
+                    setSkills({...skills, [jobs[selectedJob]]: aSkills})
+                    selectSkills({...selectedSkills, [jobs[selectedJob]]: aSkills.map(() => false)})
                 }
             }
         })()
@@ -177,7 +177,7 @@ const Skills: React.FC = () => {
                         selectedJob === i ?
                             classes.selected : selectedSkills[jobs[i]]?.includes(true) ? '' : classes.notSelected :
                         selectedSkills[jobs[i]]?.includes(true) ? classes.selected :''
-                        }
+                    }
                     label={j}
                 /></Zoom>)
             }
@@ -212,9 +212,9 @@ interface MProps extends Omit<ModalProps, 'children'> {
 }
 
 //@ts-ignore
-const UserEditModalContext = React.createContext()
+const EventEditModalContext = React.createContext()
 
-export const UserEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({children, onSubmitClick, ...props}) => {
+export const EventEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({children, onSubmitClick, ...props}) => {
     const [disabled, setDisabled] = useState(false)
 
     useEffect(() => {
@@ -316,23 +316,23 @@ export const UserEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({
     </Modal>
 }
 
-export type UseUserEditModalType = ReturnType<typeof _useUserEditModal>
+export type UseEventEditModalType = ReturnType<typeof _useEventEditModal>
 
-export const UserEditModalProvider: React.FC = ({children}) => {
-    const modalState = _useUserEditModal()
-    return <UserEditModalContext.Provider value={modalState}>
-        <UserEditModal
+export const EventEditModalProvider: React.FC = ({children}) => {
+    const modalState = _useEventEditModal()
+    return <EventEditModalContext.Provider value={modalState}>
+        <EventEditModal
             onSubmitClick={modalState.onSubmit}
             open={modalState.isOpen}
             close={modalState.close}/>
         {children}
-    </UserEditModalContext.Provider>
+    </EventEditModalContext.Provider>
 }
 
-export const useUserEditModal: () => UseUserEditModalType = () => {
-    const context = React.useContext(UserEditModalContext)
+export const useEventEditModal: () => UseEventEditModalType = () => {
+    const context = React.useContext(EventEditModalContext)
     if (context === undefined) {
-        throw new Error('useUserEditModal must be used within a UserEditModalProvider')
+        throw new Error('useEventEditModal must be used within a EventEditModalProvider')
     }
-    return context as UseUserEditModalType
+    return context as UseEventEditModalType
 }

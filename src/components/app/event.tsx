@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react'
-import {Grid, Typography} from '@material-ui/core'
+import {Box, Grid, Hidden, Typography} from '@material-ui/core'
 import {
     AvatarPlate,
-    Title,
+    Title
 } from '../common'
 import {useAppState} from '../tools/use-app-state'
 import styled from 'styled-components'
@@ -12,6 +12,8 @@ import {ParticipateButton} from '../event/participate-button'
 import {useParams} from 'react-router'
 import {NotFound} from './notfound'
 import notFoundIcon from '../../assets/notfound.svg'
+import Image from 'material-ui-image'
+import {EditEventButton} from '../event/edit-event-button'
 
 const EventNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
@@ -44,7 +46,7 @@ export const EventApp: React.FC = () => {
         if (eventId) {
             event.change({id: eventId})
         } else {
-            if(cEvent.id !== '-1') {
+            if (cEvent.id !== '-1') {
                 event.change({id: cEvent.id})
             }
         }
@@ -60,45 +62,62 @@ export const EventApp: React.FC = () => {
     }
 
     return <Grid container style={{position: 'relative'}}>
-                <Grid style={{zIndex: 3}} container direction='column'>
-                    <Grid item container spacing={2}>
-                        <Grid item container md={5}>
-                            <AvatarPlate src={event.logo}>
-                                <ParticipateButton/>
-                            </AvatarPlate>
+        <Grid style={{zIndex: 3}} container direction='column'>
+            <Grid item container spacing={2}>
+                <Grid item container md={5}>
+                    <AvatarPlate src={event.logo}>
+                        <ParticipateButton/>
+                    </AvatarPlate>
+                </Grid>
+                <Grid item container md spacing={3} direction='column'>
+                    <EventNameGrid item>
+                        <Typography style={{minHeight: 24}}>
+                            {event.name}
+                        </Typography>
+                        <Box clone marginLeft='12px'>
+                            <EditEventButton/>
+                        </Box>
+                    </EventNameGrid>
+                    <Hidden smDown>
+                        <Grid item style={{paddingLeft: 20, paddingRight: 20}}>
+                            <Image src={event.background} imageStyle={{
+                                width: '100%',
+                                objectFit: 'cover',
+                                height: '250px'
+                            }} style={{
+                                width: '100%',
+                                borderRadius: '10px 10px 0 0',
+                                overflow: 'hidden',
+                                paddingTop: '250px'
+                            }}/>
                         </Grid>
-                        <Grid item container md spacing={3} direction='column'>
-                            <EventNameGrid item>
-                                <Typography style={{minHeight: 24}}>
-                                    {event.name}
-                                </Typography>
-                            </EventNameGrid>
-                            <Grid style={{height: 130}} item/>
-                            <Grid item>
-                                <JobPlate elevation={4}
-                                          text={event.place ? `Место проведения: ${event.place}`: ''}/>
-                            </Grid>
-                            <Grid item>
-                                <InfoPlate elevation={4} textPlate={CaptionText}
-                                           text='Подробная информация'/>
-                            </Grid>
-                        </Grid>
+                        <Grid item style={{marginTop: -120}}/>
+                    </Hidden>
+                    <Grid item style={{zIndex: 2}}>
+                        <JobPlate elevation={4}
+                                  text={event.place ? `Место проведения: ${event.place}` : ''}/>
                     </Grid>
-                    <Grid item container>
-                        <Grid item container direction='column' md>
-                            <Grid item>
-                                <Title>
-                                    О мероприятии
-                                </Title>
-                            </Grid>
-                            <Grid item>
-                                <SecondaryText>
-                                    123
-                                </SecondaryText>
-                            </Grid>
-                        </Grid>
-                        <Grid item xs md={5}/>
+                    <Grid item style={{zIndex: 2}}>
+                        <InfoPlate elevation={4} textPlate={CaptionText}
+                                   text='Подробная информация'/>
                     </Grid>
                 </Grid>
             </Grid>
+            <Grid item container>
+                <Grid item container direction='column' md>
+                    <Grid item>
+                        <Title>
+                            О мероприятии
+                        </Title>
+                    </Grid>
+                    <Grid item>
+                        <SecondaryText>
+                            {event.description}
+                        </SecondaryText>
+                    </Grid>
+                </Grid>
+                <Grid item xs md={5}/>
+            </Grid>
+        </Grid>
+    </Grid>
 }
