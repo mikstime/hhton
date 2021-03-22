@@ -7,8 +7,8 @@ import {
     User,
     UserOptional, UserSkill,
 } from '../components/tools/use-app-state/user'
-import Convert from './backend'
-import {HackathonOptional} from '../components/tools/use-app-state/hackathon'
+import Convert, {BackendHackathon} from './backend'
+import {Hackathon, HackathonOptional} from '../components/tools/use-app-state/hackathon'
 
 const useMock = true
 const mockImplemented = false
@@ -221,12 +221,13 @@ const lackEvent = {
 export const fetchEvent = async (id: string) => {
     if (!mockImplemented) {
         //@TODO rewrite with Convert
-        const event = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${id}`)
+        const eventRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${id}`)
 
-        if (event.ok) {
-            const json = await event.json()
+        if (eventRequest.ok) {
+            const json = await eventRequest.json()
+            const event = Convert.event.toFrontend(json as BackendHackathon)
 
-            return {...lackEvent, ...json, id: json.id.toString()}
+            return event
         } else {
             return null
         }

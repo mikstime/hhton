@@ -3,7 +3,7 @@ import {
     User, UserOptional
 } from '../components/tools/use-app-state/user'
 import {
-    Hackathon
+    Hackathon, HackathonSettings, Prize
 } from '../components/tools/use-app-state/hackathon'
 import {Invites} from '../components/tools/use-app-state/invite'
 
@@ -20,7 +20,18 @@ type BackendUser = {
     skills: BackendSkills | null
 }
 
-type BackendHackathon = {}
+export type BackendHackathon = {
+    id: number | null,
+    name: string | null,
+    description: string | null,
+    founder: number | null,
+    dateStart: Date | null,
+    dateEnd: Date | null,
+    state: string | null,
+    place: string | null,
+    feed: User[] | null,
+    participantsCount: number | null
+}
 
 type BackendInvites = {}
 
@@ -75,6 +86,30 @@ const Convert = {
                 bio: ''
             }
         }
+    },
+    event: {
+        toFrontend: (bHackathon: BackendHackathon) => {
+            const currentDate = new Date()
+
+            return {
+                name: bHackathon.name ?? '',
+                id: bHackathon.id?.toString() ?? '-1',
+                logo: 'http://loremflickr.com/1000/1000',
+                background: 'http://loremflickr.com/1000/1000',
+                founderId: bHackathon.founder?.toString() ?? '-1',
+                isFinished: currentDate > bHackathon.dateEnd! ?? true,
+                place: bHackathon.place ?? '',
+                participantsCount: bHackathon.participantsCount,
+                participants: bHackathon.feed,
+                prizes: [] as Prize[],
+                settings: {},
+            }
+        },
+        toBackend: (bUser: Hackathon) => {
+            return {
+
+            }
+        }
     }
 } as {
     user: {
@@ -82,7 +117,7 @@ const Convert = {
         toBackend: (bUser: User) => BackendUser
     },
     event: {
-        toFrontend: (bUser: BackendHackathon) => User,
+        toFrontend: (bUser: BackendHackathon) => Hackathon,
         toBackend: (bUser: Hackathon) => BackendHackathon
     },
     team: {
