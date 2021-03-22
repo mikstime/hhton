@@ -74,7 +74,7 @@ export const useChipStyles = makeStyles((theme: Theme) =>
 const Skills: React.FC<{ user: User }> = ({user}) => {
     const classes = useChipStyles()
     return <div className={classes.root} style={{margin: '0px -8px 0px -8px'}}>
-        {user.skills.tags.map((s, i) => <Chip key={s + i} label={s}/>)}
+        {user.skills.tags.map((s, i) => <Chip key={s.name + i} label={s.name}/>)}
     </div>
 }
 

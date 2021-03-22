@@ -6,8 +6,7 @@ import {
 } from '@material-ui/core'
 import {
     AvatarPlate,
-    GrayPlate,
-    Title, FlexSpace
+    Title, FlexSpace, GrayishPlate
 } from '../common'
 import {useAppState} from '../tools/use-app-state'
 import styled from 'styled-components'
@@ -74,10 +73,6 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                     <Grid item>
                         <BioPlate text={user.bio}/>
                     </Grid>
-                    {/*<Grid item>*/}
-                    {/*    <InfoPlate textPlate={CaptionText}*/}
-                    {/*               text='Подробная информация'/>*/}
-                    {/*</Grid>*/}
                 </Grid>
             </Grid>
             <Grid item container>
@@ -89,21 +84,21 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                     </Grid>
                     <Grid item>
                         <SecondaryText>
-                            {user.skills.description}
+                            {user.skills.description || 'Пользователь не указал данные о своих профессиональных навыках'}
                         </SecondaryText>
                     </Grid>
                 </Grid>
                 <Grid item xs md={5} container wrap='nowrap'>
                     <FlexSpace/>
                     <Grid item>
-                        <GrayPlate>
+                        <GrayishPlate>
                             <Grid container spacing={1}>
-                                {user.skills.tags.map((e, i) => <Grid
-                                    key={i} item>
-                                    <BoldText>{e}</BoldText>
+                                {user.skills.tags.map((e) => <Grid
+                                    key={e.id} item>
+                                    <BoldText>{e.name}</BoldText>
                                 </Grid>)}
                             </Grid>
-                        </GrayPlate>
+                        </GrayishPlate>
                     </Grid>
                 </Grid>
             </Grid>

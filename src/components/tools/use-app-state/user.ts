@@ -3,9 +3,14 @@ import {Hackathon} from './hackathon'
 
 export type UserSkills = {
     description: string,
-    tags: string[]
+    tags: UserSkill[]
 }
 
+export type UserSkill = {
+    name: string,
+    id?: string,
+    jobId?: string,
+}
 
 export type UserActions = {
     change: (newUser: UserOptional) => any,
@@ -18,15 +23,14 @@ export type User = {
     lastName: string,
     jobName: string,
     bio: string,
-    isInvited: boolean,
+    isInvited?: boolean,
     avatar: string,
     skills: UserSkills,
     hackathons: Hackathon[], // история участий
     id: string,
-    team?: Team,
+    team: Team,
     isNullUser?: boolean,
     notFound?: boolean,
-    inMyTeam?: boolean,
 }
 
 
@@ -67,7 +71,11 @@ export const NULL_USER = {
         description: ''
     },
     hackathons: [],
-    isNullUser: true
+    isNullUser: true,
+    team: {
+        name: '',
+        members: [],
+    }
 } as User
 
 type UserAction =

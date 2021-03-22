@@ -1,7 +1,7 @@
 import {createMuiTheme} from "@material-ui/core";
 
 export const FONT_BLACK = '#222222'
-export const FONT_GRAY = '#6D7885'
+export const FONT_GRAY = '#818C99'
 export const MAIN_BLUE = '#3E74DB'
 export const MAIN_GREEN = '#42C13D'
 const MuiTheme = createMuiTheme({

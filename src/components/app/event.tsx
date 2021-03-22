@@ -44,7 +44,9 @@ export const EventApp: React.FC = () => {
         if (eventId) {
             event.change({id: eventId})
         } else {
-            event.change({id: cEvent.id})
+            if(cEvent.id !== '-1') {
+                event.change({id: cEvent.id})
+            }
         }
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventId, cEvent.id])

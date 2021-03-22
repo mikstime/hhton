@@ -3,7 +3,12 @@ import {sleep} from '../utils'
 import background from '../assets/background.png'
 import logo from '../assets/logo.png'
 import {NULL_USER} from '../components/tools/use-app-state'
-import {User} from '../components/tools/use-app-state/user'
+import {
+    User,
+    UserOptional, UserSkill,
+} from '../components/tools/use-app-state/user'
+import Convert from './backend'
+import {HackathonOptional} from '../components/tools/use-app-state/hackathon'
 
 const useMock = true
 const mockImplemented = false
@@ -19,10 +24,14 @@ const TEST_USERS: User[] = [
         bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
         jobName: 'Тинькофф',
         skills: {
-            tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {name: 'React', jobId: '1', id: '1'}, {name: 'Angular', jobId: '1', id: '1'}, {name: 'CSS', jobId: '1', id: '1'}, {name: 'Backend', jobId: '1', id: '1'}, {name: 'Node.js', jobId: '1', id: '1'}, {name: 'Golang', jobId: '1', id: '1'}, {name: 'Postgres', jobId: '1', id: '1'}],
+            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
-        hackathons: []
+        hackathons: [],
+        team: {
+            name: 'test team',
+            members: []
+        }
     },
     {
         id: '14',
@@ -33,10 +42,14 @@ const TEST_USERS: User[] = [
         bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
         jobName: 'Тинькофф',
         skills: {
-            tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {name: 'React', jobId: '1', id: '1'}, {name: 'Angular', jobId: '1', id: '1'}, {name: 'CSS', jobId: '1', id: '1'}, {name: 'Backend', jobId: '1', id: '1'}, {name: 'Node.js', jobId: '1', id: '1'}, {name: 'Golang', jobId: '1', id: '1'}, {name: 'Postgres', jobId: '1', id: '1'}],
+            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
-        hackathons: []
+        hackathons: [],
+        team: {
+            name: 'test team',
+            members: []
+        }
     },
     {
         id: '11',
@@ -47,10 +60,14 @@ const TEST_USERS: User[] = [
         bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
         jobName: 'Тинькофф',
         skills: {
-            tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {name: 'React', jobId: '1', id: '1'}, {name: 'Angular', jobId: '1', id: '1'}, {name: 'CSS', jobId: '1', id: '1'}, {name: 'Backend', jobId: '1', id: '1'}, {name: 'Node.js', jobId: '1', id: '1'}, {name: 'Golang', jobId: '1', id: '1'}, {name: 'Postgres', jobId: '1', id: '1'}],
+            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
-        hackathons: []
+        hackathons: [],
+        team: {
+            name: 'test team',
+            members: []
+        }
     },
     {
         id: '113',
@@ -61,10 +78,14 @@ const TEST_USERS: User[] = [
         bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
         jobName: 'Тинькофф',
         skills: {
-            tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {name: 'React', jobId: '1', id: '1'}, {name: 'Angular', jobId: '1', id: '1'}, {name: 'CSS', jobId: '1', id: '1'}, {name: 'Backend', jobId: '1', id: '1'}, {name: 'Node.js', jobId: '1', id: '1'}, {name: 'Golang', jobId: '1', id: '1'}, {name: 'Postgres', jobId: '1', id: '1'}],
+            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
-        hackathons: []
+        hackathons: [],
+        team: {
+            name: 'test team',
+            members: []
+        }
     },
     {
         id: '112',
@@ -75,10 +96,14 @@ const TEST_USERS: User[] = [
         bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
         jobName: 'Тинькофф',
         skills: {
-            tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {name: 'React', jobId: '1', id: '1'}, {name: 'Angular', jobId: '1', id: '1'}, {name: 'CSS', jobId: '1', id: '1'}, {name: 'Backend', jobId: '1', id: '1'}, {name: 'Node.js', jobId: '1', id: '1'}, {name: 'Golang', jobId: '1', id: '1'}, {name: 'Postgres', jobId: '1', id: '1'}],
+            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
-        hackathons: []
+        hackathons: [],
+        team: {
+            name: 'test team',
+            members: []
+        }
     },
     {
         id: '111',
@@ -89,10 +114,14 @@ const TEST_USERS: User[] = [
         bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
         jobName: 'Тинькофф',
         skills: {
-            tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {name: 'React', jobId: '1', id: '1'}, {name: 'Angular', jobId: '1', id: '1'}, {name: 'CSS', jobId: '1', id: '1'}, {name: 'Backend', jobId: '1', id: '1'}, {name: 'Node.js', jobId: '1', id: '1'}, {name: 'Golang', jobId: '1', id: '1'}, {name: 'Postgres', jobId: '1', id: '1'}],
+            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
         },
-        hackathons: []
+        hackathons: [],
+        team: {
+            name: 'test team',
+            members: []
+        }
     }
 ]
 
@@ -106,7 +135,7 @@ const lackUser = {
     jobName: 'Тинькофф',
     avatar: 'http://loremflickr.com/1000/1000',
     skills: {
-        tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
+        tags: [{name: 'Frontend', jobId: '1', id: '1'}, {name: 'React', jobId: '1', id: '1'}, {name: 'Angular', jobId: '1', id: '1'}, {name: 'CSS', jobId: '1', id: '1'}, {name: 'Backend', jobId: '1', id: '1'}, {name: 'Node.js', jobId: '1', id: '1'}, {name: 'Golang', jobId: '1', id: '1'}, {name: 'Postgres', jobId: '1', id: '1'}],
         description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
     },
     hackathons: []
@@ -117,14 +146,7 @@ export const fetchUser = async (id: string) => {
 
         if (user.ok) {
             const json = await user.json()
-
-            Object.assign(json, lackUser)
-            if(json.team) {
-                if(!json.team.members) {
-                    json.team.members = []
-                }
-            }
-            return json
+            return Convert.user.toFrontend(json)
         } else {
             return null
         }
@@ -138,6 +160,7 @@ export const fetchUser = async (id: string) => {
         if (user) {
             return user
         }
+
         return {
             firstName: 'Имя' + id,
             lastName: 'Фамилия',
@@ -147,10 +170,14 @@ export const fetchUser = async (id: string) => {
             avatar: 'http://loremflickr.com/1000/1000',
             id: id,
             skills: {
-                tags: ['Frontend', 'React', 'Angular', 'CSS', 'Backend', 'Node.js', 'Golang', 'Postgres'],
+                tags: [{name: 'Frontend', jobId: '1', id: '1'}, {name: 'React', jobId: '1', id: '1'}, {name: 'Angular', jobId: '1', id: '1'}, {name: 'CSS', jobId: '1', id: '1'}, {name: 'Backend', jobId: '1', id: '1'}, {name: 'Node.js', jobId: '1', id: '1'}, {name: 'Golang', jobId: '1', id: '1'}, {name: 'Postgres', jobId: '1', id: '1'}],
                 description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
             },
-            hackathons: []
+            hackathons: [],
+            team: {
+                name: 'test team',
+                members: []
+            }
         }
     }
 }
@@ -193,6 +220,7 @@ const lackEvent = {
  */
 export const fetchEvent = async (id: string) => {
     if (!mockImplemented) {
+        //@TODO rewrite with Convert
         const event = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${id}`)
 
         if (event.ok) {
@@ -341,12 +369,13 @@ export const findUsers = async (query: string) => {
  */
 export const getJobs: () => Promise<string[]> = async () => {
     if (!mockImplemented) {
+        //@TODO rewrite with Convert
         const job = await fetch(`${HOST_DOMAIN}${PREFIX}/job`)
 
         if (job.ok) {
             const json = await job.json()
             let result = [] as string[]
-            if(json) {
+            if (json) {
                 json.forEach((v: { name: any }) => {
                     result.push(v.name)
                 })
@@ -368,12 +397,13 @@ export const getJobs: () => Promise<string[]> = async () => {
  */
 export const getSkills = async (job: string) => {
     if (!mockImplemented) {
+        //@TODO rewrite with Convert
         const skill = await fetch(`${HOST_DOMAIN}${PREFIX}/job/${encodeURIComponent(job)}/skills`)
 
         if (skill.ok) {
             const json = await skill.json()
             let result = [] as string[]
-            if(json) {
+            if (json) {
                 json.forEach((v: { name: any }) => {
                     result.push(v.name)
                 })
@@ -398,6 +428,7 @@ export const getSkills = async (job: string) => {
 export const getFeed = async (eventId: string, query: string, sinceId?: string) => {
     if (!mockImplemented) {
         // TODO получать id сразу
+        //@TODO rewrite with Convert
         const event = await fetchEvent(eventId)
         if (event === null) {
             return []
@@ -430,14 +461,18 @@ export const getFeed = async (eventId: string, query: string, sinceId?: string) 
  */
 export const getTeam = async (eventId: string, userId: string) => {
     if (!mockImplemented) {
+        //@TODO rewrite with Convert
         const team = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${userId}/team`)
 
         if (team.ok) {
             const json = await team.json()
-            if(json) {
+            if (json) {
                 return {
-                    members: json.members.map((u: User) => ({...lackUser, ...u})) as User[],
-                    name: json.name,
+                    members: json.members.map((u: User) => ({
+                        ...lackUser, ...u,
+                        id: u.id.toString()
+                    })) as User[],
+                    name: json.name
                 }
             } else {
                 return {
@@ -462,7 +497,7 @@ export const getTeam = async (eventId: string, userId: string) => {
 }
 
 export const signIn = async () => {
-    if(!useMock) {
+    if (!useMock) {
         return null
     } else {
         return await fetchUser('1')
@@ -476,15 +511,16 @@ export const signIn = async () => {
  */
 export const teamInvites = async (eventId: string, userId: string) => {
     if (!mockImplemented && userId) {
+        //@TODO rewrite with Convert
         const teams = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/teams`)
 
         if (teams.ok) {
             const json = await teams.json()
             let result = [] as User[]
 
-            if(json) {
+            if (json) {
                 json.forEach((v: { members: any[] }) => {
-                    if(v.members) {
+                    if (v.members) {
                         result.push({...lackUser, ...v.members[0]})
                     } else {
                         console.log('members is null')
@@ -498,7 +534,7 @@ export const teamInvites = async (eventId: string, userId: string) => {
         }
     } else {
         await sleep(300)
-        return TEST_USERS.slice(2,4)
+        return TEST_USERS.slice(2, 4)
     }
 }
 
@@ -509,12 +545,13 @@ export const teamInvites = async (eventId: string, userId: string) => {
  */
 export const personalInvites = async (eventId: string, userId: string) => {
     if (!mockImplemented && userId) {
+        //@TODO rewrite with Convert
         const users = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/users`)
 
         if (users.ok) {
             const json = await users.json()
 
-            if(json) {
+            if (json) {
                 return json.map((u: User) => ({...lackUser, ...u}))
             }
             return [] as User[]
@@ -523,7 +560,7 @@ export const personalInvites = async (eventId: string, userId: string) => {
         }
     } else {
         await sleep(300)
-        return TEST_USERS.slice(1,3)
+        return TEST_USERS.slice(1, 3)
     }
 }
 
@@ -536,13 +573,13 @@ export const personalInvites = async (eventId: string, userId: string) => {
 export const acceptInvite = async (eventId: string, inviteeId: string, inviterId: string) => {
     if (!mockImplemented) {
         const join = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/team/join`,
-        {
-            method: 'POST',
-            body: JSON.stringify({
-                uid1: inviterId,
-                uid2: inviteeId
+            {
+                method: 'POST',
+                body: JSON.stringify({
+                    uid1: inviterId,
+                    uid2: inviteeId
+                })
             })
-        })
         return (join.ok && join.status === 200)
     } else {
         await sleep(300)
@@ -561,11 +598,45 @@ export const declineInvite = async (eventId: string, inviteeId: string, inviterI
     if (!mockImplemented) {
         const decline = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${inviterId}/decline`,
             {
-                method: 'POST',
+                method: 'POST'
             })
         return (decline.ok && decline.status === 200)
     } else {
         await sleep(300)
         return true
     }
+}
+
+/**
+ * Изменяет данные пользователя, в случае успеха возвращает true.
+ * @param user
+ * @constructor
+ */
+export const modifyUser = async (user: UserOptional & { id: string }) => {
+    if (!useMock) {
+        //@TODO implement (with Convert)
+        return false
+    } else {
+        await sleep(300)
+        return true
+    }
+}
+
+/**
+ * Изменяет данные события, в случае успеха возвращает true.
+ * @param event
+ * @constructor
+ */
+export const modifyEvent = async (event: HackathonOptional & { id: string }) => {
+    if (!useMock) {
+        //@TODO implement (with Convert)
+        return false
+    } else {
+        await sleep(300)
+        return true
+    }
+}
+
+export const setSelectedSkills = (skills: UserSkill[]) => {
+
 }

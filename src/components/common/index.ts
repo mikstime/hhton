@@ -1,5 +1,5 @@
 import {Plate} from './plate'
-import {GrayPlate} from './gray-plate'
+import {GrayPlate, GrayishPlate} from './gray-plate'
 import {FlexSpace, Root} from './reusable'
 import {AvatarPlate} from './avatar-plate'
 import {ItemPlate} from './item-plate'
@@ -9,6 +9,7 @@ import {Modal, ModalProps} from './modal'
 export {
     Plate,
     GrayPlate,
+    GrayishPlate,
     FlexSpace,
     AvatarPlate,
     ItemPlate,

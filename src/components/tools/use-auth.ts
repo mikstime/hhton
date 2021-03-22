@@ -11,8 +11,8 @@ export const useAuth = () => {
             const user = await signIn()
             if (user) {
                 cUser.set(user)
-                cEvent.change({id: '1'})
-                event.change({id: '1'})
+                cEvent.change({id: '6'})
+                event.change({id: '6'})
 
             }
         })()

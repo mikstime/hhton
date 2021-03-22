@@ -1,9 +1,16 @@
 import React, {useCallback, useEffect, useState} from 'react'
-import {Modal, ModalProps} from '../common'
-import {Button, Grid, Omit, Typography} from '@material-ui/core'
-import {PrimaryButton} from '../common/buttons'
+import {AdditionalText, GrayPlate, Modal, ModalProps} from '../common'
+import {
+    Button,
+    Grid,
+    InputBase,
+    InputBaseProps,
+    Omit,
+    Typography
+} from '@material-ui/core'
+import {SecondaryButton} from '../common/buttons'
 
-const _usePromptModal = () => {
+const _useUserEditModal = () => {
     const [isOpen, setIsOpen] = useState(false)
     const [onSubmit, setOnSubmit] = useState<Function | undefined>(undefined)
 
@@ -24,13 +31,33 @@ const _usePromptModal = () => {
     }
 }
 
+const GrayField: React.FC<{label: string, inputProps?: InputBaseProps}> = ({label, inputProps = {}}) => {
+    return <Grid item xs container alignItems='baseline' spacing={2}> <Grid xs={12} sm={4} item>
+        <Typography variant='body2' style={{color: '#6F7985'}} align='right'>
+            {label}
+        </Typography>
+    </Grid>
+        <Grid xs={12} sm={8} item>
+            <InputBase {...inputProps} style={{
+                background: 'white',
+                borderRadius: 8,
+                paddingLeft: 12,
+                paddingRight: 12,
+                display: 'block',
+                height: 32,
+                ...(inputProps.style || {})
+            }}/>
+        </Grid>
+    </Grid>
+}
+
 interface MProps extends Omit<ModalProps, 'children'> {
 }
 
 //@ts-ignore
-const PromptModalContext = React.createContext()
+const UserEditModalContext = React.createContext()
 
-export const PromptModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({children, onSubmitClick, ...props}) => {
+export const UserEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({children, onSubmitClick, ...props}) => {
     const [disabled, setDisabled] = useState(false)
 
     useEffect(() => {
@@ -47,45 +74,57 @@ export const PromptModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({ch
     return <Modal gridProps={{item: true, md: 10, sm: 10, xs: 12}}
                   onClose={props.close}{...props}>
         <Grid container direction='column'>
-            <Typography variant='h1'>
-                Вы действительно хотите отказаться от участия в мероприятии?
+            <Typography variant='h2' style={{fontSize: 22}}>
+                Информация о пользователе
             </Typography>
+            <AdditionalText style={{marginTop: 16}}>
+                Используйте этот стиль, если хотите выделить информацию в общем
+                списке. Пример использования: подробная информация на странице
+                сообщества
+            </AdditionalText>
+            <GrayPlate style={{marginTop: 16}}>
+                <Grid container spacing={4}>
+                    <GrayField label='имя'/>
+                    <GrayField label='Фамилия'/>
+                </Grid>
+            </GrayPlate>
             <Grid container direction='row' justify='flex-end'
                   style={{marginTop: 32}} spacing={1}>
                 <Grid item>
-                    <Button style={{color: '#818C99'}} disabled={disabled} onClick={() => {
-                        setDisabled(true)
-                    }}>
-                        Отказаться
+                    <Button style={{color: '#818C99'}} disabled={disabled}
+                            onClick={() => {
+                                setDisabled(true)
+                            }}>
+                        Отменить
                     </Button>
                 </Grid>
                 <Grid item>
-                    <PrimaryButton disabled={disabled} onClick={props.close}>
-                        Продолжить участие
-                    </PrimaryButton>
+                    <SecondaryButton disabled={disabled} onClick={props.close}>
+                        Сохранить изменения
+                    </SecondaryButton>
                 </Grid>
             </Grid>
         </Grid>
     </Modal>
 }
 
-export type UsePromptModalType = ReturnType<typeof _usePromptModal>
+export type UseUserEditModalType = ReturnType<typeof _useUserEditModal>
 
-export const PromptModalProvider: React.FC = ({children}) => {
-    const modalState = _usePromptModal()
-    return <PromptModalContext.Provider value={modalState}>
-        <PromptModal
+export const UserEditModalProvider: React.FC = ({children}) => {
+    const modalState = _useUserEditModal()
+    return <UserEditModalContext.Provider value={modalState}>
+        <UserEditModal
             onSubmitClick={modalState.onSubmit}
             open={modalState.isOpen}
             close={modalState.close}/>
         {children}
-    </PromptModalContext.Provider>
+    </UserEditModalContext.Provider>
 }
 
-export const usePromptModal: () => UsePromptModalType = () => {
-    const context = React.useContext(PromptModalContext)
+export const useUserEditModal: () => UseUserEditModalType = () => {
+    const context = React.useContext(UserEditModalContext)
     if (context === undefined) {
-        throw new Error('usePromptModal must be used within a PromptModalProvider')
+        throw new Error('useUserEditModal must be used within a UserEditModalProvider')
     }
-    return context as UsePromptModalType
+    return context as UseUserEditModalType
 }

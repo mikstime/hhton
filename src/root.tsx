@@ -9,8 +9,7 @@ import {SnackbarProvider} from 'notistack'
 import {MuiTheme} from './style/theme'
 import {AppStateProvider} from './components/tools/use-app-state'
 import {App} from './components/app'
-import {SearchModalProvider} from './components/modals/search'
-import {PromptModalProvider} from './components/modals/prompt'
+import {ModalsProvider} from './components/modals/ModalsProvider'
 
 const Main: React.FC = () => {
     return <ThemeProvider theme={MuiTheme}>
@@ -18,11 +17,9 @@ const Main: React.FC = () => {
             <BrowserRouter>
                 <SnackbarProvider maxSnack={3}>
                     <AppStateProvider>
-                        <SearchModalProvider>
-                            <PromptModalProvider>
+                        <ModalsProvider>
                             <App/>
-                            </PromptModalProvider>
-                        </SearchModalProvider>
+                        </ModalsProvider>
                     </AppStateProvider>
                 </SnackbarProvider>
             </BrowserRouter>

@@ -9,7 +9,18 @@ const useStyles = makeStyles({
         marginTop: 36,
     },
 })
-export const GrayPlate: React.FC<PlateProps> = (props) => {
+export const GrayishPlate: React.FC<PlateProps> = (props) => {
     const classes = useStyles()
+    return <Plate classes={classes} {...props}/>
+}
+
+const useStylesGray = makeStyles({
+    root: {
+        backgroundColor: '#F5F5F5',
+        padding: '12px 16px 12px 16px',
+    },
+})
+export const GrayPlate: React.FC<PlateProps> = (props) => {
+    const classes = useStylesGray()
     return <Plate classes={classes} {...props}/>
 }
