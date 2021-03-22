@@ -603,7 +603,7 @@ export const declineInvite = async (eventId: string, inviteeId: string, inviterI
 export const modifyUser = async (user: UserOptional & { id: string }) => {
     if (!useMock) {
         let success = true
-        const backUser = Convert.user.toBackend(user)
+        const backUser = Convert.userOptional.toBackend(user)
 
         const modifyRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${user.id}`,
             {
@@ -620,7 +620,7 @@ export const modifyUser = async (user: UserOptional & { id: string }) => {
             const modifySkillsRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${user.id}/skills`,
                 {
                     method: 'POST',
-                    body: JSON.stringify(backUser.skills)
+                    body: JSON.stringify(Convert.newSkills.toBackend(backUser.skills))
                 })
 
             success = modifySkillsRequest.ok && modifySkillsRequest.status === 200

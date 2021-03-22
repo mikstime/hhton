@@ -1,13 +1,26 @@
 import {
     Team,
-    User, UserOptional
+    User, UserOptional, UserSkill
 } from '../components/tools/use-app-state/user'
 import {
-    Hackathon, Prize
+    Hackathon, HackathonOptional, Prize
 } from '../components/tools/use-app-state/hackathon'
 import {Invites} from '../components/tools/use-app-state/invite'
 
 type BackendUser = {
+    id: number | null,
+    firstName: string | null,
+    lastName: string | null,
+    jobName: string | null,
+    email: string | null,
+    workPlace: string | null,
+    description: string | null,
+    bio: string | null,
+    team: BackendTeam | null,
+    skills: BackendSkills | null
+}
+
+type BackendUserOptional = {
     id: number | null,
     firstName: string | null,
     lastName: string | null,
@@ -51,6 +64,12 @@ type BackendSkills = {
     jobId: number,
 }[]
 
+type NewSkills = {
+    skillID: number,
+    skillName: string,
+    jobID: number,
+}[]
+
 /**
  * Convert позволяет преобразовывать сущности Бэкенда в сущности фронтенда
  * и наоборот.
@@ -77,7 +96,7 @@ const Convert = {
                 }
             }
         },
-        toBackend: (fUser: UserOptional) => {
+        toBackend: (fUser: User) => {
             //@TODO better implementation
             return {
                 id: Number(fUser.id) ?? null,
@@ -88,6 +107,22 @@ const Convert = {
                 workPlace: '',
                 description: fUser.skills?.description ?? null,
                 bio: ''
+            }
+        }
+    },
+    userOptional: {
+        toBackend: (fUser: UserOptional) => {
+            //@TODO better implementation
+            return {
+                id: Number(fUser.id) ?? null,
+                firstName: fUser.firstName ?? null,
+                lastName: fUser.lastName ?? null,
+                jobName: fUser.jobName ?? null,
+                email: '',
+                workPlace: '',
+                description: fUser.skills?.description ?? null,
+                bio: fUser.bio ?? null,
+                skills: fUser.skills?.tags?.map(s => ({skillID: Number(s.id), jobID: Number(s.jobId), skillName: s.name})) ?? null
             }
         }
     },
@@ -115,21 +150,41 @@ const Convert = {
             }
         }
     },
+    eventOptional: {
+        toBackend: (fEvent: HackathonOptional) => {
+            return {
+
+            }
+        }
+    },
     skills: {
         toFrontend: (bSkills: BackendSkills) => {
             return bSkills.map(s => ({
                 id: s.id.toString(), name: s.name, jobId: s.jobId.toString()
             }))
         }
+    },
+    newSkills: {
+        toBackend: (bSkills: BackendSkills) => {
+            return bSkills.map(s => ({
+                skillID: s.id, skillName: s.name, jobID: s.jobId
+            }))
+        },
     }
 } as {
     user: {
         toFrontend: (bUser: BackendUser) => User,
         toBackend: (bUser: User) => BackendUser
     },
+    userOptional: {
+        toBackend: (bUser: UserOptional) => BackendUserOptional
+    },
     event: {
         toFrontend: (bUser: BackendHackathon) => Hackathon,
         toBackend: (bUser: Hackathon) => BackendHackathon
+    },
+    eventOptional: {
+        toBackend: (fEvent: HackathonOptional) => BackendHackathon
     },
     team: {
         toFrontend: (bUser: BackendTeam) => Team,
@@ -141,6 +196,9 @@ const Convert = {
     },
     skills: {
         toFrontend: (bSkills: BackendSkills) => UserSkill[],
+    }
+    newSkills: {
+        toBackend: (bSkills: BackendSkills) => NewSkills,
     }
 }
 
