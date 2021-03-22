@@ -7,7 +7,7 @@ import {
 } from '../components/tools/use-app-state/hackathon'
 import {Invites} from '../components/tools/use-app-state/invite'
 
-type BackendUser = {
+export type BackendUser = {
     id: number | null,
     firstName: string | null,
     lastName: string | null,

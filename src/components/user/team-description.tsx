@@ -1,6 +1,6 @@
 import React from 'react'
 import {AdditionalText, MainText} from '../common'
-import {Grid, useTheme} from '@material-ui/core'
+import {Box, Grid, useTheme} from '@material-ui/core'
 import Image from 'material-ui-image'
 import {User} from '../tools/use-app-state/user'
 import {Link} from 'react-router-dom'
@@ -16,9 +16,11 @@ const TeamItem: React.FC<{ user: User }> = ({user}) => {
         }} src={user.avatar}/>
         <Link to={`/user/${user.id}`}
               style={{textDecoration: 'none', marginTop: 8}}>
+            {/*<Box clone style={{overflow: "hidden", textOverflow: "ellipsis", width: '80%'}}>*/}
             <AdditionalText>
                 {user.firstName} {user.lastName}
             </AdditionalText>
+            {/*</Box>*/}
         </Link>
     </Grid>
 }
