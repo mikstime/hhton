@@ -3,12 +3,9 @@ import {sleep} from '../utils'
 import background from '../assets/background.png'
 import logo from '../assets/logo.png'
 import {NULL_USER} from '../components/tools/use-app-state'
-import {
-    User,
-    UserOptional, UserSkill,
-} from '../components/tools/use-app-state/user'
+import {User, UserOptional, UserSkill,} from '../components/tools/use-app-state/user'
 import Convert, {BackendHackathon} from './backend'
-import {Hackathon, HackathonOptional} from '../components/tools/use-app-state/hackathon'
+import {HackathonOptional} from '../components/tools/use-app-state/hackathon'
 
 const useMock = true
 const mockImplemented = false
@@ -220,20 +217,20 @@ const lackEvent = {
  */
 export const fetchEvent = async (id: string) => {
     if (!mockImplemented) {
-        //@TODO rewrite with Convert
         const eventRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${id}`)
 
         if (eventRequest.ok) {
             const json = await eventRequest.json()
-            const event = Convert.event.toFrontend(json as BackendHackathon)
 
-            return event
+            return Convert.event.toFrontend(json as BackendHackathon)
         } else {
             return null
         }
     } else {
         await sleep(300)
         return {
+            id: '1',
+            founderId: '1',
             name: 'Хакатон',
             logo: logo,
             background: background,
@@ -435,19 +432,12 @@ export const getFeed = async (eventId: string, query: string, sinceId?: string) 
             return []
         }
 
-        const feed = await fetch(`${HOST_DOMAIN}${PREFIX}/feed/${event.feed.id}`)
+        let result: any[] = []
 
-        if (feed.ok) {
-            const json = await feed.json()
-            let result: any[] = []
-
-            json.users.forEach((v: { id: any }) => {
-                result.push(v.id)
-            })
-            return result
-        } else {
-            return []
-        }
+        event.participants.forEach((v: { id: any }) => {
+            result.push(v.id)
+        })
+        return result
     } else {
         await sleep(300)
         console.log(query, sinceId)

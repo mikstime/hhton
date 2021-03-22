@@ -3,7 +3,7 @@ import {
     User, UserOptional
 } from '../components/tools/use-app-state/user'
 import {
-    Hackathon, HackathonSettings, Prize
+    Hackathon, Prize
 } from '../components/tools/use-app-state/hackathon'
 import {Invites} from '../components/tools/use-app-state/invite'
 
@@ -29,7 +29,11 @@ export type BackendHackathon = {
     dateEnd: Date | null,
     state: string | null,
     place: string | null,
-    feed: User[] | null,
+    feed: {
+        id: number | null,
+        users: User[] | null,
+        event: number | null,
+    } | null
     participantsCount: number | null
 }
 
@@ -100,7 +104,7 @@ const Convert = {
                 isFinished: currentDate > bHackathon.dateEnd! ?? true,
                 place: bHackathon.place ?? '',
                 participantsCount: bHackathon.participantsCount,
-                participants: bHackathon.feed,
+                participants: bHackathon.feed?.users,
                 prizes: [] as Prize[],
                 settings: {},
             }
