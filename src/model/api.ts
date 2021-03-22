@@ -397,25 +397,22 @@ export const getJobs: () => Promise<string[]> = async () => {
  */
 export const getSkills = async (job: string) => {
     if (!mockImplemented) {
-        //@TODO rewrite with Convert
         const skill = await fetch(`${HOST_DOMAIN}${PREFIX}/job/${encodeURIComponent(job)}/skills`)
 
         if (skill.ok) {
             const json = await skill.json()
-            let result = [] as string[]
+
             if (json) {
-                json.forEach((v: { name: any }) => {
-                    result.push(v.name)
-                })
+                return Convert.skills.toFrontend(json)
             }
 
-            return result
+            return [] as UserSkill[]
         } else {
             return []
         }
     } else {
         await sleep(300)
-        return ['React', 'Angular', 'TypeScript']
+        return [{name: 'React', jobId: '1', id: '1'}, {name: 'Angular', jobId: '1', id: '1'}, {name: 'CSS', jobId: '1', id: '1'}]
     }
 }
 

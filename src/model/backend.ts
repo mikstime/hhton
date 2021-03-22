@@ -1,6 +1,6 @@
 import {
     Team,
-    User, UserOptional
+    User, UserOptional, UserSkill,
 } from '../components/tools/use-app-state/user'
 import {
     Hackathon
@@ -75,6 +75,13 @@ const Convert = {
                 bio: ''
             }
         }
+    },
+    skills: {
+        toFrontend: (bSkills: BackendSkills) => {
+            return bSkills.map(s => ({
+                id: s.id.toString(), name: s.name, jobId: s.jobId.toString()
+            }))
+        }
     }
 } as {
     user: {
@@ -92,6 +99,9 @@ const Convert = {
     invite: {
         toFrontend: (bUser: BackendInvites) => Invites,
         toBackend: (bUser: Invites) => BackendInvites
+    },
+    skills: {
+        toFrontend: (bSkills: BackendSkills) => UserSkill[],
     }
 }
 
