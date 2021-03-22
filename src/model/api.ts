@@ -3,11 +3,8 @@ import {sleep} from '../utils'
 import background from '../assets/background.png'
 import logo from '../assets/logo.png'
 import {NULL_USER} from '../components/tools/use-app-state'
-import {
-    User,
-    UserOptional, UserSkill,
-} from '../components/tools/use-app-state/user'
-import Convert from './backend'
+import {User, UserOptional, UserSkill,} from '../components/tools/use-app-state/user'
+import Convert, {BackendHackathon} from './backend'
 import {HackathonOptional} from '../components/tools/use-app-state/hackathon'
 
 const useMock = true
@@ -220,19 +217,20 @@ const lackEvent = {
  */
 export const fetchEvent = async (id: string) => {
     if (!mockImplemented) {
-        //@TODO rewrite with Convert
-        const event = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${id}`)
+        const eventRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${id}`)
 
-        if (event.ok) {
-            const json = await event.json()
+        if (eventRequest.ok) {
+            const json = await eventRequest.json()
 
-            return {...lackEvent, ...json, id: json.id.toString()}
+            return Convert.event.toFrontend(json as BackendHackathon)
         } else {
             return null
         }
     } else {
         await sleep(300)
         return {
+            id: '1',
+            founderId: '1',
             name: 'Хакатон',
             logo: logo,
             description: 'Замечательный хакатон',
@@ -432,19 +430,12 @@ export const getFeed = async (eventId: string, query: string, sinceId?: string) 
             return []
         }
 
-        const feed = await fetch(`${HOST_DOMAIN}${PREFIX}/feed/${event.feed.id}`)
+        let result: any[] = []
 
-        if (feed.ok) {
-            const json = await feed.json()
-            let result: any[] = []
-
-            json.users.forEach((v: { id: any }) => {
-                result.push(v.id)
-            })
-            return result
-        } else {
-            return []
-        }
+        event.participants.forEach((v: { id: any }) => {
+            result.push(v.id)
+        })
+        return result
     } else {
         await sleep(300)
         console.log(query, sinceId)
@@ -612,8 +603,31 @@ export const declineInvite = async (eventId: string, inviteeId: string, inviterI
  */
 export const modifyUser = async (user: UserOptional & { id: string }) => {
     if (!useMock) {
-        //@TODO implement (with Convert)
-        return false
+        let success = true
+        const backUser = Convert.userOptional.toBackend(user)
+
+        const modifyRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${user.id}`,
+            {
+                method: 'PUT',
+                body: JSON.stringify(backUser)
+            })
+
+        success = modifyRequest.ok && modifyRequest.status === 200
+        if (!success) {
+            return false
+        }
+
+        if (backUser.skills != null) {
+            const modifySkillsRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${user.id}/skills`,
+                {
+                    method: 'POST',
+                    body: JSON.stringify(Convert.newSkills.toBackend(backUser.skills))
+                })
+
+            success = modifySkillsRequest.ok && modifySkillsRequest.status === 200
+        }
+
+        return success
     } else {
         await sleep(300)
         return true

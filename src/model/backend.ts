@@ -1,9 +1,9 @@
 import {
     Team,
-    User, UserOptional, UserSkill,
+    User, UserOptional, UserSkill
 } from '../components/tools/use-app-state/user'
 import {
-    Hackathon
+    Hackathon, HackathonOptional, Prize
 } from '../components/tools/use-app-state/hackathon'
 import {Invites} from '../components/tools/use-app-state/invite'
 
@@ -20,7 +20,35 @@ type BackendUser = {
     skills: BackendSkills | null
 }
 
-type BackendHackathon = {}
+type BackendUserOptional = {
+    id: number | null,
+    firstName: string | null,
+    lastName: string | null,
+    jobName: string | null,
+    email: string | null,
+    workPlace: string | null,
+    description: string | null,
+    bio: string | null,
+    team: BackendTeam | null,
+    skills: BackendSkills | null
+}
+
+export type BackendHackathon = {
+    id: number | null,
+    name: string | null,
+    description: string | null,
+    founder: number | null,
+    dateStart: Date | null,
+    dateEnd: Date | null,
+    state: string | null,
+    place: string | null,
+    feed: {
+        id: number | null,
+        users: User[] | null,
+        event: number | null,
+    } | null
+    participantsCount: number | null
+}
 
 type BackendInvites = {}
 
@@ -34,6 +62,12 @@ type BackendSkills = {
     id: number,
     name: string,
     jobId: number,
+}[]
+
+type NewSkills = {
+    skillID: number,
+    skillName: string,
+    jobID: number,
 }[]
 
 /**
@@ -62,7 +96,7 @@ const Convert = {
                 }
             }
         },
-        toBackend: (fUser: UserOptional) => {
+        toBackend: (fUser: User) => {
             //@TODO better implementation
             return {
                 id: Number(fUser.id) ?? null,
@@ -76,21 +110,81 @@ const Convert = {
             }
         }
     },
+    userOptional: {
+        toBackend: (fUser: UserOptional) => {
+            //@TODO better implementation
+            return {
+                id: Number(fUser.id) ?? null,
+                firstName: fUser.firstName ?? null,
+                lastName: fUser.lastName ?? null,
+                jobName: fUser.jobName ?? null,
+                email: '',
+                workPlace: '',
+                description: fUser.skills?.description ?? null,
+                bio: fUser.bio ?? null,
+                skills: fUser.skills?.tags?.map(s => ({skillID: Number(s.id), jobID: Number(s.jobId), skillName: s.name})) ?? null
+            }
+        }
+    },
+    event: {
+        toFrontend: (bHackathon: BackendHackathon) => {
+            const currentDate = new Date()
+
+            return {
+                name: bHackathon.name ?? '',
+                id: bHackathon.id?.toString() ?? '-1',
+                logo: 'http://loremflickr.com/1000/1000',
+                background: 'http://loremflickr.com/1000/1000',
+                founderId: bHackathon.founder?.toString() ?? '-1',
+                isFinished: currentDate > bHackathon.dateEnd! ?? true,
+                place: bHackathon.place ?? '',
+                participantsCount: bHackathon.participantsCount,
+                participants: bHackathon.feed?.users,
+                prizes: [] as Prize[],
+                settings: {},
+            }
+        },
+        toBackend: (bUser: Hackathon) => {
+            return {
+
+            }
+        }
+    },
+    eventOptional: {
+        toBackend: (fEvent: HackathonOptional) => {
+            return {
+
+            }
+        }
+    },
     skills: {
         toFrontend: (bSkills: BackendSkills) => {
             return bSkills.map(s => ({
                 id: s.id.toString(), name: s.name, jobId: s.jobId.toString()
             }))
         }
+    },
+    newSkills: {
+        toBackend: (bSkills: BackendSkills) => {
+            return bSkills.map(s => ({
+                skillID: s.id, skillName: s.name, jobID: s.jobId
+            }))
+        },
     }
 } as {
     user: {
         toFrontend: (bUser: BackendUser) => User,
         toBackend: (bUser: User) => BackendUser
     },
+    userOptional: {
+        toBackend: (bUser: UserOptional) => BackendUserOptional
+    },
     event: {
-        toFrontend: (bUser: BackendHackathon) => User,
+        toFrontend: (bUser: BackendHackathon) => Hackathon,
         toBackend: (bUser: Hackathon) => BackendHackathon
+    },
+    eventOptional: {
+        toBackend: (fEvent: HackathonOptional) => BackendHackathon
     },
     team: {
         toFrontend: (bUser: BackendTeam) => Team,
@@ -102,6 +196,9 @@ const Convert = {
     },
     skills: {
         toFrontend: (bSkills: BackendSkills) => UserSkill[],
+    }
+    newSkills: {
+        toBackend: (bSkills: BackendSkills) => NewSkills,
     }
 }
 
