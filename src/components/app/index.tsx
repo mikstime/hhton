@@ -21,6 +21,7 @@ import {
 import {useAppState} from '../tools/use-app-state'
 import {AdditionalText} from '../common'
 import styled from 'styled-components'
+import {useNotifications} from '../tools/use-notifications'
 
 const NavLink: React.FC<LinkProps> = (props) => {
     const theme = useTheme()
@@ -176,6 +177,7 @@ export const App: React.FC = () => {
     useFetcher()
     useInvitesFetcher()
     useAuth()
+    useNotifications()
 
     return <Switch>
         <Route path='/user/:userId'>

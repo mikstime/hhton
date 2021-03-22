@@ -8,7 +8,7 @@ export const useAuth = () => {
     useEffect(() => {
         (async () => {
             cEvent.change({id: '6'})
-            cUser.change({id: '1'})
+            cUser.change({id: '17'})
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

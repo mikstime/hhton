@@ -1,6 +1,6 @@
 import React from 'react'
 import {AdditionalText, MainText} from '../common'
-import {Box, Grid, useTheme} from '@material-ui/core'
+import {Grid, useTheme} from '@material-ui/core'
 import Image from 'material-ui-image'
 import {User} from '../tools/use-app-state/user'
 import {Link} from 'react-router-dom'
@@ -8,12 +8,15 @@ import {useAppState} from '../tools/use-app-state'
 
 const TeamItem: React.FC<{ user: User }> = ({user}) => {
     return <Grid item container alignItems='center'>
+        <Link to={`/user/${user.id}`}
+              style={{textDecoration: 'none'}}>
         <Image disableSpinner={true} imageStyle={{borderRadius: '50%'}} style={{
             width: 24,
             paddingTop: 24,
             borderRadius: '50%',
             margin: '8px 8px 0 0'
         }} src={user.avatar}/>
+        </Link>
         <Link to={`/user/${user.id}`}
               style={{textDecoration: 'none', marginTop: 8}}>
             {/*<Box clone style={{overflow: "hidden", textOverflow: "ellipsis", width: '80%'}}>*/}
