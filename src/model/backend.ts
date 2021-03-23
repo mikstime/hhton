@@ -51,7 +51,7 @@ export type BackendHackathon = {
 type BackendInvites = {}
 
 type BackendTeam = {
-    members: User[],
+    members: BackendUser[],
     name: string,
     id: number,
 }
@@ -67,6 +67,13 @@ type NewSkills = {
     skillName: string,
     jobID: number,
 }[]
+
+type BackendJobs = {
+    id: number,
+    name: string,
+}[]
+
+export type Jobs = string[]
 
 /**
  * Convert позволяет преобразовывать сущности Бэкенда в сущности фронтенда
@@ -107,9 +114,13 @@ const Convert = {
             }
         }
     },
+    users: {
+        toFrontend: (bUsers: BackendUser[]) => {
+            return bUsers.map(u => (Convert.user.toFrontend(u)))
+        }
+    },
     userOptional: {
         toBackend: (fUser: UserOptional) => {
-            //@TODO better implementation
             return {
                 id: Number(fUser.id) ?? null,
                 firstName: fUser.firstName ?? null,
@@ -154,6 +165,14 @@ const Convert = {
             }
         }
     },
+    team: {
+        toFrontend: (bUser: BackendTeam) => {
+            return {
+                members: bUser.members.map(u => (Convert.user.toFrontend(u))),
+                name: bUser.name,
+            }
+        }
+    },
     skills: {
         toFrontend: (bSkills: BackendSkills) => {
             return bSkills.map(s => ({
@@ -167,12 +186,22 @@ const Convert = {
                 skillID: s.id, skillName: s.name, jobID: s.jobId
             }))
         },
+    },
+    job: {
+        toFrontend: (bJobs: BackendJobs) => {
+            return bJobs.map(j => (
+                j.name
+            ))
+        },
     }
 } as {
     user: {
         toFrontend: (bUser: BackendUser) => User,
         toBackend: (bUser: User) => BackendUser
     },
+    users: {
+        toFrontend: (bUser: BackendUser[]) => User[]
+    }
     userOptional: {
         toBackend: (bUser: UserOptional) => BackendUserOptional
     },
@@ -196,6 +225,9 @@ const Convert = {
     },
     newSkills: {
         toBackend: (bSkills: BackendSkills) => NewSkills,
+    }
+    job: {
+        toFrontend: (bJobs: BackendJobs) => Jobs,
     }
 }
 

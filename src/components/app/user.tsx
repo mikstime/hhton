@@ -22,7 +22,7 @@ import {useParams} from 'react-router-dom'
 import notFoundIcon from '../../assets/notfound.svg'
 import {TeamDescription} from '../user/team-description'
 import {EditUserButton} from '../user/edit-user-button'
-import {editUserAvatar} from '../tools/edit-user-avatar'
+import {editUserAvatar} from '../tools/edit-images'
 import {useSnackbar} from 'notistack'
 
 const UserNameGrid = styled(Grid)`
@@ -36,8 +36,11 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
     const {user, cEvent, cUser} = useAppState()
     const {enqueueSnackbar} = useSnackbar()
 
-    const onAvatarChange = useCallback(() => {
-        const img = editUserAvatar()
+    const onAvatarChange = useCallback(async () => {
+        let img = "Пусто"
+        await editUserAvatar().then(result => img = result)
+        console.log(img)
+
         if(!img) {
             enqueueSnackbar('Не удалось обновить аватар',{
                 variant: 'error'

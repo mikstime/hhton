@@ -8,7 +8,7 @@ import {
     UserOptional,
     UserSkill
 } from '../components/tools/use-app-state/user'
-import Convert, {BackendHackathon, BackendUser} from './backend'
+import Convert, {BackendHackathon, BackendUser, Jobs} from './backend'
 import {HackathonOptional} from '../components/tools/use-app-state/hackathon'
 
 const useMock = false
@@ -500,14 +500,13 @@ export const findUsers = async (query: string) => {
  */
 export const getJobs: () => Promise<{name: string, id: number}[]> = async () => {
     if (!mockImplemented) {
-        //@TODO rewrite with Convert
         const job = await fetch(`${HOST_DOMAIN}${PREFIX}/job`)
 
         if (job.ok) {
             const json = await job.json()
-            let result = [] as {name: string, id: number}[]
+            let result = [] as Jobs
             if (json) {
-                result.push(...json)
+                result = Convert.job.toFrontend(json)
             }
 
             return result
@@ -559,14 +558,15 @@ export const getFeed = async (eventId: string, query: string, sinceId?: string) 
     if (!mockImplemented) {
         // TODO получать id сразу
         //@TODO rewrite with Convert
+        // Нечего конвертировать
         const event = await fetchEvent(eventId)
         if (event === null) {
             return []
         }
 
-        let result: any[] = []
+        let result = [] as string[]
 
-        event.participants.forEach((v: { id: any }) => {
+        event.participants.forEach((v: { id: string }) => {
             result.push(v.id)
         })
         return result
@@ -584,16 +584,12 @@ export const getFeed = async (eventId: string, query: string, sinceId?: string) 
  */
 export const getTeam = async (eventId: string, userId: string) => {
     if (!mockImplemented) {
-        //@TODO rewrite with Convert
         const team = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${userId}/team`)
 
         if (team.ok) {
             const json = await team.json()
             if (json) {
-                return {
-                    members: json.members.map((u: BackendUser) => Convert.user.toFrontend(u)),
-                    name: json.name
-                }
+                return Convert.team.toFrontend(json)
             } else {
                 return {
                     members: [] as User[],
@@ -633,6 +629,7 @@ export const teamInvites = async (eventId: string, userId: string) => {
     if (!mockImplemented && userId) {
         //@TODO rewrite with Convert
         const teams = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/teams`)
+
         if (teams.ok) {
             const json = await teams.json()
             const parsedTeams = await Promise.all(
@@ -674,14 +671,13 @@ export const teamInvites = async (eventId: string, userId: string) => {
  */
 export const personalInvites = async (eventId: string, userId: string) => {
     if (!mockImplemented && userId) {
-        //@TODO rewrite with Convert
         const users = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/users`)
 
         if (users.ok) {
             const json = await users.json()
 
             if (json) {
-                return json.map((u: User) => ({...lackUser, ...u}))
+                return Convert.users.toFrontend(json)
             }
             return [] as User[]
         } else {
@@ -790,4 +786,38 @@ export const modifyEvent = async (event: HackathonOptional & { id: string }) => 
 
 export const setSelectedSkills = (skills: UserSkill[]) => {
 
+}
+
+export const updateImage = async (image: File, path: string) => {
+    if (!mockImplemented) {
+        let formData = new FormData();
+
+        formData.append("file", image);
+        const userAvatarResponse = await fetch(path, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (userAvatarResponse.ok) {
+            const json = await userAvatarResponse.json()
+            return json.avatar as string
+        } else {
+            return ""
+        }
+    } else {
+        await sleep(300)
+        return `http://loremflickr.com/1000/1000?t=${new Date()}`
+    }
+}
+
+export const updateUserAvatar = async (image: File, userID: string) => {
+    return updateImage(image, `${HOST_DOMAIN}${PREFIX}/user/${userID}/image`)
+}
+
+export const updateEventLogo = async (image: File, userID: string) => {
+    // return updateImage(image, `${HOST_DOMAIN}${PREFIX}/user/${userID}/image`)
+}
+
+export const updateEventBackground = async (image: File, userID: string) => {
+    // return updateImage(image, `${HOST_DOMAIN}${PREFIX}/user/${userID}/image`)
 }
