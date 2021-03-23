@@ -11,7 +11,10 @@ export const useNotifications = () => {
     const {enqueueSnackbar} = useSnackbar()
     useEffect(() => {
         if (cUser.id !== '-1') {
-            if (client.current) client.current.close()
+            if (client.current) {
+                client.current.close()
+                console.log('close')
+            }
             try {
                 client.current = new w3cwebsocket(`${WS_DOMAIN}${PREFIX}/notification/channel/${cUser.id}`)
                 client.current.onmessage = (m) => {
@@ -22,7 +25,10 @@ export const useNotifications = () => {
                     console.log('connection established')
                     if (client.current) {
                         // console.log('sending')
-                        client.current.send(JSON.stringify({message: 'hello'}))
+                        client.current.send(JSON.stringify({
+                            "ID":1,"type":"notification","status":"good",
+                            "message":"Ping","userID":1,
+                            "created":"2021-03-23T14:45:19.661708689+03:00"}))
                     }
                 }
                 client.current.onerror = (e) => {
