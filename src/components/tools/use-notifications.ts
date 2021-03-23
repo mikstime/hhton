@@ -15,7 +15,6 @@ export const useNotifications = () => {
             try {
                 client.current = new w3cwebsocket(`${WS_DOMAIN}:8080/notification/channel/${cUser.id}`)
                 client.current.onmessage = (m) => {
-                    console.log(m)
                     enqueueSnackbar(m.data)
                 }
                 client.current.onopen = () => {
@@ -26,7 +25,6 @@ export const useNotifications = () => {
                     }
                 }
                 client.current.onerror = (e) => {
-                    console.log(e)
                 }
             } catch (e) {
                 console.log(e)
