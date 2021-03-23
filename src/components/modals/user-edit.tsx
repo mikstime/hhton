@@ -5,7 +5,7 @@ import {
     GrayPlate,
     Modal,
     ModalProps,
-    Plate,
+    Plate
 } from '../common'
 import {
     Box,
@@ -43,10 +43,10 @@ const _useUserEditModal = () => {
     }
 }
 
-const storeDiff = (o1: {[key: string]: any}, o2: {[key: string]: any}) => {
-    const toReturn: {[key: string]: any} = {}
-    for(let key of Object.keys(o2)) {
-        if(o2[key] !== o1[key]) {
+const storeDiff = (o1: { [key: string]: any }, o2: { [key: string]: any }) => {
+    const toReturn: { [key: string]: any } = {}
+    for (let key of Object.keys(o2)) {
+        if (o2[key] !== o1[key]) {
             toReturn[key] = o2[key]
         }
     }
@@ -133,11 +133,15 @@ const WhiteField: React.FC<{ label: string, prefix?: string, inputProps?: InputB
     </Grid>
 }
 
-const Skills: React.FC = () => {
+const Skills: React.FC<{
+    disabled: boolean,
+    onChange: (skills: UserSkill[]) => void,
+    value: UserSkill[]
+}> = ({disabled, onChange, value}) => {
 
     const classes = useChipStyles()
-
-    const [jobs, setJobs] = useState<string[]>([])
+    const {user} = useAppState()
+    const [jobs, setJobs] = useState<{name: string, id: number}[]>([])
     const [selectedJob, selectJob] = useState(-1)
 
     const [skills, setSkills] = useState<{ [key: string]: UserSkill[] }>({})
@@ -150,19 +154,43 @@ const Skills: React.FC = () => {
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
     useEffect(() => {
         (async () => {
             if (jobs[selectedJob]) {
-                const aSkills = await getSkills(jobs[selectedJob])
-                if(!skills[jobs[selectedJob]]?.length) {
-                setSkills({...skills, [jobs[selectedJob]]: aSkills})
-                selectSkills({...selectedSkills, [jobs[selectedJob]]: aSkills.map(() => false)})
+                const aSkills = await getSkills(jobs[selectedJob].name)
+                if (!skills[jobs[selectedJob].name]?.length) {
+                    setSkills({...skills, [jobs[selectedJob].name]: aSkills})
+                    selectSkills({
+                        ...selectedSkills,
+                        [jobs[selectedJob].name]: aSkills.map((sk) => {
+                            if(value.find(s => s.id === sk.id)) {
+                                return true
+                            }
+                            return false
+                        })
+                    })
                 }
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedJob, jobs])
+
+    useEffect(() => {
+        const s: UserSkill[] = []
+        if(!Object.keys(selectedSkills).length) return
+        for (let key of jobs.map(j => j.name)) {
+            if(skills[key]?.length > 0) {
+                selectedSkills[key].forEach((sk, i) => sk && s.push({...skills[key][i]}))
+            } else {
+                const j = jobs.find(j => j.name === key)
+                if(j) {
+                    s.push(...value.filter(s => s.jobId === j.id.toString()))
+                }
+            }
+        }
+        onChange(s)
+        //eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedSkills])
 
     return <Grid container direction='column'>
         <Typography variant='h1' style={{
@@ -172,7 +200,7 @@ const Skills: React.FC = () => {
 
         <div className={classes.root}>
             {
-                jobs.map((j, i) => <Zoom key={j} in><Chip
+                jobs.map((j, i) => <Zoom key={j.name} in><Chip
                     onClick={
                         () => {
                             if (selectedJob === i) {
@@ -183,11 +211,11 @@ const Skills: React.FC = () => {
                         }
                     }
                     className={selectedJob >= 0 ?
-                        selectedJob === i ?
-                            classes.selected : selectedSkills[jobs[i]]?.includes(true) ? '' : classes.notSelected :
-                        selectedSkills[jobs[i]]?.includes(true) ? classes.selected :''
-                        }
-                    label={j}
+                        selectedJob === i?
+                            classes.selected : selectedSkills[jobs[i]?.name]?.includes(true) || value.find(x => x.jobId === j.id.toString())? '' : classes.notSelected :
+                        selectedSkills[jobs[i]?.name]?.includes(true) || value.find(v => v.jobId === jobs[i].id.toString())? classes.selected : ''
+                    }
+                    label={j.name}
                 /></Zoom>)
             }
         </div>
@@ -200,16 +228,16 @@ const Skills: React.FC = () => {
         }
         <div className={classes.root}>
             {
-                skills[jobs[selectedJob]]?.map((j, i) => (
+                skills[jobs[selectedJob]?.name]?.map((j, i) => (
                     <Zoom key={j.id} in><Chip
                         onClick={
                             () => {
                                 const selected = {...selectedSkills}
-                                selected[jobs[selectedJob]][i] = !selected[jobs[selectedJob]][i]
+                                selected[jobs[selectedJob]?.name][i] = !selected[jobs[selectedJob]?.name][i]
                                 selectSkills(selected)
                             }
                         }
-                        className={selectedSkills[jobs[selectedJob]]?.[i] ? classes.selected : ''}
+                        className={selectedSkills[jobs[selectedJob]?.name]?.[i] ? classes.selected : ''}
                         label={j.name}
                     /></Zoom>))
             }
@@ -233,10 +261,10 @@ const useUserEdit = () => {
     const [gh, setGh] = useState('')
     const [bio, setBio] = useState(user.bio)
     const [sDesc, setSDesc] = useState(user.skills.description)
-
-    useEffect(() => {
-        if(user.id !== '-1') {
-            console.log('changed', user.id, user)
+    const [disabled, setDisabled] = useState(false)
+    const [skills, setSkills] = useState<UserSkill[]>(user.skills.tags)
+    const reset = () => {
+        if (user.id !== '-1') {
             setFirstName(user.firstName)
             setLastName(user.lastName)
             setJob(user.jobName)
@@ -245,56 +273,81 @@ const useUserEdit = () => {
             setGh('')
             setBio(user.bio)
             setSDesc(user.skills.description)
+            setSkills(user.skills.tags)
+            setDisabled(false)
         }
-    }, [user.id])
+    }
+
+    useEffect(reset, [user.id])
     return {
         firstName: {
             value: firstName,
+            disabled,
             onChange: (e: React.ChangeEvent<HTMLInputElement>) => setFirstName(e.target.value)
         },
         lastName: {
             value: lastName,
+            disabled,
             onChange: (e: React.ChangeEvent<HTMLInputElement>) => setLastName(e.target.value)
         },
         job: {
             value: job,
+            disabled,
             onChange: (e: React.ChangeEvent<HTMLInputElement>) => setJob(e.target.value)
         },
         vk: {
             value: vk,
+            disabled,
             onChange: (e: React.ChangeEvent<HTMLInputElement>) => setVk(e.target.value)
         },
         tg: {
             value: tg,
+            disabled,
             onChange: (e: React.ChangeEvent<HTMLInputElement>) => setTg(e.target.value)
         },
         gh: {
             value: gh,
+            disabled,
             onChange: (e: React.ChangeEvent<HTMLInputElement>) => setGh(e.target.value)
         },
         bio: {
             value: bio,
+            disabled,
             onChange: (e: React.ChangeEvent<HTMLInputElement>) => setBio(e.target.value)
         },
         sDesc: {
             value: sDesc,
+            disabled,
             onChange: (e: React.ChangeEvent<HTMLInputElement>) => setSDesc(e.target.value)
         },
+        skills: {
+            value: skills,
+            disabled,
+            onChange: (s: UserSkill[]) => setSkills(s)
+        },
+        disabled,
         onSubmit: async () => {
-            const diff = storeDiff(user, {firstName, lastName, jobName: job, bio})
-            if(sDesc !== user.skills.description) {
-                diff.skills = {
-                    // tags: [{id: 1}]
-                    description: sDesc
-                }
+            const diff = storeDiff(user, {
+                firstName,
+                lastName,
+                jobName: job,
+                bio
+            })
+            setDisabled(true)
+            diff.skills = {
+                tags: skills,
+                description: sDesc
             }
             diff.id = user.id
-            const update = await modifyUser(diff as UserOptional & {id: string})
-            console.log(update)
+            const update = await modifyUser(diff as UserOptional & { id: string })
+            setDisabled(false)
+            user.change(diff)
+            return update
         },
-        errors: {
-
-        }
+        onCancel: () => {
+            reset()
+        },
+        errors: {}
     }
 }
 export const UserEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({children, onSubmitClick, ...props}) => {
@@ -326,18 +379,18 @@ export const UserEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({
                 <Grid container spacing={4}>
                     <GrayField label='Имя' inputProps={{
                         placeholder: 'Василий',
-                        ...fields.firstName,
+                        ...fields.firstName
                     }}/>
                     <GrayField label='Фамилия' inputProps={{
                         placeholder: 'Петров',
-                        ...fields.lastName,
+                        ...fields.lastName
                     }}/>
                 </Grid>
             </GrayPlate>
             <Plate elevation={4} padding={8} style={{marginTop: 16}}>
                 <WhiteField label='Место работы' inputProps={{
                     placeholder: 'Тинькофф',
-                    ...fields.job,
+                    ...fields.job
                 }}/>
             </Plate>
             <Typography variant='h2' style={{fontSize: 22, marginTop: 24}}>
@@ -346,19 +399,19 @@ export const UserEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({
             <Plate elevation={4} padding={8} style={{marginTop: 16}}>
                 <WhiteField prefix='vk.com/' label='Вконтакте' inputProps={{
                     placeholder: 'teamuponline',
-                    ...fields.vk,
+                    ...fields.vk
                 }}/>
             </Plate>
             <Plate elevation={4} padding={8} style={{marginTop: 16}}>
                 <WhiteField prefix='t.me/' label='Телеграм' inputProps={{
                     placeholder: 'teamuponline',
-                    ...fields.tg,
+                    ...fields.tg
                 }}/>
             </Plate>
             <Plate elevation={4} padding={8} style={{marginTop: 16}}>
                 <WhiteField prefix='github.com/' label='Github' inputProps={{
                     placeholder: 'teamuponline',
-                    ...fields.gh,
+                    ...fields.gh
                 }}/>
             </Plate>
             <Typography variant='h2' style={{fontSize: 22, marginTop: 24}}>
@@ -371,12 +424,12 @@ export const UserEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({
                 <Grid direction='column' container spacing={4}>
                     <MultilineGrayField label='О себе' inputProps={{
                         placeholder: 'В свободное от работы время я бегаю',
-                        ...fields.bio,
+                        ...fields.bio
                     }}/>
                     <MultilineGrayField style={{paddingTop: 0}}
                                         label='О навыках' inputProps={{
                         placeholder: 'Первый свой полифилл я написал в 11 лет',
-                        ...fields.sDesc,
+                        ...fields.sDesc
                     }}/>
                 </Grid>
             </GrayPlate>
@@ -387,22 +440,25 @@ export const UserEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({
                 Выберите один или несколько навыков в интересующих Вас
                 профессиях
             </AdditionalText>
-            <Skills/>
+            <Skills {...fields.skills}/>
             <Grid container direction='row' justify='flex-end'
                   style={{marginTop: 32}} spacing={1}>
                 <Grid item>
-                    <Button style={{color: '#818C99'}} disabled={disabled}
-                            onClick={() => {
-                                setDisabled(true)
+                    <Button disabled={fields.disabled}
+                            style={{color: '#818C99'}}
+                            onClick={(e) => {
+                                fields.onCancel()
+                                props.close && props.close(e)
                             }}>
                         Отменить
                     </Button>
                 </Grid>
                 <Grid item>
-                    <SecondaryButton disabled={disabled} onClick={async (e) => {
-                        await fields.onSubmit()
-                        props.close && props.close(e)
-                    }}>
+                    <SecondaryButton disabled={fields.disabled}
+                                     onClick={async (e) => {
+                                         await fields.onSubmit()
+                                         props.close && props.close(e)
+                                     }}>
                         Сохранить
                     </SecondaryButton>
                 </Grid>

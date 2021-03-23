@@ -89,7 +89,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
 
     const classes = useChipStyles()
 
-    const [jobs, setJobs] = useState<string[]>([])
+    const [jobs, setJobs] = useState<{name: string, id: number}[]>([])
     const [selectedJob, selectJob] = useState(-1)
 
     const [skills, setSkills] = useState<UserSkill[]>([])
@@ -110,7 +110,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
             setSkills([])
             selectSkills([])
             if (~selectedJob) {
-                const skills = await getSkills(jobs[selectedJob])
+                const skills = await getSkills(jobs[selectedJob].name)
                 setSkills(skills)
                 selectSkills(skills.map(() => false))
             }
@@ -118,7 +118,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
     }, [selectedJob, jobs])
 
     const showFeed = useCallback(() => {
-        const fjob = jobs[selectedJob]
+        const fjob = jobs[selectedJob].name
         const fskills = skills.filter((s, i) => selectedSkills[i]).map(s => s.name)
         if (fskills.length) {
             history.push(`/feed?job=${fjob}&skill=${fskills.join('&skill=')}`)
@@ -140,7 +140,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
 
                 <div className={classes.root}>
                     {
-                        jobs.map((j, i) => <Zoom key={j} in><Chip
+                        jobs.map((j, i) => <Zoom key={j.name} in><Chip
                             onClick={
                                 () => {
                                     if (selectedJob === i) {
@@ -151,7 +151,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
                                 }
                             }
                             className={selectedJob >= 0 ? selectedJob === i ? classes.selected : classes.notSelected : ''}
-                            label={j}
+                            label={j.name}
                         /></Zoom>)
                     }
                 </div>

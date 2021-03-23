@@ -498,18 +498,16 @@ export const findUsers = async (query: string) => {
 /**
  * Возвращает массив доступных специализаций
  */
-export const getJobs: () => Promise<string[]> = async () => {
+export const getJobs: () => Promise<{name: string, id: number}[]> = async () => {
     if (!mockImplemented) {
         //@TODO rewrite with Convert
         const job = await fetch(`${HOST_DOMAIN}${PREFIX}/job`)
 
         if (job.ok) {
             const json = await job.json()
-            let result = [] as string[]
+            let result = [] as {name: string, id: number}[]
             if (json) {
-                json.forEach((v: { name: any }) => {
-                    result.push(v.name)
-                })
+                result.push(...json)
             }
 
             return result
@@ -518,7 +516,7 @@ export const getJobs: () => Promise<string[]> = async () => {
         }
     } else {
         await sleep(300)
-        return ['Frontend', 'Backend', '3D designer', 'Product Manager', 'UX/UI', 'DevOps', 'Другое']
+        return []//['Frontend', 'Backend', '3D designer', 'Product Manager', 'UX/UI', 'DevOps', 'Другое']
     }
 }
 
@@ -762,7 +760,7 @@ export const modifyUser = async (user: UserOptional & { id: string }) => {
             const modifySkillsRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${user.id}/skills`,
                 {
                     method: 'POST',
-                    body: JSON.stringify(Convert.newSkills.toBackend(backUser.skills))
+                    body: JSON.stringify(backUser.skills)
                 })
 
             success = modifySkillsRequest.ok && modifySkillsRequest.status === 200

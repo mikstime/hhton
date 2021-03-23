@@ -193,7 +193,7 @@ const Convert = {
     },
     skills: {
         toFrontend: (bSkills: BackendSkills) => UserSkill[],
-    }
+    },
     newSkills: {
         toBackend: (bSkills: BackendSkills) => NewSkills,
     }
