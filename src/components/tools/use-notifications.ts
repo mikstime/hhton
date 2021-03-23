@@ -13,7 +13,7 @@ export const useNotifications = () => {
         if (cUser.id !== '-1') {
             if (client.current) client.current.close()
             try {
-                client.current = new w3cwebsocket(`${WS_DOMAIN}:8080${PREFIX}/notification/channel/${cUser.id}`)
+                client.current = new w3cwebsocket(`${WS_DOMAIN}${PREFIX}/notification/channel/${cUser.id}`)
                 client.current.onmessage = (m) => {
                     enqueueSnackbar(m.data)
                 }
