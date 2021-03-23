@@ -124,7 +124,6 @@ const Convert = {
     },
     userOptional: {
         toBackend: (fUser: UserOptional) => {
-            //@TODO better implementation
             return {
                 id: Number(fUser.id) ?? null,
                 firstName: fUser.firstName ?? null,

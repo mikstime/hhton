@@ -1,6 +1,5 @@
-export const WS_DOMAIN = 'wss://team-up.online'
-export const HOST_DOMAIN = 'https://team-up.online'
-export const PREFIX = '/api'
-// export const WS_DOMAIN = 'ws://localhost:8080'
-// export const HOST_DOMAIN = 'http://localhost:8080'
-// export const PREFIX = ''
+const local = true
+
+export const WS_DOMAIN = local ? 'ws://localhost:8080' : 'wss://team-up.online'
+export const HOST_DOMAIN = local ? 'http://localhost:8080' : 'https://team-up.online'
+export const PREFIX = local ? '' : '/api'

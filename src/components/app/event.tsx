@@ -22,8 +22,7 @@ import Image from 'material-ui-image'
 import {EditEventButton} from '../event/edit-event-button'
 import {useEventAboutModal} from '../modals/event-about'
 import {EditableImage} from '../common/editable-image'
-import {editEventBackground} from '../tools/edit-event-background'
-import {editEventLogo} from '../tools/edit-event-logo'
+import {editEventBackground, editEventLogo} from '../tools/edit-images'
 import {useSnackbar} from 'notistack'
 
 const EventNameGrid = styled(Grid)`

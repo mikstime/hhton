@@ -4,7 +4,7 @@ import background from '../assets/background.png'
 import logo from '../assets/logo.png'
 import {NULL_USER} from '../components/tools/use-app-state'
 import {User, UserOptional, UserSkill,} from '../components/tools/use-app-state/user'
-import Convert, {BackendHackathon} from './backend'
+import Convert, {BackendHackathon, Jobs} from './backend'
 import {HackathonOptional} from '../components/tools/use-app-state/hackathon'
 
 const useMock = true
@@ -368,7 +368,8 @@ export const fetchEvent = async (id: string) => {
             participants: new Array(270).map(() => NULL_USER),
             prizes: [],
             settings: {},
-            isParticipating: false
+            isParticipating: false,
+            description: 'Хакатон'
         }
     }
 }
@@ -782,4 +783,38 @@ export const modifyEvent = async (event: HackathonOptional & { id: string }) => 
 
 export const setSelectedSkills = (skills: UserSkill[]) => {
 
+}
+
+export const updateImage = async (image: File, path: string) => {
+    if (!mockImplemented) {
+        let formData = new FormData();
+
+        formData.append("file", image);
+        const userAvatarResponse = await fetch(path, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (userAvatarResponse.ok) {
+            const json = await userAvatarResponse.json()
+            return json.avatar as string
+        } else {
+            return ""
+        }
+    } else {
+        await sleep(300)
+        return `http://loremflickr.com/1000/1000?t=${new Date()}`
+    }
+}
+
+export const updateUserAvatar = async (image: File, userID: string) => {
+    return updateImage(image, `${HOST_DOMAIN}${PREFIX}/user/${userID}/image`)
+}
+
+export const updateEventLogo = async (image: File, userID: string) => {
+    // return updateImage(image, `${HOST_DOMAIN}${PREFIX}/user/${userID}/image`)
+}
+
+export const updateEventBackground = async (image: File, userID: string) => {
+    // return updateImage(image, `${HOST_DOMAIN}${PREFIX}/user/${userID}/image`)
 }
