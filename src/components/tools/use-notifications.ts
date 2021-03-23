@@ -1,7 +1,7 @@
 import {useAppState} from './use-app-state'
 import {useEffect, useRef} from 'react'
 import {w3cwebsocket} from 'websocket'
-import {WS_DOMAIN} from '../../config/network'
+import {PREFIX, WS_DOMAIN} from '../../config/network'
 import {useSnackbar} from 'notistack'
 
 export const useNotifications = () => {
@@ -13,7 +13,7 @@ export const useNotifications = () => {
         if (cUser.id !== '-1') {
             if (client.current) client.current.close()
             try {
-                client.current = new w3cwebsocket(`${WS_DOMAIN}:8080/notification/channel/${cUser.id}`)
+                client.current = new w3cwebsocket(`${WS_DOMAIN}${PREFIX}:8080/notification/channel/${cUser.id}`)
                 client.current.onmessage = (m) => {
                     enqueueSnackbar(m.data)
                 }
