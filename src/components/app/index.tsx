@@ -89,20 +89,20 @@ const AppNav: React.FC<GridProps> = ({children}) => {
 
     const drawer = (
         <Box>
-            <NavLink to={`/event/${cEvent.id}`}>
+            <NavLink to={`/event/${cEvent.id}`} onClick={() => setMobileOpen(false)}>
                 <AdditionalText
                     align='right'>
                     К мероприятию
                 </AdditionalText>
             </NavLink>
             <Box paddingTop={2}/>
-            <NavLink to={`/team`}>
+            <NavLink to={`/team`} onClick={() => setMobileOpen(false)}>
                 <AdditionalText align='right'>
                     К команде
                 </AdditionalText>
             </NavLink>
             <Box paddingTop={2}/>
-            <NavLink to={`/user`}>
+            <NavLink to={`/user`} onClick={() => setMobileOpen(false)}>
                 <AdditionalText align='right'>
                     К себе
                 </AdditionalText>

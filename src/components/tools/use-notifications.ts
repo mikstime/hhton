@@ -13,26 +13,23 @@ export const useNotifications = () => {
         if (cUser.id !== '-1') {
             if (client.current) {
                 client.current.close()
-                console.log('close')
             }
             try {
                 client.current = new w3cwebsocket(`${WS_DOMAIN}${PREFIX}/notification/channel/${cUser.id}`)
                 client.current.onmessage = (m) => {
-                    console.log(m)
-                    enqueueSnackbar(m.data)
+                    const json = JSON.parse(m.data as string)
+                    enqueueSnackbar(json.message)
                 }
                 client.current.onopen = () => {
-                    console.log('connection established')
-                    if (client.current) {
+                    // if (client.current) {
                         // console.log('sending')
-                        client.current.send(JSON.stringify({
-                            "ID":1,"type":"notification","status":"good",
-                            "message":"Ping","userID":1,
-                            "created":"2021-03-23T14:45:19.661708689+03:00"}))
-                    }
+                        // client.current.send(JSON.stringify({
+                        //     "ID":17,"type":"notification","status":"good",
+                        //     "message":"Ping","userID":17,
+                        //     "created":"2021-03-23T14:45:19.661708689+03:00"}))
+                    // }
                 }
-                client.current.onerror = (e) => {
-                }
+                client.current.onerror = (e) => {}
             } catch (e) {
                 console.log(e)
             }
