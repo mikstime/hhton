@@ -120,7 +120,7 @@ const AppNav: React.FC<GridProps> = ({children}) => {
                         onClick={handleDrawerToggle}
                         className={classes.menuButton}
                     >
-                        Чуча
+                        Меню
                     </IconButton>
                 </Toolbar>
             </AppBar>

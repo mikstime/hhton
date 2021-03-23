@@ -83,16 +83,14 @@ const MultilineGrayField: React.FC<{ label: string, inputProps?: InputBaseProps 
 
 
 const GrayField: React.FC<{ label: string, inputProps?: InputBaseProps }> = ({label, inputProps = {}}) => {
-    return <Grid item xs container alignItems='baseline' spacing={2}>
-        <Box clone width={{md: '80px'}}>
-            <Grid xs={12} md='auto' item>
-                <Box clone textAlign={{md: 'right'}}>
-                    <Typography variant='body2' style={{color: '#6F7985'}}>
-                        {label}
-                    </Typography>
-                </Box>
-            </Grid>
-        </Box>
+    return <Grid item xs container alignItems='baseline'>
+        <Grid xs={12} md='auto' item style={{marginRight: 16}}>
+            <Box clone textAlign={{md: 'right'}}>
+                <Typography variant='body2' style={{color: '#6F7985'}}>
+                    {label}
+                </Typography>
+            </Box>
+        </Grid>
         <Grid xs={12} sm item>
             <InputBase {...inputProps} style={{
                 background: 'white',
@@ -110,11 +108,11 @@ const GrayField: React.FC<{ label: string, inputProps?: InputBaseProps }> = ({la
 const WhiteField: React.FC<{ label: string, prefix?: string, inputProps?: InputBaseProps }> = ({label, prefix, inputProps = {}}) => {
     return <Grid item xs container alignItems='baseline'
                  style={{minHeight: 32}}>
-        <Grid item xs sm={6} container>
-            <Typography variant='body2' style={{color: '#6F7985'}}>
-                {label}
-            </Typography>
+        <Grid item sm={6} container>
             <Hidden xsDown>
+                <Typography variant='body2' style={{color: '#6F7985'}}>
+                    {label}
+                </Typography>
                 <FlexSpace/>
                 <AdditionalText>
                     {prefix}
@@ -133,6 +131,13 @@ const WhiteField: React.FC<{ label: string, prefix?: string, inputProps?: InputB
     </Grid>
 }
 
+const WhiteFieldLabel: React.FC<{ label: string }> = ({label}) => {
+    return <Hidden smUp><Typography variant='body2' style={{color: '#6F7985', marginTop: 16}}>
+        {label}
+    </Typography>
+    </Hidden>
+}
+
 const Skills: React.FC<{
     disabled: boolean,
     onChange: (skills: UserSkill[]) => void,
@@ -140,8 +145,7 @@ const Skills: React.FC<{
 }> = ({disabled, onChange, value}) => {
 
     const classes = useChipStyles()
-    const {user} = useAppState()
-    const [jobs, setJobs] = useState<{name: string, id: number}[]>([])
+    const [jobs, setJobs] = useState<{ name: string, id: number }[]>([])
     const [selectedJob, selectJob] = useState(-1)
 
     const [skills, setSkills] = useState<{ [key: string]: UserSkill[] }>({})
@@ -163,10 +167,8 @@ const Skills: React.FC<{
                     selectSkills({
                         ...selectedSkills,
                         [jobs[selectedJob].name]: aSkills.map((sk) => {
-                            if(value.find(s => s.id === sk.id)) {
-                                return true
-                            }
-                            return false
+                            return !!value.find(s => s.id === sk.id);
+
                         })
                     })
                 }
@@ -177,13 +179,13 @@ const Skills: React.FC<{
 
     useEffect(() => {
         const s: UserSkill[] = []
-        if(!Object.keys(selectedSkills).length) return
+        if (!Object.keys(selectedSkills).length) return
         for (let key of jobs.map(j => j.name)) {
-            if(skills[key]?.length > 0) {
+            if (skills[key]?.length > 0) {
                 selectedSkills[key].forEach((sk, i) => sk && s.push({...skills[key][i]}))
             } else {
                 const j = jobs.find(j => j.name === key)
-                if(j) {
+                if (j) {
                     s.push(...value.filter(s => s.jobId === j.id.toString()))
                 }
             }
@@ -200,7 +202,7 @@ const Skills: React.FC<{
 
         <div className={classes.root}>
             {
-                jobs.map((j, i) => <Zoom key={j.name} in><Chip
+                jobs.map((j, i) => <Zoom key={j.name} in><Chip disabled={disabled}
                     onClick={
                         () => {
                             if (selectedJob === i) {
@@ -211,9 +213,9 @@ const Skills: React.FC<{
                         }
                     }
                     className={selectedJob >= 0 ?
-                        selectedJob === i?
-                            classes.selected : selectedSkills[jobs[i]?.name]?.includes(true) || value.find(x => x.jobId === j.id.toString())? '' : classes.notSelected :
-                        selectedSkills[jobs[i]?.name]?.includes(true) || value.find(v => v.jobId === jobs[i].id.toString())? classes.selected : ''
+                        selectedJob === i ?
+                            classes.selected : selectedSkills[jobs[i]?.name]?.includes(true) || value.find(x => x.jobId === j.id.toString()) ? '' : classes.notSelected :
+                        selectedSkills[jobs[i]?.name]?.includes(true) || value.find(v => v.jobId === jobs[i].id.toString()) ? classes.selected : ''
                     }
                     label={j.name}
                 /></Zoom>)
@@ -229,7 +231,7 @@ const Skills: React.FC<{
         <div className={classes.root}>
             {
                 skills[jobs[selectedJob]?.name]?.map((j, i) => (
-                    <Zoom key={j.id} in><Chip
+                    <Zoom key={j.id} in><Chip disabled={disabled}
                         onClick={
                             () => {
                                 const selected = {...selectedSkills}
@@ -376,44 +378,59 @@ export const UserEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({
                 на поиск лучшей команды
             </AdditionalText>
             <GrayPlate style={{marginTop: 16}}>
-                <Grid container spacing={4}>
-                    <GrayField label='Имя' inputProps={{
-                        placeholder: 'Василий',
-                        ...fields.firstName
-                    }}/>
-                    <GrayField label='Фамилия' inputProps={{
-                        placeholder: 'Петров',
-                        ...fields.lastName
-                    }}/>
-                </Grid>
+                <Box clone flexDirection={{xs: 'column', sm: 'row'}}>
+                    <Grid container spacing={4}>
+                        <GrayField label='Имя' inputProps={{
+                            placeholder: 'Василий',
+                            ...fields.firstName
+                        }}/>
+                        <GrayField label='Фамилия' inputProps={{
+                            placeholder: 'Петров',
+                            ...fields.lastName
+                        }}/>
+                    </Grid>
+                </Box>
             </GrayPlate>
-            <Plate elevation={4} padding={8} style={{marginTop: 16}}>
-                <WhiteField label='Место работы' inputProps={{
-                    placeholder: 'Тинькофф',
-                    ...fields.job
-                }}/>
-            </Plate>
+            <WhiteFieldLabel label='Место работы'/>
+            <Box clone marginTop={{xs: 0, sm: '16px'}}>
+                <Plate elevation={4} padding={8}>
+                    <WhiteField label='Место работы' inputProps={{
+                        placeholder: 'Тинькофф',
+                        ...fields.job
+                    }}/>
+                </Plate>
+            </Box>
             <Typography variant='h2' style={{fontSize: 22, marginTop: 24}}>
                 Социальные сети
             </Typography>
-            <Plate elevation={4} padding={8} style={{marginTop: 16}}>
-                <WhiteField prefix='vk.com/' label='Вконтакте' inputProps={{
-                    placeholder: 'teamuponline',
-                    ...fields.vk
-                }}/>
-            </Plate>
-            <Plate elevation={4} padding={8} style={{marginTop: 16}}>
-                <WhiteField prefix='t.me/' label='Телеграм' inputProps={{
-                    placeholder: 'teamuponline',
-                    ...fields.tg
-                }}/>
-            </Plate>
-            <Plate elevation={4} padding={8} style={{marginTop: 16}}>
-                <WhiteField prefix='github.com/' label='Github' inputProps={{
-                    placeholder: 'teamuponline',
-                    ...fields.gh
-                }}/>
-            </Plate>
+            <WhiteFieldLabel label='Вконтакте'/>
+            <Box clone marginTop={{xs: 0, sm: '16px'}}>
+                <Plate elevation={4} padding={8}>
+                    <WhiteField prefix='vk.com/' label='Вконтакте' inputProps={{
+                        placeholder: 'teamuponline',
+                        ...fields.vk
+                    }}/>
+                </Plate>
+            </Box>
+            <WhiteFieldLabel label='Телеграм'/>
+            <Box clone marginTop={{xs: 0, sm: '16px'}}>
+                <Plate elevation={4} padding={8}>
+                    <WhiteField prefix='t.me/' label='Телеграм' inputProps={{
+                        placeholder: 'teamuponline',
+                        ...fields.tg
+                    }}/>
+                </Plate>
+            </Box>
+            <WhiteFieldLabel label='Github'/>
+            <Box clone marginTop={{xs: 0, sm: '16px'}}>
+                <Plate elevation={4} padding={8}>
+                    <WhiteField prefix='github.com/' label='Github'
+                                inputProps={{
+                                    placeholder: 'teamuponline',
+                                    ...fields.gh
+                                }}/>
+                </Plate>
+            </Box>
             <Typography variant='h2' style={{fontSize: 22, marginTop: 24}}>
                 Дополнительная информация
             </Typography>

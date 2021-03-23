@@ -132,7 +132,6 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
     }, [selectedJob, close, history, jobs, selectedSkills, skills])
 
     return <Modal back={back} canGoBack
-                  gridProps={{item: true, md: 8, sm: 10, xs: 12}}
                   onClose={props.close}{...props}>
         <Slide direction="right" in>
             <Grid container direction='column'>
@@ -186,8 +185,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
 }
 
 const SearchStart: React.FC<UseSearchModalType & MProps> = ({state: {onSmartClick, onUserClick}, ...props}) => {
-    return <Modal gridProps={{item: true, md: 8, sm: 8, xs: 10}}
-                  onClose={props.close}{...props}>
+    return <Modal onClose={props.close}{...props}>
         <Grid container direction='column'>
             <Typography variant='h1'>
                 Не знаете, кого пригласить к себе в команду?
@@ -222,7 +220,6 @@ const SearchUser: React.FC<UseSearchModalType & MProps> = ({...props}) => {
     }, [value, field])
 
     return <Modal back={props.actions.back} canGoBack
-                  gridProps={{item: true, md: 8, sm: 10, xs: 12}}
                   onClose={props.close}{...props}>
         <Slide direction="right" in>
             <Grid container direction='column'>

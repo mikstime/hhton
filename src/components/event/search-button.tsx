@@ -30,7 +30,7 @@ export const SearchButton: React.FC<CardProps> = ({classes, ...props}) => {
     return <CardActionArea className={classes1.action}>
         <Card classes={{
             root: classes1.root,
-            ...classes,
+            ...classes
         }} elevation={4} {...props}>
             <Grid container wrap='nowrap' alignItems='center'>
                 <Grid item xs>
