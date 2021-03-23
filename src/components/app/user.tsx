@@ -39,7 +39,6 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
     const onAvatarChange = useCallback(async () => {
         let img = "Пусто"
         await editUserAvatar().then(result => img = result)
-        console.log(img)
 
         if(!img) {
             enqueueSnackbar('Не удалось обновить аватар',{

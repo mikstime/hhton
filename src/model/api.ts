@@ -498,7 +498,7 @@ export const findUsers = async (query: string) => {
 /**
  * Возвращает массив доступных специализаций
  */
-export const getJobs: () => Promise<{name: string, id: number}[]> = async () => {
+export const getJobs: () => Promise<Jobs> = async () => {
     if (!mockImplemented) {
         const job = await fetch(`${HOST_DOMAIN}${PREFIX}/job`)
 

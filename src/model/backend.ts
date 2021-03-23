@@ -9,6 +9,7 @@ import {Invites} from '../components/tools/use-app-state/invite'
 
 export type BackendUser = {
     id: number | null,
+    avatar: string | null,
     firstName: string | null,
     lastName: string | null,
     workPlace: string | null,
@@ -23,6 +24,7 @@ type BackendUserOptional = {
     id: number | null,
     firstName: string | null,
     lastName: string | null,
+    avatar: string | null,
     email: string | null,
     workPlace: string | null,
     description: string | null,
@@ -73,7 +75,10 @@ type BackendJobs = {
     name: string,
 }[]
 
-export type Jobs = string[]
+export type Jobs = {
+    name: string,
+    id: number
+}[]
 
 /**
  * Convert позволяет преобразовывать сущности Бэкенда в сущности фронтенда
@@ -88,7 +93,7 @@ const Convert = {
                 lastName: bUser.lastName ?? '',
                 jobName: bUser.workPlace ?? '',
                 bio: bUser.bio ?? '',
-                avatar: 'http://loremflickr.com/1000/1000',
+                avatar: bUser.avatar || 'http://loremflickr.com/1000/1000',
                 skills: {
                     description: bUser.description ?? '',
                     tags: bUser.skills?.map(s => ({id: s.id.toString(), jobId: s.jobId.toString(), name: s.name})) ?? []
@@ -124,6 +129,7 @@ const Convert = {
             return {
                 id: Number(fUser.id) ?? null,
                 firstName: fUser.firstName ?? null,
+                avatar: fUser.avatar ?? null,
                 lastName: fUser.lastName ?? null,
                 email: '',
                 workPlace: fUser.jobName ?? null,
@@ -189,9 +195,7 @@ const Convert = {
     },
     job: {
         toFrontend: (bJobs: BackendJobs) => {
-            return bJobs.map(j => (
-                j.name
-            ))
+            return bJobs
         },
     }
 } as {

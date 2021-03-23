@@ -118,7 +118,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
     }, [selectedJob, jobs])
 
     const showFeed = useCallback(() => {
-        const fjob = jobs[selectedJob].name
+        const fjob = jobs[selectedJob]?.name || ''
         const fskills = skills.filter((s, i) => selectedSkills[i]).map(s => s.name)
         if (fskills.length) {
             history.push(`/feed?job=${fjob}&skill=${fskills.join('&skill=')}`)
