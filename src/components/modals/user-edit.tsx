@@ -18,8 +18,9 @@ import {
 } from '@material-ui/core'
 import {SecondaryButton} from '../common/buttons'
 import {useChipStyles} from '../common/skill-chip'
-import {getJobs, getSkills} from '../../model/api'
-import {UserSkill} from '../tools/use-app-state/user'
+import {getJobs, getSkills, modifyUser} from '../../model/api'
+import {UserOptional, UserSkill} from '../tools/use-app-state/user'
+import {useAppState} from '../tools/use-app-state'
 
 const _useUserEditModal = () => {
     const [isOpen, setIsOpen] = useState(false)
@@ -42,7 +43,15 @@ const _useUserEditModal = () => {
     }
 }
 
-
+const storeDiff = (o1: {[key: string]: any}, o2: {[key: string]: any}) => {
+    const toReturn: {[key: string]: any} = {}
+    for(let key of Object.keys(o2)) {
+        if(o2[key] !== o1[key]) {
+            toReturn[key] = o2[key]
+        }
+    }
+    return toReturn
+}
 const MultilineGrayField: React.FC<{ label: string, inputProps?: InputBaseProps } & GridProps> = ({label, inputProps = {}, ...rest}) => {
     return <Grid item xs container alignItems='baseline' {...rest}>
         <Box clone width={{sm: '100px'}} paddingRight={2}>
@@ -214,9 +223,84 @@ interface MProps extends Omit<ModalProps, 'children'> {
 //@ts-ignore
 const UserEditModalContext = React.createContext()
 
+const useUserEdit = () => {
+    const {user} = useAppState()
+    const [firstName, setFirstName] = useState(user.firstName)
+    const [lastName, setLastName] = useState(user.lastName)
+    const [job, setJob] = useState(user.jobName)
+    const [vk, setVk] = useState('')
+    const [tg, setTg] = useState('')
+    const [gh, setGh] = useState('')
+    const [bio, setBio] = useState(user.bio)
+    const [sDesc, setSDesc] = useState(user.skills.description)
+
+    useEffect(() => {
+        if(user.id !== '-1') {
+            console.log('changed', user.id, user)
+            setFirstName(user.firstName)
+            setLastName(user.lastName)
+            setJob(user.jobName)
+            setVk('')
+            setTg('')
+            setGh('')
+            setBio(user.bio)
+            setSDesc(user.skills.description)
+        }
+    }, [user.id])
+    return {
+        firstName: {
+            value: firstName,
+            onChange: (e: React.ChangeEvent<HTMLInputElement>) => setFirstName(e.target.value)
+        },
+        lastName: {
+            value: lastName,
+            onChange: (e: React.ChangeEvent<HTMLInputElement>) => setLastName(e.target.value)
+        },
+        job: {
+            value: job,
+            onChange: (e: React.ChangeEvent<HTMLInputElement>) => setJob(e.target.value)
+        },
+        vk: {
+            value: vk,
+            onChange: (e: React.ChangeEvent<HTMLInputElement>) => setVk(e.target.value)
+        },
+        tg: {
+            value: tg,
+            onChange: (e: React.ChangeEvent<HTMLInputElement>) => setTg(e.target.value)
+        },
+        gh: {
+            value: gh,
+            onChange: (e: React.ChangeEvent<HTMLInputElement>) => setGh(e.target.value)
+        },
+        bio: {
+            value: bio,
+            onChange: (e: React.ChangeEvent<HTMLInputElement>) => setBio(e.target.value)
+        },
+        sDesc: {
+            value: sDesc,
+            onChange: (e: React.ChangeEvent<HTMLInputElement>) => setSDesc(e.target.value)
+        },
+        onSubmit: async () => {
+            const diff = storeDiff(user, {firstName, lastName, jobName: job, bio})
+            if(sDesc !== user.skills.description) {
+                diff.skills = {
+                    // tags: [{id: 1}]
+                    description: sDesc
+                }
+            }
+            diff.id = user.id
+            const update = await modifyUser(diff as UserOptional & {id: string})
+            console.log(update)
+        },
+        errors: {
+
+        }
+    }
+}
 export const UserEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({children, onSubmitClick, ...props}) => {
     const [disabled, setDisabled] = useState(false)
 
+    const fields = useUserEdit()
     useEffect(() => {
         if (disabled) {
             onSubmitClick()
@@ -241,16 +325,19 @@ export const UserEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({
             <GrayPlate style={{marginTop: 16}}>
                 <Grid container spacing={4}>
                     <GrayField label='Имя' inputProps={{
-                        placeholder: 'Василий'
+                        placeholder: 'Василий',
+                        ...fields.firstName,
                     }}/>
                     <GrayField label='Фамилия' inputProps={{
-                        placeholder: 'Петров'
+                        placeholder: 'Петров',
+                        ...fields.lastName,
                     }}/>
                 </Grid>
             </GrayPlate>
             <Plate elevation={4} padding={8} style={{marginTop: 16}}>
                 <WhiteField label='Место работы' inputProps={{
-                    placeholder: 'Тинькофф'
+                    placeholder: 'Тинькофф',
+                    ...fields.job,
                 }}/>
             </Plate>
             <Typography variant='h2' style={{fontSize: 22, marginTop: 24}}>
@@ -258,17 +345,20 @@ export const UserEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({
             </Typography>
             <Plate elevation={4} padding={8} style={{marginTop: 16}}>
                 <WhiteField prefix='vk.com/' label='Вконтакте' inputProps={{
-                    placeholder: 'teamuponline'
+                    placeholder: 'teamuponline',
+                    ...fields.vk,
                 }}/>
             </Plate>
             <Plate elevation={4} padding={8} style={{marginTop: 16}}>
                 <WhiteField prefix='t.me/' label='Телеграм' inputProps={{
-                    placeholder: 'teamuponline'
+                    placeholder: 'teamuponline',
+                    ...fields.tg,
                 }}/>
             </Plate>
             <Plate elevation={4} padding={8} style={{marginTop: 16}}>
                 <WhiteField prefix='github.com/' label='Github' inputProps={{
-                    placeholder: 'teamuponline'
+                    placeholder: 'teamuponline',
+                    ...fields.gh,
                 }}/>
             </Plate>
             <Typography variant='h2' style={{fontSize: 22, marginTop: 24}}>
@@ -280,11 +370,13 @@ export const UserEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({
             <GrayPlate style={{marginTop: 16}}>
                 <Grid direction='column' container spacing={4}>
                     <MultilineGrayField label='О себе' inputProps={{
-                        placeholder: 'В свободное от работы время я бегаю'
+                        placeholder: 'В свободное от работы время я бегаю',
+                        ...fields.bio,
                     }}/>
                     <MultilineGrayField style={{paddingTop: 0}}
                                         label='О навыках' inputProps={{
-                        placeholder: 'Первый свой полифилл я написал в 11 лет'
+                        placeholder: 'Первый свой полифилл я написал в 11 лет',
+                        ...fields.sDesc,
                     }}/>
                 </Grid>
             </GrayPlate>
@@ -307,7 +399,10 @@ export const UserEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({
                     </Button>
                 </Grid>
                 <Grid item>
-                    <SecondaryButton disabled={disabled} onClick={props.close}>
+                    <SecondaryButton disabled={disabled} onClick={async (e) => {
+                        await fields.onSubmit()
+                        props.close && props.close(e)
+                    }}>
                         Сохранить
                     </SecondaryButton>
                 </Grid>

@@ -11,7 +11,7 @@ import {
 import Convert, {BackendHackathon, BackendUser} from './backend'
 import {HackathonOptional} from '../components/tools/use-app-state/hackathon'
 
-const useMock = true
+const useMock = false
 const mockImplemented = false
 
 
@@ -747,7 +747,6 @@ export const modifyUser = async (user: UserOptional & { id: string }) => {
     if (!useMock) {
         let success = true
         const backUser = Convert.userOptional.toBackend(user)
-
         const modifyRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${user.id}`,
             {
                 method: 'PUT',

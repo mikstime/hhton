@@ -31,8 +31,15 @@ export type User = {
     team: Team,
     isNullUser?: boolean,
     notFound?: boolean,
+    // settings: UserSettings
 }
 
+export type UserSettings = {
+    // social networks
+    telegram?: string,
+    github?: string,
+    vk?: string,
+}
 
 export type Team = {
     members: User[],

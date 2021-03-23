@@ -11,9 +11,8 @@ export type BackendUser = {
     id: number | null,
     firstName: string | null,
     lastName: string | null,
-    jobName: string | null,
-    email: string | null,
     workPlace: string | null,
+    email: string | null,
     description: string | null,
     bio: string | null,
     team: BackendTeam | null,
@@ -24,7 +23,6 @@ type BackendUserOptional = {
     id: number | null,
     firstName: string | null,
     lastName: string | null,
-    jobName: string | null,
     email: string | null,
     workPlace: string | null,
     description: string | null,
@@ -81,7 +79,7 @@ const Convert = {
             return {
                 firstName: bUser.firstName ?? '',
                 lastName: bUser.lastName ?? '',
-                jobName: bUser.jobName ?? '',
+                jobName: bUser.workPlace ?? '',
                 bio: bUser.bio ?? '',
                 avatar: 'http://loremflickr.com/1000/1000',
                 skills: {
@@ -102,9 +100,8 @@ const Convert = {
                 id: Number(fUser.id) ?? null,
                 firstName: fUser.firstName ?? null,
                 lastName: fUser.lastName ?? null,
-                jobName: fUser.jobName ?? null,
                 email: '',
-                workPlace: '',
+                workPlace: fUser.jobName,
                 description: fUser.skills?.description ?? null,
                 bio: ''
             }
@@ -117,9 +114,8 @@ const Convert = {
                 id: Number(fUser.id) ?? null,
                 firstName: fUser.firstName ?? null,
                 lastName: fUser.lastName ?? null,
-                jobName: fUser.jobName ?? null,
                 email: '',
-                workPlace: '',
+                workPlace: fUser.jobName ?? null,
                 description: fUser.skills?.description ?? null,
                 bio: fUser.bio ?? null,
                 skills: fUser.skills?.tags?.map(s => ({skillID: Number(s.id), jobID: Number(s.jobId), skillName: s.name})) ?? null
