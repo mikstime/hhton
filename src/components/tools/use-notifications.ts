@@ -15,13 +15,14 @@ export const useNotifications = () => {
             try {
                 client.current = new w3cwebsocket(`${WS_DOMAIN}${PREFIX}/notification/channel/${cUser.id}`)
                 client.current.onmessage = (m) => {
+                    console.log(m)
                     enqueueSnackbar(m.data)
                 }
                 client.current.onopen = () => {
                     console.log('connection established')
                     if (client.current) {
                         // console.log('sending')
-                        client.current.send('hello')
+                        client.current.send(JSON.stringify({message: 'hello'}))
                     }
                 }
                 client.current.onerror = (e) => {
