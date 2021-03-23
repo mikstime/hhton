@@ -21,6 +21,7 @@ import {
 import {useAppState} from '../tools/use-app-state'
 import {AdditionalText} from '../common'
 import styled from 'styled-components'
+import {useNotifications} from '../tools/use-notifications'
 
 const NavLink: React.FC<LinkProps> = (props) => {
     const theme = useTheme()
@@ -88,20 +89,20 @@ const AppNav: React.FC<GridProps> = ({children}) => {
 
     const drawer = (
         <Box>
-            <NavLink to={`/event/${cEvent.id}`}>
+            <NavLink to={`/event/${cEvent.id}`} onClick={() => setMobileOpen(false)}>
                 <AdditionalText
                     align='right'>
                     К мероприятию
                 </AdditionalText>
             </NavLink>
             <Box paddingTop={2}/>
-            <NavLink to={`/team`}>
+            <NavLink to={`/team`} onClick={() => setMobileOpen(false)}>
                 <AdditionalText align='right'>
                     К команде
                 </AdditionalText>
             </NavLink>
             <Box paddingTop={2}/>
-            <NavLink to={`/user`}>
+            <NavLink to={`/user`} onClick={() => setMobileOpen(false)}>
                 <AdditionalText align='right'>
                     К себе
                 </AdditionalText>
@@ -176,6 +177,7 @@ export const App: React.FC = () => {
     useFetcher()
     useInvitesFetcher()
     useAuth()
+    useNotifications()
 
     return <Switch>
         <Route path='/user/:userId'>

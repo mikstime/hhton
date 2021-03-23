@@ -1,5 +1,11 @@
-import React, {useEffect} from 'react'
-import {Box, Grid, Hidden, Typography} from '@material-ui/core'
+import React, {useCallback, useEffect} from 'react'
+import {
+    Box,
+    CardActionArea,
+    Grid,
+    Hidden,
+    Typography
+} from '@material-ui/core'
 import {
     AvatarPlate,
     Title
@@ -14,33 +20,46 @@ import {NotFound} from './notfound'
 import notFoundIcon from '../../assets/notfound.svg'
 import Image from 'material-ui-image'
 import {EditEventButton} from '../event/edit-event-button'
+import {useEventAboutModal} from '../modals/event-about'
+import {EditableImage} from '../common/editable-image'
+import {editEventBackground} from '../tools/edit-event-background'
+import {editEventLogo} from '../tools/edit-event-logo'
+import {useSnackbar} from 'notistack'
 
 const EventNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
 `
 
-// const Background = styled.div`
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-//   right: 0;
-//   height: 279px;
-// `
-//
-// const StyledImage = styled(Image)`
-//   position: absolute;
-//   z-index: 0;
-//   top: 0;
-//   left: 0;
-//   right: 0;
-//   padding-top: 0 !important;
-//   display: flex;
-// `
-
 export const EventApp: React.FC = () => {
     //@ts-ignore
     const {eventId} = useParams()
-    const {event, cEvent} = useAppState()
+    const {event, cEvent, cUser} = useAppState()
+    const {open} = useEventAboutModal()
+    const {enqueueSnackbar} = useSnackbar()
+
+    const onLogoChange = useCallback(() => {
+        const img = editEventLogo()
+        if (!img) {
+            enqueueSnackbar('Не удалось обновить логотип', {
+                variant: 'error'
+            })
+        } else {
+            cEvent.change({logo: img})
+            event.change({logo: img})
+        }
+    }, [cEvent, event])
+
+    const onBackgroundChange = useCallback(() => {
+        const img = editEventBackground()
+        if (!img) {
+            enqueueSnackbar('Не удалось обновить фон', {
+                variant: 'error'
+            })
+        } else {
+            cEvent.change({background: img})
+            event.change({background: img})
+        }
+    }, [cEvent, event])
 
     useEffect(() => {
         if (eventId) {
@@ -65,12 +84,14 @@ export const EventApp: React.FC = () => {
         <Grid style={{zIndex: 3}} container direction='column'>
             <Grid item container spacing={2}>
                 <Grid item container md={5}>
-                    <AvatarPlate src={event.logo}>
+                    <AvatarPlate src={event.logo}
+                                 onEdit={onLogoChange}
+                                 editable={event.founderId === cUser.id}>
                         <ParticipateButton/>
                     </AvatarPlate>
                 </Grid>
-                <Grid item container md spacing={3} direction='column'>
-                    <EventNameGrid item>
+                <Grid item container md spacing={2} direction='column'>
+                    <EventNameGrid item container alignItems='center'>
                         <Typography style={{minHeight: 24}}>
                             {event.name}
                         </Typography>
@@ -80,16 +101,30 @@ export const EventApp: React.FC = () => {
                     </EventNameGrid>
                     <Hidden smDown>
                         <Grid item style={{paddingLeft: 20, paddingRight: 20}}>
-                            <Image src={event.background} imageStyle={{
-                                width: '100%',
-                                objectFit: 'cover',
-                                height: '250px'
-                            }} style={{
-                                width: '100%',
-                                borderRadius: '10px 10px 0 0',
-                                overflow: 'hidden',
-                                paddingTop: '250px'
-                            }}/>
+                            {event.founderId === cUser.id ?
+                                <EditableImage onClick={onBackgroundChange}>
+                                    <Image src={event.background} imageStyle={{
+                                        width: '100%',
+                                        objectFit: 'cover',
+                                        height: '250px'
+                                    }} style={{
+                                        width: '100%',
+                                        borderRadius: '10px 10px 0 0',
+                                        overflow: 'hidden',
+                                        paddingTop: '250px'
+                                    }}/>
+                                </EditableImage> :
+                                <Image src={event.background} imageStyle={{
+                                    width: '100%',
+                                    objectFit: 'cover',
+                                    height: '250px'
+                                }} style={{
+                                    width: '100%',
+                                    borderRadius: '10px 10px 0 0',
+                                    overflow: 'hidden',
+                                    paddingTop: '250px'
+                                }}/>
+                            }
                         </Grid>
                         <Grid item style={{marginTop: -120}}/>
                     </Hidden>
@@ -98,8 +133,11 @@ export const EventApp: React.FC = () => {
                                   text={event.place ? `Место проведения: ${event.place}` : ''}/>
                     </Grid>
                     <Grid item style={{zIndex: 2}}>
-                        <InfoPlate elevation={4} textPlate={CaptionText}
-                                   text='Подробная информация'/>
+                        <CardActionArea style={{borderRadius: 10}}
+                                        onClick={open}>
+                            <InfoPlate elevation={4} textPlate={CaptionText}
+                                       text='Подробная информация'/>
+                        </CardActionArea>
                     </Grid>
                 </Grid>
             </Grid>
@@ -108,11 +146,16 @@ export const EventApp: React.FC = () => {
                     <Grid item>
                         <Title>
                             О мероприятии
+                            <Hidden smDown>
+                                <Box clone marginLeft='12px'>
+                                    <EditEventButton/>
+                                </Box>
+                            </Hidden>
                         </Title>
                     </Grid>
                     <Grid item>
                         <SecondaryText>
-                            {event.description}
+                            {event.description || 'Похоже, информация о мероприятии отсутствует'}
                         </SecondaryText>
                     </Grid>
                 </Grid>

@@ -147,6 +147,7 @@ const Convert = {
                 id: bHackathon.id?.toString() ?? '-1',
                 logo: 'http://loremflickr.com/1000/1000',
                 background: 'http://loremflickr.com/1000/1000',
+                description: bHackathon.description ?? '',
                 founderId: bHackathon.founder?.toString() ?? '-1',
                 isFinished: currentDate > bHackathon.dateEnd! ?? true,
                 place: bHackathon.place ?? '',

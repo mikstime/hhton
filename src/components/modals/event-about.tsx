@@ -1,6 +1,20 @@
 import React, {useCallback, useEffect, useState} from 'react'
-import {Modal, ModalProps} from '../common'
-import {Button, Grid, Omit, Typography} from '@material-ui/core'
+import {
+    AdditionalText,
+    FlexSpace,
+    GrayPlate,
+    Modal,
+    ModalProps,
+    Plate,
+} from '../common'
+import {
+    Box,
+    Grid, Hidden,
+    InputBase,
+    InputBaseProps,
+    Omit,
+    Typography
+} from '@material-ui/core'
 import {PrimaryButton} from '../common/buttons'
 
 const _useEventAboutModal = () => {
@@ -24,6 +38,59 @@ const _useEventAboutModal = () => {
     }
 }
 
+
+const GrayField: React.FC<{ label: string, inputProps?: InputBaseProps }> = ({label, inputProps = {}}) => {
+    return <Grid item xs container alignItems='baseline' spacing={2}>
+        <Box clone width={{md: '80px'}}>
+            <Grid xs={12} md='auto' item>
+                <Box clone textAlign={{md: 'right'}}>
+                    <Typography variant='body2' style={{color: '#6F7985'}}>
+                        {label}
+                    </Typography>
+                </Box>
+            </Grid>
+        </Box>
+        <Grid xs={12} sm item>
+            <InputBase {...inputProps} style={{
+                background: 'white',
+                borderRadius: 8,
+                paddingLeft: 12,
+                paddingRight: 12,
+                display: 'block',
+                height: 32,
+                ...(inputProps.style || {})
+            }}/>
+        </Grid>
+    </Grid>
+}
+
+const WhiteField: React.FC<{ label: string, prefix?: string, inputProps?: InputBaseProps }> = ({label, prefix, inputProps = {}}) => {
+    return <Grid item xs container alignItems='baseline'
+                 style={{minHeight: 32}}>
+        <Grid item xs sm={6} container>
+            <Typography variant='body2' style={{color: '#6F7985'}}>
+                {label}
+            </Typography>
+            <Hidden xsDown>
+                <FlexSpace/>
+                <AdditionalText>
+                    {prefix}
+                </AdditionalText>
+            </Hidden>
+        </Grid>
+        <Grid item xs sm>
+            <InputBase fullWidth {...inputProps} style={{
+                // paddingLeft: 12,
+                paddingRight: 12,
+                display: 'block',
+                height: 32,
+                ...(inputProps.style || {})
+            }}/>
+        </Grid>
+    </Grid>
+}
+
+
 interface MProps extends Omit<ModalProps, 'children'> {
 }
 
@@ -44,24 +111,49 @@ export const EventAboutModal: React.FC<{ onSubmitClick: () => any } & MProps> = 
             setDisabled(false)
         }
     }, [props.open])
-    return <Modal gridProps={{item: true, md: 10, sm: 10, xs: 12}}
-                  onClose={props.close}{...props}>
+    return <Modal
+        onClose={props.close}{...props}>
         <Grid container direction='column'>
-            <Typography variant='h1'>
-                Вы действительно хотите отказаться от участия в мероприятии?
+            <Typography variant='h2' style={{fontSize: 22}}>
+                Информация о мероприятии
             </Typography>
+            <AdditionalText style={{marginTop: 16}}>
+                Более подробная информация увеличивает Ваши шансы
+                на поиск лучшей команды
+            </AdditionalText>
+            <GrayPlate style={{marginTop: 16}}>
+                <Grid container spacing={4}>
+                    <GrayField label='Начало' inputProps={{
+                        placeholder: 'Василий'
+                    }}/>
+                    <GrayField label='Число победителей' inputProps={{
+                        placeholder: 'Петров'
+                    }}/>
+                </Grid>
+                <Grid container spacing={4}>
+                    <GrayField label='Конец' inputProps={{
+                        placeholder: 'Василий'
+                    }}/>
+                    <GrayField label='Число участников' inputProps={{
+                        placeholder: 'Петров'
+                    }}/>
+                </Grid>
+            </GrayPlate>
+            <Plate elevation={4} padding={8} style={{marginTop: 16}}>
+                <WhiteField label='Место проведения' inputProps={{
+                    placeholder: 'Москва'
+                }}/>
+            </Plate>
+            <Plate elevation={4} padding={8} style={{marginTop: 16}}>
+                <WhiteField label='Сайт мероприятия' inputProps={{
+                    placeholder: 'team-up.online'
+                }}/>
+            </Plate>
             <Grid container direction='row' justify='flex-end'
                   style={{marginTop: 32}} spacing={1}>
                 <Grid item>
-                    <Button style={{color: '#818C99'}} disabled={disabled} onClick={() => {
-                        setDisabled(true)
-                    }}>
-                        Отказаться
-                    </Button>
-                </Grid>
-                <Grid item>
                     <PrimaryButton disabled={disabled} onClick={props.close}>
-                        Продолжить участие
+                        Применить
                     </PrimaryButton>
                 </Grid>
             </Grid>
