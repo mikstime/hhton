@@ -707,12 +707,13 @@ export const personalInvites = async (eventId: string, userId: string) => {
  */
 export const acceptInvite = async (eventId: string, inviteeId: string, inviterId: string) => {
     if (!mockImplemented) {
+        console.log(inviteeId, inviterId, Number(inviterId), Number(inviteeId))
         const join = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/team/join`,
             {
                 method: 'POST',
                 body: JSON.stringify({
-                    uid1: inviterId,
-                    uid2: inviteeId
+                    uid1: Number(inviterId),
+                    uid2: Number(inviteeId)
                 })
             })
         return (join.ok && join.status === 200)
