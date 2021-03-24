@@ -2,11 +2,11 @@ import React, {useCallback, useEffect} from 'react'
 import {
     Box,
     Grid,
-    GridProps, Hidden
+    GridProps, Hidden, useTheme
 } from '@material-ui/core'
 import {
     AvatarPlate,
-    Title, FlexSpace, GrayishPlate
+    Title, FlexSpace, GrayishPlate, AdditionalText
 } from '../common'
 import {useAppState} from '../tools/use-app-state'
 import styled from 'styled-components'
@@ -29,6 +29,14 @@ const UserNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
 `
 
+const SocialLink: React.FC<{prefix?: string, site?: string, value: string}> = ({prefix = '', site = '', value}) => {
+    const theme = useTheme()
+    if(!value) return null
+    return <Grid item>
+        <AdditionalText style={{marginLeft: 16 + 36}}>{prefix}
+        <a target='_blank' style={{textDecoration: 'none', color: theme.palette.primary.main}} href={`https://${site}${value}`}>{site}{value}</a></AdditionalText>
+    </Grid>
+}
 
 export const UserApp: React.FC<GridProps> = ({...rest}) => {
     //@ts-ignore
@@ -38,7 +46,7 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
 
     const onAvatarChange = useCallback(async () => {
         let img = "Пусто"
-        await editUserAvatar().then(result => img = result)
+        await editUserAvatar(user.id).then(result => img = result)
 
         if(!img) {
             enqueueSnackbar('Не удалось обновить аватар',{
@@ -92,6 +100,11 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                 <Grid item>
                     <BioPlate text={user.bio}/>
                 </Grid>
+                <Grid item container direction='column' spacing={2} style={{marginTop: 8}}>
+                    <SocialLink prefix='ВКонтакте: ' site='vk.com/' value={user.settings.vk}/>
+                    <SocialLink prefix='Телеграм: ' site='t.me/' value={user.settings.tg}/>
+                    <SocialLink prefix='Github: ' site='github.com/' value={user.settings.gh}/>
+                </Grid>
             </Grid>
         </Grid>
         <Grid item container>
@@ -132,9 +145,12 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                     Участие в хакатонах
                 </Title>
             </Grid>
-            <Grid item container>
-                {user.hackathons.join(' ')}
+            <Grid item>
+                <SecondaryText>
+                    Скоро
+                </SecondaryText>
             </Grid>
+            <div style={{height: 32}}/>
         </Grid>
     </Grid>
 }

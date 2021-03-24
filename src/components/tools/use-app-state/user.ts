@@ -31,14 +31,14 @@ export type User = {
     team: Team,
     isNullUser?: boolean,
     notFound?: boolean,
-    // settings: UserSettings
+    settings: UserSettings
 }
 
 export type UserSettings = {
     // social networks
-    telegram?: string,
-    github?: string,
-    vk?: string,
+    tg: string,
+    gh: string,
+    vk: string,
 }
 
 export type Team = {
@@ -60,7 +60,7 @@ export type UserOptional = {
     hackathons?: Hackathon[],
     id?: string
     isNullUser?: boolean
-    inMyTeam?: boolean,
+    settings?: UserSettings
 }
 
 
@@ -82,6 +82,11 @@ export const NULL_USER = {
     team: {
         name: '',
         members: [],
+    },
+    settings: {
+        vk: '',
+        tg: '',
+        gh: ''
     }
 } as User
 

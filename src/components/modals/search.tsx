@@ -241,6 +241,7 @@ const SearchUser: React.FC<UseSearchModalType & MProps> = ({...props}) => {
                             <InputBase
                                 inputRef={field}
                                 value={value}
+                                fullWidth
                                 onChange={(e) => {
                                     setValue(e.target.value)
                                 }}

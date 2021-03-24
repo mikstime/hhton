@@ -27,10 +27,16 @@ const TeamItem: React.FC<{ user: User }> = ({user}) => {
         </Link>
     </Grid>
 }
+
+const TO_SHOW = 4
 export const TeamDescription: React.FC<{ noName?: boolean, user: User }> = ({user, noName}) => {
 
     const theme = useTheme()
     const {cUser} = useAppState()
+
+    const filtered = user.team.members.filter(u => u.id !== user.id)
+    const usersToShow = filtered.slice(0, TO_SHOW)
+    const more = filtered.length - TO_SHOW > 0 ? filtered.length - TO_SHOW : 0
     if (!user.isNullUser && user.team) {
         if (user.team.members && user.team.members.length > 1) {
             return <Grid item container direction='column'>
@@ -40,8 +46,11 @@ export const TeamDescription: React.FC<{ noName?: boolean, user: User }> = ({use
                 }}>
                     В команде с
                 </MainText>
-                {user.team.members.filter(u => u.id !== user.id).map(u =>
+                {usersToShow.map(u =>
                     <TeamItem key={u.id} user={u}/>)}
+                {more > 0 &&             <AdditionalText style={{marginTop: 16}}>
+                    ещё {more}
+                </AdditionalText>}
             </Grid>
         } else {
             return <Grid item container direction='column'>

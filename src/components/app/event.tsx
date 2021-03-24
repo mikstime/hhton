@@ -37,7 +37,7 @@ export const EventApp: React.FC = () => {
     const {enqueueSnackbar} = useSnackbar()
 
     const onLogoChange = useCallback(() => {
-        const img = editEventLogo()
+        const img = editEventLogo(event.id)
         if (!img) {
             enqueueSnackbar('Не удалось обновить логотип', {
                 variant: 'error'
@@ -49,7 +49,7 @@ export const EventApp: React.FC = () => {
     }, [cEvent, event])
 
     const onBackgroundChange = useCallback(() => {
-        const img = editEventBackground()
+        const img = editEventBackground(event.id)
         if (!img) {
             enqueueSnackbar('Не удалось обновить фон', {
                 variant: 'error'
@@ -158,7 +158,21 @@ export const EventApp: React.FC = () => {
                         </SecondaryText>
                     </Grid>
                 </Grid>
-                <Grid item xs md={5}/>
+            </Grid>
+            <Grid item container>
+                <Grid item container direction='column' md>
+                    <Grid item>
+                        <Title>
+                            Призовой фонд
+                        </Title>
+                    </Grid>
+                    <Grid item>
+                        <SecondaryText>
+                            Скоро
+                        </SecondaryText>
+                    </Grid>
+                    <div style={{height: 32}}/>
+                </Grid>
             </Grid>
         </Grid>
     </Grid>

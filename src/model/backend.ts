@@ -103,6 +103,11 @@ const Convert = {
                 team: {
                     name: '',
                     members: [] as User[]
+                },
+                settings: {
+                    vk: 'mikstime',
+                    gh: 'mikstime',
+                    tg: 'mikstime'
                 }
             }
         },

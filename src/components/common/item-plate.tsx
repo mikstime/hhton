@@ -1,6 +1,6 @@
 import React, {ElementType} from 'react'
 import {Plate, PlateProps} from './plate'
-import {Grid, IconButton, SvgIcon} from '@material-ui/core'
+import {Box, Grid, IconButton, SvgIcon} from '@material-ui/core'
 import styled from 'styled-components'
 import {AdditionalText} from './typography'
 
@@ -27,8 +27,10 @@ export const ItemPlate: React.FC<ItemPlateProps> = (
         <Grid container wrap='nowrap'>
             {frontIcon && text &&
             <SvgIcon style={{marginRight: 12}} component={frontIcon}/>}
-            <TextPlate style={{minHeight: '24px'}}>{text}</TextPlate>
+            <Box style={{minHeight: '24px'}} alignItems='center' display='flex'>
+            <TextPlate>{text}</TextPlate>
             {postIcon && <IconButton component={postIcon}/>}
+            </Box>
         </Grid>
     </PaddedPlate>
 }
