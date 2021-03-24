@@ -16,210 +16,210 @@ const mockImplemented = false
 
 
 const TEST_USERS: User[] = [
-    {
-        id: '1',
-        firstName: 'Имя',
-        lastName: 'Фамилия',
-        avatar: 'http://loremflickr.com/1000/1000',
-        isInvited: false,
-        bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-        jobName: 'Тинькофф',
-        skills: {
-            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
-                name: 'React',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Angular', jobId: '1', id: '1'}, {
-                name: 'CSS',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Backend', jobId: '1', id: '1'}, {
-                name: 'Node.js',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Golang', jobId: '1', id: '1'}, {
-                name: 'Postgres',
-                jobId: '1',
-                id: '1'
-            }],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-        },
-        hackathons: [],
-        team: {
-            name: 'test team',
-            members: []
-        }
-    },
-    {
-        id: '14',
-        firstName: 'Имя',
-        lastName: 'Фамилия2',
-        avatar: 'http://loremflickr.com/1000/1000',
-        isInvited: false,
-        bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-        jobName: 'Тинькофф',
-        skills: {
-            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
-                name: 'React',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Angular', jobId: '1', id: '1'}, {
-                name: 'CSS',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Backend', jobId: '1', id: '1'}, {
-                name: 'Node.js',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Golang', jobId: '1', id: '1'}, {
-                name: 'Postgres',
-                jobId: '1',
-                id: '1'
-            }],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-        },
-        hackathons: [],
-        team: {
-            name: 'test team',
-            members: []
-        }
-    },
-    {
-        id: '11',
-        firstName: 'Имя',
-        lastName: 'Фамилия3',
-        avatar: 'http://loremflickr.com/1000/1000',
-        isInvited: false,
-        bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-        jobName: 'Тинькофф',
-        skills: {
-            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
-                name: 'React',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Angular', jobId: '1', id: '1'}, {
-                name: 'CSS',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Backend', jobId: '1', id: '1'}, {
-                name: 'Node.js',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Golang', jobId: '1', id: '1'}, {
-                name: 'Postgres',
-                jobId: '1',
-                id: '1'
-            }],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-        },
-        hackathons: [],
-        team: {
-            name: 'test team',
-            members: []
-        }
-    },
-    {
-        id: '113',
-        firstName: 'Имя',
-        lastName: 'Фамилия',
-        avatar: 'http://loremflickr.com/1000/1000',
-        isInvited: false,
-        bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-        jobName: 'Тинькофф',
-        skills: {
-            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
-                name: 'React',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Angular', jobId: '1', id: '1'}, {
-                name: 'CSS',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Backend', jobId: '1', id: '1'}, {
-                name: 'Node.js',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Golang', jobId: '1', id: '1'}, {
-                name: 'Postgres',
-                jobId: '1',
-                id: '1'
-            }],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-        },
-        hackathons: [],
-        team: {
-            name: 'test team',
-            members: []
-        }
-    },
-    {
-        id: '112',
-        firstName: 'Имя',
-        lastName: 'Фамилия2',
-        avatar: 'http://loremflickr.com/1000/1000',
-        isInvited: false,
-        bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-        jobName: 'Тинькофф',
-        skills: {
-            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
-                name: 'React',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Angular', jobId: '1', id: '1'}, {
-                name: 'CSS',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Backend', jobId: '1', id: '1'}, {
-                name: 'Node.js',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Golang', jobId: '1', id: '1'}, {
-                name: 'Postgres',
-                jobId: '1',
-                id: '1'
-            }],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-        },
-        hackathons: [],
-        team: {
-            name: 'test team',
-            members: []
-        }
-    },
-    {
-        id: '111',
-        firstName: 'Имя',
-        lastName: 'Фамилия3',
-        avatar: 'http://loremflickr.com/1000/1000',
-        isInvited: false,
-        bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-        jobName: 'Тинькофф',
-        skills: {
-            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
-                name: 'React',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Angular', jobId: '1', id: '1'}, {
-                name: 'CSS',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Backend', jobId: '1', id: '1'}, {
-                name: 'Node.js',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Golang', jobId: '1', id: '1'}, {
-                name: 'Postgres',
-                jobId: '1',
-                id: '1'
-            }],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-        },
-        hackathons: [],
-        team: {
-            name: 'test team',
-            members: []
-        }
-    }
+    // {
+    //     id: '1',
+    //     firstName: 'Имя',
+    //     lastName: 'Фамилия',
+    //     avatar: 'http://loremflickr.com/1000/1000',
+    //     isInvited: false,
+    //     bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
+    //     jobName: 'Тинькофф',
+    //     skills: {
+    //         tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
+    //             name: 'React',
+    //             jobId: '1',
+    //             id: '1'
+    //         }, {name: 'Angular', jobId: '1', id: '1'}, {
+    //             name: 'CSS',
+    //             jobId: '1',
+    //             id: '1'
+    //         }, {name: 'Backend', jobId: '1', id: '1'}, {
+    //             name: 'Node.js',
+    //             jobId: '1',
+    //             id: '1'
+    //         }, {name: 'Golang', jobId: '1', id: '1'}, {
+    //             name: 'Postgres',
+    //             jobId: '1',
+    //             id: '1'
+    //         }],
+    //         description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+    //     },
+    //     hackathons: [],
+    //     team: {
+    //         name: 'test team',
+    //         members: []
+    //     }
+    // },
+    // {
+    //     id: '14',
+    //     firstName: 'Имя',
+    //     lastName: 'Фамилия2',
+    //     avatar: 'http://loremflickr.com/1000/1000',
+    //     isInvited: false,
+    //     bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
+    //     jobName: 'Тинькофф',
+    //     skills: {
+    //         tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
+    //             name: 'React',
+    //             jobId: '1',
+    //             id: '1'
+    //         }, {name: 'Angular', jobId: '1', id: '1'}, {
+    //             name: 'CSS',
+    //             jobId: '1',
+    //             id: '1'
+    //         }, {name: 'Backend', jobId: '1', id: '1'}, {
+    //             name: 'Node.js',
+    //             jobId: '1',
+    //             id: '1'
+    //         }, {name: 'Golang', jobId: '1', id: '1'}, {
+    //             name: 'Postgres',
+    //             jobId: '1',
+    //             id: '1'
+    //         }],
+    //         description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+    //     },
+    //     hackathons: [],
+    //     team: {
+    //         name: 'test team',
+    //         members: []
+    //     }
+    // },
+    // {
+    //     id: '11',
+    //     firstName: 'Имя',
+    //     lastName: 'Фамилия3',
+    //     avatar: 'http://loremflickr.com/1000/1000',
+    //     isInvited: false,
+    //     bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
+    //     jobName: 'Тинькофф',
+    //     skills: {
+    //         tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
+    //             name: 'React',
+    //             jobId: '1',
+    //             id: '1'
+    //         }, {name: 'Angular', jobId: '1', id: '1'}, {
+    //             name: 'CSS',
+    //             jobId: '1',
+    //             id: '1'
+    //         }, {name: 'Backend', jobId: '1', id: '1'}, {
+    //             name: 'Node.js',
+    //             jobId: '1',
+    //             id: '1'
+    //         }, {name: 'Golang', jobId: '1', id: '1'}, {
+    //             name: 'Postgres',
+    //             jobId: '1',
+    //             id: '1'
+    //         }],
+    //         description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+    //     },
+    //     hackathons: [],
+    //     team: {
+    //         name: 'test team',
+    //         members: []
+    //     }
+    // },
+    // {
+    //     id: '113',
+    //     firstName: 'Имя',
+    //     lastName: 'Фамилия',
+    //     avatar: 'http://loremflickr.com/1000/1000',
+    //     isInvited: false,
+    //     bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
+    //     jobName: 'Тинькофф',
+    //     skills: {
+    //         tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
+    //             name: 'React',
+    //             jobId: '1',
+    //             id: '1'
+    //         }, {name: 'Angular', jobId: '1', id: '1'}, {
+    //             name: 'CSS',
+    //             jobId: '1',
+    //             id: '1'
+    //         }, {name: 'Backend', jobId: '1', id: '1'}, {
+    //             name: 'Node.js',
+    //             jobId: '1',
+    //             id: '1'
+    //         }, {name: 'Golang', jobId: '1', id: '1'}, {
+    //             name: 'Postgres',
+    //             jobId: '1',
+    //             id: '1'
+    //         }],
+    //         description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+    //     },
+    //     hackathons: [],
+    //     team: {
+    //         name: 'test team',
+    //         members: []
+    //     }
+    // },
+    // {
+    //     id: '112',
+    //     firstName: 'Имя',
+    //     lastName: 'Фамилия2',
+    //     avatar: 'http://loremflickr.com/1000/1000',
+    //     isInvited: false,
+    //     bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
+    //     jobName: 'Тинькофф',
+    //     skills: {
+    //         tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
+    //             name: 'React',
+    //             jobId: '1',
+    //             id: '1'
+    //         }, {name: 'Angular', jobId: '1', id: '1'}, {
+    //             name: 'CSS',
+    //             jobId: '1',
+    //             id: '1'
+    //         }, {name: 'Backend', jobId: '1', id: '1'}, {
+    //             name: 'Node.js',
+    //             jobId: '1',
+    //             id: '1'
+    //         }, {name: 'Golang', jobId: '1', id: '1'}, {
+    //             name: 'Postgres',
+    //             jobId: '1',
+    //             id: '1'
+    //         }],
+    //         description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+    //     },
+    //     hackathons: [],
+    //     team: {
+    //         name: 'test team',
+    //         members: []
+    //     }
+    // },
+    // {
+    //     id: '111',
+    //     firstName: 'Имя',
+    //     lastName: 'Фамилия3',
+    //     avatar: 'http://loremflickr.com/1000/1000',
+    //     isInvited: false,
+    //     bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
+    //     jobName: 'Тинькофф',
+    //     skills: {
+    //         tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
+    //             name: 'React',
+    //             jobId: '1',
+    //             id: '1'
+    //         }, {name: 'Angular', jobId: '1', id: '1'}, {
+    //             name: 'CSS',
+    //             jobId: '1',
+    //             id: '1'
+    //         }, {name: 'Backend', jobId: '1', id: '1'}, {
+    //             name: 'Node.js',
+    //             jobId: '1',
+    //             id: '1'
+    //         }, {name: 'Golang', jobId: '1', id: '1'}, {
+    //             name: 'Postgres',
+    //             jobId: '1',
+    //             id: '1'
+    //         }],
+    //         description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
+    //     },
+    //     hackathons: [],
+    //     team: {
+    //         name: 'test team',
+    //         members: []
+    //     }
+    // }
 ]
 
 /**
@@ -282,6 +282,11 @@ export const fetchUser = async (id: string) => {
             jobName: 'Тинькофф',
             avatar: 'http://loremflickr.com/1000/1000',
             id: id,
+            settings: {
+                vk: '',
+                tg: '',
+                gh: '',
+            },
             skills: {
                 tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
                     name: 'React',
@@ -498,7 +503,7 @@ export const findUsers = async (query: string) => {
 /**
  * Возвращает массив доступных специализаций
  */
-export const getJobs: () => Promise<{name: string, id: number}[]> = async () => {
+export const getJobs: () => Promise<Jobs> = async () => {
     if (!mockImplemented) {
         const job = await fetch(`${HOST_DOMAIN}${PREFIX}/job`)
 
@@ -589,7 +594,10 @@ export const getTeam = async (eventId: string, userId: string) => {
         if (team.ok) {
             const json = await team.json()
             if (json) {
-                return Convert.team.toFrontend(json)
+                const t = Convert.team.toFrontend(json)
+                //@TODO Пользователи прилетают не полные. Поправить на беке
+                t.members = await Promise.all(json.members.map((j: BackendUser) => fetchUser(j.id!.toString())))
+                return t
             } else {
                 return {
                     members: [] as User[],
@@ -676,8 +684,10 @@ export const personalInvites = async (eventId: string, userId: string) => {
         if (users.ok) {
             const json = await users.json()
 
-            if (json) {
-                return Convert.users.toFrontend(json)
+            //@TODO не хватает полей у пользователя (косяк бекенда)
+            const fullUsers = await Promise.all(json.map((j: BackendUser) => fetchUser(j.id!.toString())))
+            if (fullUsers) {
+                return fullUsers as User[]
             }
             return [] as User[]
         } else {

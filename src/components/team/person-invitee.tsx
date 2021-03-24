@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react'
 import {User} from '../tools/use-app-state/user'
-import {Box, Grid} from '@material-ui/core'
+import {Box, Chip, Grid} from '@material-ui/core'
 import {AvatarPlate} from '../common'
 import {PrimaryButton} from '../common/buttons'
 import {InviteButton} from '../event/invite-button'
@@ -9,17 +9,19 @@ import {TeamDescription} from '../user/team-description'
 import {acceptInvite, declineInvite} from '../../model/api'
 import {useAppState} from '../tools/use-app-state'
 import {useSnackbar} from 'notistack'
+import {useChipStyles} from './team-member'
+import {SocialLink} from '../app/user'
 
 const useInviteActions = (user: User) => {
     const [isFetching, setIsFetching] = useState(false)
     const [fading, setFading] = useState(true)
-    const {event, cUser, invites} = useAppState()
+    const {cEvent, cUser, invites} = useAppState()
 
     const {enqueueSnackbar} = useSnackbar()
 
     const submit = useCallback(async () => {
         setIsFetching(true)
-        const didAccept = await acceptInvite(event.id, cUser.id, user.id)
+        const didAccept = await acceptInvite(cEvent.id, cUser.id, user.id)
         if (didAccept) {
             setIsFetching(false)
             setFading(false)
@@ -35,11 +37,11 @@ const useInviteActions = (user: User) => {
                 variant: 'error'
             })
         }
-    }, [cUser.id, event.id, user.id, invites, enqueueSnackbar])
+    }, [cUser.id, cEvent.id, user.id, invites, enqueueSnackbar])
 
     const decline = useCallback(async () => {
         setIsFetching(true)
-        const didDecline = await declineInvite(event.id, cUser.id, user.id)
+        const didDecline = await declineInvite(cEvent.id, cUser.id, user.id)
         if (didDecline) {
             setIsFetching(false)
             setFading(false)
@@ -53,7 +55,7 @@ const useInviteActions = (user: User) => {
                 variant: 'error'
             })
         }
-    }, [cUser.id, event.id, user.id, invites, enqueueSnackbar])
+    }, [cUser.id, cEvent.id, user.id, invites, enqueueSnackbar])
     return {
         isFetching,
         fading,
@@ -63,12 +65,21 @@ const useInviteActions = (user: User) => {
 }
 
 
+const Skills: React.FC<{ user: User }> = ({user}) => {
+    const classes = useChipStyles()
+    return <div className={classes.root} style={{margin: '0px -8px 0px -8px'}}>
+        {user.skills.tags.map((s, i) => <Chip key={s.name + i}
+                                              label={s.name}/>)}
+    </div>
+}
+
+
 export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
 
     const {isFetching, submit, decline} = useInviteActions(user)
     return <Grid item container spacing={2}
                  style={{overflow: 'visible'}}>
-        <Grid item container md={8} xs={9} sm={12}>
+        <Grid item container md={8} xs={12} sm={12}>
             <AvatarPlate direction='row' src={user.avatar}
                          afterChildren={
                              <Box clone paddingTop={2} flex='1'>
@@ -106,7 +117,19 @@ export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
             </AvatarPlate>
         </Grid>
         <Grid item container md={4} xs={12} sm={6}>
-        {/*    //@TODO some more info*/}
+            <Grid item>
+                <Skills user={user}/>
+            </Grid>
+            <Grid item container style={{marginTop: 24, marginBottom: 24}} wrap='nowrap'>
+                <Grid item container direction='column' justify='center' spacing={2}>
+                    <SocialLink prefix='ВКонтакте: ' site='vk.com/'
+                                value={user.settings.vk}/>
+                    <SocialLink prefix='Телеграм: ' site='t.me/'
+                                value={user.settings.tg}/>
+                    <SocialLink prefix='Github: ' site='github.com/'
+                                value={user.settings.gh}/>
+                </Grid>
+            </Grid>
         </Grid>
     </Grid>
 }

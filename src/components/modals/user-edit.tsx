@@ -120,6 +120,7 @@ const WhiteField: React.FC<{ label: string, prefix?: string, inputProps?: InputB
             </Hidden>
         </Grid>
         <Grid item xs sm>
+            <Box clone marginLeft={{xs: '20px', sm: '0'}}>
             <InputBase fullWidth {...inputProps} style={{
                 // paddingLeft: 12,
                 paddingRight: 12,
@@ -127,6 +128,7 @@ const WhiteField: React.FC<{ label: string, prefix?: string, inputProps?: InputB
                 height: 32,
                 ...(inputProps.style || {})
             }}/>
+            </Box>
         </Grid>
     </Grid>
 }
@@ -270,9 +272,9 @@ const useUserEdit = () => {
             setFirstName(user.firstName)
             setLastName(user.lastName)
             setJob(user.jobName)
-            setVk('')
-            setTg('')
-            setGh('')
+            setVk(user.settings.vk)
+            setTg(user.settings.tg)
+            setGh(user.settings.gh)
             setBio(user.bio)
             setSDesc(user.skills.description)
             setSkills(user.skills.tags)
@@ -340,6 +342,9 @@ const useUserEdit = () => {
                 tags: skills,
                 description: sDesc
             }
+            diff.settings = {
+                vk, tg, gh
+            }
             diff.id = user.id
             const update = await modifyUser(diff as UserOptional & { id: string })
             setDisabled(false)
@@ -403,10 +408,10 @@ export const UserEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({
             <Typography variant='h2' style={{fontSize: 22, marginTop: 24}}>
                 Социальные сети
             </Typography>
-            <WhiteFieldLabel label='Вконтакте'/>
+            <WhiteFieldLabel label='ВКонтакте'/>
             <Box clone marginTop={{xs: 0, sm: '16px'}}>
                 <Plate elevation={4} padding={8}>
-                    <WhiteField prefix='vk.com/' label='Вконтакте' inputProps={{
+                    <WhiteField prefix='vk.com/' label='ВКонтакте' inputProps={{
                         placeholder: 'teamuponline',
                         ...fields.vk
                     }}/>
@@ -459,7 +464,7 @@ export const UserEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({
             </AdditionalText>
             <Skills {...fields.skills}/>
             <Grid container direction='row' justify='flex-end'
-                  style={{marginTop: 32}} spacing={1}>
+                  style={{marginTop: 0}} spacing={1}>
                 <Grid item>
                     <Button disabled={fields.disabled}
                             style={{color: '#818C99'}}

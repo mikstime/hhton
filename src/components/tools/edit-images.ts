@@ -18,25 +18,24 @@ userAvatarSelector.addEventListener("change", async function handleFile() {
 /**
  * @returns {string|boolean} – возвращает ссылку на изображение в случае успеха, и false при неудаче.
  */
-export const editUserAvatar = async () => {
+export const editUserAvatar = async (userId: string) => {
     //@TODO загрузить картинку (png, svg, gif)
     //@TODO отправить на сервер
     //@TODO вернуть, картинку, полученную с сервера
     // TODO Нет id юзера
     // return false
-    const userID = '1'
 
 
     userAvatarSelector.click();
     await waitFor('chosen', userAvatarChanged)
 
-    return await updateUserAvatar(userAvatar, userID)
+    return await updateUserAvatar(userAvatar, userId)
 }
 
 /**
  * @returns {string|boolean} – возвращает ссылку на изображение в случае успеха, и false при неудаче.
  */
-export const editEventBackground = () => {
+export const editEventBackground = (eventId: string) => {
     //@TODO загрузить картинку (png, svg, gif)
     //@TODO отправить на сервер
     //@TODO вернуть, картинку, полученную с сервера
@@ -47,7 +46,7 @@ export const editEventBackground = () => {
 /**
  * @returns {string|boolean} – возвращает ссылку на изображение в случае успеха, и false при неудаче.
  */
-export const editEventLogo = () => {
+export const editEventLogo = (eventId: string) => {
     //@TODO загрузить картинку (png, svg, gif)
     //@TODO отправить на сервер
     //@TODO вернуть, картинку, полученную с сервера

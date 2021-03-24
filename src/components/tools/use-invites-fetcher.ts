@@ -31,6 +31,7 @@ export const useInvitesFetcher = () => {
 
     useEffect(() => {
         (async () => {
+            //update team when invite is accepted or declined
             if (cUser.id !== '-1' && cEvent.id !== '-1') {
                 const team = await getTeam(cEvent.id, cUser.id)
                 if (team) {
