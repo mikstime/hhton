@@ -504,9 +504,9 @@ export const getJobs: () => Promise<{name: string, id: number}[]> = async () => 
 
         if (job.ok) {
             const json = await job.json()
-            let result = [] as Jobs
+            let result = [] as {name: string, id: number}[]
             if (json) {
-                result = Convert.job.toFrontend(json)
+                result.push(...json)
             }
 
             return result
