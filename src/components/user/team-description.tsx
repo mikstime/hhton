@@ -28,7 +28,7 @@ const TeamItem: React.FC<{ user: User }> = ({user}) => {
     </Grid>
 }
 
-const TO_SHOW = 4
+const TO_SHOW = 40
 export const TeamDescription: React.FC<{ noName?: boolean, user: User }> = ({user, noName}) => {
 
     const theme = useTheme()

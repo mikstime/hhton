@@ -6,7 +6,6 @@ const useStyles = makeStyles({
     root: {
         backgroundColor: '#F0F2F5',
         padding: '12px 16px 12px 16px',
-        marginTop: 36,
     },
 })
 export const GrayishPlate: React.FC<PlateProps> = (props) => {
