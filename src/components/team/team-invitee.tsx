@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react'
 import {User} from '../tools/use-app-state/user'
-import {Box, Grid, IconButton} from '@material-ui/core'
+import {Box, Chip, Grid, IconButton} from '@material-ui/core'
 import {Link} from 'react-router-dom'
 import {AvatarPlate} from '../common'
 import {NameTypography} from '../common/typography'
@@ -9,6 +9,8 @@ import {ReactComponent as ThumbsDownIcon} from '../../assets/thumbs_down.svg'
 import {useAppState} from '../tools/use-app-state'
 import {useSnackbar} from 'notistack'
 import {acceptInvite, declineInvite} from '../../model/api'
+import {useChipStyles} from './team-member'
+import {SocialLink} from '../app/user'
 
 
 const useInviteActions = (user: User) => {
@@ -64,6 +66,15 @@ const useInviteActions = (user: User) => {
 }
 
 
+const Skills: React.FC<{ user: User }> = ({user}) => {
+    const classes = useChipStyles()
+    return <div className={classes.root} style={{margin: '0px -8px 0px -8px'}}>
+        {user.skills.tags.map((s, i) => <Chip key={s.name + i}
+                                              label={s.name}/>)}
+    </div>
+}
+
+
 export const TeamInvitee: React.FC<{ user: User }> = ({user}) => {
     const {isFetching, submit, decline} = useInviteActions(user)
 
@@ -71,7 +82,10 @@ export const TeamInvitee: React.FC<{ user: User }> = ({user}) => {
         <Grid item md={5} xs={9} sm={5}>
             <Link to={`/user/${user.id}`}
                   style={{textDecoration: 'none'}}>
-                <AvatarPlate padding={24} src={user.avatar}/>
+                <AvatarPlate padding={24} src={user.avatar} style={{
+                    position: 'sticky',
+                    top: 24,
+                }}/>
             </Link>
         </Grid>
         <Box clone order={{xs: 3, sm: 2, md: 2}}>
@@ -80,7 +94,21 @@ export const TeamInvitee: React.FC<{ user: User }> = ({user}) => {
                 <Grid item container>
                     <NameTypography user={user}/>
                 </Grid>
+                <Grid item>
+                    <Skills user={user}/>
+                </Grid>
+                <Grid item container style={{marginTop: 24, marginBottom: 24}} wrap='nowrap'>
+                    <Grid item container direction='column' justify='center' spacing={2}>
+                        <SocialLink prefix='ВКонтакте: ' site='vk.com/'
+                                    value={user.settings.vk}/>
+                        <SocialLink prefix='Телеграм: ' site='t.me/'
+                                    value={user.settings.tg}/>
+                        <SocialLink prefix='Github: ' site='github.com/'
+                                    value={user.settings.gh}/>
+                    </Grid>
+                </Grid>
             </Grid>
+
         </Box>
         <Box clone order={{xs: 2, sm: 3, md: 3}}>
             <Grid item xs={3} sm={2} md={2} container spacing={2}

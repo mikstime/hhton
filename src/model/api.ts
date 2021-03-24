@@ -594,7 +594,10 @@ export const getTeam = async (eventId: string, userId: string) => {
         if (team.ok) {
             const json = await team.json()
             if (json) {
-                return Convert.team.toFrontend(json)
+                const t = Convert.team.toFrontend(json)
+                //@TODO Пользователи прилетают не полные. Поправить на беке
+                t.members = await Promise.all(json.members.map((j: BackendUser) => fetchUser(j.id!.toString())))
+                return t
             } else {
                 return {
                     members: [] as User[],
@@ -681,8 +684,10 @@ export const personalInvites = async (eventId: string, userId: string) => {
         if (users.ok) {
             const json = await users.json()
 
-            if (json) {
-                return Convert.users.toFrontend(json)
+            //@TODO не хватает полей у пользователя (косяк бекенда)
+            const fullUsers = await Promise.all(json.map((j: BackendUser) => fetchUser(j.id!.toString())))
+            if (fullUsers) {
+                return fullUsers as User[]
             }
             return [] as User[]
         } else {

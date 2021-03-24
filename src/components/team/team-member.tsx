@@ -14,6 +14,7 @@ import {NameTypography} from '../common/typography'
 import {ReactComponent as KickActiveIcon} from '../../assets/kick_active.svg'
 import {ReactComponent as KickIcon} from '../../assets/kick.svg'
 import {useAppState} from '../tools/use-app-state'
+import {SocialLink} from '../app/user'
 
 
 const VoteIcon: React.FC<{ active: boolean }> = ({active, ...props}) => {
@@ -90,7 +91,10 @@ export const TeamMember: React.FC<{ user: User }> = ({user}) => {
         <Grid item md={5} xs={9} sm={5}>
             <Link to={`/user/${user.id}`}
                   style={{textDecoration: 'none'}}>
-                <AvatarPlate padding={24} src={user.avatar}/>
+                <AvatarPlate padding={24} src={user.avatar} style={{
+                    position: 'sticky',
+                    top: 24,
+                }}/>
             </Link>
         </Grid>
         <Box clone order={{xs: 3, sm: 2, md: 2}}>
@@ -101,6 +105,16 @@ export const TeamMember: React.FC<{ user: User }> = ({user}) => {
                 </Grid>
                 <Grid item>
                     <Skills user={user}/>
+                </Grid>
+                <Grid item container style={{marginTop: 24, marginBottom: 24}} wrap='nowrap'>
+                    <Grid item container direction='column' justify='center' spacing={2}>
+                        <SocialLink prefix='ВКонтакте: ' site='vk.com/'
+                                    value={user.settings.vk}/>
+                        <SocialLink prefix='Телеграм: ' site='t.me/'
+                                    value={user.settings.tg}/>
+                        <SocialLink prefix='Github: ' site='github.com/'
+                                    value={user.settings.gh}/>
+                    </Grid>
                 </Grid>
             </Grid>
         </Box>

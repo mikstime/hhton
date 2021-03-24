@@ -29,7 +29,7 @@ const UserNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
 `
 
-const SocialLink: React.FC<{ prefix?: string, site?: string, value: string }> = ({prefix = '', site = '', value}) => {
+export const SocialLink: React.FC<{ prefix?: string, site?: string, value: string }> = ({prefix = '', site = '', value}) => {
     const theme = useTheme()
     if (!value) return null
     return <Grid item>

@@ -4,7 +4,7 @@ import {useAppState} from '../tools/use-app-state'
 import {useSearchModal} from '../modals/search'
 import {useSnackbar} from 'notistack'
 import {joinEvent, leaveEvent} from '../../model/api'
-import {ButtonGroup, makeStyles} from '@material-ui/core'
+import {ButtonGroup, makeStyles, Tooltip} from '@material-ui/core'
 import {ReactComponent as CancelIcon} from '../../assets/cancel.svg'
 import {usePromptModal} from '../modals/prompt'
 
@@ -99,9 +99,11 @@ export const ParticipateButton: React.FC = () => {
             <SecondaryButton style={{flex: 1}} onClick={onClick}>
                 Найти команду
             </SecondaryButton>
-            <SecondaryButton classes={classes} startIcon={<CancelIcon/>}
-                             onClick={onLeaveClick}>
-            </SecondaryButton>
+            <Tooltip title="Покинуть" aria-label="leave">
+                <SecondaryButton classes={classes} startIcon={<CancelIcon/>}
+                                 onClick={onLeaveClick}>
+                </SecondaryButton>
+            </Tooltip>
         </ButtonGroup>
     }
     if (event.isFinished) {

@@ -8,7 +8,7 @@ import {
 } from '../../model/api'
 import {useSnackbar} from 'notistack'
 import {Link} from 'react-router-dom'
-import {ButtonGroup, makeStyles} from '@material-ui/core'
+import {ButtonGroup, makeStyles, Tooltip} from '@material-ui/core'
 import {ReactComponent as CancelIcon} from '../../assets/cancel.svg'
 import {usePromptModal} from '../modals/prompt'
 import {useHistory} from 'react-router-dom'
@@ -147,9 +147,11 @@ export const UniteButton: React.FC = () => {
             <PrimaryButton style={{flex: 1}} onClick={onUniteClick}>
                 Принять
             </PrimaryButton>
+            <Tooltip title="Отклонить" aria-label="decline">
             <PrimaryButton classes={classes} startIcon={<CancelIcon/>}
                              onClick={onDeclineClick}>
             </PrimaryButton>
+            </Tooltip>
         </ButtonGroup>
     }
 
