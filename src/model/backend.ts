@@ -17,7 +17,10 @@ export type BackendUser = {
     description: string | null,
     bio: string | null,
     team: BackendTeam | null,
-    skills: BackendSkills | null
+    skills: BackendSkills | null,
+    tg: string | null,
+    gh: string | null,
+    vk: string | null
 }
 
 type BackendUserOptional = {
@@ -30,7 +33,10 @@ type BackendUserOptional = {
     description: string | null,
     bio: string | null,
     team: BackendTeam | null,
-    skills: BackendSkills | null
+    skills: BackendSkills | null,
+    tg: string | null,
+    gh: string | null,
+    vk: string | null
 }
 
 export type BackendHackathon = {
@@ -105,9 +111,9 @@ const Convert = {
                     members: [] as User[]
                 },
                 settings: {
-                    vk: 'mikstime',
-                    gh: 'mikstime',
-                    tg: 'mikstime'
+                    vk: bUser.vk,
+                    gh: bUser.gh,
+                    tg: bUser.tg
                 }
             }
         },
@@ -140,7 +146,14 @@ const Convert = {
                 workPlace: fUser.jobName ?? null,
                 description: fUser.skills?.description ?? null,
                 bio: fUser.bio ?? null,
-                skills: fUser.skills?.tags?.map(s => ({skillID: Number(s.id), jobID: Number(s.jobId), skillName: s.name})) ?? null
+                skills: fUser.skills?.tags?.map(s => ({
+                    skillID: Number(s.id),
+                    jobID: Number(s.jobId),
+                    skillName: s.name
+                })) ?? null,
+                vk: fUser.settings?.vk ?? null,
+                gh: fUser.settings?.gh ?? null,
+                tg: fUser.settings?.tg ?? null
             }
         }
     },
