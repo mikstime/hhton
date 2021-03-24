@@ -646,18 +646,22 @@ export const teamInvites = async (eventId: string, userId: string) => {
  */
 export const personalInvites = async (eventId: string, userId: string) => {
     if (!mockImplemented && userId) {
-        const users = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/users`)
+        try {
+            const users = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/users`)
 
-        if (users.ok) {
-            const json = await users.json()
+            if (users.ok) {
+                const json = await users.json()
 
-            //@TODO не хватает полей у пользователя (косяк бекенда)
-            const fullUsers = await Promise.all(json.map((j: BackendUser) => fetchUser(j.id!.toString())))
-            if (fullUsers) {
-                return fullUsers as User[]
+                //@TODO не хватает полей у пользователя (косяк бекенда)
+                const fullUsers = await Promise.all(json.map((j: BackendUser) => fetchUser(j.id!.toString())))
+                if (fullUsers) {
+                    return fullUsers as User[]
+                }
+                return [] as User[]
+            } else {
+                return []
             }
-            return [] as User[]
-        } else {
+        } catch (e) {
             return []
         }
     } else {
