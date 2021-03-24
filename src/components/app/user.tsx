@@ -29,12 +29,16 @@ const UserNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
 `
 
-const SocialLink: React.FC<{prefix?: string, site?: string, value: string}> = ({prefix = '', site = '', value}) => {
+const SocialLink: React.FC<{ prefix?: string, site?: string, value: string }> = ({prefix = '', site = '', value}) => {
     const theme = useTheme()
-    if(!value) return null
+    if (!value) return null
     return <Grid item>
         <AdditionalText style={{marginLeft: 16 + 36}}>{prefix}
-        <a target='_blank' style={{textDecoration: 'none', color: theme.palette.primary.main}} href={`https://${site}${value}`}>{site}{value}</a></AdditionalText>
+            <a target='_blank' style={{
+                textDecoration: 'none',
+                color: theme.palette.primary.main
+            }}
+               href={`https://${site}${value}`}>{site}{value}</a></AdditionalText>
     </Grid>
 }
 
@@ -45,11 +49,11 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
     const {enqueueSnackbar} = useSnackbar()
 
     const onAvatarChange = useCallback(async () => {
-        let img = "Пусто"
+        let img = 'Пусто'
         await editUserAvatar(user.id).then(result => img = result)
 
-        if(!img) {
-            enqueueSnackbar('Не удалось обновить аватар',{
+        if (!img) {
+            enqueueSnackbar('Не удалось обновить аватар', {
                 variant: 'error'
             })
         } else {
@@ -94,16 +98,23 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                     </Box>
                 </UserNameGrid>
                 <Grid item>
-                    <JobPlate
-                        text={user.jobName ? `Место работы: ${user.jobName}` : ''}/>
+                    {(user.isNullUser || user.jobName.length > 0)
+                    && <JobPlate
+                      text={user.jobName ? `Место работы: ${user.jobName}` : ''}/>
+                    }
                 </Grid>
                 <Grid item>
-                    <BioPlate text={user.bio}/>
+                    {(user.isNullUser || user.bio.length > 0)
+                    && <BioPlate text={user.bio}/>}
                 </Grid>
-                <Grid item container direction='column' spacing={2} style={{marginTop: 8}}>
-                    <SocialLink prefix='ВКонтакте: ' site='vk.com/' value={user.settings.vk}/>
-                    <SocialLink prefix='Телеграм: ' site='t.me/' value={user.settings.tg}/>
-                    <SocialLink prefix='Github: ' site='github.com/' value={user.settings.gh}/>
+                <Grid item container direction='column' spacing={2}
+                      style={{marginTop: 8}}>
+                    <SocialLink prefix='ВКонтакте: ' site='vk.com/'
+                                value={user.settings.vk}/>
+                    <SocialLink prefix='Телеграм: ' site='t.me/'
+                                value={user.settings.tg}/>
+                    <SocialLink prefix='Github: ' site='github.com/'
+                                value={user.settings.gh}/>
                 </Grid>
             </Grid>
         </Grid>

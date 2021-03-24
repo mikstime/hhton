@@ -4,6 +4,9 @@ import {useAppState} from '../tools/use-app-state'
 import {invitePerson} from '../../model/api'
 import {useSnackbar} from 'notistack'
 import {Link} from 'react-router-dom'
+import {useInvites} from '../tools/use-app-state/invite'
+import {ButtonGroup, makeStyles} from '@material-ui/core'
+import {ReactComponent as CancelIcon} from '../../assets/cancel.svg'
 
 const useUnite = () => {
     const {event, user, cUser} = useAppState()
@@ -45,12 +48,18 @@ const useUnite = () => {
     }
 }
 
+const useStyles = makeStyles({
+    startIcon: {
+        margin: 0
+    }
+})
 
 export const UniteButton: React.FC = () => {
 
+    const classes = useStyles()
     const {onClick, isFetching} = useUnite()
 
-    const {cUser, user} = useAppState()
+    const {cUser, user, invites} = useAppState()
 
     if (user.isNullUser || !user.team) {
         return <PrimaryButton disabled/>
@@ -62,8 +71,17 @@ export const UniteButton: React.FC = () => {
         </PrimaryButton>
     }
 
+    if (user.isInvited) {
+        return <PrimaryButton disabled>
+            Заявка отправлена
+        </PrimaryButton>
+    }
+
     const inMyTeam = user.team && user.team.members.find(u => u.id === cUser.id)
 
+    const onDeclineClick = () => {
+        invites.set({team: [], personal: []})
+    }
     if (user.id === cUser.id || inMyTeam) {
         return <Link to='/team' style={{textDecoration: 'none'}}>
             <SecondaryButton style={{width: '100%'}}>
@@ -72,10 +90,18 @@ export const UniteButton: React.FC = () => {
         </Link>
     }
 
-    if (user.isInvited) {
-        return <PrimaryButton disabled>
-            Заявка отправлена
-        </PrimaryButton>
+    const didInviteMe = !!invites.team.find(t => t.team.members.find(tt => user.id.toString() === tt.id))
+        || !!invites.personal.find(t => t.id.toString() === user.id)
+
+    if(didInviteMe) {
+        return <ButtonGroup variant="contained" color="primary">
+            <PrimaryButton style={{flex: 1}} onClick={onClick}>
+                Принять
+            </PrimaryButton>
+            <PrimaryButton classes={classes} startIcon={<CancelIcon/>}
+                             onClick={onDeclineClick}>
+            </PrimaryButton>
+        </ButtonGroup>
     }
 
     return <PrimaryButton onClick={onClick}>
