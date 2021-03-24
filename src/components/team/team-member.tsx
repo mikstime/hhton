@@ -83,6 +83,7 @@ const Skills: React.FC<{ user: User }> = ({user}) => {
 
 
 export const TeamMember: React.FC<{ user: User }> = ({user}) => {
+
     const [didVote] = useState(false)
 
     const {cUser} = useAppState()

@@ -77,6 +77,7 @@ const Skills: React.FC<{ user: User }> = ({user}) => {
 export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
 
     const {isFetching, submit, decline} = useInviteActions(user)
+
     return <Grid item container spacing={2}
                  style={{overflow: 'visible'}}>
         <Grid item container md={8} xs={12} sm={12}>
@@ -105,12 +106,12 @@ export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
                          avatarProps={{wrap: 'nowrap', xs: 12, sm: 6, md: 7}}>
                 <Grid xs sm={6} md={5} item container
                       direction='column'>
-                    <Box paddingLeft={2}>
+                    <Box paddingLeft={{xs: 0, sm: 2}} marginTop={{xs: 1, md: 0}}>
                         <Grid item container>
                             <NameTypography user={user}/>
                         </Grid>
                     </Box>
-                    <Box paddingLeft={2}>
+                    <Box paddingLeft={{xs: 0, sm: 2}}>
                         <TeamDescription noName user={user}/>
                     </Box>
                 </Grid>

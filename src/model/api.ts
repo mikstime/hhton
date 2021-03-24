@@ -222,44 +222,16 @@ const TEST_USERS: User[] = [
     // }
 ]
 
-/**
- * Получить информацию о пользователе, включая информацию об участии пользователя в хакатонах
- * @param id
- */
-const lackUser = {
-    isInvited: false,
-    bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-    jobName: 'Тинькофф',
-    avatar: 'http://loremflickr.com/1000/1000',
-    skills: {
-        tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
-            name: 'React',
-            jobId: '1',
-            id: '1'
-        }, {name: 'Angular', jobId: '1', id: '1'}, {
-            name: 'CSS',
-            jobId: '1',
-            id: '1'
-        }, {name: 'Backend', jobId: '1', id: '1'}, {
-            name: 'Node.js',
-            jobId: '1',
-            id: '1'
-        }, {name: 'Golang', jobId: '1', id: '1'}, {
-            name: 'Postgres',
-            jobId: '1',
-            id: '1'
-        }],
-        description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-    },
-    hackathons: []
-}
 export const fetchUser = async (id: string) => {
     if (!mockImplemented) {
         const user = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${id}`)
 
         if (user.ok) {
             const json = await user.json()
-            return Convert.user.toFrontend(json)
+            if (json) {
+                return Convert.user.toFrontend(json)
+            }
+            return null
         } else {
             return null
         }
@@ -285,7 +257,7 @@ export const fetchUser = async (id: string) => {
             settings: {
                 vk: '',
                 tg: '',
-                gh: '',
+                gh: ''
             },
             skills: {
                 tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
@@ -339,15 +311,6 @@ export const isInvited = async (eventId: string, inviterId: string, inviteeId: s
     }
 }
 
-const lackEvent = {
-    logo: logo,
-    background: background,
-    isFinished: false,
-    participants: new Array(270).map(() => NULL_USER),
-    prizes: [],
-    settings: {},
-    isParticipating: false
-}
 /**
  * Получить информацию о мероприятии
  * @param id
@@ -509,7 +472,7 @@ export const getJobs: () => Promise<Jobs> = async () => {
 
         if (job.ok) {
             const json = await job.json()
-            let result = [] as {name: string, id: number}[]
+            let result = [] as { name: string, id: number }[]
             if (json) {
                 result.push(...json)
             }
@@ -596,7 +559,7 @@ export const getTeam = async (eventId: string, userId: string) => {
             if (json) {
                 const t = Convert.team.toFrontend(json)
                 //@TODO Пользователи прилетают не полные. Поправить на беке
-                t.members = await Promise.all(json.members.map((j: BackendUser) => fetchUser(j.id!.toString())))
+                t.members = await Promise.all(json.members.map((j: BackendUser) => fetchUser(j.id!.toString())).filter((u:User|null) => u))
                 return t
             } else {
                 return {
@@ -640,29 +603,33 @@ export const teamInvites = async (eventId: string, userId: string) => {
 
         if (teams.ok) {
             const json = await teams.json()
-            const parsedTeams = await Promise.all(
-                json.map((t: { id: number }) => fetch(`${HOST_DOMAIN}${PREFIX}/team/${t.id}`))
-            )
-            //@ts-ignore
-            const teams1 = await Promise.all(parsedTeams.map(p => p.json()))
-            if (teams1) {
-                let result = [] as User[]
-
+            try {
+                const parsedTeams = await Promise.all(
+                    json.map((t: { id: number }) => fetch(`${HOST_DOMAIN}${PREFIX}/team/${t.id}`))
+                )
+                //@ts-ignore
+                const teams1 = await Promise.all(parsedTeams.map(p => p.json()))
                 if (teams1) {
-                    //@ts-ignore
-                    teams1.forEach((v: { members: BackendUser[] }) => {
-                        if (v.members) {
-                            result.push(Convert.user.toFrontend(v.members[0]))
-                        } else {
-                            console.log('members is null')
-                        }
-                    })
+                    let result = [] as User[]
+
+                    if (teams1) {
+                        //@ts-ignore
+                        teams1.forEach((v: { members: BackendUser[] }) => {
+                            if (v.members) {
+                                result.push(Convert.user.toFrontend(v.members[0]))
+                            } else {
+                                console.log('members is null')
+                            }
+                        })
+                    }
+
+                    return result
                 }
 
-                return result
+                return []
+            } catch (e) {
+                return []
             }
-
-            return []
         } else {
             return []
         }
@@ -801,19 +768,19 @@ export const setSelectedSkills = (skills: UserSkill[]) => {
 
 export const updateImage = async (image: File, path: string) => {
     if (!mockImplemented) {
-        let formData = new FormData();
+        let formData = new FormData()
 
-        formData.append("file", image);
+        formData.append('file', image)
         const userAvatarResponse = await fetch(path, {
             method: 'POST',
             body: formData
-        });
+        })
 
         if (userAvatarResponse.ok) {
             const json = await userAvatarResponse.json()
             return json.avatar as string
         } else {
-            return ""
+            return ''
         }
     } else {
         await sleep(300)
