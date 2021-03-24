@@ -1,12 +1,17 @@
 import React, {useCallback, useEffect, useState} from 'react'
 import {PrimaryButton, SecondaryButton} from '../common/buttons'
 import {useAppState} from '../tools/use-app-state'
-import {invitePerson} from '../../model/api'
+import {
+    acceptInvite,
+    declineInvite,
+    invitePerson
+} from '../../model/api'
 import {useSnackbar} from 'notistack'
 import {Link} from 'react-router-dom'
-import {useInvites} from '../tools/use-app-state/invite'
 import {ButtonGroup, makeStyles} from '@material-ui/core'
 import {ReactComponent as CancelIcon} from '../../assets/cancel.svg'
+import {usePromptModal} from '../modals/prompt'
+import {useHistory} from 'react-router-dom'
 
 const useUnite = () => {
     const {event, user, cUser} = useAppState()
@@ -58,8 +63,10 @@ export const UniteButton: React.FC = () => {
 
     const classes = useStyles()
     const {onClick, isFetching} = useUnite()
-
-    const {cUser, user, invites} = useAppState()
+    const {cUser, cEvent, user, invites} = useAppState()
+    const history = useHistory()
+    const {enqueueSnackbar} = useSnackbar()
+    const pModal = usePromptModal()
 
     if (user.isNullUser || !user.team) {
         return <PrimaryButton disabled/>
@@ -80,8 +87,50 @@ export const UniteButton: React.FC = () => {
     const inMyTeam = user.team && user.team.members.find(u => u.id === cUser.id)
 
     const onDeclineClick = () => {
-        invites.set({team: [], personal: []})
+        pModal.open({
+            message: 'Отклонить заявку?',
+            accept: 'Да',
+            decline: 'Оставить заявку',
+            onSubmit: async () => {
+                const didDecline = await declineInvite(cEvent.id, cUser.id, user.id)
+                if (didDecline) {
+                    invites.set({
+                        team: invites.team
+                            .filter(t => !t.team.members
+                                .find(tt => user.id.toString() === tt.id)),
+                        personal: invites.personal.filter(t => t.id.toString() !== user.id)
+                    })
+                    pModal.close()
+                    enqueueSnackbar(`Вы отклонили заявку`)
+
+                } else {
+                    enqueueSnackbar(`Не удалось отклонить заявку`, {
+                        variant: 'error'
+                    })
+                    pModal.close()
+                }
+            }
+        })
     }
+
+    const onUniteClick = async () => {
+        const didAccept = await acceptInvite(cEvent.id, cUser.id, user.id)
+        if(didAccept) {
+            invites.set({
+                team: invites.team
+                    .filter(t => !t.team.members
+                        .find(tt => user.id.toString() === tt.id)),
+                personal: invites.personal.filter(t => t.id.toString() !== user.id)
+            })
+            history.push('/team')
+            enqueueSnackbar(`Вы объединились`)
+        } else {
+            enqueueSnackbar(`Не удалось принять заявку`, {
+                variant: 'error'
+            })
+        }
+    }
+
     if (user.id === cUser.id || inMyTeam) {
         return <Link to='/team' style={{textDecoration: 'none'}}>
             <SecondaryButton style={{width: '100%'}}>
@@ -95,7 +144,7 @@ export const UniteButton: React.FC = () => {
 
     if(didInviteMe) {
         return <ButtonGroup variant="contained" color="primary">
-            <PrimaryButton style={{flex: 1}} onClick={onClick}>
+            <PrimaryButton style={{flex: 1}} onClick={onUniteClick}>
                 Принять
             </PrimaryButton>
             <PrimaryButton classes={classes} startIcon={<CancelIcon/>}

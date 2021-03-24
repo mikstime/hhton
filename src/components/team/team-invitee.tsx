@@ -14,13 +14,13 @@ import {acceptInvite, declineInvite} from '../../model/api'
 const useInviteActions = (user: User) => {
     const [isFetching, setIsFetching] = useState(false)
     const [fading, setFading] = useState(true)
-    const {event, cUser, invites} = useAppState()
+    const {cEvent, cUser, invites} = useAppState()
 
     const {enqueueSnackbar} = useSnackbar()
 
     const submit = useCallback(async () => {
         setIsFetching(true)
-        const didAccept = await acceptInvite(event.id, cUser.id, user.id)
+        const didAccept = await acceptInvite(cEvent.id, cUser.id, user.id)
         if (didAccept) {
             setIsFetching(false)
             setFading(false)
@@ -36,11 +36,11 @@ const useInviteActions = (user: User) => {
                 variant: 'error',
             })
         }
-    }, [cUser.id, event.id, user.id, invites, enqueueSnackbar])
+    }, [cUser.id, cEvent.id, user.id, invites, enqueueSnackbar])
 
     const decline = useCallback(async () => {
         setIsFetching(true)
-        const didDecline = await declineInvite(event.id, cUser.id, user.id)
+        const didDecline = await declineInvite(cEvent.id, cUser.id, user.id)
         if (didDecline) {
             setIsFetching(false)
             setFading(false)
@@ -54,7 +54,7 @@ const useInviteActions = (user: User) => {
                 variant: 'error',
             })
         }
-    }, [cUser.id, event.id, user.id, invites, enqueueSnackbar])
+    }, [cUser.id, cEvent.id, user.id, invites, enqueueSnackbar])
     return {
         isFetching,
         fading,

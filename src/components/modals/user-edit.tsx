@@ -464,7 +464,7 @@ export const UserEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({
             </AdditionalText>
             <Skills {...fields.skills}/>
             <Grid container direction='row' justify='flex-end'
-                  style={{marginTop: 32}} spacing={1}>
+                  style={{marginTop: 0}} spacing={1}>
                 <Grid item>
                     <Button disabled={fields.disabled}
                             style={{color: '#818C99'}}

@@ -6,11 +6,17 @@ import {PrimaryButton} from '../common/buttons'
 const _usePromptModal = () => {
     const [isOpen, setIsOpen] = useState(false)
     const [onSubmit, setOnSubmit] = useState<Function | undefined>(undefined)
-
-    const open = useCallback(({onSubmit}) => {
+    const [message, setMessage] = useState('')
+    const [accept, setAccept] = useState('Принять')
+    const [decline, setDecline] = useState('Отклонить')
+    const open = useCallback((
+        {onSubmit, message, accept = 'Принять', decline = 'Отклонить'}) => {
         setOnSubmit(() => onSubmit)
+        setAccept(accept)
+        setMessage(message)
+        setDecline(decline)
         setIsOpen(true)
-    }, [setIsOpen, setOnSubmit])
+    }, [setIsOpen, setOnSubmit, setAccept, setDecline, setMessage])
 
     const close = useCallback(() => {
         setIsOpen(false)
@@ -20,6 +26,9 @@ const _usePromptModal = () => {
         open,
         close,
         isOpen,
+        message,
+        accept,
+        decline,
         onSubmit: () => onSubmit && onSubmit()
     }
 }
@@ -30,7 +39,9 @@ interface MProps extends Omit<ModalProps, 'children'> {
 //@ts-ignore
 const PromptModalContext = React.createContext()
 
-export const PromptModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({children, onSubmitClick, ...props}) => {
+export const PromptModal: React.FC<{
+    onSubmitClick: () => any, message: string, accept: string, decline: string
+} & MProps> = ({children, onSubmitClick, message, accept, decline, ...props}) => {
     const [disabled, setDisabled] = useState(false)
 
     useEffect(() => {
@@ -47,21 +58,21 @@ export const PromptModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({ch
     return <Modal gridProps={{item: true, md: 10, sm: 10, xs: 12}}
                   onClose={props.close}{...props}>
         <Grid container direction='column'>
-            <Typography variant='h1'>
-                Вы действительно хотите отказаться от участия в мероприятии?
+            <Typography align='center'>
+                {message}
             </Typography>
             <Grid container direction='row' justify='flex-end'
-                  style={{marginTop: 32}} spacing={1}>
+                  style={{marginTop: 16}} spacing={1}>
                 <Grid item>
                     <Button style={{color: '#818C99'}} disabled={disabled} onClick={() => {
                         setDisabled(true)
                     }}>
-                        Отказаться
+                        {accept}
                     </Button>
                 </Grid>
                 <Grid item>
                     <PrimaryButton disabled={disabled} onClick={props.close}>
-                        Продолжить участие
+                        {decline}
                     </PrimaryButton>
                 </Grid>
             </Grid>
@@ -76,6 +87,9 @@ export const PromptModalProvider: React.FC = ({children}) => {
     return <PromptModalContext.Provider value={modalState}>
         <PromptModal
             onSubmitClick={modalState.onSubmit}
+            message={modalState.message}
+            accept={modalState.accept}
+            decline={modalState.decline}
             open={modalState.isOpen}
             close={modalState.close}/>
         {children}

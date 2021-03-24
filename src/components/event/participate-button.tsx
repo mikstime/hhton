@@ -48,6 +48,9 @@ const useParticipate = () => {
 
     const onLeaveClick = useCallback(async () => {
         pModal.open({
+            message: 'Отказаться от участия в мероприятии?',
+            accept: 'Отказаться',
+            decline: 'Продолжить участие',
             onSubmit: async () => {
                 const didLeave = await leaveEvent(cUser.id, event.id)
                 if (didLeave) {

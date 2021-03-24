@@ -40,7 +40,7 @@ export const Modal: React.FC<ModalProps> = ({children, canGoBack, cantClose, gri
                 <FlexSpace/>
                 <Box clone order={{
                 }}>
-                <Grid item lg={8} container {...gridProps}
+                <Grid container {...gridProps}
                       style={
                           {
                               overflowY: 'auto',
@@ -62,7 +62,7 @@ export const Modal: React.FC<ModalProps> = ({children, canGoBack, cantClose, gri
                         </IconButton>
                         }
                     </Grid>
-                    <Grid item xs={12} sm={8} md={6}>
+                    <Grid item xs={12} sm={8} md={6} lg={5}>
                         <Plate elevation={4} padding={32}>
                             {children}
                         </Plate>
