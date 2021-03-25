@@ -45,6 +45,9 @@ jobs:
     if: contains(github.ref, 'develop')
     needs: build
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - uses: actions/download-artifact@master
         with:
           name: uploaded_files
