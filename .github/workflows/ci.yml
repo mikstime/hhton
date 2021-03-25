@@ -2,7 +2,7 @@ name: CI/CD
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, develop ]
 
 jobs:
   build:
@@ -40,24 +40,33 @@ jobs:
           name: uploaded_files
           path: ./build
 
-      - name: Deploy
-        run: |
-          git config --global user.name $user_name
-          git config --global user.email $user_email
-          git remote set-url origin https://${github_token}@github.com/${repository}
-          npm run deploy
-        env:
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
-          github_token: ${{ secrets.ACTIONS_DEPLOY_ACCESS_TOKEN }}
-          repository: ${{ github.repository }}
-
-  deploy:
+  deploy_gp:
     runs-on: ubuntu-latest
+    if: contains(github.ref, 'develop')
     needs: build
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/download-artifact@master
+        with:
+          name: uploaded_files
+          path: ./build
 
+      - name: Deploy
+      run: |
+        git config --global user.name $user_name
+        git config --global user.email $user_email
+        git remote set-url origin https://${github_token}@github.com/${repository}
+        npm run deploy
+      env:
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+        github_token: ${{ secrets.ACTIONS_DEPLOY_ACCESS_TOKEN }}
+        repository: ${{ github.repository }}
+
+  deploy_dev:
+    runs-on: ubuntu-latest
+    if: contains(github.ref, 'master')
+    needs: build
+    steps:
       - uses: actions/download-artifact@master
         with:
           name: uploaded_files
