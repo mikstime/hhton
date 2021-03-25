@@ -40,19 +40,6 @@ jobs:
           name: uploaded_files
           path: ./build
 
-  deploy_gp:
-    runs-on: ubuntu-latest
-    if: contains(github.ref, 'develop')
-    needs: build
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - uses: actions/download-artifact@master
-        with:
-          name: uploaded_files
-          path: ./build
-
       - name: Deploy
         run: |
           git config --global user.name $user_name
