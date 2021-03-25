@@ -72,3 +72,4 @@ jobs:
           port: 22
           source: "build/*"
           target: "/var/www/team-up.online/html/hhton"
+          strip_components: 1
