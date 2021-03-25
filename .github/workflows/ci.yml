@@ -69,6 +69,6 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT }}
+          port: 22
           source: "build/*"
           target: "/var/www/team-up.online/html/hhton"
