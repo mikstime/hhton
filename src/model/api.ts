@@ -466,12 +466,23 @@ export const leaveEvent = async (userId: string, eventId: string) => {
  * @param query
  */
 export const findUsers = async (query: string) => {
+    // TODO нужен eventID
+    const eventID = 6
     if (!useMock) {
-        //@TODO implement
-        return []
+        const usersRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventID}/user/search?tag=${query}`,{
+            credentials: "include"
+        })
+
+        if (usersRequest.ok) {
+            const json = await usersRequest.json()
+
+            return Convert.users.toFrontend(json)
+        } else {
+            return [] as User[]
+        }
     } else {
         await sleep(300)
-        return TEST_USERS.filter(u => u.id.startsWith(query))
+        return [] as User[]
     }
 }
 
@@ -833,6 +844,10 @@ export const updateEventBackground = async (image: File, userID: string) => {
     // return updateImage(image, `${HOST_DOMAIN}${PREFIX}/user/${userID}/image`)
 }
 
+/**
+ * Проверить текущего пользователя
+ * Вовращает userID или -1
+ */
 export const checkUser = async () => {
     if (!mockImplemented) {
         const authResponse = await fetch(`${HOST_DOMAIN}${PREFIX}/check`, {
