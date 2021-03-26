@@ -4,6 +4,7 @@ import {Container, Grid, Typography} from '@material-ui/core'
 import {SecondaryButton} from '../common/buttons'
 import firstTriangle from '../../assets/home/first-triangle.svg'
 import {Link} from 'react-router-dom'
+import {HOST_DOMAIN, PREFIX} from "../../config/network";
 
 const RootContainer = styled(Container)`
   height: 100vh;
@@ -16,7 +17,7 @@ const Screen = styled.div`
   height: 100vh;
 `
 export const HomeApp: React.FC = () => {
-
+    const linkToAuth = `${HOST_DOMAIN}${PREFIX}/redirect`
     return <Root>
         <Screen style={{
             backgroundColor: 'white',
@@ -52,6 +53,11 @@ export const HomeApp: React.FC = () => {
                             {/*Я хочу организовать мероприятие*/}
                         </SecondaryButton>
                         </Link>
+                        <a href={ linkToAuth } style={{textDecoration: 'none'}} target="_blank" rel="noreferrer noopener">
+                            <SecondaryButton style={{marginTop: 48}}>
+                                Войти через ВК
+                            </SecondaryButton>
+                        </a>
                     </Grid>
                 </Grid>
             </RootContainer>

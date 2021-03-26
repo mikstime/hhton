@@ -10,6 +10,7 @@ import {
 } from '../components/tools/use-app-state/user'
 import Convert, {BackendHackathon, BackendUser, Jobs} from './backend'
 import {HackathonOptional} from '../components/tools/use-app-state/hackathon'
+import 'jsonp';
 
 const useMock = false
 const mockImplemented = false
@@ -224,7 +225,9 @@ const TEST_USERS: User[] = [
 
 export const fetchUser = async (id: string) => {
     if (!mockImplemented) {
-        const user = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${id}`)
+        const user = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${id}`, {
+            credentials: "include"
+        })
 
         if (user.ok) {
             const json = await user.json()
@@ -296,7 +299,9 @@ export const fetchUser = async (id: string) => {
  */
 export const isInvited = async (eventId: string, inviterId: string, inviteeId: string) => {
     if (!mockImplemented) {
-        const invited = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invited/user/${inviteeId}`)
+        const invited = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invited/user/${inviteeId}`, {
+            credentials: "include"
+        })
 
         if (invited.ok) {
             const json = await invited.json()
@@ -317,7 +322,9 @@ export const isInvited = async (eventId: string, inviterId: string, inviteeId: s
  */
 export const fetchEvent = async (id: string) => {
     if (!mockImplemented) {
-        const eventRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${id}`)
+        const eventRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${id}`, {
+            credentials: "include"
+        })
 
         if (eventRequest.ok) {
             const json = await eventRequest.json()
@@ -354,7 +361,9 @@ export const fetchEvent = async (id: string) => {
  */
 export const isParticipating = async (eventId: string, userId: string) => {
     if (!mockImplemented) {
-        const event = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${userId}/events`)
+        const event = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${userId}/events`, {
+            credentials: "include"
+        })
 
         if (event.ok) {
             const json = await event.json()
@@ -386,6 +395,7 @@ export const invitePerson = async (eventId: string, inviterId: string, inviteeId
         const invite = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${inviteeId}/invite`,
             {
                 method: 'POST',
+                credentials: "include",
                 body: JSON.stringify({
                     silent: mode === 'silent'
                 })
@@ -407,6 +417,7 @@ export const joinEvent = async (userId: string, eventId: string) => {
         const join = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/join`,
             {
                 method: 'POST',
+                credentials: "include",
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8'
                 },
@@ -433,6 +444,7 @@ export const leaveEvent = async (userId: string, eventId: string) => {
         const leave = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/leave`,
             {
                 method: 'POST',
+                credentials: "include",
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8'
                 },
@@ -468,7 +480,9 @@ export const findUsers = async (query: string) => {
  */
 export const getJobs: () => Promise<Jobs> = async () => {
     if (!mockImplemented) {
-        const job = await fetch(`${HOST_DOMAIN}${PREFIX}/job`)
+        const job = await fetch(`${HOST_DOMAIN}${PREFIX}/job`, {
+            credentials: "include"
+        })
 
         if (job.ok) {
             const json = await job.json()
@@ -493,7 +507,9 @@ export const getJobs: () => Promise<Jobs> = async () => {
  */
 export const getSkills = async (job: string) => {
     if (!mockImplemented) {
-        const skill = await fetch(`${HOST_DOMAIN}${PREFIX}/job/${encodeURIComponent(job)}/skills`)
+        const skill = await fetch(`${HOST_DOMAIN}${PREFIX}/job/${encodeURIComponent(job)}/skills`, {
+            credentials: "include"
+        })
 
         if (skill.ok) {
             const json = await skill.json()
@@ -552,7 +568,9 @@ export const getFeed = async (eventId: string, query: string, sinceId?: string) 
  */
 export const getTeam = async (eventId: string, userId: string) => {
     if (!mockImplemented) {
-        const team = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${userId}/team`)
+        const team = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${userId}/team`, {
+            credentials: "include"
+        })
 
         if (team.ok) {
             const json = await team.json()
@@ -599,13 +617,17 @@ export const signIn = async () => {
 export const teamInvites = async (eventId: string, userId: string) => {
     if (!mockImplemented && userId) {
         //@TODO rewrite with Convert
-        const teams = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/teams`)
+        const teams = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/teams`, {
+            credentials: "include"
+        })
 
         if (teams.ok) {
             const json = await teams.json()
             try {
                 const parsedTeams = await Promise.all(
-                    json.map((t: { id: number }) => fetch(`${HOST_DOMAIN}${PREFIX}/team/${t.id}`))
+                    json.map((t: { id: number }) => fetch(`${HOST_DOMAIN}${PREFIX}/team/${t.id}`, {
+            credentials: "include"
+        }))
                 )
                 //@ts-ignore
                 const teams1 = await Promise.all(parsedTeams.map(p => p.json()))
@@ -647,7 +669,9 @@ export const teamInvites = async (eventId: string, userId: string) => {
 export const personalInvites = async (eventId: string, userId: string) => {
     if (!mockImplemented && userId) {
         try {
-            const users = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/users`)
+            const users = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/users`, {
+            credentials: "include"
+        })
 
             if (users.ok) {
                 const json = await users.json()
@@ -682,6 +706,7 @@ export const acceptInvite = async (eventId: string, inviteeId: string, inviterId
         const join = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/team/join`,
             {
                 method: 'POST',
+                credentials: "include",
                 body: JSON.stringify({
                     uid1: Number(inviterId),
                     uid2: Number(inviteeId)
@@ -705,6 +730,7 @@ export const declineInvite = async (eventId: string, inviteeId: string, inviterI
     if (!mockImplemented) {
         const decline = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${inviterId}/decline`,
             {
+                credentials: "include",
                 method: 'POST'
             })
         return (decline.ok && decline.status === 200)
@@ -726,6 +752,7 @@ export const modifyUser = async (user: UserOptional & { id: string }) => {
         const modifyRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${user.id}`,
             {
                 method: 'PUT',
+                credentials: "include",
                 body: JSON.stringify(backUser)
             })
 
@@ -738,6 +765,7 @@ export const modifyUser = async (user: UserOptional & { id: string }) => {
             const modifySkillsRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${user.id}/skills`,
                 {
                     method: 'POST',
+                    credentials: "include",
                     body: JSON.stringify(backUser.skills)
                 })
 
@@ -777,6 +805,7 @@ export const updateImage = async (image: File, path: string) => {
         formData.append('file', image)
         const userAvatarResponse = await fetch(path, {
             method: 'POST',
+            credentials: "include",
             body: formData
         })
 
@@ -802,4 +831,23 @@ export const updateEventLogo = async (image: File, userID: string) => {
 
 export const updateEventBackground = async (image: File, userID: string) => {
     // return updateImage(image, `${HOST_DOMAIN}${PREFIX}/user/${userID}/image`)
+}
+
+export const checkUser = async () => {
+    if (!mockImplemented) {
+        const authResponse = await fetch(`${HOST_DOMAIN}${PREFIX}/check`, {
+            method: 'GET',
+            credentials: "include"
+        })
+
+        if (authResponse.ok) {
+            const json = await authResponse.json()
+            return json.id as number
+        } else {
+            return -1
+        }
+    } else {
+        await sleep(300)
+        return 1
+    }
 }
