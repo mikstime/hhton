@@ -15,216 +15,13 @@ const useMock = false
 const mockImplemented = false
 
 
-const TEST_USERS: User[] = [
-    // {
-    //     id: '1',
-    //     firstName: 'Имя',
-    //     lastName: 'Фамилия',
-    //     avatar: 'http://loremflickr.com/1000/1000',
-    //     isInvited: false,
-    //     bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-    //     jobName: 'Тинькофф',
-    //     skills: {
-    //         tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
-    //             name: 'React',
-    //             jobId: '1',
-    //             id: '1'
-    //         }, {name: 'Angular', jobId: '1', id: '1'}, {
-    //             name: 'CSS',
-    //             jobId: '1',
-    //             id: '1'
-    //         }, {name: 'Backend', jobId: '1', id: '1'}, {
-    //             name: 'Node.js',
-    //             jobId: '1',
-    //             id: '1'
-    //         }, {name: 'Golang', jobId: '1', id: '1'}, {
-    //             name: 'Postgres',
-    //             jobId: '1',
-    //             id: '1'
-    //         }],
-    //         description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-    //     },
-    //     hackathons: [],
-    //     team: {
-    //         name: 'test team',
-    //         members: []
-    //     }
-    // },
-    // {
-    //     id: '14',
-    //     firstName: 'Имя',
-    //     lastName: 'Фамилия2',
-    //     avatar: 'http://loremflickr.com/1000/1000',
-    //     isInvited: false,
-    //     bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-    //     jobName: 'Тинькофф',
-    //     skills: {
-    //         tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
-    //             name: 'React',
-    //             jobId: '1',
-    //             id: '1'
-    //         }, {name: 'Angular', jobId: '1', id: '1'}, {
-    //             name: 'CSS',
-    //             jobId: '1',
-    //             id: '1'
-    //         }, {name: 'Backend', jobId: '1', id: '1'}, {
-    //             name: 'Node.js',
-    //             jobId: '1',
-    //             id: '1'
-    //         }, {name: 'Golang', jobId: '1', id: '1'}, {
-    //             name: 'Postgres',
-    //             jobId: '1',
-    //             id: '1'
-    //         }],
-    //         description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-    //     },
-    //     hackathons: [],
-    //     team: {
-    //         name: 'test team',
-    //         members: []
-    //     }
-    // },
-    // {
-    //     id: '11',
-    //     firstName: 'Имя',
-    //     lastName: 'Фамилия3',
-    //     avatar: 'http://loremflickr.com/1000/1000',
-    //     isInvited: false,
-    //     bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-    //     jobName: 'Тинькофф',
-    //     skills: {
-    //         tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
-    //             name: 'React',
-    //             jobId: '1',
-    //             id: '1'
-    //         }, {name: 'Angular', jobId: '1', id: '1'}, {
-    //             name: 'CSS',
-    //             jobId: '1',
-    //             id: '1'
-    //         }, {name: 'Backend', jobId: '1', id: '1'}, {
-    //             name: 'Node.js',
-    //             jobId: '1',
-    //             id: '1'
-    //         }, {name: 'Golang', jobId: '1', id: '1'}, {
-    //             name: 'Postgres',
-    //             jobId: '1',
-    //             id: '1'
-    //         }],
-    //         description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-    //     },
-    //     hackathons: [],
-    //     team: {
-    //         name: 'test team',
-    //         members: []
-    //     }
-    // },
-    // {
-    //     id: '113',
-    //     firstName: 'Имя',
-    //     lastName: 'Фамилия',
-    //     avatar: 'http://loremflickr.com/1000/1000',
-    //     isInvited: false,
-    //     bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-    //     jobName: 'Тинькофф',
-    //     skills: {
-    //         tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
-    //             name: 'React',
-    //             jobId: '1',
-    //             id: '1'
-    //         }, {name: 'Angular', jobId: '1', id: '1'}, {
-    //             name: 'CSS',
-    //             jobId: '1',
-    //             id: '1'
-    //         }, {name: 'Backend', jobId: '1', id: '1'}, {
-    //             name: 'Node.js',
-    //             jobId: '1',
-    //             id: '1'
-    //         }, {name: 'Golang', jobId: '1', id: '1'}, {
-    //             name: 'Postgres',
-    //             jobId: '1',
-    //             id: '1'
-    //         }],
-    //         description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-    //     },
-    //     hackathons: [],
-    //     team: {
-    //         name: 'test team',
-    //         members: []
-    //     }
-    // },
-    // {
-    //     id: '112',
-    //     firstName: 'Имя',
-    //     lastName: 'Фамилия2',
-    //     avatar: 'http://loremflickr.com/1000/1000',
-    //     isInvited: false,
-    //     bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-    //     jobName: 'Тинькофф',
-    //     skills: {
-    //         tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
-    //             name: 'React',
-    //             jobId: '1',
-    //             id: '1'
-    //         }, {name: 'Angular', jobId: '1', id: '1'}, {
-    //             name: 'CSS',
-    //             jobId: '1',
-    //             id: '1'
-    //         }, {name: 'Backend', jobId: '1', id: '1'}, {
-    //             name: 'Node.js',
-    //             jobId: '1',
-    //             id: '1'
-    //         }, {name: 'Golang', jobId: '1', id: '1'}, {
-    //             name: 'Postgres',
-    //             jobId: '1',
-    //             id: '1'
-    //         }],
-    //         description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-    //     },
-    //     hackathons: [],
-    //     team: {
-    //         name: 'test team',
-    //         members: []
-    //     }
-    // },
-    // {
-    //     id: '111',
-    //     firstName: 'Имя',
-    //     lastName: 'Фамилия3',
-    //     avatar: 'http://loremflickr.com/1000/1000',
-    //     isInvited: false,
-    //     bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-    //     jobName: 'Тинькофф',
-    //     skills: {
-    //         tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
-    //             name: 'React',
-    //             jobId: '1',
-    //             id: '1'
-    //         }, {name: 'Angular', jobId: '1', id: '1'}, {
-    //             name: 'CSS',
-    //             jobId: '1',
-    //             id: '1'
-    //         }, {name: 'Backend', jobId: '1', id: '1'}, {
-    //             name: 'Node.js',
-    //             jobId: '1',
-    //             id: '1'
-    //         }, {name: 'Golang', jobId: '1', id: '1'}, {
-    //             name: 'Postgres',
-    //             jobId: '1',
-    //             id: '1'
-    //         }],
-    //         description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-    //     },
-    //     hackathons: [],
-    //     team: {
-    //         name: 'test team',
-    //         members: []
-    //     }
-    // }
-]
+const TEST_USERS: User[] = []
 
 export const fetchUser = async (id: string) => {
     if (!mockImplemented) {
-        const user = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${id}`)
+        const user = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${id}`, {
+            credentials: "include"
+        })
 
         if (user.ok) {
             const json = await user.json()
@@ -296,7 +93,9 @@ export const fetchUser = async (id: string) => {
  */
 export const isInvited = async (eventId: string, inviterId: string, inviteeId: string) => {
     if (!mockImplemented) {
-        const invited = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invited/user/${inviteeId}`)
+        const invited = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invited/user/${inviteeId}`, {
+            credentials: "include"
+        })
 
         if (invited.ok) {
             const json = await invited.json()
@@ -317,7 +116,9 @@ export const isInvited = async (eventId: string, inviterId: string, inviteeId: s
  */
 export const fetchEvent = async (id: string) => {
     if (!mockImplemented) {
-        const eventRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${id}`)
+        const eventRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${id}`, {
+            credentials: "include"
+        })
 
         if (eventRequest.ok) {
             const json = await eventRequest.json()
@@ -354,7 +155,9 @@ export const fetchEvent = async (id: string) => {
  */
 export const isParticipating = async (eventId: string, userId: string) => {
     if (!mockImplemented) {
-        const event = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${userId}/events`)
+        const event = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${userId}/events`, {
+            credentials: "include"
+        })
 
         if (event.ok) {
             const json = await event.json()
@@ -386,6 +189,7 @@ export const invitePerson = async (eventId: string, inviterId: string, inviteeId
         const invite = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${inviteeId}/invite`,
             {
                 method: 'POST',
+                credentials: "include",
                 body: JSON.stringify({
                     silent: mode === 'silent'
                 })
@@ -407,6 +211,7 @@ export const joinEvent = async (userId: string, eventId: string) => {
         const join = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/join`,
             {
                 method: 'POST',
+                credentials: "include",
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8'
                 },
@@ -433,6 +238,7 @@ export const leaveEvent = async (userId: string, eventId: string) => {
         const leave = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/leave`,
             {
                 method: 'POST',
+                credentials: "include",
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8'
                 },
@@ -454,12 +260,23 @@ export const leaveEvent = async (userId: string, eventId: string) => {
  * @param query
  */
 export const findUsers = async (query: string) => {
+    // TODO нужен eventID
+    const eventID = 6
     if (!useMock) {
-        //@TODO implement
-        return []
+        const usersRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventID}/user/search?tag=${query}`,{
+            credentials: "include"
+        })
+
+        if (usersRequest.ok) {
+            const json = await usersRequest.json()
+
+            return Convert.users.toFrontend(json)
+        } else {
+            return [] as User[]
+        }
     } else {
         await sleep(300)
-        return TEST_USERS.filter(u => u.id.startsWith(query))
+        return [] as User[]
     }
 }
 
@@ -468,7 +285,9 @@ export const findUsers = async (query: string) => {
  */
 export const getJobs: () => Promise<Jobs> = async () => {
     if (!mockImplemented) {
-        const job = await fetch(`${HOST_DOMAIN}${PREFIX}/job`)
+        const job = await fetch(`${HOST_DOMAIN}${PREFIX}/job`, {
+            credentials: "include"
+        })
 
         if (job.ok) {
             const json = await job.json()
@@ -493,7 +312,9 @@ export const getJobs: () => Promise<Jobs> = async () => {
  */
 export const getSkills = async (job: string) => {
     if (!mockImplemented) {
-        const skill = await fetch(`${HOST_DOMAIN}${PREFIX}/job/${encodeURIComponent(job)}/skills`)
+        const skill = await fetch(`${HOST_DOMAIN}${PREFIX}/job/${encodeURIComponent(job)}/skills`, {
+            credentials: "include"
+        })
 
         if (skill.ok) {
             const json = await skill.json()
@@ -552,7 +373,9 @@ export const getFeed = async (eventId: string, query: string, sinceId?: string) 
  */
 export const getTeam = async (eventId: string, userId: string) => {
     if (!mockImplemented) {
-        const team = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${userId}/team`)
+        const team = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${userId}/team`, {
+            credentials: "include"
+        })
 
         if (team.ok) {
             const json = await team.json()
@@ -599,13 +422,17 @@ export const signIn = async () => {
 export const teamInvites = async (eventId: string, userId: string) => {
     if (!mockImplemented && userId) {
         //@TODO rewrite with Convert
-        const teams = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/teams`)
+        const teams = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/teams`, {
+            credentials: "include"
+        })
 
         if (teams.ok) {
             const json = await teams.json()
             try {
                 const parsedTeams = await Promise.all(
-                    json.map((t: { id: number }) => fetch(`${HOST_DOMAIN}${PREFIX}/team/${t.id}`))
+                    json.map((t: { id: number }) => fetch(`${HOST_DOMAIN}${PREFIX}/team/${t.id}`, {
+            credentials: "include"
+        }))
                 )
                 //@ts-ignore
                 const teams1 = await Promise.all(parsedTeams.map(p => p.json()))
@@ -647,7 +474,9 @@ export const teamInvites = async (eventId: string, userId: string) => {
 export const personalInvites = async (eventId: string, userId: string) => {
     if (!mockImplemented && userId) {
         try {
-            const users = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/users`)
+            const users = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/users`, {
+            credentials: "include"
+        })
 
             if (users.ok) {
                 const json = await users.json()
@@ -682,6 +511,7 @@ export const acceptInvite = async (eventId: string, inviteeId: string, inviterId
         const join = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/team/join`,
             {
                 method: 'POST',
+                credentials: "include",
                 body: JSON.stringify({
                     uid1: Number(inviterId),
                     uid2: Number(inviteeId)
@@ -705,6 +535,7 @@ export const declineInvite = async (eventId: string, inviteeId: string, inviterI
     if (!mockImplemented) {
         const decline = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${inviterId}/decline`,
             {
+                credentials: "include",
                 method: 'POST'
             })
         return (decline.ok && decline.status === 200)
@@ -726,6 +557,7 @@ export const modifyUser = async (user: UserOptional & { id: string }) => {
         const modifyRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${user.id}`,
             {
                 method: 'PUT',
+                credentials: "include",
                 body: JSON.stringify(backUser)
             })
 
@@ -738,6 +570,7 @@ export const modifyUser = async (user: UserOptional & { id: string }) => {
             const modifySkillsRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${user.id}/skills`,
                 {
                     method: 'POST',
+                    credentials: "include",
                     body: JSON.stringify(backUser.skills)
                 })
 
@@ -777,6 +610,7 @@ export const updateImage = async (image: File, path: string) => {
         formData.append('file', image)
         const userAvatarResponse = await fetch(path, {
             method: 'POST',
+            credentials: "include",
             body: formData
         })
 
@@ -802,4 +636,27 @@ export const updateEventLogo = async (image: File, userID: string) => {
 
 export const updateEventBackground = async (image: File, userID: string) => {
     // return updateImage(image, `${HOST_DOMAIN}${PREFIX}/user/${userID}/image`)
+}
+
+/**
+ * Проверить текущего пользователя
+ * Вовращает userID или -1
+ */
+export const checkUser = async () => {
+    if (!mockImplemented) {
+        const authResponse = await fetch(`${HOST_DOMAIN}${PREFIX}/check`, {
+            method: 'GET',
+            credentials: "include"
+        })
+
+        if (authResponse.ok) {
+            const json = await authResponse.json()
+            return json.id.toString()
+        } else {
+            return '-1'
+        }
+    } else {
+        await sleep(300)
+        return '1'
+    }
 }

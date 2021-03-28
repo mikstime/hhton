@@ -16,14 +16,14 @@ export const TeamApp: React.FC = () => {
     return <Grid container direction='column'>
         <SubTitle style={{marginBottom: 24}}>{(cUser.team && cUser.team.name) || 'Ваша комнада'}</SubTitle>
         <Grid container spacing={3} direction='column'>
-            {cUser.team && cUser.team.members.map((u, i) => {
+            {!!cUser.team.members.length && cUser.team.members.map((u, i) => {
                 return <Fragment key={i}>
                     <Grow in><TeamMember user={u}/></Grow>
                     <Divider light flexItem style={{height: 1}}/>
                 </Fragment>
             })
             }
-            {(!cUser.team || !cUser.team.members.length) && <Fragment>
+            {!cUser.team.members.length && <Fragment>
               <Grow in><TeamMember user={cUser}/></Grow>
               <Divider light flexItem style={{height: 1}}/>
             </Fragment>}
