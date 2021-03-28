@@ -28,8 +28,7 @@
     "typescript": "^4.1.5",
     "wait-for-event": "^2.0.1",
     "web-vitals": "^1.0.1",
-    "websocket": "^1.0.33",
-    "yarn": "^1.22.10"
+    "websocket": "^1.0.33"
   },
   "scripts": {
     "build:react": "react-scripts build",
