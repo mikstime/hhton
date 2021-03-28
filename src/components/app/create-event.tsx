@@ -24,13 +24,12 @@ import {useEventAboutModal} from '../modals/event-about'
 import {EditableImage} from '../common/editable-image'
 import {editEventBackground, editEventLogo} from '../tools/edit-images'
 import {useSnackbar} from 'notistack'
-import {WinnersSection} from '../event/winners'
 
 const EventNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
 `
 
-export const EventApp: React.FC = () => {
+export const CreateEventApp: React.FC = () => {
     //@ts-ignore
     const {eventId} = useParams()
     const {event, cEvent, cUser} = useAppState()
@@ -138,16 +137,6 @@ export const EventApp: React.FC = () => {
                             <InfoPlate elevation={4} textPlate={CaptionText}
                                        text='Подробная информация'/>
                         </CardActionArea>
-                    </Grid>
-                </Grid>
-            </Grid>
-            <Grid item container>
-                <Grid item container direction='column' md>
-                    <Grid item>
-                        <Title>
-                            Победители
-                        </Title>
-                        <WinnersSection/>
                     </Grid>
                 </Grid>
             </Grid>

@@ -22,6 +22,8 @@ import {useAppState} from '../tools/use-app-state'
 import {AdditionalText} from '../common'
 import styled from 'styled-components'
 import {useNotifications} from '../tools/use-notifications'
+import {HostApp} from './host'
+import {CreateEventApp} from './create-event'
 
 const NavLink: React.FC<LinkProps> = (props) => {
     const theme = useTheme()
@@ -88,8 +90,9 @@ const AppNav: React.FC<GridProps> = ({children}) => {
     }
 
     const drawer = (
-        <Box>
-            <NavLink to={`/event/${cEvent.id}`} onClick={() => setMobileOpen(false)}>
+        <Box display='flex' flexDirection='column'>
+            <NavLink to={`/event/${cEvent.id}`}
+                     onClick={() => setMobileOpen(false)}>
                 <AdditionalText
                     align='right'>
                     К мероприятию
@@ -105,6 +108,12 @@ const AppNav: React.FC<GridProps> = ({children}) => {
             <NavLink to={`/user`} onClick={() => setMobileOpen(false)}>
                 <AdditionalText align='right'>
                     К себе
+                </AdditionalText>
+            </NavLink>
+            <Box flex={1}/>
+            <NavLink to={`/host`} onClick={() => setMobileOpen(false)}>
+                <AdditionalText align='right'>
+                    Организаторам
                 </AdditionalText>
             </NavLink>
         </Box>
@@ -180,6 +189,9 @@ export const App: React.FC = () => {
     useNotifications()
 
     return <Switch>
+        <Route path='/event/create'>
+            <CreateEventApp/>
+        </Route>
         <Route path='/user/:userId'>
             <AppNav>
                 <RootContainer>
@@ -221,6 +233,9 @@ export const App: React.FC = () => {
                     <FeedApp/>
                 </RootContainer>
             </AppNav>
+        </Route>
+        <Route path='/host'>
+            <HostApp/>
         </Route>
         <Route>
             <HomeApp/>

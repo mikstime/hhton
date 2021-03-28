@@ -105,7 +105,7 @@ const GrayField: React.FC<{ label: string, inputProps?: InputBaseProps }> = ({la
     </Grid>
 }
 
-const WhiteField: React.FC<{ label: string, prefix?: string, inputProps?: InputBaseProps }> = ({label, prefix, inputProps = {}}) => {
+export const WhiteField: React.FC<{ label: string, prefix?: string, inputProps?: InputBaseProps }> = ({label, prefix, inputProps = {}}) => {
     return <Grid item xs container alignItems='baseline'
                  style={{minHeight: 32}}>
         <Grid item sm={6} container>
@@ -133,7 +133,7 @@ const WhiteField: React.FC<{ label: string, prefix?: string, inputProps?: InputB
     </Grid>
 }
 
-const WhiteFieldLabel: React.FC<{ label: string }> = ({label}) => {
+export const WhiteFieldLabel: React.FC<{ label: string }> = ({label}) => {
     return <Hidden smUp><Typography variant='body2' style={{color: '#6F7985', marginTop: 16}}>
         {label}
     </Typography>

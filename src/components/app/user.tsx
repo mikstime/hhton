@@ -113,18 +113,21 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                     {(user.isNullUser || user.bio.length > 0)
                     && <BioPlate text={user.bio}/>}
                 </Grid>
-                <Grid item container>
-                    <Grid item container>
-                        <GrayishPlate>
-                            <Grid container spacing={1} style={{minHeight: 32}}>
-                                {user.skills.tags.map((e) => <Grid
-                                    key={e.id} item>
-                                    <BoldText>{e.name}</BoldText>
-                                </Grid>)}
-                            </Grid>
-                        </GrayishPlate>
+                {(user.isNullUser || user.skills.tags.length > 0)
+                    && <Grid item container>
+                        <Grid item container>
+                            <GrayishPlate>
+                                <Grid container spacing={1}
+                                      style={{minHeight: 32}}>
+                                    {user.skills.tags.map((e) => <Grid
+                                        key={e.id} item>
+                                        <BoldText>{e.name}</BoldText>
+                                    </Grid>)}
+                                </Grid>
+                            </GrayishPlate>
+                        </Grid>
                     </Grid>
-                </Grid>
+                }
                 <FlexSpace/>
                 <Grid item container style={{marginTop: 24, marginBottom: 24}} wrap='nowrap'>
                         <Grid item container direction='column' justify='center' spacing={2}>

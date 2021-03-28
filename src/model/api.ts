@@ -643,6 +643,7 @@ export const updateEventBackground = async (image: File, userID: string) => {
  * Вовращает userID или -1
  */
 export const checkUser = async () => {
+    return '181853117'
     if (!mockImplemented) {
         const authResponse = await fetch(`${HOST_DOMAIN}${PREFIX}/check`, {
             method: 'GET',
@@ -659,4 +660,9 @@ export const checkUser = async () => {
         await sleep(300)
         return '1'
     }
+}
+
+export const finishEvent = async (eventId: string) => {
+    await sleep(300)
+    return true
 }
