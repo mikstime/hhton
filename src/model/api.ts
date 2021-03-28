@@ -10,7 +10,6 @@ import {
 } from '../components/tools/use-app-state/user'
 import Convert, {BackendHackathon, BackendUser, Jobs} from './backend'
 import {HackathonOptional} from '../components/tools/use-app-state/hackathon'
-import 'jsonp';
 
 const useMock = false
 const mockImplemented = false
