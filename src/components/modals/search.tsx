@@ -237,7 +237,7 @@ const SearchUser: React.FC<UseSearchModalType & MProps> = ({...props}) => {
                     >
                         <Grid container alignItems='baseline' wrap='nowrap'>
                             <Typography
-                                style={{marginLeft: '8px'}}>@</Typography>
+                                style={{marginLeft: '8px'}}>vk.com/</Typography>
                             <InputBase
                                 inputRef={field}
                                 value={value}
