@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react'
 import {
     AdditionalText,
     Modal,
-    ModalProps,
+    ModalProps
 } from '../../common'
 import {
     Button,
@@ -17,7 +17,7 @@ import {EventPrizes} from './prizes'
 import {Additional} from './additional'
 import {Prize, Team} from '../../tools/use-app-state/user'
 import {Group, teamsToGroups} from './select-team-popover'
-import {getEventTeams, modifyEvent} from '../../../model/api'
+import {getEventTeams, getWinners, modifyEvent} from '../../../model/api'
 import {useAppState} from '../../tools/use-app-state'
 import {
     HackathonOptional,
@@ -62,22 +62,38 @@ export const useEventEdit = () => {
     useEffect(() => {
         (async () => {
             if (event.isFinished) {
-                const teams = await getEventTeams(event.id)
-                setGroups(teamsToGroups(teams))
+                let teams = await getEventTeams(event.id)
+                //@ts-ignore
+                const winners = (await getWinners(event.id)).sort((w, v) => w.prizes[0].place - v.prizes[0].place)
+                teams = teams.map(t => {
+                    const ind = winners.findIndex(v => v.id?.toString() === t.id?.toString())
+                    if (~ind) {
+                        if (winners[ind]?.prizes?.[0]) {
+                            t.prizes = [winners![ind]!.prizes![0]]
+                        } else {
+                            t.prizes = []
+                        }
+                    } else {
+                        t.prizes = []
+                    }
+                    return t
+                })
+                const g = teamsToGroups(teams)
+                setGroups(g)
             }
         })()
     }, [event.id, event.isFinished])
 
     const reset = () => {
         // if (event.id !== '-1') {
-            setStart(event.settings.start ?? null)
-            setFinish(event.settings.finish ?? null)
-            setTeamSize(event.settings.teamSize?.toString() ?? '')
-            setUsersLimit(event.settings.usersLimit?.toString() ?? '')
-            setPlace(event.place)
-            setSite(event.settings.site ?? '')
-            setPrizes(event.prizes)
-            setDisabled(false)
+        setStart(event.settings.start ?? null)
+        setFinish(event.settings.finish ?? null)
+        setTeamSize(event.settings.teamSize?.toString() ?? '')
+        setUsersLimit(event.settings.usersLimit?.toString() ?? '')
+        setPlace(event.place)
+        setSite(event.settings.site ?? '')
+        setPrizes(event.prizes)
+        setDisabled(false)
         // }
     }
 
@@ -120,46 +136,46 @@ export const useEventEdit = () => {
             start: {
                 value: start,
                 onChange: onStartChange,
-                disabled,
+                disabled
             },
             finish: {
                 value: finish,
                 onChange: onFinishChange,
-                disabled,
+                disabled
             },
             teamSize: {
                 value: teamSize,
                 onChange: onTeamSizeChange,
-                disabled,
+                disabled
             },
             usersLimit: {
                 value: usersLimit,
                 onChange: onUsersLimitChange,
-                disabled,
+                disabled
             }
         },
         additional: {
             place: {
                 value: place,
                 onChange: onPlaceChange,
-                disabled,
+                disabled
             },
             site: {
                 value: site,
                 onChange: onSiteChange,
-                disabled,
+                disabled
             }
         },
         prizes: {
             prizes: {
                 value: prizes,
                 onChange: onPrizesChange,
-                disabled,
+                disabled
             },
             groups: {
                 value: groups,
                 onChange: onGroupsChange,
-                disabled,
+                disabled
             }
         },
         getSubmit: () => {
@@ -175,15 +191,15 @@ export const useEventEdit = () => {
             } as HackathonSettings
 
             //@ts-ignore
-            const teams: (Team&{selected: boolean})[] = groups.reduce((a, g) => [...a, ...g.teams],
-                [] as (Team&{selected: boolean})[])
+            const teams: (Team & { selected: boolean })[] = groups.reduce((a, g) => [...a, ...g.teams],
+                [] as (Team & { selected: boolean })[])
 
             diff.id = event.id
             return {
                 diff: diff as HackathonOptional & { id: string },
                 founderId: event.founderId,
                 prizes,
-                teams: teams,
+                teams: teams
             }
         },
         onSubmit: async () => {
@@ -200,20 +216,20 @@ export const useEventEdit = () => {
             setDisabled(true)
 
             //@ts-ignore
-            const teams: (Team&{selected: boolean})[] = groups.reduce((a, g) => [...a, ...g.teams],
-                [] as (Team&{selected: boolean})[])
+            const teams: (Team & { selected: boolean })[] = groups.reduce((a, g) => [...a, ...g.teams],
+                [] as (Team & { selected: boolean })[])
 
             diff.id = event.id
             const update = await modifyEvent({
                 diff: diff as HackathonOptional & { id: string },
                 founderId: event.founderId,
                 prizes,
-                teams: teams,
+                teams: teams
             })
             setDisabled(false)
             event.change({
-                    ...diff,
-                prizes,
+                ...diff,
+                prizes
             })//@TODO winners
             // const update = await modifyUser(diff as UserOptional & { id: string })
             // setDisabled(false)
@@ -265,7 +281,8 @@ export const EventEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = (
                 Призовые места
             </Typography>
             <AdditionalText style={{marginTop: 16}}>
-                После завершения мероприятия можно распределить призоввые места между
+                После завершения мероприятия можно распределить призоввые места
+                между
                 участниками
             </AdditionalText>
             <EventPrizes {...edit.prizes}/>
@@ -283,7 +300,7 @@ export const EventEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = (
                 <Grid item>
                     <SecondaryButton disabled={disabled} onClick={async (e) => {
                         const didSave = await edit.onSubmit()
-                        if(didSave) {
+                        if (didSave) {
                             props.close?.(e)
                         } else {
                             enqueueSnackbar('Не удалось обновить данные', {variant: 'error'})

@@ -144,26 +144,28 @@ export const EventApp: React.FC = () => {
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid item container>
-                <Grid item container direction='column' md>
+            {
+                event.description && <Grid item container>
+                  <Grid item container direction='column' md>
                     <Grid item>
-                        <Title>
-                            О мероприятии
-                            {!event.isFinished && <Hidden smDown>
-                              <Box clone marginLeft='12px'>
-                                <EditEventButton/>
-                              </Box>
-                            </Hidden>
-                            }
-                        </Title>
+                      <Title>
+                        О мероприятии
+                          {!event.isFinished && <Hidden smDown>
+                            <Box clone marginLeft='12px'>
+                              <EditEventButton/>
+                            </Box>
+                          </Hidden>
+                          }
+                      </Title>
                     </Grid>
                     <Grid item>
-                        <SecondaryText>
-                            {event.description || 'Похоже, информация о мероприятии отсутствует'}
-                        </SecondaryText>
+                      <SecondaryText>
+                          {event.description || 'Похоже, информация о мероприятии отсутствует'}
+                      </SecondaryText>
                     </Grid>
+                  </Grid>
                 </Grid>
-            </Grid>
+            }
             {
                 event.isFinished &&
                 <Grow in><Grid item container direction='column'>
