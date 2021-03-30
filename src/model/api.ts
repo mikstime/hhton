@@ -263,11 +263,9 @@ export const leaveEvent = async (userId: string, eventId: string) => {
  * Поиск пользователей по строке. Возвращает массив пользователей
  * @param query
  */
-export const findUsers = async (query: string) => {
-    // TODO нужен eventID
-    const eventID = 6
+export const findUsers = async (query: string, eventId: string) => {
     if (!useMock) {
-        const usersRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventID}/user/search?tag=${query}`, {
+        const usersRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/search?tag=${query}`, {
             credentials: 'include'
         })
 
