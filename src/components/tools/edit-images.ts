@@ -28,7 +28,7 @@ export const editUserAvatar = async (userId: string) => {
 /**
  * @returns {string|boolean} – возвращает ссылку на изображение в случае успеха, и false при неудаче.
  */
-export const editEventBackground = (eventId: string) => {
+export const editEventBackground = async (eventId: string) => {
     picSelector.click();
     await waitFor('chosen', picChanged)
 
@@ -38,7 +38,7 @@ export const editEventBackground = (eventId: string) => {
 /**
  * @returns {string|boolean} – возвращает ссылку на изображение в случае успеха, и false при неудаче.
  */
-export const editEventLogo = (eventId: string) => {
+export const editEventLogo = async (eventId: string) => {
     picSelector.click();
     await waitFor('chosen', picChanged)
 
