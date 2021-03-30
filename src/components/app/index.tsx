@@ -24,6 +24,7 @@ import styled from 'styled-components'
 import {useNotifications} from '../tools/use-notifications'
 import {HostApp} from './host'
 import {CreateEventApp} from './create-event'
+import {HOST_DOMAIN, PREFIX} from '../../config/network'
 
 const NavLink: React.FC<LinkProps> = (props) => {
     const theme = useTheme()
@@ -78,7 +79,7 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 const AppNav: React.FC<GridProps> = ({children}) => {
-    const {cEvent} = useAppState()
+    const {cEvent, cUser} = useAppState()
     const classes = useStyles()
 
     const container = document.getElementById('root')
@@ -99,23 +100,36 @@ const AppNav: React.FC<GridProps> = ({children}) => {
                 </AdditionalText>
             </NavLink>
             <Box paddingTop={2}/>
+            {cUser.id !== '-1' &&
             <NavLink to={`/team`} onClick={() => setMobileOpen(false)}>
-                <AdditionalText align='right'>
-                    К команде
-                </AdditionalText>
+              <AdditionalText align='right'>
+                К команде
+              </AdditionalText>
             </NavLink>
+            }
             <Box paddingTop={2}/>
+            {cUser.id !== '-1' &&
             <NavLink to={`/user`} onClick={() => setMobileOpen(false)}>
-                <AdditionalText align='right'>
-                    К себе
-                </AdditionalText>
+              <AdditionalText align='right'>
+                К себе
+              </AdditionalText>
             </NavLink>
-            <Box flex={1}/>
+            }
+            <Box height='100px'/>
             <NavLink to={`/host`} onClick={() => setMobileOpen(false)}>
                 <AdditionalText align='right'>
                     Организаторам
                 </AdditionalText>
             </NavLink>
+            {
+                cUser.isNotAuthorized &&
+                <a href={`${HOST_DOMAIN}${PREFIX}/redirect?backTo=${ window.location.pathname.replace('/', '')}`}
+                   style={{textDecoration: 'none'}}>
+                  <AdditionalText align='right'>
+                    Регистрация
+                  </AdditionalText>
+                </a>
+            }
         </Box>
     )
     return <div className={classes.root}>

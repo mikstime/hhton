@@ -8,9 +8,10 @@ export const useAuth = () => {
 
     useEffect(() => {
         (async () => {
-            const userId = '17'//await checkUser()//'181853117'
+            const userId = await checkUser()//'181853117'
             cEvent.change({id: '6'})
-            cUser.change({id: userId})
+            // @ts-ignore
+            cUser.change({id: userId, isNotAuthorized: userId === '-1'})
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
