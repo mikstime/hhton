@@ -184,7 +184,7 @@ const Convert = {
                 background: 'http://loremflickr.com/1000/1000',
                 description: bHackathon.description ?? '',
                 founderId: bHackathon.founder?.toString() ?? '-1',
-                isFinished: bHackathon.state === 'finished',
+                isFinished: bHackathon.state === 'Closed',
                 place: bHackathon.place ?? '',
                 participantsCount: bHackathon.participantsCount,
                 participants: bHackathon.feed?.users,

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {Switch, Route, Link, LinkProps} from 'react-router-dom'
 import {UserApp} from './user'
 import {EventApp} from './event'
@@ -22,6 +22,8 @@ import {useAppState} from '../tools/use-app-state'
 import {AdditionalText} from '../common'
 import styled from 'styled-components'
 import {useNotifications} from '../tools/use-notifications'
+import {HostApp} from './host'
+import {CreateEventApp} from './create-event'
 
 const NavLink: React.FC<LinkProps> = (props) => {
     const theme = useTheme()
@@ -88,8 +90,9 @@ const AppNav: React.FC<GridProps> = ({children}) => {
     }
 
     const drawer = (
-        <Box>
-            <NavLink to={`/event/${cEvent.id}`} onClick={() => setMobileOpen(false)}>
+        <Box display='flex' flexDirection='column'>
+            <NavLink to={`/event/${cEvent.id}`}
+                     onClick={() => setMobileOpen(false)}>
                 <AdditionalText
                     align='right'>
                     К мероприятию
@@ -107,6 +110,12 @@ const AppNav: React.FC<GridProps> = ({children}) => {
                     К себе
                 </AdditionalText>
             </NavLink>
+            <Box flex={1}/>
+            <NavLink to={`/host`} onClick={() => setMobileOpen(false)}>
+                <AdditionalText align='right'>
+                    Организаторам
+                </AdditionalText>
+            </NavLink>
         </Box>
     )
     return <div className={classes.root}>
@@ -120,7 +129,7 @@ const AppNav: React.FC<GridProps> = ({children}) => {
                         onClick={handleDrawerToggle}
                         className={classes.menuButton}
                     >
-                        Чуча
+                        Меню
                     </IconButton>
                 </Toolbar>
             </AppBar>
@@ -166,10 +175,24 @@ const StyledContainer = styled(Container)`
   box-sizing: border-box;
 `
 const RootContainer: React.FC<ContainerProps> = (props) => {
-    return <Box clone
-                marginRight={{md: '50px !important', lg: '200px !important'}}>
-        <StyledContainer {...props}/>
-    </Box>
+    return <Fragment>
+        <Hidden lgUp>
+            <Box clone
+                 marginRight={{md: '50px !important', lg: '200px !important'}}
+                 paddingLeft={{md: 'calc(15vw - 120px) !important'}}
+                 paddingRight={{md: 'calc(15vw - 130px) !important'}}>
+                <StyledContainer maxWidth='md' {...props}/>
+            </Box>
+        </Hidden>
+        <Hidden mdDown>
+            <Box clone
+                 marginRight={{md: '50px !important', lg: '250px !important'}}
+                 paddingLeft={{md: '72px !important'}}
+                 paddingRight={{md: '62px !important'}}>
+                <StyledContainer maxWidth='md' {...props}/>
+            </Box>
+        </Hidden>
+    </Fragment>
 }
 
 export const App: React.FC = () => {
@@ -180,6 +203,13 @@ export const App: React.FC = () => {
     useNotifications()
 
     return <Switch>
+        <Route path='/event/create'>
+            <AppNav>
+                <RootContainer>
+                    <CreateEventApp/>
+                </RootContainer>
+            </AppNav>
+        </Route>
         <Route path='/user/:userId'>
             <AppNav>
                 <RootContainer>
@@ -221,6 +251,9 @@ export const App: React.FC = () => {
                     <FeedApp/>
                 </RootContainer>
             </AppNav>
+        </Route>
+        <Route path='/host'>
+            <HostApp/>
         </Route>
         <Route>
             <HomeApp/>

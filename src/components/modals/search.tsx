@@ -89,7 +89,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
 
     const classes = useChipStyles()
 
-    const [jobs, setJobs] = useState<string[]>([])
+    const [jobs, setJobs] = useState<{name: string, id: number}[]>([])
     const [selectedJob, selectJob] = useState(-1)
 
     const [skills, setSkills] = useState<UserSkill[]>([])
@@ -110,7 +110,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
             setSkills([])
             selectSkills([])
             if (~selectedJob) {
-                const skills = await getSkills(jobs[selectedJob])
+                const skills = await getSkills(jobs[selectedJob].name)
                 setSkills(skills)
                 selectSkills(skills.map(() => false))
             }
@@ -118,7 +118,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
     }, [selectedJob, jobs])
 
     const showFeed = useCallback(() => {
-        const fjob = jobs[selectedJob]
+        const fjob = jobs[selectedJob]?.name || ''
         const fskills = skills.filter((s, i) => selectedSkills[i]).map(s => s.name)
         if (fskills.length) {
             history.push(`/feed?job=${fjob}&skill=${fskills.join('&skill=')}`)
@@ -132,7 +132,6 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
     }, [selectedJob, close, history, jobs, selectedSkills, skills])
 
     return <Modal back={back} canGoBack
-                  gridProps={{item: true, md: 8, sm: 10, xs: 12}}
                   onClose={props.close}{...props}>
         <Slide direction="right" in>
             <Grid container direction='column'>
@@ -140,7 +139,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
 
                 <div className={classes.root}>
                     {
-                        jobs.map((j, i) => <Zoom key={j} in><Chip
+                        jobs.map((j, i) => <Zoom key={j.name} in><Chip
                             onClick={
                                 () => {
                                     if (selectedJob === i) {
@@ -151,7 +150,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
                                 }
                             }
                             className={selectedJob >= 0 ? selectedJob === i ? classes.selected : classes.notSelected : ''}
-                            label={j}
+                            label={j.name}
                         /></Zoom>)
                     }
                 </div>
@@ -186,8 +185,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
 }
 
 const SearchStart: React.FC<UseSearchModalType & MProps> = ({state: {onSmartClick, onUserClick}, ...props}) => {
-    return <Modal gridProps={{item: true, md: 8, sm: 8, xs: 10}}
-                  onClose={props.close}{...props}>
+    return <Modal onClose={props.close}{...props}>
         <Grid container direction='column'>
             <Typography variant='h1'>
                 Не знаете, кого пригласить к себе в команду?
@@ -222,7 +220,6 @@ const SearchUser: React.FC<UseSearchModalType & MProps> = ({...props}) => {
     }, [value, field])
 
     return <Modal back={props.actions.back} canGoBack
-                  gridProps={{item: true, md: 8, sm: 10, xs: 12}}
                   onClose={props.close}{...props}>
         <Slide direction="right" in>
             <Grid container direction='column'>
@@ -244,6 +241,7 @@ const SearchUser: React.FC<UseSearchModalType & MProps> = ({...props}) => {
                             <InputBase
                                 inputRef={field}
                                 value={value}
+                                fullWidth
                                 onChange={(e) => {
                                     setValue(e.target.value)
                                 }}

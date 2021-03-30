@@ -13,7 +13,6 @@ export const _useAppState: () => {
     cEvent: Hackathon & HackathonActions,
     invites: Invites & InvitesActions,
 } = () => {
-
     const user = useUser()
     const cUser = useUser()
     const event = useHackathon()

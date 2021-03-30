@@ -1,6 +1,8 @@
 import {useCallback, useReducer} from 'react'
 import {Hackathon} from './hackathon'
 
+export type Id = string
+
 export type UserSkills = {
     description: string,
     tags: UserSkill[]
@@ -8,7 +10,7 @@ export type UserSkills = {
 
 export type UserSkill = {
     name: string,
-    id?: string,
+    id?: Id,
     jobId?: string,
 }
 
@@ -27,16 +29,32 @@ export type User = {
     avatar: string,
     skills: UserSkills,
     hackathons: Hackathon[], // история участий
-    id: string,
+    id: Id,
     team: Team,
     isNullUser?: boolean,
     notFound?: boolean,
+    settings: UserSettings
 }
 
+export type UserSettings = {
+    // social networks
+    tg: string,
+    gh: string,
+    vk: string,
+}
+
+export type Prize = {
+    name: string,
+    id?: Id,
+    count: string,
+    winners?: Team[]
+}
 
 export type Team = {
     members: User[],
     name: string,
+    id?: Id,
+    prizes?: Prize[]
 }
 
 
@@ -53,7 +71,7 @@ export type UserOptional = {
     hackathons?: Hackathon[],
     id?: string
     isNullUser?: boolean
-    inMyTeam?: boolean,
+    settings?: UserSettings
 }
 
 
@@ -75,6 +93,11 @@ export const NULL_USER = {
     team: {
         name: '',
         members: [],
+    },
+    settings: {
+        vk: '',
+        tg: '',
+        gh: ''
     }
 } as User
 

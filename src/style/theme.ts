@@ -16,12 +16,12 @@ const MuiTheme = createMuiTheme({
     typography: {
         h1: {
             fontSize: 28,
-            fontFamily: "'Galvji', sans-serif",
+            fontFamily: "'Frutiger', sans-serif",
             color: FONT_BLACK,
         },
         h2: {
             fontSize: 19,
-            fontFamily: "'Galvji', sans-serif",
+            fontFamily: "'Frutiger', sans-serif",
             color: FONT_BLACK,
         },
         body1: {
@@ -31,12 +31,12 @@ const MuiTheme = createMuiTheme({
         },
         body2: {
             fontSize: 15,
-            fontFamily: "'Galvji', sans-serif",
+            fontFamily: "'Frutiger', sans-serif",
             color: FONT_GRAY,
         },
         caption: {
             fontSize: 15,
-            fontFamily: "'Galvji', sans-serif",
+            fontFamily: "'Frutiger', sans-serif",
             color: MAIN_BLUE,
         }
     },

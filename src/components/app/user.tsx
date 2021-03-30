@@ -2,11 +2,11 @@ import React, {useCallback, useEffect} from 'react'
 import {
     Box,
     Grid,
-    GridProps, Hidden
+    GridProps, useTheme
 } from '@material-ui/core'
 import {
     AvatarPlate,
-    Title, FlexSpace, GrayishPlate
+    Title, GrayishPlate, AdditionalText, FlexSpace
 } from '../common'
 import {useAppState} from '../tools/use-app-state'
 import styled from 'styled-components'
@@ -24,11 +24,26 @@ import {TeamDescription} from '../user/team-description'
 import {EditUserButton} from '../user/edit-user-button'
 import {editUserAvatar} from '../tools/edit-images'
 import {useSnackbar} from 'notistack'
+import {UserEvents} from '../user/events'
 
 const UserNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
 `
 
+export const SocialLink: React.FC<{ prefix?: string, site?: string, value: string }> = ({prefix = '', site = '', value}) => {
+    const theme = useTheme()
+    if (!value) return null
+    return <Grid item>
+        <Box clone textAlign={{md: 'center'}}>
+        <AdditionalText style={{marginLeft: 4}}>{prefix}
+            <a target='_blank' style={{
+                textDecoration: 'none',
+                color: theme.palette.primary.main
+            }}
+               href={`https://${site}${value}`}>{site}{value}</a></AdditionalText>
+        </Box>
+    </Grid>
+}
 
 export const UserApp: React.FC<GridProps> = ({...rest}) => {
     //@ts-ignore
@@ -36,19 +51,18 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
     const {user, cEvent, cUser} = useAppState()
     const {enqueueSnackbar} = useSnackbar()
 
-    const onAvatarChange = useCallback(async () => {
-        let img = "Пусто"
-        await editUserAvatar().then(result => img = result)
-        console.log(img)
+    const onAvatarChange = useCallback(() => {
+        editUserAvatar(user.id).then(result => {
+            if (!result) {
+                enqueueSnackbar('Не удалось обновить аватар', {
+                    variant: 'error'
+                })
+            } else {
+                cUser.change({avatar: result})
+                user.change({avatar: result})
+            }
+        })
 
-        if(!img) {
-            enqueueSnackbar('Не удалось обновить аватар',{
-                variant: 'error'
-            })
-        } else {
-            cUser.change({avatar: img})
-            user.change({avatar: img})
-        }
     }, [cUser])
 
     useEffect(() => {
@@ -61,6 +75,7 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
         }
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userId, cUser.id, cEvent.id])
+
     if (user.notFound) {
         return <NotFound
             title='Пользователь не найден'
@@ -72,12 +87,15 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
     return <Grid container direction='column' {...rest}>
         <Grid item container spacing={2}>
             <Grid item container md={5}>
-                <AvatarPlate src={user.avatar}
-                             editable={user.id === cUser.id}
-                             onEdit={onAvatarChange}>
-                    <UniteButton/>
-                    <TeamDescription user={user}/>
-                </AvatarPlate>
+                <Grid item xs>
+                    <AvatarPlate src={user.avatar}
+                                 editable={user.id === cUser.id}
+                                 onEdit={onAvatarChange}
+                                 style={{position: 'sticky', top: 24}}>
+                        <UniteButton/>
+                        <TeamDescription user={user}/>
+                    </AvatarPlate>
+                </Grid>
             </Grid>
             <Grid item container md spacing={2} direction='column'>
                 <UserNameGrid item container alignItems='center'>
@@ -87,44 +105,54 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                     </Box>
                 </UserNameGrid>
                 <Grid item>
-                    <JobPlate
-                        text={user.jobName ? `Место работы: ${user.jobName}` : ''}/>
+                    {(user.isNullUser || user.jobName.length > 0)
+                    && <JobPlate
+                      text={user.jobName ? `Место работы: ${user.jobName}` : ''}/>
+                    }
                 </Grid>
                 <Grid item>
-                    <BioPlate text={user.bio}/>
+                    {(user.isNullUser || user.bio.length > 0)
+                    && <BioPlate text={user.bio}/>}
                 </Grid>
+                {(user.isNullUser || user.skills.tags.length > 0)
+                    && <Grid item container>
+                        <Grid item container>
+                            <GrayishPlate>
+                                <Grid container spacing={1}
+                                      style={{minHeight: 32}}>
+                                    {user.skills.tags.map((e) => <Grid
+                                        key={e.id} item>
+                                        <BoldText>{e.name}</BoldText>
+                                    </Grid>)}
+                                </Grid>
+                            </GrayishPlate>
+                        </Grid>
+                    </Grid>
+                }
+                <FlexSpace/>
+                <Grid item container style={{marginTop: 24, marginBottom: 24}} wrap='nowrap'>
+                        <Grid item container direction='column' justify='center' spacing={2}>
+                            <SocialLink prefix='ВКонтакте: ' site='vk.com/'
+                                        value={user.settings.vk}/>
+                            <SocialLink prefix='Телеграм: ' site='t.me/'
+                                        value={user.settings.tg}/>
+                            <SocialLink prefix='Github: ' site='github.com/'
+                                        value={user.settings.gh}/>
+                        </Grid>
+                </Grid>
+                <FlexSpace/>
             </Grid>
         </Grid>
-        <Grid item container>
-            <Grid item container direction='column' md>
-                <Grid item>
-                    <Title>
-                        Навыки
-                        <Hidden smDown>
-                            <Box clone marginLeft='12px'>
-                                <EditUserButton/>
-                            </Box>
-                        </Hidden>
-                    </Title>
-                </Grid>
-                <Grid item>
-                    <SecondaryText>
-                        {user.skills.description || 'Пользователь не указал данные о своих профессиональных навыках'}
-                    </SecondaryText>
-                </Grid>
+        <Grid item container direction='column'>
+            <Grid item>
+                <Title>
+                    Навыки
+                </Title>
             </Grid>
-            <Grid item xs md={5} container wrap='nowrap'>
-                <FlexSpace/>
-                <Grid item>
-                    <GrayishPlate>
-                        <Grid container spacing={1}>
-                            {user.skills.tags.map((e) => <Grid
-                                key={e.id} item>
-                                <BoldText>{e.name}</BoldText>
-                            </Grid>)}
-                        </Grid>
-                    </GrayishPlate>
-                </Grid>
+            <Grid item>
+                <SecondaryText>
+                    {user.skills.description || 'Пользователь не указал данные о своих профессиональных навыках'}
+                </SecondaryText>
             </Grid>
         </Grid>
         <Grid item container direction='column'>
@@ -133,9 +161,10 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                     Участие в хакатонах
                 </Title>
             </Grid>
-            <Grid item container>
-                {user.hackathons.join(' ')}
+            <Grid item>
+                <UserEvents/>
             </Grid>
+            <div style={{height: 32}}/>
         </Grid>
     </Grid>
 }

@@ -1,6 +1,7 @@
 import React from 'react'
 import {
-    Grid, GridProps, Grow, IconButton, makeStyles,
+    Box,
+    Grid, GridProps, Grow, Hidden, IconButton, makeStyles,
     Modal as ModalBase,
     ModalProps as ModalBaseProps
 } from '@material-ui/core'
@@ -37,6 +38,8 @@ export const Modal: React.FC<ModalProps> = ({children, canGoBack, cantClose, gri
         <Grow in={props.open}>
             <div className={classes.modal}>
                 <FlexSpace/>
+                <Box clone order={{
+                }}>
                 <Grid container {...gridProps}
                       style={
                           {
@@ -46,7 +49,9 @@ export const Modal: React.FC<ModalProps> = ({children, canGoBack, cantClose, gri
                               paddingBottom: '10vh',
                               ...(gridProps.style || {})
                           }}>
-                    <Grid item md/>
+                    <Hidden xsDown>
+                        <Grid item xs/>
+                    </Hidden>
                     <Grid style={{
                         position: 'sticky',
                         height: 52, width: 52, top: 0
@@ -57,7 +62,7 @@ export const Modal: React.FC<ModalProps> = ({children, canGoBack, cantClose, gri
                         </IconButton>
                         }
                     </Grid>
-                    <Grid item xs md={6}>
+                    <Grid item xs={12} sm={9} md={7} lg={6}>
                         <Plate elevation={4} padding={32}>
                             {children}
                         </Plate>
@@ -72,8 +77,9 @@ export const Modal: React.FC<ModalProps> = ({children, canGoBack, cantClose, gri
                             </IconButton>
                         }
                     </Grid>
-                    <Grid item md/>
+                    <Grid item xs/>
                 </Grid>
+                </Box>
                 <FlexSpace/>
             </div>
         </Grow>

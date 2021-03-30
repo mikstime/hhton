@@ -1,12 +1,13 @@
 import React, {useCallback, useEffect, useState} from 'react'
-import {SecondaryButton} from '../common/buttons'
+import {PrimaryButton, SecondaryButton} from '../common/buttons'
 import {useAppState} from '../tools/use-app-state'
 import {useSearchModal} from '../modals/search'
 import {useSnackbar} from 'notistack'
-import {joinEvent, leaveEvent} from '../../model/api'
-import {ButtonGroup, makeStyles} from '@material-ui/core'
+import {finishEvent, joinEvent, leaveEvent} from '../../model/api'
+import {ButtonGroup, makeStyles, Tooltip} from '@material-ui/core'
 import {ReactComponent as CancelIcon} from '../../assets/cancel.svg'
 import {usePromptModal} from '../modals/prompt'
+import {useEventEditModal} from '../modals/event-edit'
 
 const useParticipate = () => {
     const {event, cUser} = useAppState()
@@ -17,7 +18,7 @@ const useParticipate = () => {
 
     const sModal = useSearchModal()
     const pModal = usePromptModal()
-
+    const eModal = useEventEditModal()
     const onClick = useCallback(() => {
         if (!event.isParticipating) {
             setActionId(event.id + cUser.id)
@@ -48,6 +49,9 @@ const useParticipate = () => {
 
     const onLeaveClick = useCallback(async () => {
         pModal.open({
+            message: 'Отказаться от участия в мероприятии?',
+            accept: 'Отказаться',
+            decline: 'Продолжить участие',
             onSubmit: async () => {
                 const didLeave = await leaveEvent(cUser.id, event.id)
                 if (didLeave) {
@@ -65,10 +69,29 @@ const useParticipate = () => {
         })
 
     }, [enqueueSnackbar, pModal, cUser.id, event])
+
+    const onSetWinnersClick = useCallback((e) => {
+        eModal.open(e)
+    }, [])
+
+    const onFinishClick = useCallback(async () => {
+        const didFinish = await finishEvent(event.id)
+        if(didFinish) {
+            event.change({isFinished: true})
+            enqueueSnackbar('Мероприятие завершено', {variant: 'success'})
+        } else {
+            enqueueSnackbar('Не удалось завершить меропритяие', {
+                variant: 'error'
+            })
+        }
+    }, [])
+
     return {
         onClick,
         onLeaveClick,
-        isFetching: actionId === event.id + cUser.id
+        isFetching: actionId === event.id + cUser.id,
+        onFinishClick,
+        onSetWinnersClick,
     }
 }
 
@@ -78,8 +101,8 @@ const useStyles = makeStyles({
     }
 })
 export const ParticipateButton: React.FC = () => {
-    const {event} = useAppState()
-    const {isFetching, onClick, onLeaveClick} = useParticipate()
+    const {event, cUser} = useAppState()
+    const {isFetching, onClick, onLeaveClick, onFinishClick, onSetWinnersClick} = useParticipate()
     const classes = useStyles()
 
     if (event.isNullEvent) {
@@ -91,21 +114,37 @@ export const ParticipateButton: React.FC = () => {
         </SecondaryButton>
     }
 
-    if (event.isParticipating) {
-        return <ButtonGroup variant="contained" color="secondary">
-            <SecondaryButton style={{flex: 1}} onClick={onClick}>
-                Найти команду
-            </SecondaryButton>
-            <SecondaryButton classes={classes} startIcon={<CancelIcon/>}
-                             onClick={onLeaveClick}>
-            </SecondaryButton>
-        </ButtonGroup>
+    if(event.founderId === cUser.id && !event.isFinished) {
+        return <PrimaryButton onClick={onFinishClick}>
+            Завершить мероприятие
+        </PrimaryButton>
     }
+
+    if(event.founderId === cUser.id && event.isFinished) {
+        return <PrimaryButton onClick={onSetWinnersClick}>
+            Выбрать победителей
+        </PrimaryButton>
+    }
+
     if (event.isFinished) {
         return <SecondaryButton disabled>
             Мероприятие завершено
         </SecondaryButton>
     }
+
+    if (event.isParticipating) {
+        return <ButtonGroup variant="contained" color="secondary">
+            <SecondaryButton style={{flex: 1}} onClick={onClick}>
+                Найти команду
+            </SecondaryButton>
+            <Tooltip title="Покинуть" aria-label="leave">
+                <SecondaryButton classes={classes} startIcon={<CancelIcon/>}
+                                 onClick={onLeaveClick}>
+                </SecondaryButton>
+            </Tooltip>
+        </ButtonGroup>
+    }
+
     return <SecondaryButton onClick={onClick}>
         Участвовать
     </SecondaryButton>
