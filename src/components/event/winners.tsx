@@ -107,22 +107,34 @@ export const WinnersSection: React.FC = () => {
             <GrayishPlate padding={24}>
                 <Box clone>
                     <Grid container alignItems='stretch'>
-                        <Hidden smDown>
-                            <Grid xs item container
-                                  alignItems='flex-end'
-                                  spacing={1}>
-                                {winners[0] &&
-                                <Place place='1' height={108} src={winners[0].members[0].avatar ?? ''}/>}
-                                {winners[1] &&
-                                <Place place='2' height={79} src={winners[0].members[1].avatar ?? ''}/>}
-                                {winners[2] &&
-                                <Place place='3' height={54} src={winners[0].members[2].avatar ?? ''}/>}
-                                <FlexSpace/>
-                            </Grid>
-                        </Hidden>
+                        {!event.isNullEvent && !winners.length &&
+                        <Grid xs item container spacing={1} alignItems='center'
+                              style={{
+                                  height: 40
+                              }}><Typography>
+                          Победители пока не определены
+                        </Typography>
+                        </Grid>}
+                        {winners.length > 0 && <Hidden smDown>
+                          <Grid xs item container
+                                alignItems='flex-end'
+                                spacing={1}>
+                              {winners[0] &&
+                              <Place place='1' height={108}
+                                     src={winners[0].members[0].avatar ?? ''}/>}
+                              {winners[1] &&
+                              <Place place='2' height={79}
+                                     src={winners[0].members[1].avatar ?? ''}/>}
+                              {winners[2] &&
+                              <Place place='3' height={54}
+                                     src={winners[0].members[2].avatar ?? ''}/>}
+                            <FlexSpace/>
+                          </Grid>
+                        </Hidden>}
+                        {winners.length > 0 &&
                         <Winners winners={winners} onClick={(r) => {
                             setR(r)
-                        }}/>
+                        }}/>}
                     </Grid>
                 </Box>
             </GrayishPlate>

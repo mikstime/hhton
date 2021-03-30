@@ -82,7 +82,6 @@ export const EventApp: React.FC = () => {
             icon={notFoundIcon}
         />
     }
-
     return <Grid container style={{position: 'relative'}}>
         <Grid style={{zIndex: 3}} container direction='column'>
             <Grid item container spacing={2}>

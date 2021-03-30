@@ -33,7 +33,7 @@ export const CreateEventApp: React.FC = () => {
         if (event.id !== '-1') {
             edit.reset()
             event.set(NULL_HACKATHON)
-            cEvent.set(NULL_HACKATHON)
+            // cEvent.set(NULL_HACKATHON)
         }
     }, [event.id])
     const history = useHistory()
