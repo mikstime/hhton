@@ -1,19 +1,20 @@
 {
   "files": {
-    "main.js": "/hhton/static/js/main.71408ca4.chunk.js",
-    "main.js.map": "/hhton/static/js/main.71408ca4.chunk.js.map",
-    "runtime-main.js": "/hhton/static/js/runtime-main.1d3e8693.js",
-    "runtime-main.js.map": "/hhton/static/js/runtime-main.1d3e8693.js.map",
-    "static/js/2.655c9766.chunk.js": "/hhton/static/js/2.655c9766.chunk.js",
-    "static/js/2.655c9766.chunk.js.map": "/hhton/static/js/2.655c9766.chunk.js.map",
+    "main.js": "/hhton/static/js/main.78b5ea80.chunk.js",
+    "main.js.map": "/hhton/static/js/main.78b5ea80.chunk.js.map",
+    "runtime-main.js": "/hhton/static/js/runtime-main.d754d495.js",
+    "runtime-main.js.map": "/hhton/static/js/runtime-main.d754d495.js.map",
+    "static/js/2.dd480c89.chunk.js": "/hhton/static/js/2.dd480c89.chunk.js",
+    "static/js/2.dd480c89.chunk.js.map": "/hhton/static/js/2.dd480c89.chunk.js.map",
     "index.html": "/hhton/index.html",
-    "static/js/2.655c9766.chunk.js.LICENSE.txt": "/hhton/static/js/2.655c9766.chunk.js.LICENSE.txt",
+    "static/js/2.dd480c89.chunk.js.LICENSE.txt": "/hhton/static/js/2.dd480c89.chunk.js.LICENSE.txt",
     "static/media/back.aabac1f0.svg": "/hhton/static/media/back.aabac1f0.svg",
     "static/media/background.d6d21316.png": "/hhton/static/media/background.d6d21316.png",
     "static/media/bio.27d45da0.svg": "/hhton/static/media/bio.27d45da0.svg",
     "static/media/camera.d7e59fb4.svg": "/hhton/static/media/camera.d7e59fb4.svg",
     "static/media/cancel.7d9eee14.svg": "/hhton/static/media/cancel.7d9eee14.svg",
     "static/media/close.b7fe9507.svg": "/hhton/static/media/close.b7fe9507.svg",
+    "static/media/delete.b00e22ad.svg": "/hhton/static/media/delete.b00e22ad.svg",
     "static/media/first-triangle.a41c8cee.svg": "/hhton/static/media/first-triangle.a41c8cee.svg",
     "static/media/info.f6d9aa93.svg": "/hhton/static/media/info.f6d9aa93.svg",
     "static/media/job.ca61acdd.svg": "/hhton/static/media/job.ca61acdd.svg",
@@ -23,12 +24,15 @@
     "static/media/notfound.786dbcca.svg": "/hhton/static/media/notfound.786dbcca.svg",
     "static/media/rocket.4a97a43f.svg": "/hhton/static/media/rocket.4a97a43f.svg",
     "static/media/settings.840abd4b.svg": "/hhton/static/media/settings.840abd4b.svg",
+    "static/media/settings_prizes.04b00161.svg": "/hhton/static/media/settings_prizes.04b00161.svg",
+    "static/media/settings_prizes1.801e1916.svg": "/hhton/static/media/settings_prizes1.801e1916.svg",
+    "static/media/team.bc0ff16c.svg": "/hhton/static/media/team.bc0ff16c.svg",
     "static/media/thumbs_down.a9705c43.svg": "/hhton/static/media/thumbs_down.a9705c43.svg",
     "static/media/thumbs_up.f0573fed.svg": "/hhton/static/media/thumbs_up.f0573fed.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.1d3e8693.js",
-    "static/js/2.655c9766.chunk.js",
-    "static/js/main.71408ca4.chunk.js"
+    "static/js/runtime-main.d754d495.js",
+    "static/js/2.dd480c89.chunk.js",
+    "static/js/main.78b5ea80.chunk.js"
   ]
 }
