@@ -7,7 +7,8 @@ export const MAIN_GREEN = '#42C13D'
 const MuiTheme = createMuiTheme({
     palette: {
         primary: {
-            main: MAIN_BLUE
+            main: MAIN_BLUE,
+            light: 'rgb(145 183 255)'
         },
         secondary: {
             main: MAIN_GREEN

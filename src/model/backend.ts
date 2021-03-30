@@ -5,7 +5,6 @@ import {
 import {
     Hackathon, HackathonOptional
 } from '../components/tools/use-app-state/hackathon'
-import {Invites} from '../components/tools/use-app-state/invite'
 
 export type BackendUser = {
     id: number | null,
@@ -75,6 +74,7 @@ type BackendTeam = {
     members: BackendUser[],
     name: string,
     id: number,
+    prize: Prize
 }
 
 type BackendSkills = {
@@ -121,7 +121,7 @@ const Convert = {
                 id: bUser.id?.toString() ?? '-1',
                 team: {
                     name: '',
-                    members: [] as User[]
+                    members: [] as User[],
                 },
                 settings: {
                     vk: bUser.vk,
@@ -134,12 +134,19 @@ const Convert = {
             //@TODO better implementation
             return {
                 id: Number(fUser.id) ?? null,
+                avatar: null,
+                skills: null,
+                tg: null,
+                gh: null,
+                vk: null,
+                history: null,
                 firstName: fUser.firstName ?? null,
                 lastName: fUser.lastName ?? null,
                 email: '',
                 workPlace: fUser.jobName,
                 description: fUser.skills?.description ?? null,
-                bio: ''
+                bio: '',
+                team: null
             }
         }
     },
@@ -166,13 +173,14 @@ const Convert = {
                 })) ?? null,
                 vk: fUser.settings?.vk ?? null,
                 gh: fUser.settings?.gh ?? null,
-                tg: fUser.settings?.tg ?? null
+                tg: fUser.settings?.tg ?? null,
+                team: null
             }
         }
     },
     event: {
         toFrontend: (bHackathon: BackendHackathon) => {
-            const currentDate = new Date()
+            // const currentDate = new Date()
             const orderedPrizes = bHackathon.prizeList?.sort((left, right) => {
                     return (left.place ?? 0) - (right.place ?? 0)
                 }
@@ -189,7 +197,7 @@ const Convert = {
                 background: bHackathon.background || 'http://loremflickr.com/1000/1000',
                 description: bHackathon.description ?? '',
                 founderId: bHackathon.founder?.toString() ?? '-1',
-                isFinished: bHackathon.state === 'finished',
+                isFinished: bHackathon.state === 'finished' || bHackathon.state === 'Closed',
                 place: bHackathon.place ?? '',
                 participantsCount: bHackathon.participantsCount,
                 participants: bHackathon.feed?.users,
@@ -204,9 +212,7 @@ const Convert = {
             }
         },
         toBackend: (bUser: Hackathon) => {
-            return {
-
-            }
+            return null
         }
     },
     eventOptional: {
@@ -231,16 +237,19 @@ const Convert = {
                     eventID: Number(fEvent.id) ?? null,
                     name: p.name ?? null,
                     place: i,
-                    amount: Number(p.count) ?? null
+                    amount: Number(p.count) ?? null,
+                    winnerTeamIDs: null
                 }))
             }
         }
     },
     team: {
-        toFrontend: (bUser: BackendTeam) => {
+        toFrontend: (bTeam: BackendTeam) => {
             return {
-                members: bUser.members.map(u => (Convert.user.toFrontend(u))),
-                name: bUser.name,
+                members: bTeam.members.map(u => (Convert.user.toFrontend(u))),
+                name: bTeam.name,
+                id: bTeam.id.toString(),
+                prizes: [bTeam.prize] as Prize[]
             }
         }
     },
@@ -276,19 +285,19 @@ const Convert = {
     },
     event: {
         toFrontend: (bUser: BackendHackathon) => Hackathon,
-        toBackend: (bUser: Hackathon) => BackendHackathon
+        toBackend: (bUser: Hackathon) => BackendHackathon|null
     },
     eventOptional: {
         toBackend: (fEvent: HackathonOptional, prizes: Prize[]) => BackendHackathon
     },
     team: {
         toFrontend: (bUser: BackendTeam) => Team,
-        toBackend: (bUser: Team) => BackendTeam
+        // toBackend: (bUser: Team) => BackendTeam
     },
-    invite: {
-        toFrontend: (bUser: BackendInvites) => Invites,
-        toBackend: (bUser: Invites) => BackendInvites
-    },
+    // invite: {
+    //     toFrontend: (bUser: BackendInvites) => Invites,
+    //     toBackend: (bUser: Invites) => BackendInvites
+    // },
     skills: {
         toFrontend: (bSkills: BackendSkills) => UserSkill[],
     },
