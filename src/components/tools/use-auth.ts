@@ -8,7 +8,7 @@ export const useAuth = () => {
 
     useEffect(() => {
         (async () => {
-            const userId = '17'//'181853117'//await checkUser()//'181853117'
+            const userId = await checkUser()//'181853117'
             cEvent.change({id: '6'})
             // @ts-ignore
             cUser.change({id: userId, isNotAuthorized: userId === '-1'})
