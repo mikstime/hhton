@@ -35,12 +35,12 @@ export const SocialLink: React.FC<{ prefix?: string, site?: string, value: strin
     if (!value) return null
     return <Grid item>
         <Box clone textAlign={{md: 'center'}}>
-        <AdditionalText style={{marginLeft: 4}}>{prefix}
-            <a target='_blank' style={{
-                textDecoration: 'none',
-                color: theme.palette.primary.main
-            }}
-               href={`https://${site}${value}`}>{site}{value}</a></AdditionalText>
+            <AdditionalText style={{marginLeft: 4}}>{prefix}
+                <a target='_blank' style={{
+                    textDecoration: 'none',
+                    color: theme.palette.primary.main
+                }}
+                   href={`https://${site}${value}`}>{site}{value}</a></AdditionalText>
         </Box>
     </Grid>
 }
@@ -115,30 +115,32 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                     && <BioPlate text={user.bio}/>}
                 </Grid>
                 {(user.isNullUser || user.skills.tags.length > 0)
-                    && <Grid item container>
-                        <Grid item container>
-                            <GrayishPlate>
-                                <Grid container spacing={1}
-                                      style={{minHeight: 32}}>
-                                    {user.skills.tags.map((e) => <Grid
-                                        key={e.id} item>
-                                        <BoldText>{e.name}</BoldText>
-                                    </Grid>)}
-                                </Grid>
-                            </GrayishPlate>
-                        </Grid>
-                    </Grid>
+                && <Grid item container>
+                  <Grid item container>
+                    <GrayishPlate>
+                      <Grid container spacing={1}
+                            style={{minHeight: 32}}>
+                          {user.skills.tags.map((e) => <Grid
+                              key={e.id} item>
+                              <BoldText>{e.name}</BoldText>
+                          </Grid>)}
+                      </Grid>
+                    </GrayishPlate>
+                  </Grid>
+                </Grid>
                 }
                 <FlexSpace/>
-                <Grid item container style={{marginTop: 24, marginBottom: 24}} wrap='nowrap'>
-                        <Grid item container direction='column' justify='center' spacing={2}>
-                            <SocialLink prefix='ВКонтакте: ' site='vk.com/'
-                                        value={user.settings.vk}/>
-                            <SocialLink prefix='Телеграм: ' site='t.me/'
-                                        value={user.settings.tg}/>
-                            <SocialLink prefix='Github: ' site='github.com/'
-                                        value={user.settings.gh}/>
-                        </Grid>
+                <Grid item container style={{marginTop: 24, marginBottom: 24}}
+                      wrap='nowrap'>
+                    <Grid item container direction='column' justify='center'
+                          spacing={2}>
+                        <SocialLink prefix='ВКонтакте: ' site='vk.com/'
+                                    value={user.settings.vk}/>
+                        <SocialLink prefix='Телеграм: ' site='t.me/'
+                                    value={user.settings.tg}/>
+                        <SocialLink prefix='Github: ' site='github.com/'
+                                    value={user.settings.gh}/>
+                    </Grid>
                 </Grid>
                 <FlexSpace/>
             </Grid>
@@ -155,16 +157,19 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                 </SecondaryText>
             </Grid>
         </Grid>
-        <Grid item container direction='column'>
-            <Grid item>
-                <Title>
-                    Участие в хакатонах
-                </Title>
+        {
+            user.hackathons.length > 0 &&
+            <Grid item container direction='column'> <Grid item>
+              <Title>
+                Победы в хакатонах
+              </Title>
             </Grid>
-            <Grid item>
+              <Grid item>
                 <UserEvents/>
+              </Grid>
+              <div style={{height: 32}}/>
             </Grid>
-            <div style={{height: 32}}/>
-        </Grid>
+        }
+
     </Grid>
 }
