@@ -708,12 +708,12 @@ export const updateUserAvatar = async (image: File, userID: string) => {
     return updateImage(image, `${HOST_DOMAIN}${PREFIX}/user/${userID}/image`)
 }
 
-export const updateEventLogo = async (image: File, userID: string) => {
-    // return updateImage(image, `${HOST_DOMAIN}${PREFIX}/user/${userID}/image`)
+export const updateEventLogo = async (image: File, eventId: string) => {
+    return updateImage(image, `${HOST_DOMAIN}${PREFIX}/event/${eventId}/logo`)
 }
 
-export const updateEventBackground = async (image: File, userID: string) => {
-    // return updateImage(image, `${HOST_DOMAIN}${PREFIX}/user/${userID}/image`)
+export const updateEventBackground = async (image: File, eventId: string) => {
+    return updateImage(image, `${HOST_DOMAIN}${PREFIX}/event/${eventId}/background`)
 }
 
 /**
