@@ -85,7 +85,7 @@ const useParticipate = () => {
                 variant: 'error'
             })
         }
-    }, [])
+    }, [event.id])
 
     return {
         onClick,

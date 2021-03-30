@@ -21,6 +21,7 @@ export type BackendUser = {
     tg: string | null,
     gh: string | null,
     vk: string | null
+    history: Hackathon[] | null
 }
 
 type BackendUserOptional = {
@@ -116,7 +117,7 @@ const Convert = {
                     description: bUser.description ?? '',
                     tags: bUser.skills?.map(s => ({id: s.id.toString(), jobId: s.jobId.toString(), name: s.name})) ?? []
                 },
-                hackathons: [] as Hackathon[],
+                hackathons: bUser.history ?? [],
                 id: bUser.id?.toString() ?? '-1',
                 team: {
                     name: '',
@@ -184,8 +185,8 @@ const Convert = {
             return {
                 name: bHackathon.name ?? '',
                 id: bHackathon.id?.toString() ?? '-1',
-                logo: bHackathon.logo,
-                background: bHackathon.background,
+                logo: bHackathon.logo || 'http://loremflickr.com/1000/1000',
+                background: bHackathon.background || 'http://loremflickr.com/1000/1000',
                 description: bHackathon.description ?? '',
                 founderId: bHackathon.founder?.toString() ?? '-1',
                 isFinished: bHackathon.state === 'finished',
