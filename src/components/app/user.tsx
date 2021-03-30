@@ -24,6 +24,7 @@ import {TeamDescription} from '../user/team-description'
 import {EditUserButton} from '../user/edit-user-button'
 import {editUserAvatar} from '../tools/edit-images'
 import {useSnackbar} from 'notistack'
+import {UserEvents} from '../user/events'
 
 const UserNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
@@ -113,18 +114,21 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                     {(user.isNullUser || user.bio.length > 0)
                     && <BioPlate text={user.bio}/>}
                 </Grid>
-                <Grid item container>
-                    <Grid item container>
-                        <GrayishPlate>
-                            <Grid container spacing={1} style={{minHeight: 32}}>
-                                {user.skills.tags.map((e) => <Grid
-                                    key={e.id} item>
-                                    <BoldText>{e.name}</BoldText>
-                                </Grid>)}
-                            </Grid>
-                        </GrayishPlate>
+                {(user.isNullUser || user.skills.tags.length > 0)
+                    && <Grid item container>
+                        <Grid item container>
+                            <GrayishPlate>
+                                <Grid container spacing={1}
+                                      style={{minHeight: 32}}>
+                                    {user.skills.tags.map((e) => <Grid
+                                        key={e.id} item>
+                                        <BoldText>{e.name}</BoldText>
+                                    </Grid>)}
+                                </Grid>
+                            </GrayishPlate>
+                        </Grid>
                     </Grid>
-                </Grid>
+                }
                 <FlexSpace/>
                 <Grid item container style={{marginTop: 24, marginBottom: 24}} wrap='nowrap'>
                         <Grid item container direction='column' justify='center' spacing={2}>
@@ -158,9 +162,7 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                 </Title>
             </Grid>
             <Grid item>
-                <SecondaryText>
-                    Скоро
-                </SecondaryText>
+                <UserEvents/>
             </Grid>
             <div style={{height: 32}}/>
         </Grid>

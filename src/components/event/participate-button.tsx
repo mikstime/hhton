@@ -1,12 +1,13 @@
 import React, {useCallback, useEffect, useState} from 'react'
-import {SecondaryButton} from '../common/buttons'
+import {PrimaryButton, SecondaryButton} from '../common/buttons'
 import {useAppState} from '../tools/use-app-state'
 import {useSearchModal} from '../modals/search'
 import {useSnackbar} from 'notistack'
-import {joinEvent, leaveEvent} from '../../model/api'
+import {finishEvent, joinEvent, leaveEvent} from '../../model/api'
 import {ButtonGroup, makeStyles, Tooltip} from '@material-ui/core'
 import {ReactComponent as CancelIcon} from '../../assets/cancel.svg'
 import {usePromptModal} from '../modals/prompt'
+import {useEventEditModal} from '../modals/event-edit'
 
 const useParticipate = () => {
     const {event, cUser} = useAppState()
@@ -17,7 +18,7 @@ const useParticipate = () => {
 
     const sModal = useSearchModal()
     const pModal = usePromptModal()
-
+    const eModal = useEventEditModal()
     const onClick = useCallback(() => {
         if (!event.isParticipating) {
             setActionId(event.id + cUser.id)
@@ -68,10 +69,29 @@ const useParticipate = () => {
         })
 
     }, [enqueueSnackbar, pModal, cUser.id, event])
+
+    const onSetWinnersClick = useCallback((e) => {
+        eModal.open(e)
+    }, [])
+
+    const onFinishClick = useCallback(async () => {
+        const didFinish = await finishEvent(event.id)
+        if(didFinish) {
+            event.change({isFinished: true})
+            enqueueSnackbar('Мероприятие завершено', {variant: 'success'})
+        } else {
+            enqueueSnackbar('Не удалось завершить меропритяие', {
+                variant: 'error'
+            })
+        }
+    }, [])
+
     return {
         onClick,
         onLeaveClick,
-        isFetching: actionId === event.id + cUser.id
+        isFetching: actionId === event.id + cUser.id,
+        onFinishClick,
+        onSetWinnersClick,
     }
 }
 
@@ -81,8 +101,8 @@ const useStyles = makeStyles({
     }
 })
 export const ParticipateButton: React.FC = () => {
-    const {event} = useAppState()
-    const {isFetching, onClick, onLeaveClick} = useParticipate()
+    const {event, cUser} = useAppState()
+    const {isFetching, onClick, onLeaveClick, onFinishClick, onSetWinnersClick} = useParticipate()
     const classes = useStyles()
 
     if (event.isNullEvent) {
@@ -91,6 +111,24 @@ export const ParticipateButton: React.FC = () => {
     if (isFetching) {
         return <SecondaryButton disabled>
             Подождите...
+        </SecondaryButton>
+    }
+
+    if(event.founderId === cUser.id && !event.isFinished) {
+        return <PrimaryButton onClick={onFinishClick}>
+            Завершить мероприятие
+        </PrimaryButton>
+    }
+
+    if(event.founderId === cUser.id && event.isFinished) {
+        return <PrimaryButton onClick={onSetWinnersClick}>
+            Выбрать победителей
+        </PrimaryButton>
+    }
+
+    if (event.isFinished) {
+        return <SecondaryButton disabled>
+            Мероприятие завершено
         </SecondaryButton>
     }
 
@@ -106,11 +144,7 @@ export const ParticipateButton: React.FC = () => {
             </Tooltip>
         </ButtonGroup>
     }
-    if (event.isFinished) {
-        return <SecondaryButton disabled>
-            Мероприятие завершено
-        </SecondaryButton>
-    }
+
     return <SecondaryButton onClick={onClick}>
         Участвовать
     </SecondaryButton>

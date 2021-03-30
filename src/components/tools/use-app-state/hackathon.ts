@@ -1,6 +1,6 @@
 import {User} from './user'
 import {useCallback, useReducer} from 'react'
-
+import {Prize} from './user'
 
 export type Hackathon = {
     name: string,
@@ -39,13 +39,12 @@ export type HackathonOptional = {
     isParticipating?: boolean,
 }
 
-export type HackathonSettings = {}
-
-
-export type Prize = {
-    name: string,
-    count: number,
-    winners: User[]
+export type HackathonSettings = {
+    start?: Date|null,
+    finish?: Date|null,
+    usersLimit?: number,
+    teamSize?: number,
+    site?: string,
 }
 
 
@@ -53,6 +52,8 @@ export const NULL_HACKATHON = {
     name: '',
     id: '-1',
     logo: '',
+    start: null,
+    finish: null,
     description: '',
     background: '',
     isFinished: false,

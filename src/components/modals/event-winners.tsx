@@ -9,16 +9,15 @@ import {
 } from '../common'
 import {
     Box,
-    Button,
     Grid, Hidden,
     InputBase,
     InputBaseProps,
     Omit,
-    Typography,
+    Typography
 } from '@material-ui/core'
-import {SecondaryButton} from '../common/buttons'
+import {PrimaryButton} from '../common/buttons'
 
-const _useEventEditModal = () => {
+const _useEventWinnersModal = () => {
     const [isOpen, setIsOpen] = useState(false)
     const [onSubmit, setOnSubmit] = useState<Function | undefined>(undefined)
 
@@ -96,9 +95,9 @@ interface MProps extends Omit<ModalProps, 'children'> {
 }
 
 //@ts-ignore
-const EventEditModalContext = React.createContext()
+const EventWinnersModalContext = React.createContext()
 
-export const EventEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({children, onSubmitClick, ...props}) => {
+export const EventWinnersModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({children, onSubmitClick, ...props}) => {
     const [disabled, setDisabled] = useState(false)
 
     useEffect(() => {
@@ -127,7 +126,7 @@ export const EventEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = (
                     <GrayField label='Начало' inputProps={{
                         placeholder: 'Василий'
                     }}/>
-                    <GrayField label='Окончание' inputProps={{
+                    <GrayField label='Число победителей' inputProps={{
                         placeholder: 'Петров'
                     }}/>
                 </Grid>
@@ -135,74 +134,50 @@ export const EventEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = (
                     <GrayField label='Конец' inputProps={{
                         placeholder: 'Василий'
                     }}/>
-                    <GrayField label='Фамилия' inputProps={{
+                    <GrayField label='Число участников' inputProps={{
                         placeholder: 'Петров'
                     }}/>
                 </Grid>
             </GrayPlate>
             <Plate elevation={4} padding={8} style={{marginTop: 16}}>
-                <WhiteField label='Место работы' inputProps={{
-                    placeholder: 'Тинькофф'
-                }}/>
-            </Plate>
-            <Typography variant='h2' style={{fontSize: 22, marginTop: 24}}>
-                Социальные сети
-            </Typography>
-            <Plate elevation={4} padding={8} style={{marginTop: 16}}>
-                <WhiteField prefix='vk.com/' label='Вконтакте' inputProps={{
-                    placeholder: 'teamuponline'
+                <WhiteField label='Место проведения' inputProps={{
+                    placeholder: 'Москва'
                 }}/>
             </Plate>
             <Plate elevation={4} padding={8} style={{marginTop: 16}}>
-                <WhiteField prefix='t.me/' label='Телеграм' inputProps={{
-                    placeholder: 'teamuponline'
+                <WhiteField label='Сайт мероприятия' inputProps={{
+                    placeholder: 'team-up.online'
                 }}/>
             </Plate>
-            <Plate elevation={4} padding={8} style={{marginTop: 16}}>
-                <WhiteField prefix='github.com/' label='Github' inputProps={{
-                    placeholder: 'teamuponline'
-                }}/>
-            </Plate>
-            <Typography variant='h2' style={{fontSize: 22, marginTop: 24}}>
-                Дополнительная информация
-            </Typography>
             <Grid container direction='row' justify='flex-end'
                   style={{marginTop: 32}} spacing={1}>
                 <Grid item>
-                    <Button style={{color: '#818C99'}} disabled={disabled}
-                            onClick={() => {
-                                setDisabled(true)
-                            }}>
-                        Отменить
-                    </Button>
-                </Grid>
-                <Grid item>
-                    <SecondaryButton disabled={disabled} onClick={props.close}>
-                        Сохранить
-                    </SecondaryButton>
+                    <PrimaryButton disabled={disabled} onClick={props.close}>
+                        Применить
+                    </PrimaryButton>
                 </Grid>
             </Grid>
         </Grid>
     </Modal>
 }
 
-export type UseEventEditModalType = ReturnType<typeof _useEventEditModal>
+export type UseEventWinnersModalType = ReturnType<typeof _useEventWinnersModal>
 
-export const EventEditModalProvider: React.FC = ({children}) => {
-    const modalState = _useEventEditModal()
-    return <EventEditModalContext.Provider value={modalState}>
-        <EventEditModal
+export const EventWinnersModalProvider: React.FC = ({children}) => {
+    const modalState = _useEventWinnersModal()
+    return <EventWinnersModalContext.Provider value={modalState}>
+        <EventWinnersModal
             onSubmitClick={modalState.onSubmit}
             open={modalState.isOpen}
             close={modalState.close}/>
         {children}
-    </EventEditModalContext.Provider>
+    </EventWinnersModalContext.Provider>
 }
 
-export const useEventEditModal: () => UseEventEditModalType = () => {
-    const context = React.useContext(EventEditModalContext)
+export const useEventWinnersModal: () => UseEventWinnersModalType = () => {
+    const context = React.useContext(EventWinnersModalContext)
     if (context === undefined) {
-        throw new Error('useEventEditModal must be used within a EventEditModalProvider')
+        throw new Error('useEventWinnersModal must be used within a EventWinnersModalProvider')
     }
-    return context as UseEventEditModalType
+    return context as UseEventWinnersModalType
 }
