@@ -3,259 +3,35 @@ import {sleep} from '../utils'
 import background from '../assets/background.png'
 import logo from '../assets/logo.png'
 import {NULL_USER} from '../components/tools/use-app-state'
-import {User, UserOptional, UserSkill,} from '../components/tools/use-app-state/user'
-import Convert, {BackendHackathon, Jobs} from './backend'
+import {
+    Id, Prize,
+    Team,
+    User,
+    UserOptional,
+    UserSkill
+} from '../components/tools/use-app-state/user'
+import Convert, {BackendHackathon, BackendUser, Jobs} from './backend'
 import {HackathonOptional} from '../components/tools/use-app-state/hackathon'
+import {response} from "express";
 
-const useMock = true
+const useMock = false
 const mockImplemented = false
 
 
-const TEST_USERS: User[] = [
-    {
-        id: '1',
-        firstName: 'Имя',
-        lastName: 'Фамилия',
-        avatar: 'http://loremflickr.com/1000/1000',
-        isInvited: false,
-        bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-        jobName: 'Тинькофф',
-        skills: {
-            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
-                name: 'React',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Angular', jobId: '1', id: '1'}, {
-                name: 'CSS',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Backend', jobId: '1', id: '1'}, {
-                name: 'Node.js',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Golang', jobId: '1', id: '1'}, {
-                name: 'Postgres',
-                jobId: '1',
-                id: '1'
-            }],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-        },
-        hackathons: [],
-        team: {
-            name: 'test team',
-            members: []
-        }
-    },
-    {
-        id: '14',
-        firstName: 'Имя',
-        lastName: 'Фамилия2',
-        avatar: 'http://loremflickr.com/1000/1000',
-        isInvited: false,
-        bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-        jobName: 'Тинькофф',
-        skills: {
-            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
-                name: 'React',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Angular', jobId: '1', id: '1'}, {
-                name: 'CSS',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Backend', jobId: '1', id: '1'}, {
-                name: 'Node.js',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Golang', jobId: '1', id: '1'}, {
-                name: 'Postgres',
-                jobId: '1',
-                id: '1'
-            }],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-        },
-        hackathons: [],
-        team: {
-            name: 'test team',
-            members: []
-        }
-    },
-    {
-        id: '11',
-        firstName: 'Имя',
-        lastName: 'Фамилия3',
-        avatar: 'http://loremflickr.com/1000/1000',
-        isInvited: false,
-        bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-        jobName: 'Тинькофф',
-        skills: {
-            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
-                name: 'React',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Angular', jobId: '1', id: '1'}, {
-                name: 'CSS',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Backend', jobId: '1', id: '1'}, {
-                name: 'Node.js',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Golang', jobId: '1', id: '1'}, {
-                name: 'Postgres',
-                jobId: '1',
-                id: '1'
-            }],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-        },
-        hackathons: [],
-        team: {
-            name: 'test team',
-            members: []
-        }
-    },
-    {
-        id: '113',
-        firstName: 'Имя',
-        lastName: 'Фамилия',
-        avatar: 'http://loremflickr.com/1000/1000',
-        isInvited: false,
-        bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-        jobName: 'Тинькофф',
-        skills: {
-            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
-                name: 'React',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Angular', jobId: '1', id: '1'}, {
-                name: 'CSS',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Backend', jobId: '1', id: '1'}, {
-                name: 'Node.js',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Golang', jobId: '1', id: '1'}, {
-                name: 'Postgres',
-                jobId: '1',
-                id: '1'
-            }],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-        },
-        hackathons: [],
-        team: {
-            name: 'test team',
-            members: []
-        }
-    },
-    {
-        id: '112',
-        firstName: 'Имя',
-        lastName: 'Фамилия2',
-        avatar: 'http://loremflickr.com/1000/1000',
-        isInvited: false,
-        bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-        jobName: 'Тинькофф',
-        skills: {
-            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
-                name: 'React',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Angular', jobId: '1', id: '1'}, {
-                name: 'CSS',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Backend', jobId: '1', id: '1'}, {
-                name: 'Node.js',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Golang', jobId: '1', id: '1'}, {
-                name: 'Postgres',
-                jobId: '1',
-                id: '1'
-            }],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-        },
-        hackathons: [],
-        team: {
-            name: 'test team',
-            members: []
-        }
-    },
-    {
-        id: '111',
-        firstName: 'Имя',
-        lastName: 'Фамилия3',
-        avatar: 'http://loremflickr.com/1000/1000',
-        isInvited: false,
-        bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-        jobName: 'Тинькофф',
-        skills: {
-            tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
-                name: 'React',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Angular', jobId: '1', id: '1'}, {
-                name: 'CSS',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Backend', jobId: '1', id: '1'}, {
-                name: 'Node.js',
-                jobId: '1',
-                id: '1'
-            }, {name: 'Golang', jobId: '1', id: '1'}, {
-                name: 'Postgres',
-                jobId: '1',
-                id: '1'
-            }],
-            description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-        },
-        hackathons: [],
-        team: {
-            name: 'test team',
-            members: []
-        }
-    }
-]
+const TEST_USERS: User[] = []
 
-/**
- * Получить информацию о пользователе, включая информацию об участии пользователя в хакатонах
- * @param id
- */
-const lackUser = {
-    isInvited: false,
-    bio: 'Небольшое био. Содержит основную информацию о человеке. Опционально. Может содержать несколько строк текста.',
-    jobName: 'Тинькофф',
-    avatar: 'http://loremflickr.com/1000/1000',
-    skills: {
-        tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
-            name: 'React',
-            jobId: '1',
-            id: '1'
-        }, {name: 'Angular', jobId: '1', id: '1'}, {
-            name: 'CSS',
-            jobId: '1',
-            id: '1'
-        }, {name: 'Backend', jobId: '1', id: '1'}, {
-            name: 'Node.js',
-            jobId: '1',
-            id: '1'
-        }, {name: 'Golang', jobId: '1', id: '1'}, {
-            name: 'Postgres',
-            jobId: '1',
-            id: '1'
-        }],
-        description: 'Используйте этот стиль, если хотите выделить информацию в общем списке. Пример использования: подробная информация на странице сообщества'
-    },
-    hackathons: []
-}
-export const fetchUser = async (id: string) => {
+export const fetchUser = async (id: Id) => {
     if (!mockImplemented) {
-        const user = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${id}`)
+        const user = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${id}`, {
+            credentials: 'include'
+        })
 
         if (user.ok) {
             const json = await user.json()
-            return Convert.user.toFrontend(json)
+            if (json) {
+                return Convert.user.toFrontend(json)
+            }
+            return null
         } else {
             return null
         }
@@ -278,6 +54,11 @@ export const fetchUser = async (id: string) => {
             jobName: 'Тинькофф',
             avatar: 'http://loremflickr.com/1000/1000',
             id: id,
+            settings: {
+                vk: '',
+                tg: '',
+                gh: ''
+            },
             skills: {
                 tags: [{name: 'Frontend', jobId: '1', id: '1'}, {
                     name: 'React',
@@ -315,7 +96,9 @@ export const fetchUser = async (id: string) => {
  */
 export const isInvited = async (eventId: string, inviterId: string, inviteeId: string) => {
     if (!mockImplemented) {
-        const invited = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invited/user/${inviteeId}`)
+        const invited = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invited/user/${inviteeId}`, {
+            credentials: 'include'
+        })
 
         if (invited.ok) {
             const json = await invited.json()
@@ -330,22 +113,15 @@ export const isInvited = async (eventId: string, inviterId: string, inviteeId: s
     }
 }
 
-const lackEvent = {
-    logo: logo,
-    background: background,
-    isFinished: false,
-    participants: new Array(270).map(() => NULL_USER),
-    prizes: [],
-    settings: {},
-    isParticipating: false
-}
 /**
  * Получить информацию о мероприятии
  * @param id
  */
-export const fetchEvent = async (id: string) => {
+export const fetchEvent = async (id: Id) => {
     if (!mockImplemented) {
-        const eventRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${id}`)
+        const eventRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${id}`, {
+            credentials: 'include'
+        })
 
         if (eventRequest.ok) {
             const json = await eventRequest.json()
@@ -361,6 +137,9 @@ export const fetchEvent = async (id: string) => {
             founderId: '1',
             name: 'Хакатон',
             logo: logo,
+            description: 'Замечательный хакатон',
+            start: null,
+            finish: null,
             background: background,
             isFinished: false,
             place: 'Москва, Лубянка 13',
@@ -368,8 +147,7 @@ export const fetchEvent = async (id: string) => {
             participants: new Array(270).map(() => NULL_USER),
             prizes: [],
             settings: {},
-            isParticipating: false,
-            description: 'Хакатон'
+            isParticipating: false
         }
     }
 }
@@ -382,7 +160,9 @@ export const fetchEvent = async (id: string) => {
  */
 export const isParticipating = async (eventId: string, userId: string) => {
     if (!mockImplemented) {
-        const event = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${userId}/events`)
+        const event = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${userId}/events`, {
+            credentials: 'include'
+        })
 
         if (event.ok) {
             const json = await event.json()
@@ -414,6 +194,7 @@ export const invitePerson = async (eventId: string, inviterId: string, inviteeId
         const invite = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${inviteeId}/invite`,
             {
                 method: 'POST',
+                credentials: 'include',
                 body: JSON.stringify({
                     silent: mode === 'silent'
                 })
@@ -435,6 +216,7 @@ export const joinEvent = async (userId: string, eventId: string) => {
         const join = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/join`,
             {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8'
                 },
@@ -461,6 +243,7 @@ export const leaveEvent = async (userId: string, eventId: string) => {
         const leave = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/leave`,
             {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8'
                 },
@@ -482,27 +265,40 @@ export const leaveEvent = async (userId: string, eventId: string) => {
  * @param query
  */
 export const findUsers = async (query: string) => {
+    // TODO нужен eventID
+    const eventID = 6
     if (!useMock) {
-        //@TODO implement
-        return []
+        const usersRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventID}/user/search?tag=${query}`, {
+            credentials: 'include'
+        })
+
+        if (usersRequest.ok) {
+            const json = await usersRequest.json()
+
+            return Convert.users.toFrontend(json)
+        } else {
+            return [] as User[]
+        }
     } else {
         await sleep(300)
-        return TEST_USERS.filter(u => u.id.startsWith(query))
+        return [] as User[]
     }
 }
 
 /**
  * Возвращает массив доступных специализаций
  */
-export const getJobs: () => Promise<string[]> = async () => {
+export const getJobs: () => Promise<Jobs> = async () => {
     if (!mockImplemented) {
-        const job = await fetch(`${HOST_DOMAIN}${PREFIX}/job`)
+        const job = await fetch(`${HOST_DOMAIN}${PREFIX}/job`, {
+            credentials: 'include'
+        })
 
         if (job.ok) {
             const json = await job.json()
-            let result = [] as Jobs
+            let result = [] as { name: string, id: number }[]
             if (json) {
-                result = Convert.job.toFrontend(json)
+                result.push(...json)
             }
 
             return result
@@ -511,7 +307,7 @@ export const getJobs: () => Promise<string[]> = async () => {
         }
     } else {
         await sleep(300)
-        return ['Frontend', 'Backend', '3D designer', 'Product Manager', 'UX/UI', 'DevOps', 'Другое']
+        return []//['Frontend', 'Backend', '3D designer', 'Product Manager', 'UX/UI', 'DevOps', 'Другое']
     }
 }
 
@@ -521,7 +317,9 @@ export const getJobs: () => Promise<string[]> = async () => {
  */
 export const getSkills = async (job: string) => {
     if (!mockImplemented) {
-        const skill = await fetch(`${HOST_DOMAIN}${PREFIX}/job/${encodeURIComponent(job)}/skills`)
+        const skill = await fetch(`${HOST_DOMAIN}${PREFIX}/job/${encodeURIComponent(job)}/skills`, {
+            credentials: 'include'
+        })
 
         if (skill.ok) {
             const json = await skill.json()
@@ -562,7 +360,7 @@ export const getFeed = async (eventId: string, query: string, sinceId?: string) 
 
         let result = [] as string[]
 
-        event.participants.forEach((v: { id: string }) => {
+        event.participants.forEach((v: { id: Id }) => {
             result.push(v.id)
         })
         return result
@@ -580,12 +378,17 @@ export const getFeed = async (eventId: string, query: string, sinceId?: string) 
  */
 export const getTeam = async (eventId: string, userId: string) => {
     if (!mockImplemented) {
-        const team = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${userId}/team`)
+        const team = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${userId}/team`, {
+            credentials: 'include'
+        })
 
         if (team.ok) {
             const json = await team.json()
             if (json) {
-                return Convert.team.toFrontend(json)
+                const t = Convert.team.toFrontend(json)
+                //@TODO Пользователи прилетают не полные. Поправить на беке
+                t.members = await Promise.all(json.members.map((j: BackendUser) => fetchUser(j.id!.toString())).filter((u: User | null) => u))
+                return t
             } else {
                 return {
                     members: [] as User[],
@@ -624,33 +427,41 @@ export const signIn = async () => {
 export const teamInvites = async (eventId: string, userId: string) => {
     if (!mockImplemented && userId) {
         //@TODO rewrite with Convert
-        const teams = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/teams`)
+        const teams = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/teams`, {
+            credentials: 'include'
+        })
 
         if (teams.ok) {
             const json = await teams.json()
-            const parsedTeams = await Promise.all(
-                json.map((t: { id: number }) => fetch(`${HOST_DOMAIN}${PREFIX}/team/${t.id}`))
-            )
-            //@ts-ignore
-            const teams1 = await Promise.all(parsedTeams.map(p => p.json()))
-            if (teams1) {
-                let result = [] as User[]
-
+            try {
+                const parsedTeams = await Promise.all(
+                    json.map((t: { id: number }) => fetch(`${HOST_DOMAIN}${PREFIX}/team/${t.id}`, {
+                        credentials: 'include'
+                    }))
+                )
+                //@ts-ignore
+                const teams1 = await Promise.all(parsedTeams.map(p => p.json()))
                 if (teams1) {
-                    //@ts-ignore
-                    teams1.forEach((v: { members: BackendUser[] }) => {
-                        if (v.members) {
-                            result.push(Convert.user.toFrontend(v.members[0]))
-                        } else {
-                            console.log('members is null')
-                        }
-                    })
+                    let result = [] as User[]
+
+                    if (teams1) {
+                        //@ts-ignore
+                        teams1.forEach((v: { members: BackendUser[] }) => {
+                            if (v.members) {
+                                result.push(Convert.user.toFrontend(v.members[0]))
+                            } else {
+                                console.log('members is null')
+                            }
+                        })
+                    }
+
+                    return result
                 }
 
-                return result
+                return []
+            } catch (e) {
+                return []
             }
-
-            return []
         } else {
             return []
         }
@@ -667,16 +478,24 @@ export const teamInvites = async (eventId: string, userId: string) => {
  */
 export const personalInvites = async (eventId: string, userId: string) => {
     if (!mockImplemented && userId) {
-        const users = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/users`)
+        try {
+            const users = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/users`, {
+                credentials: 'include'
+            })
 
-        if (users.ok) {
-            const json = await users.json()
+            if (users.ok) {
+                const json = await users.json()
 
-            if (json) {
-                return Convert.users.toFrontend(json)
+                //@TODO не хватает полей у пользователя (косяк бекенда)
+                const fullUsers = await Promise.all(json.map((j: BackendUser) => fetchUser(j.id!.toString())))
+                if (fullUsers) {
+                    return fullUsers as User[]
+                }
+                return [] as User[]
+            } else {
+                return []
             }
-            return [] as User[]
-        } else {
+        } catch (e) {
             return []
         }
     } else {
@@ -693,12 +512,14 @@ export const personalInvites = async (eventId: string, userId: string) => {
  */
 export const acceptInvite = async (eventId: string, inviteeId: string, inviterId: string) => {
     if (!mockImplemented) {
+        console.log(inviteeId, inviterId, Number(inviterId), Number(inviteeId))
         const join = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/team/join`,
             {
                 method: 'POST',
+                credentials: 'include',
                 body: JSON.stringify({
-                    uid1: inviterId,
-                    uid2: inviteeId
+                    uid1: Number(inviterId),
+                    uid2: Number(inviteeId)
                 })
             })
         return (join.ok && join.status === 200)
@@ -719,6 +540,7 @@ export const declineInvite = async (eventId: string, inviteeId: string, inviterI
     if (!mockImplemented) {
         const decline = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${inviterId}/decline`,
             {
+                credentials: 'include',
                 method: 'POST'
             })
         return (decline.ok && decline.status === 200)
@@ -733,14 +555,14 @@ export const declineInvite = async (eventId: string, inviteeId: string, inviterI
  * @param user
  * @constructor
  */
-export const modifyUser = async (user: UserOptional & { id: string }) => {
+export const modifyUser = async (user: UserOptional & { id: Id }) => {
     if (!useMock) {
         let success = true
         const backUser = Convert.userOptional.toBackend(user)
-
         const modifyRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${user.id}`,
             {
                 method: 'PUT',
+                credentials: 'include',
                 body: JSON.stringify(backUser)
             })
 
@@ -753,7 +575,8 @@ export const modifyUser = async (user: UserOptional & { id: string }) => {
             const modifySkillsRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${user.id}/skills`,
                 {
                     method: 'POST',
-                    body: JSON.stringify(Convert.newSkills.toBackend(backUser.skills))
+                    credentials: 'include',
+                    body: JSON.stringify(backUser.skills)
                 })
 
             success = modifySkillsRequest.ok && modifySkillsRequest.status === 200
@@ -768,16 +591,90 @@ export const modifyUser = async (user: UserOptional & { id: string }) => {
 
 /**
  * Изменяет данные события, в случае успеха возвращает true.
- * @param event
+ * @param data
  * @constructor
  */
-export const modifyEvent = async (event: HackathonOptional & { id: string }) => {
-    if (!useMock) {
-        //@TODO implement (with Convert)
-        return false
+export const modifyEvent = async (data: {
+    diff: HackathonOptional & { id: Id },
+    teams: Team[],
+    founderId: Id,
+    prizes: Prize[]
+}) => {
+    //@TODO implement
+    // diff может содержать измененные поля даты начала, даты окончания,
+    // числа участников и лимита участников (+ id ивента)
+    //
+    // prizes – массив призов
+    // teams – массив команд с полем prizes (содержит призы из объекта prizes) – награждение
+    // место призу присваивается аналогичное его порядковому номеру в массиве
+    if (!mockImplemented) {
+        data.diff.founderId = data.founderId
+        const fetches = [
+            await fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}`, {
+                method: 'POST',
+                credentials: 'include',
+                body: JSON.stringify(Convert.eventOptional.toBackend(data.diff, data.prizes))
+            }),
+            // TODO призы не должны быть массивом
+            // await fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/win`, {
+            //     method: 'POST',
+            //     credentials: 'include',
+            // })
+        ]
+        const eventRequest = await Promise.all(fetches)
+
+        for(let response of eventRequest) {
+            if (!response.ok) {
+                return false
+            }
+        }
+        return true
     } else {
+        console.log(data)
         await sleep(300)
         return true
+    }
+}
+
+/**
+ * Создает событие, в случае успеха возвращает id события.
+ * @param data
+ * @constructor
+ */
+export const createEvent = async (data: {
+    diff: HackathonOptional & { id: Id },
+    teams: Team[],
+    founderId: Id,
+    prizes: Prize[]
+}) => {
+    // TODO зачем здесь команды
+    if (!mockImplemented) {
+        data.diff.founderId = data.founderId
+        const fetches = [
+            await fetch(`${HOST_DOMAIN}${PREFIX}/event`, {
+                method: 'POST',
+                credentials: 'include',
+                body: JSON.stringify(Convert.eventOptional.toBackend(data.diff, data.prizes))
+            }),
+            // TODO призы не должны быть массивом
+            // await fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/win`, {
+            //     method: 'POST',
+            //     credentials: 'include',
+            // })
+        ]
+        const eventRequest = await Promise.all(fetches)
+
+        if (eventRequest[0].ok) {
+            const json = await eventRequest[0].json()
+
+            return json.id?.toString() ?? '-1'
+        } else {
+            return false
+        }
+    } else {
+        console.log(data)
+        await sleep(300)
+        return '6'
     }
 }
 
@@ -787,19 +684,20 @@ export const setSelectedSkills = (skills: UserSkill[]) => {
 
 export const updateImage = async (image: File, path: string) => {
     if (!mockImplemented) {
-        let formData = new FormData();
+        let formData = new FormData()
 
-        formData.append("file", image);
+        formData.append('file', image)
         const userAvatarResponse = await fetch(path, {
             method: 'POST',
+            credentials: 'include',
             body: formData
-        });
+        })
 
         if (userAvatarResponse.ok) {
             const json = await userAvatarResponse.json()
             return json.avatar as string
         } else {
-            return ""
+            return ''
         }
     } else {
         await sleep(300)
@@ -817,4 +715,62 @@ export const updateEventLogo = async (image: File, userID: string) => {
 
 export const updateEventBackground = async (image: File, userID: string) => {
     // return updateImage(image, `${HOST_DOMAIN}${PREFIX}/user/${userID}/image`)
+}
+
+/**
+ * Проверить текущего пользователя
+ * Вовращает userID или -1
+ */
+export const checkUser = async () => {
+    if (!mockImplemented) {
+        const authResponse = await fetch(`${HOST_DOMAIN}${PREFIX}/check`, {
+            method: 'GET',
+            credentials: 'include'
+        })
+
+        if (authResponse.ok) {
+            const json = await authResponse.json()
+            return json.id.toString()
+        } else {
+            return '-1'
+        }
+    } else {
+        await sleep(300)
+        return '1'
+    }
+}
+
+export const finishEvent = async (eventId: string) => {
+    //@TODO implement
+    // Возвращает ture в случае успеха
+    if (!mockImplemented) {
+        const finishResponse = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/finish`, {
+            method: 'POST',
+            credentials: 'include'
+        })
+
+        return finishResponse.ok && finishResponse.status === 200
+    } else {
+        await sleep(300)
+        return true
+    }
+}
+
+export const getEventTeams = async (eventId: string) => {
+    //@TODO implement
+    // Возвращает массив команд на ивенте.
+    await sleep(300)
+    return [{
+        name: 'team 1',
+        members: [],
+        id: '1'
+    }, {
+        name: 'team 2',
+        members: [],
+        id: '2'
+    }, {
+        name: 'a team 3',
+        members: [],
+        id: '3'
+    }] as Team[]
 }

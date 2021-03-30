@@ -1,36 +1,42 @@
 import {
     Team,
-    User, UserOptional, UserSkill
+    User, UserOptional, UserSkill, Prize
 } from '../components/tools/use-app-state/user'
 import {
-    Hackathon, HackathonOptional, Prize
+    Hackathon, HackathonOptional
 } from '../components/tools/use-app-state/hackathon'
 import {Invites} from '../components/tools/use-app-state/invite'
 
 export type BackendUser = {
     id: number | null,
+    avatar: string | null,
     firstName: string | null,
     lastName: string | null,
-    jobName: string | null,
-    email: string | null,
     workPlace: string | null,
+    email: string | null,
     description: string | null,
     bio: string | null,
     team: BackendTeam | null,
-    skills: BackendSkills | null
+    skills: BackendSkills | null,
+    tg: string | null,
+    gh: string | null,
+    vk: string | null
 }
 
 type BackendUserOptional = {
     id: number | null,
     firstName: string | null,
     lastName: string | null,
-    jobName: string | null,
+    avatar: string | null,
     email: string | null,
     workPlace: string | null,
     description: string | null,
     bio: string | null,
     team: BackendTeam | null,
-    skills: BackendSkills | null
+    skills: BackendSkills | null,
+    tg: string | null,
+    gh: string | null,
+    vk: string | null
 }
 
 export type BackendHackathon = {
@@ -48,6 +54,14 @@ export type BackendHackathon = {
         event: number | null,
     } | null
     participantsCount: number | null
+    prizeList: {
+        id: number | null,
+        eventID: number | null,
+        name: string | null,
+        place: number | null,
+        amount: number | null,
+        winnerTeamIDs: number[] | null
+    }[] | null
 }
 
 type BackendInvites = {}
@@ -75,7 +89,10 @@ type BackendJobs = {
     name: string,
 }[]
 
-export type Jobs = string[]
+export type Jobs = {
+    name: string,
+    id: number
+}[]
 
 /**
  * Convert позволяет преобразовывать сущности Бэкенда в сущности фронтенда
@@ -88,9 +105,9 @@ const Convert = {
             return {
                 firstName: bUser.firstName ?? '',
                 lastName: bUser.lastName ?? '',
-                jobName: bUser.jobName ?? '',
+                jobName: bUser.workPlace ?? '',
                 bio: bUser.bio ?? '',
-                avatar: 'http://loremflickr.com/1000/1000',
+                avatar: bUser.avatar || 'http://loremflickr.com/1000/1000',
                 skills: {
                     description: bUser.description ?? '',
                     tags: bUser.skills?.map(s => ({id: s.id.toString(), jobId: s.jobId.toString(), name: s.name})) ?? []
@@ -100,6 +117,11 @@ const Convert = {
                 team: {
                     name: '',
                     members: [] as User[]
+                },
+                settings: {
+                    vk: bUser.vk,
+                    gh: bUser.gh,
+                    tg: bUser.tg
                 }
             }
         },
@@ -109,9 +131,8 @@ const Convert = {
                 id: Number(fUser.id) ?? null,
                 firstName: fUser.firstName ?? null,
                 lastName: fUser.lastName ?? null,
-                jobName: fUser.jobName ?? null,
                 email: '',
-                workPlace: '',
+                workPlace: fUser.jobName,
                 description: fUser.skills?.description ?? null,
                 bio: ''
             }
@@ -127,19 +148,34 @@ const Convert = {
             return {
                 id: Number(fUser.id) ?? null,
                 firstName: fUser.firstName ?? null,
+                avatar: fUser.avatar ?? null,
                 lastName: fUser.lastName ?? null,
-                jobName: fUser.jobName ?? null,
                 email: '',
-                workPlace: '',
+                workPlace: fUser.jobName ?? null,
                 description: fUser.skills?.description ?? null,
                 bio: fUser.bio ?? null,
-                skills: fUser.skills?.tags?.map(s => ({skillID: Number(s.id), jobID: Number(s.jobId), skillName: s.name})) ?? null
+                skills: fUser.skills?.tags?.map(s => ({
+                    skillID: Number(s.id),
+                    jobID: Number(s.jobId),
+                    skillName: s.name
+                })) ?? null,
+                vk: fUser.settings?.vk ?? null,
+                gh: fUser.settings?.gh ?? null,
+                tg: fUser.settings?.tg ?? null
             }
         }
     },
     event: {
         toFrontend: (bHackathon: BackendHackathon) => {
             const currentDate = new Date()
+            const orderedPrizes = bHackathon.prizeList?.sort((left, right) => {
+                    return (left.place ?? 0) - (right.place ?? 0)
+                }
+            ).map((p) => ({
+                id: p.id?.toString() ?? '',
+                name: p.name ?? null,
+                count: p.amount?.toString() ?? ''
+            })) ?? [] as Prize[]
 
             return {
                 name: bHackathon.name ?? '',
@@ -148,12 +184,18 @@ const Convert = {
                 background: 'http://loremflickr.com/1000/1000',
                 description: bHackathon.description ?? '',
                 founderId: bHackathon.founder?.toString() ?? '-1',
-                isFinished: currentDate > bHackathon.dateEnd! ?? true,
+                isFinished: bHackathon.state === 'finished',
                 place: bHackathon.place ?? '',
                 participantsCount: bHackathon.participantsCount,
                 participants: bHackathon.feed?.users,
-                prizes: [] as Prize[],
-                settings: {},
+                prizes: orderedPrizes,
+                settings: {
+                    start: bHackathon.dateStart ?? null,
+                    finish: bHackathon.dateEnd ?? null,
+                    teamSize: 0, //@TODO teamSize
+                    usersLimit: 0, //@TODO usersLimit
+                    site: '', //@TODO site
+                },
             }
         },
         toBackend: (bUser: Hackathon) => {
@@ -163,9 +205,25 @@ const Convert = {
         }
     },
     eventOptional: {
-        toBackend: (fEvent: HackathonOptional) => {
+        toBackend: (fEvent: HackathonOptional, prizes: Prize[]) => {
             return {
-
+                id: Number(fEvent.id) ?? null,
+                name: fEvent.name ?? null,
+                description: fEvent.description ?? null,
+                founder: Number(fEvent.founderId) ?? null,
+                dateStart: fEvent.settings?.start ?? null,
+                dateEnd: fEvent.settings?.finish ?? null,
+                state: fEvent.isFinished ? 'Closed' : ' Open' ?? null,
+                place: fEvent.place ?? null,
+                feed: null,
+                participantsCount: null,
+                prizeList: prizes.map((p, i) => ({
+                    id: Number(p.id) ?? null,
+                    eventID: Number(fEvent.id) ?? null,
+                    name: p.name ?? null,
+                    place: i,
+                    amount: Number(p.count) ?? null
+                }))
             }
         }
     },
@@ -193,9 +251,7 @@ const Convert = {
     },
     job: {
         toFrontend: (bJobs: BackendJobs) => {
-            return bJobs.map(j => (
-                j.name
-            ))
+            return bJobs
         },
     }
 } as {
@@ -214,7 +270,7 @@ const Convert = {
         toBackend: (bUser: Hackathon) => BackendHackathon
     },
     eventOptional: {
-        toBackend: (fEvent: HackathonOptional) => BackendHackathon
+        toBackend: (fEvent: HackathonOptional, prizes: Prize[]) => BackendHackathon
     },
     team: {
         toFrontend: (bUser: BackendTeam) => Team,
@@ -226,7 +282,7 @@ const Convert = {
     },
     skills: {
         toFrontend: (bSkills: BackendSkills) => UserSkill[],
-    }
+    },
     newSkills: {
         toBackend: (bSkills: BackendSkills) => NewSkills,
     }
