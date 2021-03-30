@@ -24,6 +24,7 @@ import {TeamDescription} from '../user/team-description'
 import {EditUserButton} from '../user/edit-user-button'
 import {editUserAvatar} from '../tools/edit-images'
 import {useSnackbar} from 'notistack'
+import {UserEvents} from '../user/events'
 
 const UserNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
@@ -161,9 +162,7 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                 </Title>
             </Grid>
             <Grid item>
-                <SecondaryText>
-                    Скоро
-                </SecondaryText>
+                <UserEvents/>
             </Grid>
             <div style={{height: 32}}/>
         </Grid>

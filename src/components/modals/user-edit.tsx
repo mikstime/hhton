@@ -43,7 +43,7 @@ const _useUserEditModal = () => {
     }
 }
 
-const storeDiff = (o1: { [key: string]: any }, o2: { [key: string]: any }) => {
+export const storeDiff = (o1: { [key: string]: any }, o2: { [key: string]: any }) => {
     const toReturn: { [key: string]: any } = {}
     for (let key of Object.keys(o2)) {
         if (o2[key] !== o1[key]) {

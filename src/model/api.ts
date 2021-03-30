@@ -4,6 +4,8 @@ import background from '../assets/background.png'
 import logo from '../assets/logo.png'
 import {NULL_USER} from '../components/tools/use-app-state'
 import {
+    Id, Prize,
+    Team,
     User,
     UserOptional,
     UserSkill
@@ -17,10 +19,10 @@ const mockImplemented = false
 
 const TEST_USERS: User[] = []
 
-export const fetchUser = async (id: string) => {
+export const fetchUser = async (id: Id) => {
     if (!mockImplemented) {
         const user = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${id}`, {
-            credentials: "include"
+            credentials: 'include'
         })
 
         if (user.ok) {
@@ -94,7 +96,7 @@ export const fetchUser = async (id: string) => {
 export const isInvited = async (eventId: string, inviterId: string, inviteeId: string) => {
     if (!mockImplemented) {
         const invited = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invited/user/${inviteeId}`, {
-            credentials: "include"
+            credentials: 'include'
         })
 
         if (invited.ok) {
@@ -114,10 +116,10 @@ export const isInvited = async (eventId: string, inviterId: string, inviteeId: s
  * Получить информацию о мероприятии
  * @param id
  */
-export const fetchEvent = async (id: string) => {
+export const fetchEvent = async (id: Id) => {
     if (!mockImplemented) {
         const eventRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${id}`, {
-            credentials: "include"
+            credentials: 'include'
         })
 
         if (eventRequest.ok) {
@@ -135,6 +137,8 @@ export const fetchEvent = async (id: string) => {
             name: 'Хакатон',
             logo: logo,
             description: 'Замечательный хакатон',
+            start: null,
+            finish: null,
             background: background,
             isFinished: false,
             place: 'Москва, Лубянка 13',
@@ -156,7 +160,7 @@ export const fetchEvent = async (id: string) => {
 export const isParticipating = async (eventId: string, userId: string) => {
     if (!mockImplemented) {
         const event = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${userId}/events`, {
-            credentials: "include"
+            credentials: 'include'
         })
 
         if (event.ok) {
@@ -189,7 +193,7 @@ export const invitePerson = async (eventId: string, inviterId: string, inviteeId
         const invite = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${inviteeId}/invite`,
             {
                 method: 'POST',
-                credentials: "include",
+                credentials: 'include',
                 body: JSON.stringify({
                     silent: mode === 'silent'
                 })
@@ -211,7 +215,7 @@ export const joinEvent = async (userId: string, eventId: string) => {
         const join = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/join`,
             {
                 method: 'POST',
-                credentials: "include",
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8'
                 },
@@ -238,7 +242,7 @@ export const leaveEvent = async (userId: string, eventId: string) => {
         const leave = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/leave`,
             {
                 method: 'POST',
-                credentials: "include",
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8'
                 },
@@ -263,8 +267,8 @@ export const findUsers = async (query: string) => {
     // TODO нужен eventID
     const eventID = 6
     if (!useMock) {
-        const usersRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventID}/user/search?tag=${query}`,{
-            credentials: "include"
+        const usersRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventID}/user/search?tag=${query}`, {
+            credentials: 'include'
         })
 
         if (usersRequest.ok) {
@@ -286,7 +290,7 @@ export const findUsers = async (query: string) => {
 export const getJobs: () => Promise<Jobs> = async () => {
     if (!mockImplemented) {
         const job = await fetch(`${HOST_DOMAIN}${PREFIX}/job`, {
-            credentials: "include"
+            credentials: 'include'
         })
 
         if (job.ok) {
@@ -313,7 +317,7 @@ export const getJobs: () => Promise<Jobs> = async () => {
 export const getSkills = async (job: string) => {
     if (!mockImplemented) {
         const skill = await fetch(`${HOST_DOMAIN}${PREFIX}/job/${encodeURIComponent(job)}/skills`, {
-            credentials: "include"
+            credentials: 'include'
         })
 
         if (skill.ok) {
@@ -355,7 +359,7 @@ export const getFeed = async (eventId: string, query: string, sinceId?: string) 
 
         let result = [] as string[]
 
-        event.participants.forEach((v: { id: string }) => {
+        event.participants.forEach((v: { id: Id }) => {
             result.push(v.id)
         })
         return result
@@ -374,7 +378,7 @@ export const getFeed = async (eventId: string, query: string, sinceId?: string) 
 export const getTeam = async (eventId: string, userId: string) => {
     if (!mockImplemented) {
         const team = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${userId}/team`, {
-            credentials: "include"
+            credentials: 'include'
         })
 
         if (team.ok) {
@@ -382,7 +386,7 @@ export const getTeam = async (eventId: string, userId: string) => {
             if (json) {
                 const t = Convert.team.toFrontend(json)
                 //@TODO Пользователи прилетают не полные. Поправить на беке
-                t.members = await Promise.all(json.members.map((j: BackendUser) => fetchUser(j.id!.toString())).filter((u:User|null) => u))
+                t.members = await Promise.all(json.members.map((j: BackendUser) => fetchUser(j.id!.toString())).filter((u: User | null) => u))
                 return t
             } else {
                 return {
@@ -423,7 +427,7 @@ export const teamInvites = async (eventId: string, userId: string) => {
     if (!mockImplemented && userId) {
         //@TODO rewrite with Convert
         const teams = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/teams`, {
-            credentials: "include"
+            credentials: 'include'
         })
 
         if (teams.ok) {
@@ -431,8 +435,8 @@ export const teamInvites = async (eventId: string, userId: string) => {
             try {
                 const parsedTeams = await Promise.all(
                     json.map((t: { id: number }) => fetch(`${HOST_DOMAIN}${PREFIX}/team/${t.id}`, {
-            credentials: "include"
-        }))
+                        credentials: 'include'
+                    }))
                 )
                 //@ts-ignore
                 const teams1 = await Promise.all(parsedTeams.map(p => p.json()))
@@ -475,8 +479,8 @@ export const personalInvites = async (eventId: string, userId: string) => {
     if (!mockImplemented && userId) {
         try {
             const users = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/users`, {
-            credentials: "include"
-        })
+                credentials: 'include'
+            })
 
             if (users.ok) {
                 const json = await users.json()
@@ -511,7 +515,7 @@ export const acceptInvite = async (eventId: string, inviteeId: string, inviterId
         const join = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/team/join`,
             {
                 method: 'POST',
-                credentials: "include",
+                credentials: 'include',
                 body: JSON.stringify({
                     uid1: Number(inviterId),
                     uid2: Number(inviteeId)
@@ -535,7 +539,7 @@ export const declineInvite = async (eventId: string, inviteeId: string, inviterI
     if (!mockImplemented) {
         const decline = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${inviterId}/decline`,
             {
-                credentials: "include",
+                credentials: 'include',
                 method: 'POST'
             })
         return (decline.ok && decline.status === 200)
@@ -550,14 +554,14 @@ export const declineInvite = async (eventId: string, inviteeId: string, inviterI
  * @param user
  * @constructor
  */
-export const modifyUser = async (user: UserOptional & { id: string }) => {
+export const modifyUser = async (user: UserOptional & { id: Id }) => {
     if (!useMock) {
         let success = true
         const backUser = Convert.userOptional.toBackend(user)
         const modifyRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${user.id}`,
             {
                 method: 'PUT',
-                credentials: "include",
+                credentials: 'include',
                 body: JSON.stringify(backUser)
             })
 
@@ -570,7 +574,7 @@ export const modifyUser = async (user: UserOptional & { id: string }) => {
             const modifySkillsRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${user.id}/skills`,
                 {
                     method: 'POST',
-                    credentials: "include",
+                    credentials: 'include',
                     body: JSON.stringify(backUser.skills)
                 })
 
@@ -586,17 +590,48 @@ export const modifyUser = async (user: UserOptional & { id: string }) => {
 
 /**
  * Изменяет данные события, в случае успеха возвращает true.
- * @param event
+ * @param data
  * @constructor
  */
-export const modifyEvent = async (event: HackathonOptional & { id: string }) => {
-    if (!useMock) {
-        //@TODO implement (with Convert)
-        return false
-    } else {
-        await sleep(300)
-        return true
-    }
+export const modifyEvent = async (data: {
+    diff: HackathonOptional & { id: Id },
+    teams: Team[],
+    founderId: Id,
+    prizes: Prize[]
+}) => {
+    //@TODO implement
+    // diff может содержать измененные поля даты начала, даты окончания,
+    // числа участников и лимита участников (+ id ивента)
+    //
+    // prizes – массив призов
+    // teams – массив команд с полем prizes (содержит призы из объекта prizes) – награждение
+    // место призу присваивается аналогичное его порядковому номеру в массиве
+    console.log(data)
+    await sleep(300)
+    return true
+}
+
+/**
+ * Создает событие, в случае успеха возвращает id события.
+ * @param data
+ * @constructor
+ */
+export const createEvent = async (data: {
+    diff: HackathonOptional & { id: Id },
+    teams: Team[],
+    founderId: Id,
+    prizes: Prize[]
+}) => {
+    //@TODO implement
+    // diff может содержать измененные поля даты начала, даты окончания,
+    // числа участников и лимита участников (+ id ивента)
+    //
+    // prizes – массив призов
+    // teams – массив команд с полем prizes (содержит призы из объекта prizes) – награждение
+    // место призу присваивается аналогичное его порядковому номеру в массиве
+    console.log(data)
+    await sleep(300)
+    return '6' // В случае неудачи false
 }
 
 export const setSelectedSkills = (skills: UserSkill[]) => {
@@ -610,7 +645,7 @@ export const updateImage = async (image: File, path: string) => {
         formData.append('file', image)
         const userAvatarResponse = await fetch(path, {
             method: 'POST',
-            credentials: "include",
+            credentials: 'include',
             body: formData
         })
 
@@ -643,11 +678,10 @@ export const updateEventBackground = async (image: File, userID: string) => {
  * Вовращает userID или -1
  */
 export const checkUser = async () => {
-    return '181853117'
     if (!mockImplemented) {
         const authResponse = await fetch(`${HOST_DOMAIN}${PREFIX}/check`, {
             method: 'GET',
-            credentials: "include"
+            credentials: 'include'
         })
 
         if (authResponse.ok) {
@@ -663,6 +697,27 @@ export const checkUser = async () => {
 }
 
 export const finishEvent = async (eventId: string) => {
+    //@TODO implement
+    // Возвращает ture в случае успеха
     await sleep(300)
     return true
+}
+
+export const getEventTeams = async (eventId: string) => {
+    //@TODO implement
+    // Возвращает массив команд на ивенте.
+    await sleep(300)
+    return [{
+        name: 'team 1',
+        members: [],
+        id: '1'
+    }, {
+        name: 'team 2',
+        members: [],
+        id: '2'
+    }, {
+        name: 'a team 3',
+        members: [],
+        id: '3'
+    }] as Team[]
 }

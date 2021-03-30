@@ -2,7 +2,7 @@ import React, {useCallback, useEffect} from 'react'
 import {
     Box,
     CardActionArea,
-    Grid,
+    Grid, Grow,
     Hidden,
     Typography
 } from '@material-ui/core'
@@ -25,6 +25,7 @@ import {EditableImage} from '../common/editable-image'
 import {editEventBackground, editEventLogo} from '../tools/edit-images'
 import {useSnackbar} from 'notistack'
 import {WinnersSection} from '../event/winners'
+import {PrizePool} from '../event/prizepool'
 
 const EventNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
@@ -133,7 +134,7 @@ export const EventApp: React.FC = () => {
                                   text={event.place ? `Место проведения: ${event.place}` : ''}/>
                     </Grid>
                     <Grid item style={{zIndex: 2}}>
-                        <CardActionArea style={{borderRadius: 10}}
+                        <CardActionArea style={{borderRadius: 8}}
                                         onClick={open}>
                             <InfoPlate elevation={4} textPlate={CaptionText}
                                        text='Подробная информация'/>
@@ -141,26 +142,34 @@ export const EventApp: React.FC = () => {
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid item container>
-                <Grid item container direction='column' md>
-                    <Grid item>
-                        <Title>
-                            Победители
-                        </Title>
-                        <WinnersSection/>
-                    </Grid>
+            {
+                event.isFinished &&
+                <Grow in><Grid item container direction='column'>
+                  <Grid item style={{marginBottom: 24}}>
+                    <Title>
+                      Победители
+                      <Hidden smDown>
+                        <Box clone marginLeft='12px'>
+                          <EditEventButton/>
+                        </Box>
+                      </Hidden>
+                    </Title>
+                  </Grid>
+                  <WinnersSection/>
                 </Grid>
-            </Grid>
+                </Grow>
+            }
             <Grid item container>
                 <Grid item container direction='column' md>
                     <Grid item>
                         <Title>
                             О мероприятии
-                            <Hidden smDown>
+                            {!event.isFinished && <Hidden smDown>
                                 <Box clone marginLeft='12px'>
                                     <EditEventButton/>
                                 </Box>
                             </Hidden>
+                            }
                         </Title>
                     </Grid>
                     <Grid item>
@@ -178,9 +187,7 @@ export const EventApp: React.FC = () => {
                         </Title>
                     </Grid>
                     <Grid item>
-                        <SecondaryText>
-                            Скоро
-                        </SecondaryText>
+                        <PrizePool prizes={event.prizes}/>
                     </Grid>
                     <div style={{height: 32}}/>
                 </Grid>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {Switch, Route, Link, LinkProps} from 'react-router-dom'
 import {UserApp} from './user'
 import {EventApp} from './event'
@@ -175,10 +175,24 @@ const StyledContainer = styled(Container)`
   box-sizing: border-box;
 `
 const RootContainer: React.FC<ContainerProps> = (props) => {
-    return <Box clone
-                marginRight={{md: '50px !important', lg: '200px !important'}}>
-        <StyledContainer {...props}/>
-    </Box>
+    return <Fragment>
+        <Hidden lgUp>
+            <Box clone
+                 marginRight={{md: '50px !important', lg: '200px !important'}}
+                 paddingLeft={{md: 'calc(15vw - 120px) !important'}}
+                 paddingRight={{md: 'calc(15vw - 130px) !important'}}>
+                <StyledContainer maxWidth='md' {...props}/>
+            </Box>
+        </Hidden>
+        <Hidden mdDown>
+            <Box clone
+                 marginRight={{md: '50px !important', lg: '250px !important'}}
+                 paddingLeft={{md: '72px !important'}}
+                 paddingRight={{md: '62px !important'}}>
+                <StyledContainer maxWidth='md' {...props}/>
+            </Box>
+        </Hidden>
+    </Fragment>
 }
 
 export const App: React.FC = () => {
@@ -190,7 +204,11 @@ export const App: React.FC = () => {
 
     return <Switch>
         <Route path='/event/create'>
-            <CreateEventApp/>
+            <AppNav>
+                <RootContainer>
+                    <CreateEventApp/>
+                </RootContainer>
+            </AppNav>
         </Route>
         <Route path='/user/:userId'>
             <AppNav>
