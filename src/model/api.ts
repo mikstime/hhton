@@ -805,6 +805,8 @@ export const getWinners = async (eventId: string) => {
             })
         if (finish.ok) {
             const j = await finish.json()
+            if(!j)
+                return []
             const ts = await Promise.all(j.map((j: Team) => getTeamById(j.id ?? ''))) as Team[]
             //@ts-ignore
             const r = j?.map((j, i) =>({
