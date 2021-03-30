@@ -740,10 +740,17 @@ export const checkUser = async () => {
 }
 
 export const finishEvent = async (eventId: string) => {
-    //@TODO implement
-    // Возвращает ture в случае успеха
-    await sleep(300)
-    return true
+    if (!mockImplemented) {
+        const finish = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/finish`,
+            {
+                method: 'POST',
+                credentials: 'include',
+            })
+        return (finish.ok && finish.status === 200)
+    } else {
+        await sleep(300)
+        return true
+    }
 }
 
 export const getEventTeams = async (eventId: string) => {
