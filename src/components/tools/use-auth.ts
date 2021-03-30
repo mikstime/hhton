@@ -8,7 +8,7 @@ export const useAuth = () => {
 
     useEffect(() => {
         (async () => {
-            const userId = await checkUser()
+            const userId = await checkUser()//'181853117'
             cEvent.change({id: '6'})
             cUser.change({id: userId})
         })()

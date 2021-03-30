@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, {Fragment, useEffect} from 'react'
 import {
     Box, Divider,
     Grid, Grow
@@ -12,7 +12,14 @@ import {PersonInvitee} from '../team/person-invitee'
 
 export const TeamApp: React.FC = () => {
 
-    const {cUser, invites} = useAppState()
+    const {cUser, invites, user} = useAppState()
+
+    useEffect(() => {
+        if(cUser.isNullUser && cUser.id !== '-1') {
+            user.change({id: cUser.id})
+        }
+    }, [cUser.isNullUser])
+
     return <Grid container direction='column'>
         <SubTitle style={{marginBottom: 24}}>{(cUser.team && cUser.team.name) || 'Ваша комнада'}</SubTitle>
         <Grid container spacing={3} direction='column'>

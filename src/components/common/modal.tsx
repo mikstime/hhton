@@ -62,7 +62,7 @@ export const Modal: React.FC<ModalProps> = ({children, canGoBack, cantClose, gri
                         </IconButton>
                         }
                     </Grid>
-                    <Grid item xs={12} sm={8} md={6} lg={5}>
+                    <Grid item xs={12} sm={9} md={7} lg={6}>
                         <Plate elevation={4} padding={32}>
                             {children}
                         </Plate>

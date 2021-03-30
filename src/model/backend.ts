@@ -1,9 +1,9 @@
 import {
     Team,
-    User, UserOptional, UserSkill
+    User, UserOptional, UserSkill, Prize
 } from '../components/tools/use-app-state/user'
 import {
-    Hackathon, HackathonOptional, Prize
+    Hackathon, HackathonOptional
 } from '../components/tools/use-app-state/hackathon'
 import {Invites} from '../components/tools/use-app-state/invite'
 
@@ -168,12 +168,18 @@ const Convert = {
                 background: 'http://loremflickr.com/1000/1000',
                 description: bHackathon.description ?? '',
                 founderId: bHackathon.founder?.toString() ?? '-1',
-                isFinished: currentDate > bHackathon.dateEnd! ?? true,
+                isFinished: bHackathon.state === 'finished',
                 place: bHackathon.place ?? '',
                 participantsCount: bHackathon.participantsCount,
                 participants: bHackathon.feed?.users,
-                prizes: [] as Prize[],
-                settings: {},
+                prizes: [] as Prize[], //@TODO prizes
+                settings: {
+                    start: null, //@TODO start date
+                    finish: null, //@TODO finish date
+                    teamSize: 0, //@TODO teamSize
+                    usersLimit: 0, //@TODO usersLimit
+                    site: '', //@TODO site
+                },
             }
         },
         toBackend: (bUser: Hackathon) => {
