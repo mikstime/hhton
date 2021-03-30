@@ -25,6 +25,7 @@ import {EditUserButton} from '../user/edit-user-button'
 import {editUserAvatar} from '../tools/edit-images'
 import {useSnackbar} from 'notistack'
 import {UserEvents} from '../user/events'
+import {useHistory} from 'react-router-dom'
 
 const UserNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
@@ -50,6 +51,7 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
     const {userId} = useParams()
     const {user, cEvent, cUser} = useAppState()
     const {enqueueSnackbar} = useSnackbar()
+    const history = useHistory()
 
     const onAvatarChange = useCallback(() => {
         editUserAvatar(user.id).then(result => {
@@ -76,6 +78,11 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userId, cUser.id, cEvent.id])
 
+    useEffect(() => {
+        if(!userId && cUser.isNotAuthorized) {
+            history.push('/')
+        }
+    }, [cUser.isNotAuthorized])
     if (user.notFound) {
         return <NotFound
             title='Пользователь не найден'

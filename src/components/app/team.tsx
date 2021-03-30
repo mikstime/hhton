@@ -8,30 +8,36 @@ import {useAppState} from '../tools/use-app-state'
 import {TeamMember} from '../team/team-member'
 import {TeamInvitee} from '../team/team-invitee'
 import {PersonInvitee} from '../team/person-invitee'
-
+import {useHistory} from 'react-router-dom'
 
 export const TeamApp: React.FC = () => {
 
     const {cUser, invites, user} = useAppState()
-
+    const history = useHistory()
     useEffect(() => {
         if(cUser.isNullUser && cUser.id !== '-1') {
             user.change({id: cUser.id})
         }
     }, [cUser.isNullUser])
 
+    useEffect(() => {
+        if(cUser.isNotAuthorized) {
+            history.push('/')
+        }
+    }, [cUser.isNotAuthorized])
+
     return <Grid container direction='column'>
         <SubTitle style={{marginBottom: 24}}>{(cUser.team && cUser.team.name) || 'Ваша комнада'}</SubTitle>
         <Grid container spacing={3} direction='column'>
-            {!!cUser.team.members.length && cUser.team.members.map((u, i) => {
+            {!!user.team.members.length && user.team.members.map((u, i) => {
                 return <Fragment key={i}>
                     <Grow in><TeamMember user={u}/></Grow>
                     <Divider light flexItem style={{height: 1}}/>
                 </Fragment>
             })
             }
-            {!cUser.team.members.length && <Fragment>
-              <Grow in><TeamMember user={cUser}/></Grow>
+            {!user.team.members.length && <Fragment>
+              <Grow in><TeamMember user={user}/></Grow>
               <Divider light flexItem style={{height: 1}}/>
             </Fragment>}
         </Grid>
