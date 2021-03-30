@@ -671,7 +671,6 @@ export const createEvent = async (data: {
             return false
         }
     } else {
-        console.log(data)
         await sleep(300)
         return '6'
     }
