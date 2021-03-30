@@ -42,7 +42,11 @@ type BackendUserOptional = {
 export type BackendHackathon = {
     id: number | null,
     name: string | null,
+    logo: string | null,
+    background: string | null,
+    site: string | null,
     description: string | null,
+    teamSize: number | null,
     founder: number | null,
     dateStart: Date | null,
     dateEnd: Date | null,
@@ -180,8 +184,8 @@ const Convert = {
             return {
                 name: bHackathon.name ?? '',
                 id: bHackathon.id?.toString() ?? '-1',
-                logo: 'http://loremflickr.com/1000/1000',
-                background: 'http://loremflickr.com/1000/1000',
+                logo: bHackathon.logo,
+                background: bHackathon.background,
                 description: bHackathon.description ?? '',
                 founderId: bHackathon.founder?.toString() ?? '-1',
                 isFinished: bHackathon.state === 'Closed',
@@ -192,9 +196,9 @@ const Convert = {
                 settings: {
                     start: bHackathon.dateStart ?? null,
                     finish: bHackathon.dateEnd ?? null,
-                    teamSize: 0, //@TODO teamSize
+                    teamSize: bHackathon.teamSize,
                     usersLimit: 0, //@TODO usersLimit
-                    site: '', //@TODO site
+                    site: bHackathon.site,
                 },
             }
         },
@@ -209,6 +213,10 @@ const Convert = {
             return {
                 id: Number(fEvent.id) ?? null,
                 name: fEvent.name ?? null,
+                logo: fEvent.logo ?? null,
+                background: fEvent.background ?? null,
+                site: fEvent.settings?.site ?? null,
+                teamSize: fEvent.settings?.teamSize ?? null,
                 description: fEvent.description ?? null,
                 founder: Number(fEvent.founderId) ?? null,
                 dateStart: fEvent.settings?.start ?? null,

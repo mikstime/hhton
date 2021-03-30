@@ -112,15 +112,6 @@ export const isInvited = async (eventId: string, inviterId: string, inviteeId: s
     }
 }
 
-const lackEvent = {
-    logo: logo,
-    background: background,
-    isFinished: false,
-    participants: new Array(270).map(() => NULL_USER),
-    prizes: [],
-    settings: {},
-    isParticipating: false
-}
 /**
  * Получить информацию о мероприятии
  * @param id
