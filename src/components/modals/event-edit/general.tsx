@@ -57,7 +57,7 @@ const DateField: React.FC<{
                 disabled={disabled}
                 disableToolbar
                 variant="inline"
-                format="MM/dd/yyyy"
+                format="dd/MM/yyyy"
                 fullWidth
                 invalidDateMessage=''
                 error={false}
@@ -110,21 +110,21 @@ export const GeneralSection: React.FC<{
             <Grid container spacing={2}>
                 <Grid xs item container spacing={1} direction='column'>
                     <DateField label='Начало' {...start} inputProps={{
-                        placeholder: '11.02.2020'
+                        placeholder: 'дд/мм/гггг'
                     }}/>
                     <DateField label='Конец' {...finish} inputProps={{
-                        placeholder: '11.02.2020'
+                        placeholder: 'дд/мм/гггг'
                     }}/>
                 </Grid>
                 <Grid xs item container spacing={1} direction='column'>
                     <NumberField label='Размер команды' inputProps={{
-                        placeholder: '4',
+                        placeholder: 'до 10',
                         inputProps: {min: 0, max: 10, ...teamSize}
                     }}/>
-                    <NumberField label='Число участников' inputProps={{
-                        placeholder: '400',
-                        inputProps: {min: 0, max: 10000, ...usersLimit}
-                    }}/>
+                    {/*<NumberField label='Число участников' inputProps={{*/}
+                    {/*    placeholder: '400',*/}
+                    {/*    inputProps: {min: 0, max: 10000, ...usersLimit}*/}
+                    {/*}}/>*/}
                     <FlexSpace/>
                 </Grid>
             </Grid>

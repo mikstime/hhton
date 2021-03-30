@@ -188,7 +188,7 @@ const Convert = {
                 background: bHackathon.background,
                 description: bHackathon.description ?? '',
                 founderId: bHackathon.founder?.toString() ?? '-1',
-                isFinished: bHackathon.state === 'Closed',
+                isFinished: true,//bHackathon.state === 'Closed',
                 place: bHackathon.place ?? '',
                 participantsCount: bHackathon.participantsCount,
                 participants: bHackathon.feed?.users,
