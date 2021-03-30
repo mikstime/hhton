@@ -42,7 +42,11 @@ type BackendUserOptional = {
 export type BackendHackathon = {
     id: number | null,
     name: string | null,
+    logo: string | null,
+    background: string | null,
+    site: string | null,
     description: string | null,
+    teamSize: number | null,
     founder: number | null,
     dateStart: Date | null,
     dateEnd: Date | null,
@@ -54,6 +58,14 @@ export type BackendHackathon = {
         event: number | null,
     } | null
     participantsCount: number | null
+    prizeList: {
+        id: number | null,
+        eventID: number | null,
+        name: string | null,
+        place: number | null,
+        amount: number | null,
+        winnerTeamIDs: number[] | null
+    }[] | null
 }
 
 type BackendInvites = {}
@@ -160,25 +172,33 @@ const Convert = {
     event: {
         toFrontend: (bHackathon: BackendHackathon) => {
             const currentDate = new Date()
+            const orderedPrizes = bHackathon.prizeList?.sort((left, right) => {
+                    return (left.place ?? 0) - (right.place ?? 0)
+                }
+            ).map((p) => ({
+                id: p.id?.toString() ?? '',
+                name: p.name ?? null,
+                count: p.amount?.toString() ?? ''
+            })) ?? [] as Prize[]
 
             return {
                 name: bHackathon.name ?? '',
                 id: bHackathon.id?.toString() ?? '-1',
-                logo: 'http://loremflickr.com/1000/1000',
-                background: 'http://loremflickr.com/1000/1000',
+                logo: bHackathon.logo,
+                background: bHackathon.background,
                 description: bHackathon.description ?? '',
                 founderId: bHackathon.founder?.toString() ?? '-1',
-                isFinished: bHackathon.state === 'finished',
+                isFinished: true,//bHackathon.state === 'Closed',
                 place: bHackathon.place ?? '',
                 participantsCount: bHackathon.participantsCount,
                 participants: bHackathon.feed?.users,
-                prizes: [] as Prize[], //@TODO prizes
+                prizes: orderedPrizes,
                 settings: {
-                    start: null, //@TODO start date
-                    finish: null, //@TODO finish date
-                    teamSize: 0, //@TODO teamSize
+                    start: bHackathon.dateStart ?? null,
+                    finish: bHackathon.dateEnd ?? null,
+                    teamSize: bHackathon.teamSize,
                     usersLimit: 0, //@TODO usersLimit
-                    site: '', //@TODO site
+                    site: bHackathon.site,
                 },
             }
         },
@@ -189,9 +209,29 @@ const Convert = {
         }
     },
     eventOptional: {
-        toBackend: (fEvent: HackathonOptional) => {
+        toBackend: (fEvent: HackathonOptional, prizes: Prize[]) => {
             return {
-
+                id: Number(fEvent.id) ?? null,
+                name: fEvent.name ?? null,
+                logo: fEvent.logo ?? null,
+                background: fEvent.background ?? null,
+                site: fEvent.settings?.site ?? null,
+                teamSize: fEvent.settings?.teamSize ?? null,
+                description: fEvent.description ?? null,
+                founder: Number(fEvent.founderId) ?? null,
+                dateStart: fEvent.settings?.start ?? null,
+                dateEnd: fEvent.settings?.finish ?? null,
+                state: fEvent.isFinished ? 'Closed' : ' Open' ?? null,
+                place: fEvent.place ?? null,
+                feed: null,
+                participantsCount: null,
+                prizeList: prizes.map((p, i) => ({
+                    id: Number(p.id) ?? null,
+                    eventID: Number(fEvent.id) ?? null,
+                    name: p.name ?? null,
+                    place: i,
+                    amount: Number(p.count) ?? null
+                }))
             }
         }
     },
@@ -238,7 +278,7 @@ const Convert = {
         toBackend: (bUser: Hackathon) => BackendHackathon
     },
     eventOptional: {
-        toBackend: (fEvent: HackathonOptional) => BackendHackathon
+        toBackend: (fEvent: HackathonOptional, prizes: Prize[]) => BackendHackathon
     },
     team: {
         toFrontend: (bUser: BackendTeam) => Team,

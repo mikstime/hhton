@@ -606,9 +606,33 @@ export const modifyEvent = async (data: {
     // prizes – массив призов
     // teams – массив команд с полем prizes (содержит призы из объекта prizes) – награждение
     // место призу присваивается аналогичное его порядковому номеру в массиве
-    console.log(data)
-    await sleep(300)
-    return true
+    if (!mockImplemented) {
+        data.diff.founderId = data.founderId
+        const fetches = [
+            await fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}`, {
+                method: 'POST',
+                credentials: 'include',
+                body: JSON.stringify(Convert.eventOptional.toBackend(data.diff, data.prizes))
+            }),
+            // TODO призы не должны быть массивом
+            // await fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/win`, {
+            //     method: 'POST',
+            //     credentials: 'include',
+            // })
+        ]
+        const eventRequest = await Promise.all(fetches)
+
+        for(let response of eventRequest) {
+            if (!response.ok) {
+                return false
+            }
+        }
+        return true
+    } else {
+        console.log(data)
+        await sleep(300)
+        return true
+    }
 }
 
 /**
@@ -622,16 +646,34 @@ export const createEvent = async (data: {
     founderId: Id,
     prizes: Prize[]
 }) => {
-    //@TODO implement
-    // diff может содержать измененные поля даты начала, даты окончания,
-    // числа участников и лимита участников (+ id ивента)
-    //
-    // prizes – массив призов
-    // teams – массив команд с полем prizes (содержит призы из объекта prizes) – награждение
-    // место призу присваивается аналогичное его порядковому номеру в массиве
-    console.log(data)
-    await sleep(300)
-    return '6' // В случае неудачи false
+    // TODO зачем здесь команды
+    if (!mockImplemented) {
+        data.diff.founderId = data.founderId
+        const fetches = [
+            await fetch(`${HOST_DOMAIN}${PREFIX}/event`, {
+                method: 'POST',
+                credentials: 'include',
+                body: JSON.stringify(Convert.eventOptional.toBackend(data.diff, data.prizes))
+            }),
+            // TODO призы не должны быть массивом
+            // await fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/win`, {
+            //     method: 'POST',
+            //     credentials: 'include',
+            // })
+        ]
+        const eventRequest = await Promise.all(fetches)
+
+        if (eventRequest[0].ok) {
+            const json = await eventRequest[0].json()
+
+            return json.id?.toString() ?? '-1'
+        } else {
+            return false
+        }
+    } else {
+        await sleep(300)
+        return '6'
+    }
 }
 
 export const setSelectedSkills = (skills: UserSkill[]) => {
@@ -665,12 +707,12 @@ export const updateUserAvatar = async (image: File, userID: string) => {
     return updateImage(image, `${HOST_DOMAIN}${PREFIX}/user/${userID}/image`)
 }
 
-export const updateEventLogo = async (image: File, userID: string) => {
-    // return updateImage(image, `${HOST_DOMAIN}${PREFIX}/user/${userID}/image`)
+export const updateEventLogo = async (image: File, eventId: string) => {
+    return updateImage(image, `${HOST_DOMAIN}${PREFIX}/event/${eventId}/logo`)
 }
 
-export const updateEventBackground = async (image: File, userID: string) => {
-    // return updateImage(image, `${HOST_DOMAIN}${PREFIX}/user/${userID}/image`)
+export const updateEventBackground = async (image: File, eventId: string) => {
+    return updateImage(image, `${HOST_DOMAIN}${PREFIX}/event/${eventId}/background`)
 }
 
 /**
@@ -697,10 +739,17 @@ export const checkUser = async () => {
 }
 
 export const finishEvent = async (eventId: string) => {
-    //@TODO implement
-    // Возвращает ture в случае успеха
-    await sleep(300)
-    return true
+    if (!mockImplemented) {
+        const finish = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/finish`,
+            {
+                method: 'POST',
+                credentials: 'include',
+            })
+        return (finish.ok && finish.status === 200)
+    } else {
+        await sleep(300)
+        return true
+    }
 }
 
 export const getEventTeams = async (eventId: string) => {

@@ -69,7 +69,7 @@ export const useEventEdit = () => {
     }, [event.id, event.isFinished])
 
     const reset = () => {
-        if (event.id !== '-1') {
+        // if (event.id !== '-1') {
             setStart(event.settings.start ?? null)
             setFinish(event.settings.finish ?? null)
             setTeamSize(event.settings.teamSize?.toString() ?? '')
@@ -78,10 +78,10 @@ export const useEventEdit = () => {
             setSite(event.settings.site ?? '')
             setPrizes(event.prizes)
             setDisabled(false)
-        }
+        // }
     }
 
-    useEffect(reset, [event.id])
+    useEffect(reset, [event.id, event.name, event.prizes])
 
     const onStartChange = useCallback((d: Date) => {
         setStart(d)
@@ -223,6 +223,7 @@ export const useEventEdit = () => {
         onCancel: () => {
             reset()
         },
+        reset
     }
 }
 
@@ -261,10 +262,11 @@ export const EventEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = (
             <GeneralSection {...edit.general}/>
             <Additional {...edit.additional}/>
             <Typography variant='h2' style={{fontSize: 22, marginTop: 24}}>
-                Призовой фонд
+                Призовые места
             </Typography>
             <AdditionalText style={{marginTop: 16}}>
-                Призовой фонд позволит привлечь больше участников
+                После завершения мероприятия можно распределить призоввые места между
+                участниками
             </AdditionalText>
             <EventPrizes {...edit.prizes}/>
             <Grid container direction='row' justify='flex-end'

@@ -39,27 +39,29 @@ export const EventApp: React.FC = () => {
     const {enqueueSnackbar} = useSnackbar()
 
     const onLogoChange = useCallback(() => {
-        const img = editEventLogo(event.id)
-        if (!img) {
-            enqueueSnackbar('Не удалось обновить логотип', {
-                variant: 'error'
-            })
-        } else {
-            cEvent.change({logo: img})
-            event.change({logo: img})
-        }
+        editEventLogo(event.id).then(result => {
+            if (!result) {
+                enqueueSnackbar('Не удалось обновить логотип', {
+                    variant: 'error'
+                })
+            } else {
+                cEvent.change({logo: result})
+                event.change({logo: result})
+            }
+        })
     }, [cEvent, event])
 
     const onBackgroundChange = useCallback(() => {
-        const img = editEventBackground(event.id)
-        if (!img) {
-            enqueueSnackbar('Не удалось обновить фон', {
-                variant: 'error'
-            })
-        } else {
-            cEvent.change({background: img})
-            event.change({background: img})
-        }
+        editEventBackground(event.id).then(result => {
+            if (!result) {
+                enqueueSnackbar('Не удалось обновить фон', {
+                    variant: 'error'
+                })
+            } else {
+                cEvent.change({background: result})
+                event.change({background: result})
+            }
+        })
     }, [cEvent, event])
 
     useEffect(() => {
