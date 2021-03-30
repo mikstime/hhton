@@ -144,7 +144,7 @@ const Convert = {
     },
     users: {
         toFrontend: (bUsers: BackendUser[]) => {
-            return bUsers.map(u => (Convert.user.toFrontend(u)))
+            return bUsers?.map(u => (Convert.user.toFrontend(u))) ?? []
         }
     },
     userOptional: {
