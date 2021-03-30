@@ -15,7 +15,7 @@ import styled from 'styled-components'
 import {CaptionText, SecondaryText} from '../common/typography'
 import {InfoPlate, JobPlate} from '../common/item-plate'
 import {ParticipateButton} from '../event/participate-button'
-import {useParams} from 'react-router'
+import {useHistory, useParams} from 'react-router'
 import {NotFound} from './notfound'
 import notFoundIcon from '../../assets/notfound.svg'
 import Image from 'material-ui-image'
@@ -37,6 +37,7 @@ export const EventApp: React.FC = () => {
     const {event, cEvent, cUser} = useAppState()
     const {open} = useEventAboutModal()
     const {enqueueSnackbar} = useSnackbar()
+    const history = useHistory()
 
     const onLogoChange = useCallback(() => {
         editEventLogo(event.id).then(result => {
@@ -70,6 +71,8 @@ export const EventApp: React.FC = () => {
         } else {
             if (cEvent.id !== '-1') {
                 event.change({id: cEvent.id})
+            } else {
+                history.push('/')
             }
         }
         //eslint-disable-next-line react-hooks/exhaustive-deps

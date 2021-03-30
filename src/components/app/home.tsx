@@ -54,11 +54,6 @@ export const HomeApp: React.FC = () => {
                             {/*Я хочу организовать мероприятие*/}
                         </SecondaryButton>
                         </Link>
-                        <a href={ linkToAuth } style={{textDecoration: 'none'}}>
-                            <SecondaryButton style={{marginTop: 48}}>
-                                Войти через ВК
-                            </SecondaryButton>
-                        </a>
                     </Grid>
                 </Grid>
             </RootContainer>
