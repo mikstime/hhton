@@ -357,12 +357,23 @@ export const getFeed = async (eventId: string, query: string, sinceId?: string) 
             return []
         }
 
-        let result = [] as string[]
-
-        event.participants.forEach((v: { id: Id }) => {
-            result.push(v.id)
+        const feedRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/filter?job=${query}`, {
+            credentials: 'include'
         })
-        return result
+
+        if (feedRequest.ok) {
+            const json = await feedRequest.json()
+            let result = [] as string[]
+
+            json.users.forEach((v: { id: Id }) => {
+                result.push(v.id)
+            })
+            return result
+        } else {
+            return []
+        }
+
+
     } else {
         await sleep(300)
         console.log(query, sinceId)
