@@ -150,7 +150,6 @@ export const EventAboutModal: React.FC<{ onSubmitClick: () => any } & MProps> = 
                 Информация о мероприятии
             </Typography>
             <GeneralSection {...edit.general}/>
-            <WhiteFieldLabel label='Место проведения'/>
             <Additional {...edit.additional}/>
             <Grid container direction='row' justify='flex-end'
                   style={{marginTop: 32}} spacing={1}>

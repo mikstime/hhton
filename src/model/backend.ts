@@ -112,7 +112,7 @@ const Convert = {
                 lastName: bUser.lastName ?? '',
                 jobName: bUser.workPlace ?? '',
                 bio: bUser.bio ?? '',
-                avatar: bUser.avatar || 'http://loremflickr.com/1000/1000',
+                avatar: bUser.avatar || 'https://teamup-online.s3.eu-north-1.amazonaws.com/camera.d7e59fb4.svg',
                 skills: {
                     description: bUser.description ?? '',
                     tags: bUser.skills?.map(s => ({id: s.id.toString(), jobId: s.jobId.toString(), name: s.name})) ?? []
@@ -193,8 +193,8 @@ const Convert = {
             return {
                 name: bHackathon.name ?? '',
                 id: bHackathon.id?.toString() ?? '-1',
-                logo: bHackathon.logo || 'http://loremflickr.com/1000/1000',
-                background: bHackathon.background || 'http://loremflickr.com/1000/1000',
+                logo: bHackathon.logo || 'https://teamup-online.s3.eu-north-1.amazonaws.com/camera.d7e59fb4.svg',
+                background: bHackathon.background || 'https://teamup-online.s3.eu-north-1.amazonaws.com/camera.d7e59fb4.svg',
                 description: bHackathon.description ?? '',
                 founderId: bHackathon.founder?.toString() ?? '-1',
                 isFinished: bHackathon.state === 'finished' || bHackathon.state === 'Closed',
