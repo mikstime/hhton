@@ -4,7 +4,7 @@ import {useAppState} from '../tools/use-app-state'
 import {useSearchModal} from '../modals/search'
 import {useSnackbar} from 'notistack'
 import {finishEvent, joinEvent, leaveEvent} from '../../model/api'
-import {ButtonGroup, makeStyles, Tooltip} from '@material-ui/core'
+import {ButtonGroup, makeStyles} from '@material-ui/core'
 import {ReactComponent as CancelIcon} from '../../assets/cancel.svg'
 import {usePromptModal} from '../modals/prompt'
 import {useEventEditModal} from '../modals/event-edit'
@@ -134,7 +134,13 @@ export const ParticipateButton: React.FC = () => {
     }
     if (cUser.isNotAuthorized) {
         const pageUrl = window.location.pathname.replace('/', '')
-        return <a href={`${HOST_DOMAIN}${PREFIX}/redirect?backTo=${pageUrl}`} style={{textDecoration: 'none', width: '100%', flex: '1 1 0%', display: 'flex'}}><SecondaryButton style={{flex: 1}}>
+        return <a href={`${HOST_DOMAIN}${PREFIX}/redirect?backTo=${pageUrl}`}
+                  style={{
+                      textDecoration: 'none',
+                      width: '100%',
+                      flex: '1 1 0%',
+                      display: 'flex'
+                  }}><SecondaryButton style={{flex: 1}}>
             Участвовать
         </SecondaryButton>
         </a>
@@ -145,11 +151,9 @@ export const ParticipateButton: React.FC = () => {
             <SecondaryButton style={{flex: 1}} onClick={onClick}>
                 Найти команду
             </SecondaryButton>
-            <Tooltip title="Покинуть" aria-label="leave">
-                <SecondaryButton classes={classes} startIcon={<CancelIcon/>}
-                                 onClick={onLeaveClick}>
-                </SecondaryButton>
-            </Tooltip>
+            <SecondaryButton classes={classes} startIcon={<CancelIcon/>}
+                             onClick={onLeaveClick}>
+            </SecondaryButton>
         </ButtonGroup>
     }
 
