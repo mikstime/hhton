@@ -1,18 +1,21 @@
 import React, {Fragment, useCallback, useEffect, useState} from 'react'
 import {UserApp} from './user'
-import {Slide} from '@material-ui/core'
+import {Slide, useTheme} from '@material-ui/core'
 import {useLocation} from 'react-router-dom'
 import {getFeed} from '../../model/api'
-import {NULL_USER, useAppState} from '../tools/use-app-state'
+import {useAppState} from '../tools/use-app-state'
 import styled from 'styled-components'
 import {PrimaryButton} from '../common/buttons'
 import {useHistory} from 'react-router-dom'
 import {useSnackbar} from 'notistack'
-import {NotFound} from './notfound'
+import {useSearchModal} from '../modals/search'
+import {ReactComponent as TweakIcon} from '../../assets/tweak.svg'
+
 const StyledDiv = styled.div`
   position: fixed;
   bottom: 20px;
   right: 20px;
+  display: flex;
 `
 export const FeedApp: React.FC = () => {
 
@@ -26,15 +29,17 @@ export const FeedApp: React.FC = () => {
     const history = useHistory()
     const {enqueueSnackbar} = useSnackbar()
     const {cEvent, user} = useAppState()
+    const sModal = useSearchModal()
+    const theme = useTheme()
     useEffect(() => {
         (async () => {
-            if(cEvent.id !== '-1') {
+            if (cEvent.id !== '-1') {
                 const users = await getFeed(cEvent.id, location.search)
                 if (users.length) {
                     setUsers(users)
                 }
             }
-            if(cEvent.notFound) {
+            if (cEvent.notFound) {
                 history.push('/user')
             }
         })()
@@ -43,7 +48,7 @@ export const FeedApp: React.FC = () => {
 
     const nextUser = useCallback(() => {
         (async () => {
-            if(cEvent.id === '-1') {
+            if (cEvent.id === '-1') {
                 enqueueSnackbar('Не удалось загрузить пользователей', {
                     variant: 'error'
                 })
@@ -77,7 +82,27 @@ export const FeedApp: React.FC = () => {
             </div>
         </Slide>
         <StyledDiv>
-            <PrimaryButton style={{transform: 'scale(1.5)', transformOrigin: 'bottom right'}} disabled={isFetching}
+            <PrimaryButton disabled={isFetching}
+                           style={{
+                               height: 48,
+                               backgroundColor: '#F0F2F5',
+                               boxShadow: theme.shadows[1],
+                               marginRight: theme.spacing(1)
+                           }}
+                           onClick={() => {
+                               sModal.actions.open({
+                                   current: 'smart',
+                                   props: {
+                                       canGoBack: false
+                                   }
+                               })
+                           }
+                           }><TweakIcon/></PrimaryButton>
+            <PrimaryButton disabled={isFetching}
+                           style={{
+                               height: 48,
+                               boxShadow: theme.shadows[1]
+                           }}
                            onClick={nextUser}>Следующий</PrimaryButton>
         </StyledDiv>
     </Fragment>

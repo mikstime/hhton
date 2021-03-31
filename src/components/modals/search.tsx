@@ -29,10 +29,14 @@ import {useAppState} from '../tools/use-app-state'
 const _useSearchModal = () => {
     const [isOpen, setIsOpen] = useState(false)
     const [current, setCurrent] = useState<'start' | 'smart' | 'user'>('start')
-
-    const open = useCallback(() => {
+    const [props, setProps] = useState<{canGoBack?: boolean}>({})
+    const open = useCallback((x?: {
+        current: 'start' | 'smart' | 'user',
+        props: {canGoBack?: boolean}
+    }) => {
         setIsOpen(true)
-        setCurrent('start')
+        setCurrent(x?.current ?? 'start')
+        setProps(x?.props ?? {})
     }, [setIsOpen, setCurrent])
 
     const close = useCallback(() => {
@@ -62,7 +66,8 @@ const _useSearchModal = () => {
             open,
             close,
             back
-        }
+        },
+        props
     }
 }
 
@@ -90,7 +95,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
 
     const classes = useChipStyles()
 
-    const [jobs, setJobs] = useState<{name: string, id: number}[]>([])
+    const [jobs, setJobs] = useState<{ name: string, id: number }[]>([])
     const [selectedJob, selectJob] = useState(-1)
 
     const [skills, setSkills] = useState<UserSkill[]>([])
@@ -292,7 +297,8 @@ export const SearchModalProvider: React.FC = ({children}) => {
     const modalState = _useSearchModal()
 
     return <SearchModalContext.Provider value={modalState}>
-        <SearchModal {...modalState} open={modalState.state.isOpen}
+        <SearchModal {...modalState} {...modalState.props}
+                     open={modalState.state.isOpen}
                      close={modalState.actions.close}/>
         {children}
     </SearchModalContext.Provider>
