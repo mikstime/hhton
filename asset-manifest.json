@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.js": "/hhton/static/js/main.f1e4c8ff.chunk.js",
-    "main.js.map": "/hhton/static/js/main.f1e4c8ff.chunk.js.map",
+    "main.js": "/hhton/static/js/main.6b9daab0.chunk.js",
+    "main.js.map": "/hhton/static/js/main.6b9daab0.chunk.js.map",
     "runtime-main.js": "/hhton/static/js/runtime-main.d754d495.js",
     "runtime-main.js.map": "/hhton/static/js/runtime-main.d754d495.js.map",
     "static/js/2.fb4f4bb0.chunk.js": "/hhton/static/js/2.fb4f4bb0.chunk.js",
@@ -28,11 +28,12 @@
     "static/media/settings_prizes1.801e1916.svg": "/hhton/static/media/settings_prizes1.801e1916.svg",
     "static/media/team.bc0ff16c.svg": "/hhton/static/media/team.bc0ff16c.svg",
     "static/media/thumbs_down.a9705c43.svg": "/hhton/static/media/thumbs_down.a9705c43.svg",
-    "static/media/thumbs_up.f0573fed.svg": "/hhton/static/media/thumbs_up.f0573fed.svg"
+    "static/media/thumbs_up.f0573fed.svg": "/hhton/static/media/thumbs_up.f0573fed.svg",
+    "static/media/tweak.2270fe9e.svg": "/hhton/static/media/tweak.2270fe9e.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.d754d495.js",
     "static/js/2.fb4f4bb0.chunk.js",
-    "static/js/main.f1e4c8ff.chunk.js"
+    "static/js/main.6b9daab0.chunk.js"
   ]
 }
