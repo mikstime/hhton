@@ -356,7 +356,7 @@ export const getFeed = async (eventId: string, query: string, sinceId?: string) 
             return []
         }
 
-        const feedRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/filter?job=${query}`, {
+        const feedRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/filter${query}`, {
             credentials: 'include'
         })
 
@@ -364,6 +364,8 @@ export const getFeed = async (eventId: string, query: string, sinceId?: string) 
             const json = await feedRequest.json()
             let result = [] as string[]
 
+            if(!json.users)
+                return []
             json.users.forEach((v: { id: Id }) => {
                 result.push(v.id)
             })
