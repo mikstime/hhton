@@ -13,6 +13,7 @@ import {NULL_HACKATHON, NULL_USER} from './use-app-state'
 export const useFetcher = () => {
 
     const isFetchingId = useRef('-1')
+    const isFetchingCuserId = useRef('-1')
     const isFetchingEventId = useRef('-1')
 
     const appState = useAppState()
@@ -58,6 +59,38 @@ export const useFetcher = () => {
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [appState.cUser.id, appState.event.id])
+
+    useEffect(() => {
+        (async () => {
+            if (appState.cUser.id !== isFetchingCuserId.current && appState.cUser.id !== '-1') {
+                isFetchingCuserId.current = appState.cUser.id
+                appState.cUser.set(NULL_USER)
+
+                const user = await fetchUser(appState.cUser.id)
+
+                if (user) {
+                    if (isFetchingCuserId.current === appState.cUser.id) {
+                        appState.cUser.set(user)
+                        const team = appState.cEvent.id !== '-1' ?
+                            await getTeam(appState.cEvent.id, user.id) : user.team
+
+                        if (isFetchingCuserId.current === appState.cUser.id) {
+                            appState.cUser.change({team})
+                        }
+                    }
+                } else {
+                    if (isFetchingCuserId.current === appState.cUser.id) {
+                        appState.cUser.set({
+                            ...NULL_USER,
+                            id: appState.cUser.id,
+                            notFound: true
+                        })
+                    }
+                }
+            }
+        })()
+        //eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [appState.cUser.id])
 
     useEffect(() => {
         (async () => {
