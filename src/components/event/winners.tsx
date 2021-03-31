@@ -124,10 +124,10 @@ export const WinnersSection: React.FC = () => {
                                      src={winners[0].members[0].avatar ?? ''}/>}
                               {winners[1] &&
                               <Place place='2' height={79}
-                                     src={winners[0].members[1].avatar ?? ''}/>}
+                                     src={winners[1].members[0].avatar ?? ''}/>}
                               {winners[2] &&
                               <Place place='3' height={54}
-                                     src={winners[0].members[2].avatar ?? ''}/>}
+                                     src={winners[2].members[0].avatar ?? ''}/>}
                             <FlexSpace/>
                           </Grid>
                         </Hidden>}
