@@ -89,57 +89,77 @@ const AppNav: React.FC<GridProps> = ({children}) => {
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen)
     }
-
-    const drawer = (
-        <Box display='flex' flexDirection='column'>
-            <NavLink to={`/event/${cEvent.id}`}
-                     onClick={() => setMobileOpen(false)}>
-                <AdditionalText
+    let drawer
+    if (cEvent.id === '-1' || cEvent.isNullEvent) {
+        drawer = null
+    } else {
+        drawer = (
+            <Box display='flex' flexDirection='column'>
+                {!cEvent.isNullEvent && cEvent.id !== '-1' &&
+                <NavLink to={`/event/${cEvent.id}`}
+                         onClick={() => setMobileOpen(false)}>
+                  <AdditionalText
                     align='right'>
                     К мероприятию
-                </AdditionalText>
-            </NavLink>
-            <Box paddingTop={2}/>
-            {cUser.id !== '-1' &&
-            <NavLink to={`/team`} onClick={() => setMobileOpen(false)}>
-              <AdditionalText align='right'>
-                К команде
-              </AdditionalText>
-            </NavLink>
-            }
-            <Box paddingTop={2}/>
-            {cUser.id !== '-1' &&
-            <NavLink to={`/user`} onClick={() => setMobileOpen(false)}>
-              <AdditionalText align='right'>
-                К себе
-              </AdditionalText>
-            </NavLink>
-            }
-            <Box height='100px'/>
-            {/*<NavLink to={`/host`} onClick={() => setMobileOpen(false)}>*/}
-            {/*    <AdditionalText align='right'>*/}
-            {/*        Организаторам*/}
-            {/*    </AdditionalText>*/}
-            {/*</NavLink>*/}
-            {
-                !cUser.isNotAuthorized && <NavLink to={`/event/create`}
-                                                  onClick={() => setMobileOpen(false)}>
-                  <AdditionalText align='right'>
-                    Создать мероприятие
                   </AdditionalText>
                 </NavLink>
-            }
-            {
-                cUser.isNotAuthorized &&
-                <a href={`${HOST_DOMAIN}${PREFIX}/redirect?backTo=${ window.location.pathname.replace('/', '')}`}
-                   style={{textDecoration: 'none', marginTop: 16}}>
+                }
+                <Box paddingTop={2}/>
+                {!cEvent.isNullEvent && cUser.id !== cEvent.founderId && cUser.id !== '-1' &&
+                <NavLink to={`/team`} onClick={() => setMobileOpen(false)}>
                   <AdditionalText align='right'>
-                    Регистрация
+                    К команде
                   </AdditionalText>
-                </a>
-            }
-        </Box>
-    )
+                </NavLink>
+                }
+                {
+                    !cUser.isNotAuthorized && cEvent.id !== '-1' && !cEvent.notFound &&
+                    <Box paddingTop={2}/>
+                }
+                {
+                    !cUser.isNotAuthorized && cEvent.id !== '-1' && !cEvent.notFound &&
+                    <NavLink to={`/feed`}
+                             onClick={() => setMobileOpen(false)}>
+                      <AdditionalText align='right'>
+                        К поиску
+                      </AdditionalText>
+                    </NavLink>
+                }
+                <Box paddingTop={2}/>
+                {cUser.id !== '-1' && !cUser.isNullUser &&
+                <NavLink to={`/user`} onClick={() => setMobileOpen(false)}>
+                  <AdditionalText align='right'>
+                    К себе
+                  </AdditionalText>
+                </NavLink>
+                }
+                <Box height='100px'/>
+                {/*<NavLink to={`/host`} onClick={() => setMobileOpen(false)}>*/}
+                {/*    <AdditionalText align='right'>*/}
+                {/*        Организаторам*/}
+                {/*    </AdditionalText>*/}
+                {/*</NavLink>*/}
+                {
+                    !cUser.isNotAuthorized && <NavLink to={`/event/create`}
+                                                       onClick={() => setMobileOpen(false)}>
+                      <AdditionalText align='right'>
+                        Создать мероприятие
+                      </AdditionalText>
+                    </NavLink>
+                }
+                {
+                    cUser.isNotAuthorized &&
+                    <a
+                      href={`${HOST_DOMAIN}${PREFIX}/redirect?backTo=${window.location.pathname.replace('/', '')}`}
+                      style={{textDecoration: 'none', marginTop: 16}}>
+                      <AdditionalText align='right'>
+                        Регистрация
+                      </AdditionalText>
+                    </a>
+                }
+            </Box>
+        )
+    }
     return <div className={classes.root}>
         <Hidden smUp implementation="css">
             <AppBar position="fixed" className={classes.appBar}>

@@ -25,7 +25,7 @@ import {EditUserButton} from '../user/edit-user-button'
 import {editUserAvatar} from '../tools/edit-images'
 import {useSnackbar} from 'notistack'
 import {UserEvents} from '../user/events'
-import {useHistory} from 'react-router-dom'
+import {useHistory, useLocation} from 'react-router-dom'
 
 const UserNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
@@ -52,7 +52,7 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
     const {user, cEvent, cUser} = useAppState()
     const {enqueueSnackbar} = useSnackbar()
     const history = useHistory()
-
+    const location = useLocation()
     const onAvatarChange = useCallback(() => {
         editUserAvatar(user.id).then(result => {
             if (!result) {
@@ -71,7 +71,7 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
         if (userId) {
             user.change({id: userId})
         } else {
-            if (cUser.id !== '-1') {
+            if (cUser.id !== '-1' && !location.pathname.startsWith('/feed')) {
                 user.change({id: cUser.id})
             }
         }
@@ -79,7 +79,7 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
     }, [userId, cUser.id, cEvent.id])
 
     useEffect(() => {
-        if(!userId && cUser.isNotAuthorized) {
+        if (!userId && cUser.isNotAuthorized) {
             history.push('/')
         }
     }, [cUser.isNotAuthorized])
@@ -174,9 +174,8 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
               <Grid item>
                 <UserEvents/>
               </Grid>
-              <div style={{height: 32}}/>
             </Grid>
         }
-
+        <div style={{height: 32}}/>
     </Grid>
 }

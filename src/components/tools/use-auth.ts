@@ -1,6 +1,6 @@
 import {useEffect} from 'react'
 import {useAppState} from './use-app-state'
-import {checkUser} from '../../model/api'
+import {checkUser, fetchEvent} from '../../model/api'
 
 export const useAuth = () => {
 
@@ -20,6 +20,12 @@ export const useAuth = () => {
 
             if(eventId) {
                 cEvent.change({id: eventId})
+                const e = await fetchEvent(eventId)
+                if(e) {
+                    cEvent.set(e)
+                } else {
+                    cEvent.change({notFound: true})
+                }
             } else {
                 // cEvent.change({id: eventId})
             }

@@ -6,6 +6,10 @@ import {
     Hackathon, HackathonOptional
 } from '../components/tools/use-app-state/hackathon'
 
+import defaultLogo from '../assets/default_logo.svg'
+import defaultAvatar from '../assets/default_avatar.svg'
+import defaultBackground from '../assets/default_background.svg'
+
 export type BackendUser = {
     id: number | null,
     avatar: string | null,
@@ -112,7 +116,7 @@ const Convert = {
                 lastName: bUser.lastName ?? '',
                 jobName: bUser.workPlace ?? '',
                 bio: bUser.bio ?? '',
-                avatar: bUser.avatar || 'http://loremflickr.com/1000/1000',
+                avatar: bUser.avatar || defaultAvatar,
                 skills: {
                     description: bUser.description ?? '',
                     tags: bUser.skills?.map(s => ({id: s.id.toString(), jobId: s.jobId.toString(), name: s.name})) ?? []
@@ -193,8 +197,8 @@ const Convert = {
             return {
                 name: bHackathon.name ?? '',
                 id: bHackathon.id?.toString() ?? '-1',
-                logo: bHackathon.logo || 'http://loremflickr.com/1000/1000',
-                background: bHackathon.background || 'http://loremflickr.com/1000/1000',
+                logo: bHackathon.logo || defaultLogo,
+                background: bHackathon.background || defaultBackground,
                 description: bHackathon.description ?? '',
                 founderId: bHackathon.founder?.toString() ?? '-1',
                 isFinished: bHackathon.state === 'finished' || bHackathon.state === 'Closed',

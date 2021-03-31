@@ -26,6 +26,7 @@ const useStyles = makeStyles({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        outline: 'none',
         '&:focus': {
             outline: 'none'
         }
@@ -37,50 +38,51 @@ export const Modal: React.FC<ModalProps> = ({children, canGoBack, cantClose, gri
     return <ModalBase {...props}>
         <Grow in={props.open}>
             <div className={classes.modal}>
-                <FlexSpace/>
-                <Box clone order={{
-                }}>
                 <Grid container {...gridProps}
                       style={
                           {
                               overflowY: 'auto',
-                              maxHeight: '90vh',
-                              marginTop: '10vh',
-                              paddingBottom: '10vh',
+                              maxHeight: '100vh',
                               ...(gridProps.style || {})
                           }}>
                     <Hidden xsDown>
                         <Grid item xs/>
                     </Hidden>
-                    <Grid style={{
-                        position: 'sticky',
-                        height: 52, width: 52, top: 0
-                    }} item>
-                        {canGoBack &&
-                        <IconButton onClick={back}>
-                          <BackIcon/>
-                        </IconButton>
-                        }
-                    </Grid>
+                    <Box clone paddingTop='100px'>
+                        <Grid style={{
+                            position: 'sticky',
+                            height: 52, width: 52, top: 0
+                        }} item>
+                            {canGoBack &&
+                            <IconButton onClick={back}>
+                              <BackIcon/>
+                            </IconButton>
+                            }
+                        </Grid>
+                    </Box>
                     <Grid item xs={12} sm={9} md={7} lg={6}>
+                        <Box height={{xs: 0, sm: 100}}/>
                         <Plate elevation={4} padding={32}>
                             {children}
                         </Plate>
+                        <Box height={{xs: 0, sm: 100}}/>
                     </Grid>
-                    <Grid style={{
-                        position: 'sticky', height: 52,
-                        width: 52, top: 0
-                    }} item>
-                        { !cantClose &&
+                    <Box clone paddingBottom={{xs: '100px', sm: '0'}} paddingTop={{xs: '0', sm: '100px'}}>
+                        <Grid style={{
+                            height: 52, position: 'sticky',
+                            width: 52, top: 0
+                        }} item>
+                            {!cantClose &&
                             <IconButton onClick={close}>
-                                <CloseIcon/>
+                              <CloseIcon/>
                             </IconButton>
-                        }
-                    </Grid>
-                    <Grid item xs/>
+                            }
+                        </Grid>
+                    </Box>
+                    <Hidden xsDown>
+                        <Grid item xs/>
+                    </Hidden>
                 </Grid>
-                </Box>
-                <FlexSpace/>
             </div>
         </Grow>
     </ModalBase>

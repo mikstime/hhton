@@ -19,12 +19,16 @@ const AvatarGrid: React.FC<{
         return <Grid {...rest}
                      style={{display: 'block', ...(rest.style || {})}}>
             <EditableImage onClick={onEdit}>
-                <StyledImage src={src}/>
+                <StyledImage src={src} imageStyle={{
+                    objectFit: 'cover'
+                }}/>
             </EditableImage>
         </Grid>
     }
     return <Grid {...rest} style={{display: 'block', ...(rest.style || {})}}>
-        <StyledImage src={src}/>
+        <StyledImage src={src} imageStyle={{
+            objectFit: 'cover'
+        }}/>
     </Grid>
 }
 

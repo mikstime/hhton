@@ -12,13 +12,8 @@ import {useHistory} from 'react-router-dom'
 
 export const TeamApp: React.FC = () => {
 
-    const {cUser, invites, user} = useAppState()
+    const {cUser, invites} = useAppState()
     const history = useHistory()
-    useEffect(() => {
-        if(cUser.isNullUser && cUser.id !== '-1') {
-            user.change({id: cUser.id})
-        }
-    }, [cUser.isNullUser])
 
     useEffect(() => {
         if(cUser.isNotAuthorized) {
@@ -29,15 +24,15 @@ export const TeamApp: React.FC = () => {
     return <Grid container direction='column'>
         <SubTitle style={{marginBottom: 24}}>{(cUser.team && cUser.team.name) || 'Ваша комнада'}</SubTitle>
         <Grid container spacing={3} direction='column'>
-            {!!user.team.members.length && user.team.members.map((u, i) => {
+            {cUser.team.members.length > 0 && cUser.team.members.map((u, i) => {
                 return <Fragment key={i}>
                     <Grow in><TeamMember user={u}/></Grow>
                     <Divider light flexItem style={{height: 1}}/>
                 </Fragment>
             })
             }
-            {!user.team.members.length && <Fragment>
-              <Grow in><TeamMember user={user}/></Grow>
+            {!cUser.team.members.length && <Fragment>
+              <Grow in><TeamMember user={cUser}/></Grow>
               <Divider light flexItem style={{height: 1}}/>
             </Fragment>}
         </Grid>

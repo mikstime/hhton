@@ -17,7 +17,7 @@ import {useEventEdit} from '../modals/event-edit'
 import {WhiteField} from '../modals/user-edit'
 import {Slide} from '@material-ui/core'
 import {createEvent} from '../../model/api'
-import {NULL_HACKATHON, useAppState} from '../tools/use-app-state'
+import {useAppState} from '../tools/use-app-state'
 import {useHistory} from 'react-router-dom'
 
 export const CreateEventApp: React.FC = () => {
@@ -31,8 +31,8 @@ export const CreateEventApp: React.FC = () => {
     const {event, cEvent} = useAppState()
     useEffect(() => {
         if (event.id !== '-1') {
-            edit.reset()
-            event.set(NULL_HACKATHON)
+            edit.nullReset()
+            // event.set(NULL_HACKATHON)
             // cEvent.set(NULL_HACKATHON)
         }
     }, [event.id])
