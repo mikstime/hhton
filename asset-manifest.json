@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.js": "/hhton/static/js/main.6b9daab0.chunk.js",
-    "main.js.map": "/hhton/static/js/main.6b9daab0.chunk.js.map",
+    "main.js": "/hhton/static/js/main.685344c4.chunk.js",
+    "main.js.map": "/hhton/static/js/main.685344c4.chunk.js.map",
     "runtime-main.js": "/hhton/static/js/runtime-main.d754d495.js",
     "runtime-main.js.map": "/hhton/static/js/runtime-main.d754d495.js.map",
     "static/js/2.fb4f4bb0.chunk.js": "/hhton/static/js/2.fb4f4bb0.chunk.js",
@@ -14,6 +14,10 @@
     "static/media/camera.d7e59fb4.svg": "/hhton/static/media/camera.d7e59fb4.svg",
     "static/media/cancel.7d9eee14.svg": "/hhton/static/media/cancel.7d9eee14.svg",
     "static/media/close.b7fe9507.svg": "/hhton/static/media/close.b7fe9507.svg",
+    "static/media/copy.fcdd0f36.svg": "/hhton/static/media/copy.fcdd0f36.svg",
+    "static/media/default_avatar.d42fadab.svg": "/hhton/static/media/default_avatar.d42fadab.svg",
+    "static/media/default_background.a44d097b.svg": "/hhton/static/media/default_background.a44d097b.svg",
+    "static/media/default_logo.b5f1afff.svg": "/hhton/static/media/default_logo.b5f1afff.svg",
     "static/media/delete.b00e22ad.svg": "/hhton/static/media/delete.b00e22ad.svg",
     "static/media/first-triangle.a41c8cee.svg": "/hhton/static/media/first-triangle.a41c8cee.svg",
     "static/media/info.f6d9aa93.svg": "/hhton/static/media/info.f6d9aa93.svg",
@@ -34,6 +38,6 @@
   "entrypoints": [
     "static/js/runtime-main.d754d495.js",
     "static/js/2.fb4f4bb0.chunk.js",
-    "static/js/main.6b9daab0.chunk.js"
+    "static/js/main.685344c4.chunk.js"
   ]
 }
