@@ -112,10 +112,16 @@ export const useFetcher = () => {
                 if (event) {
                     if (isFetchingEventId.current === appState.event.id) {
                         appState.event.set(event)
+                        appState.cEvent.set(event)
                     }
                 } else {
                     if (isFetchingEventId.current === appState.event.id) {
                         appState.event.set({
+                            ...NULL_HACKATHON,
+                            id: appState.event.id,
+                            notFound: true
+                        })
+                        appState.cEvent.set({
                             ...NULL_HACKATHON,
                             id: appState.event.id,
                             notFound: true

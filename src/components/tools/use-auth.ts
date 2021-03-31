@@ -7,12 +7,10 @@ export const useAuth = () => {
     const {cEvent, event, cUser} = useAppState()
 
     useEffect(() => {
-        if(event.id !== '-1') {
-            localStorage.setItem('eventId', event.id)
-            if (cEvent.id !== event.id)
-                cEvent.change({id: event.id})
+        if(cEvent.id !== '-1') {
+            localStorage.setItem('eventId', cEvent.id)
         }
-    }, [event.id])
+    }, [cEvent.id])
     useEffect(() => {
         (async () => {
             const eventId = localStorage.getItem('eventId')
@@ -21,10 +19,12 @@ export const useAuth = () => {
             if(eventId) {
                 cEvent.change({id: eventId})
                 const e = await fetchEvent(eventId)
-                if(e) {
+                if(e && e.id === cEvent.id) {
                     cEvent.set(e)
                 } else {
-                    cEvent.change({notFound: true})
+                    if(eventId === cEvent.id) {
+                        cEvent.change({notFound: true})
+                    }
                 }
             } else {
                 // cEvent.change({id: eventId})
