@@ -121,11 +121,14 @@ const AppNav: React.FC<GridProps> = ({children}) => {
             {/*        Организаторам*/}
             {/*    </AdditionalText>*/}
             {/*</NavLink>*/}
-            <NavLink to={`/event/create`} onClick={() => setMobileOpen(false)}>
-                <AdditionalText align='right'>
+            {
+                !cUser.isNotAuthorized && <NavLink to={`/event/create`}
+                                                  onClick={() => setMobileOpen(false)}>
+                  <AdditionalText align='right'>
                     Создать мероприятие
-                </AdditionalText>
-            </NavLink>
+                  </AdditionalText>
+                </NavLink>
+            }
             {
                 cUser.isNotAuthorized &&
                 <a href={`${HOST_DOMAIN}${PREFIX}/redirect?backTo=${ window.location.pathname.replace('/', '')}`}
