@@ -37,6 +37,7 @@ export const FeedApp: React.FC = () => {
                 const users = await getFeed(cEvent.id, location.search)
                 if (users.length) {
                     setUsers(users)
+                    setCurrent(0)
                 }
             }
             if (cEvent.notFound) {
@@ -68,9 +69,10 @@ export const FeedApp: React.FC = () => {
     }, [current, users, location, setCurrent, setIsFetching, cEvent.id])
 
     useEffect(() => {
-        if (users.length > 0) {
+        if (users[current]) {
             user.change({id: users[current]})
         } else {
+            console.log(users[current])
         }
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [users, current])
