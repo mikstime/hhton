@@ -174,9 +174,8 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
               <Grid item>
                 <UserEvents/>
               </Grid>
-              <div style={{height: 32}}/>
             </Grid>
         }
-
+        <div style={{height: 32}}/>
     </Grid>
 }

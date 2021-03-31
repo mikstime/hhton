@@ -1,6 +1,6 @@
 import React, {Fragment, useCallback, useEffect, useState} from 'react'
 import {UserApp} from './user'
-import {Slide, useTheme} from '@material-ui/core'
+import {Box, Slide, useTheme} from '@material-ui/core'
 import {useLocation} from 'react-router-dom'
 import {getFeed} from '../../model/api'
 import {useAppState} from '../tools/use-app-state'
@@ -79,6 +79,7 @@ export const FeedApp: React.FC = () => {
         <Slide key={key} in direction='right'>
             <div>
                 <UserApp/>
+                <Box height='70px'/>
             </div>
         </Slide>
         <StyledDiv>

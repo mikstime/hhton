@@ -96,6 +96,16 @@ export const useEventEdit = () => {
         setDisabled(false)
         // }
     }
+    const nullReset = () => {
+        setStart(null)
+        setFinish( null)
+        setTeamSize('')
+        setUsersLimit('')
+        setPlace('')
+        setSite('')
+        setPrizes([])
+        setDisabled(false)
+    }
 
     useEffect(reset, [event.id, event.name, event.prizes])
 
@@ -239,7 +249,8 @@ export const useEventEdit = () => {
         onCancel: () => {
             reset()
         },
-        reset
+        reset,
+        nullReset,
     }
 }
 

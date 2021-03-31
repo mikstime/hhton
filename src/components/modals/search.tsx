@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {
-    AdditionalText,
+    AdditionalText, FlexSpace, GrayPlate,
     MainText,
     Modal,
     ModalProps,
@@ -8,7 +8,7 @@ import {
     Title
 } from '../common'
 import {
-    Avatar, Chip,
+    Avatar, Button, Chip,
     Grid,
     InputBase,
     Omit,
@@ -24,15 +24,16 @@ import {PrimaryButton} from '../common/buttons'
 import {useHistory} from 'react-router-dom'
 import {useChipStyles} from '../common/skill-chip'
 import {useAppState} from '../tools/use-app-state'
-
+import {ReactComponent as CopyIcon} from '../../assets/copy.svg'
+import {copyTextToClipboard} from '../../utils'
 
 const _useSearchModal = () => {
     const [isOpen, setIsOpen] = useState(false)
     const [current, setCurrent] = useState<'start' | 'smart' | 'user'>('start')
-    const [props, setProps] = useState<{canGoBack?: boolean}>({})
+    const [props, setProps] = useState<{ canGoBack?: boolean }>({})
     const open = useCallback((x?: {
         current: 'start' | 'smart' | 'user',
-        props: {canGoBack?: boolean}
+        props: { canGoBack?: boolean }
     }) => {
         setIsOpen(true)
         setCurrent(x?.current ?? 'start')
@@ -211,10 +212,13 @@ const SearchUser: React.FC<UseSearchModalType & MProps> = ({...props}) => {
     const [results, setResults] = useState<User[]>([])
     const [value, setValue] = useState('')
     const field = useRef<HTMLInputElement>(null)
+    const [isLoading, setIsLoading] = useState(false)
     useEffect(() => {
         (async () => {
             if (value.trim().length) {
+                setIsLoading(true)
                 const users = await findUsers(value, event.id)
+                setIsLoading(false)
                 if (field.current) {
                     if (field.current.value === value) {
                         setResults([...users])
@@ -281,9 +285,26 @@ const SearchUser: React.FC<UseSearchModalType & MProps> = ({...props}) => {
                     {
                         value && !results.length &&
                         <Grid container justify='center'
-                              style={{marginTop: 12}}><AdditionalText>
-                          Никого не нашлось =с
+                              style={{
+                                  marginTop: 12,
+                                  opacity: isLoading ? '0' : '1',
+                              }}><AdditionalText>
+                          Никого не нашлось, но вы можете пригласить человека,
+                          отправив ему ссылку на мероприятие:
                         </AdditionalText>
+                          <GrayPlate style={{marginTop: 16}}>
+                            <Grid container alignItems='center'>
+                              <Typography variant='body1'>
+                                team-up.online/event/{event.id}</Typography>
+                              <FlexSpace/>
+                              <Button onClick={() => {
+                                  const str = `https://team-up.online/event/${event.id}`
+                                  copyTextToClipboard(str)
+                              }}>
+                                <CopyIcon/>
+                              </Button>
+                            </Grid>
+                          </GrayPlate>
                         </Grid>
                     }
                 </Grid>

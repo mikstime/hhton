@@ -12,32 +12,33 @@ import {NULL_HACKATHON, NULL_USER} from './use-app-state'
 
 export const useFetcher = () => {
 
-    const isFetchingId = useRef('-1')
+    const isFetchingUserId = useRef('-1')
     const isFetchingCuserId = useRef('-1')
     const isFetchingEventId = useRef('-1')
+    const isFetchingCeventId = useRef('-1')
 
     const appState = useAppState()
 
     useEffect(() => {
         (async () => {
-            if (appState.user.id !== isFetchingId.current && appState.user.id !== '-1') {
-                isFetchingId.current = appState.user.id
+            if (appState.user.id !== isFetchingUserId.current && appState.user.id !== '-1') {
+                isFetchingUserId.current = appState.user.id
                 appState.user.set(NULL_USER)
 
                 const user = await fetchUser(appState.user.id)
 
                 if (user) {
-                    if (isFetchingId.current === appState.user.id) {
+                    if (isFetchingUserId.current === appState.user.id) {
                         appState.user.set(user)
                         const team = appState.cEvent.id !== '-1' ?
                             await getTeam(appState.cEvent.id, user.id) : user.team
 
-                        if (isFetchingId.current === appState.user.id) {
+                        if (isFetchingUserId.current === appState.user.id) {
                             appState.user.change({team})
                         }
                     }
                 } else {
-                    if (isFetchingId.current === appState.user.id) {
+                    if (isFetchingUserId.current === appState.user.id) {
                         appState.user.set({
                             ...NULL_USER,
                             id: appState.user.id,
@@ -121,11 +122,36 @@ export const useFetcher = () => {
                         })
                     }
                 }
-                isFetchingEventId.current = '-1'
+                // isFetchingEventId.current = '-1'
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [appState.event.id])
+
+    useEffect(() => {
+        (async () => {
+            if (appState.cEvent.id !== isFetchingCeventId.current && appState.cEvent.id !== '-1') {
+                isFetchingCeventId.current = appState.cEvent.id
+                appState.cEvent.set(NULL_HACKATHON)
+                const event = await fetchEvent(appState.cEvent.id)
+                if (event) {
+                    if (isFetchingCeventId.current === appState.cEvent.id) {
+                        appState.cEvent.set(event)
+                    }
+                } else {
+                    if (isFetchingCeventId.current === appState.cEvent.id) {
+                        appState.cEvent.set({
+                            ...NULL_HACKATHON,
+                            id: appState.cEvent.id,
+                            notFound: true
+                        })
+                    }
+                }
+                // isFetchingCeventId.current = '-1'
+            }
+        })()
+        //eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [appState.cEvent.id])
 
     useEffect(() => {
         const u = appState.cUser
