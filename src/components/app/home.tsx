@@ -17,7 +17,8 @@ const Screen = styled.div`
   height: 100vh;
 `
 export const HomeApp: React.FC = () => {
-    const linkToAuth = `${HOST_DOMAIN}${PREFIX}/redirect`
+    const backTo = 'get_started'
+    const linkToAuth = `${HOST_DOMAIN}${PREFIX}/redirect?backTo=${backTo}`
     return <Root>
         <Screen style={{
             backgroundColor: 'white',
@@ -53,11 +54,6 @@ export const HomeApp: React.FC = () => {
                             {/*Я хочу организовать мероприятие*/}
                         </SecondaryButton>
                         </Link>
-                        <a href={ linkToAuth } style={{textDecoration: 'none'}} target="_blank" rel="noreferrer noopener">
-                            <SecondaryButton style={{marginTop: 48}}>
-                                Войти через ВК
-                            </SecondaryButton>
-                        </a>
                     </Grid>
                 </Grid>
             </RootContainer>

@@ -15,7 +15,7 @@ import styled from 'styled-components'
 import {CaptionText, SecondaryText} from '../common/typography'
 import {InfoPlate, JobPlate} from '../common/item-plate'
 import {ParticipateButton} from '../event/participate-button'
-import {useParams} from 'react-router'
+import {useHistory, useParams} from 'react-router'
 import {NotFound} from './notfound'
 import notFoundIcon from '../../assets/notfound.svg'
 import Image from 'material-ui-image'
@@ -37,29 +37,32 @@ export const EventApp: React.FC = () => {
     const {event, cEvent, cUser} = useAppState()
     const {open} = useEventAboutModal()
     const {enqueueSnackbar} = useSnackbar()
+    const history = useHistory()
 
     const onLogoChange = useCallback(() => {
-        const img = editEventLogo(event.id)
-        if (!img) {
-            enqueueSnackbar('Не удалось обновить логотип', {
-                variant: 'error'
-            })
-        } else {
-            cEvent.change({logo: img})
-            event.change({logo: img})
-        }
+        editEventLogo(event.id).then(result => {
+            if (!result) {
+                enqueueSnackbar('Не удалось обновить логотип', {
+                    variant: 'error'
+                })
+            } else {
+                cEvent.change({logo: result})
+                event.change({logo: result})
+            }
+        })
     }, [cEvent, event])
 
     const onBackgroundChange = useCallback(() => {
-        const img = editEventBackground(event.id)
-        if (!img) {
-            enqueueSnackbar('Не удалось обновить фон', {
-                variant: 'error'
-            })
-        } else {
-            cEvent.change({background: img})
-            event.change({background: img})
-        }
+        editEventBackground(event.id).then(result => {
+            if (!result) {
+                enqueueSnackbar('Не удалось обновить фон', {
+                    variant: 'error'
+                })
+            } else {
+                cEvent.change({background: result})
+                event.change({background: result})
+            }
+        })
     }, [cEvent, event])
 
     useEffect(() => {
@@ -68,6 +71,8 @@ export const EventApp: React.FC = () => {
         } else {
             if (cEvent.id !== '-1') {
                 event.change({id: cEvent.id})
+            } else {
+                history.push('/')
             }
         }
         //eslint-disable-next-line react-hooks/exhaustive-deps
@@ -80,7 +85,6 @@ export const EventApp: React.FC = () => {
             icon={notFoundIcon}
         />
     }
-
     return <Grid container style={{position: 'relative'}}>
         <Grid style={{zIndex: 3}} container direction='column'>
             <Grid item container spacing={2}>
@@ -143,6 +147,28 @@ export const EventApp: React.FC = () => {
                 </Grid>
             </Grid>
             {
+                event.description && <Grid item container>
+                  <Grid item container direction='column' md>
+                    <Grid item>
+                      <Title>
+                        О мероприятии
+                          {!event.isFinished && <Hidden smDown>
+                            <Box clone marginLeft='12px'>
+                              <EditEventButton/>
+                            </Box>
+                          </Hidden>
+                          }
+                      </Title>
+                    </Grid>
+                    <Grid item>
+                      <SecondaryText>
+                          {event.description || 'Похоже, информация о мероприятии отсутствует'}
+                      </SecondaryText>
+                    </Grid>
+                  </Grid>
+                </Grid>
+            }
+            {
                 event.isFinished &&
                 <Grow in><Grid item container direction='column'>
                   <Grid item style={{marginBottom: 24}}>
@@ -159,26 +185,6 @@ export const EventApp: React.FC = () => {
                 </Grid>
                 </Grow>
             }
-            <Grid item container>
-                <Grid item container direction='column' md>
-                    <Grid item>
-                        <Title>
-                            О мероприятии
-                            {!event.isFinished && <Hidden smDown>
-                                <Box clone marginLeft='12px'>
-                                    <EditEventButton/>
-                                </Box>
-                            </Hidden>
-                            }
-                        </Title>
-                    </Grid>
-                    <Grid item>
-                        <SecondaryText>
-                            {event.description || 'Похоже, информация о мероприятии отсутствует'}
-                        </SecondaryText>
-                    </Grid>
-                </Grid>
-            </Grid>
             <Grid item container>
                 <Grid item container direction='column' md>
                     <Grid item>

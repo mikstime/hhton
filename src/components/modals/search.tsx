@@ -23,6 +23,7 @@ import {Link} from 'react-router-dom'
 import {PrimaryButton} from '../common/buttons'
 import {useHistory} from 'react-router-dom'
 import {useChipStyles} from '../common/skill-chip'
+import {useAppState} from '../tools/use-app-state'
 
 
 const _useSearchModal = () => {
@@ -201,13 +202,14 @@ const SearchStart: React.FC<UseSearchModalType & MProps> = ({state: {onSmartClic
 
 const SearchUser: React.FC<UseSearchModalType & MProps> = ({...props}) => {
 
+    const {event} = useAppState()
     const [results, setResults] = useState<User[]>([])
     const [value, setValue] = useState('')
     const field = useRef<HTMLInputElement>(null)
     useEffect(() => {
         (async () => {
             if (value.trim().length) {
-                const users = await findUsers(value)
+                const users = await findUsers(value, event.id)
                 if (field.current) {
                     if (field.current.value === value) {
                         setResults([...users])
@@ -236,8 +238,8 @@ const SearchUser: React.FC<UseSearchModalType & MProps> = ({...props}) => {
                         }}
                     >
                         <Grid container alignItems='baseline' wrap='nowrap'>
-                            <Typography
-                                style={{marginLeft: '8px'}}>@</Typography>
+                            <AdditionalText
+                                style={{marginLeft: '8px'}}>vk.com/</AdditionalText>
                             <InputBase
                                 inputRef={field}
                                 value={value}

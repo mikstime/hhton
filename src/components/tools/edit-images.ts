@@ -1,17 +1,17 @@
 import {EventEmitter} from 'events';
 import {waitFor} from 'wait-for-event';
-import {updateUserAvatar} from "../../model/api";
+import {updateEventBackground, updateEventLogo, updateUserAvatar} from "../../model/api";
 
-let userAvatar: File;
-const userAvatarChanged = new EventEmitter();
-const userAvatarSelector = document.createElement('input');
-userAvatarSelector.setAttribute('type', 'file');
-userAvatarSelector.addEventListener("change", async function handleFile() {
+let pic: File;
+const picChanged = new EventEmitter();
+const picSelector = document.createElement('input');
+picSelector.setAttribute('type', 'file');
+picSelector.addEventListener("change", async function handleFile() {
     const fileList = this.files
 
     if (fileList != null && fileList.length != 0) {
-        userAvatar = fileList[0]
-        userAvatarChanged.emit('chosen')
+        pic = fileList[0]
+        picChanged.emit('chosen')
     }
 }, false)
 
@@ -19,37 +19,28 @@ userAvatarSelector.addEventListener("change", async function handleFile() {
  * @returns {string|boolean} – возвращает ссылку на изображение в случае успеха, и false при неудаче.
  */
 export const editUserAvatar = async (userId: string) => {
-    //@TODO загрузить картинку (png, svg, gif)
-    //@TODO отправить на сервер
-    //@TODO вернуть, картинку, полученную с сервера
-    // TODO Нет id юзера
-    // return false
+    picSelector.click();
+    await waitFor('chosen', picChanged)
 
-
-    userAvatarSelector.click();
-    await waitFor('chosen', userAvatarChanged)
-
-    return await updateUserAvatar(userAvatar, userId)
+    return await updateUserAvatar(pic, userId)
 }
 
 /**
  * @returns {string|boolean} – возвращает ссылку на изображение в случае успеха, и false при неудаче.
  */
-export const editEventBackground = (eventId: string) => {
-    //@TODO загрузить картинку (png, svg, gif)
-    //@TODO отправить на сервер
-    //@TODO вернуть, картинку, полученную с сервера
-    // return false
-    return `http://loremflickr.com/1000/1000?t=${new Date()}`
+export const editEventBackground = async (eventId: string) => {
+    picSelector.click();
+    await waitFor('chosen', picChanged)
+
+    return await updateEventBackground(pic, eventId)
 }
 
 /**
  * @returns {string|boolean} – возвращает ссылку на изображение в случае успеха, и false при неудаче.
  */
-export const editEventLogo = (eventId: string) => {
-    //@TODO загрузить картинку (png, svg, gif)
-    //@TODO отправить на сервер
-    //@TODO вернуть, картинку, полученную с сервера
-    // return false
-    return `http://loremflickr.com/1000/1000?t=${new Date()}`
+export const editEventLogo = async (eventId: string) => {
+    picSelector.click();
+    await waitFor('chosen', picChanged)
+
+    return await updateEventLogo(pic, eventId)
 }

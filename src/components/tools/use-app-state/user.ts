@@ -33,7 +33,8 @@ export type User = {
     team: Team,
     isNullUser?: boolean,
     notFound?: boolean,
-    settings: UserSettings
+    settings: UserSettings,
+    isNotAuthorized?: boolean,
 }
 
 export type UserSettings = {
@@ -71,7 +72,8 @@ export type UserOptional = {
     hackathons?: Hackathon[],
     id?: string
     isNullUser?: boolean
-    settings?: UserSettings
+    settings?: UserSettings,
+    isNotAuthorized?: boolean,
 }
 
 

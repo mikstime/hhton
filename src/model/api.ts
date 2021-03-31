@@ -262,12 +262,11 @@ export const leaveEvent = async (userId: string, eventId: string) => {
 /**
  * Поиск пользователей по строке. Возвращает массив пользователей
  * @param query
+ * @param eventId
  */
-export const findUsers = async (query: string) => {
-    // TODO нужен eventID
-    const eventID = 6
+export const findUsers = async (query: string, eventId: string) => {
     if (!useMock) {
-        const usersRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventID}/user/search?tag=${query}`, {
+        const usersRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/search?tag=${query}`, {
             credentials: 'include'
         })
 
@@ -383,6 +382,45 @@ export const getFeed = async (eventId: string, query: string, sinceId?: string) 
 
 /**
  * Возвращает объект типа Team
+ * @param teamId
+ */
+export const getTeamById = async (teamId: string) => {
+    if (!mockImplemented) {
+        const team = await fetch(`${HOST_DOMAIN}${PREFIX}/team/${teamId}`, {
+            credentials: 'include'
+        })
+
+        if (team.ok) {
+            const json = await team.json()
+            if (json) {
+                const t = Convert.team.toFrontend(json)
+                //@TODO Пользователи прилетают не полные. Поправить на беке
+                t.members = await Promise.all(json.members?.map((j: BackendUser) => fetchUser(j.id!.toString())).filter((u: User | null) => u) ?? [])
+                return t
+            } else {
+                return {
+                    members: [] as User[],
+                    name: ''
+                }
+            }
+
+        } else {
+            return {
+                members: [] as User[],
+                name: ''
+            }
+        }
+    } else {
+        await sleep(300)
+        return {
+            members: TEST_USERS.slice(1, 3),
+            name: ''
+        }
+    }
+}
+
+/**
+ * Возвращает объект типа Team
  * @param eventId
  * @param userId - id пользователя, чью команду запрашиваем
  */
@@ -418,14 +456,6 @@ export const getTeam = async (eventId: string, userId: string) => {
             members: TEST_USERS.slice(1, 3),
             name: ''
         }
-    }
-}
-
-export const signIn = async () => {
-    if (!useMock) {
-        return null
-    } else {
-        return await fetchUser('1')
     }
 }
 
@@ -624,7 +654,7 @@ export const modifyEvent = async (data: {
                 method: 'POST',
                 credentials: 'include',
                 body: JSON.stringify(Convert.eventOptional.toBackend(data.diff, data.prizes))
-            }),
+            })
             // TODO призы не должны быть массивом
             // await fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/win`, {
             //     method: 'POST',
@@ -633,7 +663,7 @@ export const modifyEvent = async (data: {
         ]
         const eventRequest = await Promise.all(fetches)
 
-        for(let response of eventRequest) {
+        for (let response of eventRequest) {
             if (!response.ok) {
                 return false
             }
@@ -665,7 +695,7 @@ export const createEvent = async (data: {
                 method: 'POST',
                 credentials: 'include',
                 body: JSON.stringify(Convert.eventOptional.toBackend(data.diff, data.prizes))
-            }),
+            })
             // TODO призы не должны быть массивом
             // await fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/win`, {
             //     method: 'POST',
@@ -682,14 +712,9 @@ export const createEvent = async (data: {
             return false
         }
     } else {
-        console.log(data)
         await sleep(300)
         return '6'
     }
-}
-
-export const setSelectedSkills = (skills: UserSkill[]) => {
-
 }
 
 export const updateImage = async (image: File, path: string) => {
@@ -719,12 +744,12 @@ export const updateUserAvatar = async (image: File, userID: string) => {
     return updateImage(image, `${HOST_DOMAIN}${PREFIX}/user/${userID}/image`)
 }
 
-export const updateEventLogo = async (image: File, userID: string) => {
-    // return updateImage(image, `${HOST_DOMAIN}${PREFIX}/user/${userID}/image`)
+export const updateEventLogo = async (image: File, eventId: string) => {
+    return updateImage(image, `${HOST_DOMAIN}${PREFIX}/event/${eventId}/logo`)
 }
 
-export const updateEventBackground = async (image: File, userID: string) => {
-    // return updateImage(image, `${HOST_DOMAIN}${PREFIX}/user/${userID}/image`)
+export const updateEventBackground = async (image: File, eventId: string) => {
+    return updateImage(image, `${HOST_DOMAIN}${PREFIX}/event/${eventId}/background`)
 }
 
 /**
@@ -755,7 +780,7 @@ export const finishEvent = async (eventId: string) => {
         const finish = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/finish`,
             {
                 method: 'POST',
-                credentials: 'include',
+                credentials: 'include'
             })
         return (finish.ok && finish.status === 200)
     } else {
@@ -765,20 +790,50 @@ export const finishEvent = async (eventId: string) => {
 }
 
 export const getEventTeams = async (eventId: string) => {
-    //@TODO implement
-    // Возвращает массив команд на ивенте.
-    await sleep(300)
-    return [{
-        name: 'team 1',
-        members: [],
-        id: '1'
-    }, {
-        name: 'team 2',
-        members: [],
-        id: '2'
-    }, {
-        name: 'a team 3',
-        members: [],
-        id: '3'
-    }] as Team[]
+    if (!mockImplemented) {
+        const finish = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/teams`,
+            {
+                credentials: 'include'
+            })
+        if (finish.ok) {
+            const j = await finish.json()
+            if(j) {
+            return await Promise.all(j.map((j: Team) => getTeamById(j.id ?? ''))) as Team[]
+            }
+        }
+        return []
+    } else {
+        await sleep(300)
+        return []
+    }
+}
+
+export const getWinners = async (eventId: string) => {
+    if (!mockImplemented) {
+        const finish = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/teams/win`,
+            {
+                credentials: 'include'
+            })
+        if (finish.ok) {
+            const j = await finish.json()
+            if(!j)
+                return []
+            const ts = await Promise.all(j.map((j: Team) => getTeamById(j.id ?? ''))) as Team[]
+            //@ts-ignore
+            const r = j?.map((j, i) =>({
+                ...ts[i],
+                prizes: [{
+                id: j.prize.id,
+                name: j.prize.name,
+                place: j.prize.place,
+                count: j.prize.amount,
+                }]
+            })) ?? []
+            return r as Team[]
+        }
+        return []
+    } else {
+        await sleep(300)
+        return []
+    }
 }

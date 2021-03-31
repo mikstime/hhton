@@ -18,7 +18,7 @@ export const Additional: React.FC<{
         <Box clone marginTop={{xs: 0, sm: '16px'}}>
             <Plate elevation={4} padding={8}>
                 <WhiteField label='Место проведения' inputProps={{
-                    placeholder: 'Москва',
+                    placeholder: 'город, улица, дом',
                     ...place
                 }}/>
             </Plate>
@@ -27,7 +27,7 @@ export const Additional: React.FC<{
         <Box clone marginTop={{xs: 0, sm: '16px'}}>
             <Plate elevation={4} padding={8}>
                 <WhiteField label='Сайт мероприятия' inputProps={{
-                    placeholder: 'team-up.online',
+                    placeholder: 'Например, team-up.online',
                     ...site
                 }}/>
             </Plate>

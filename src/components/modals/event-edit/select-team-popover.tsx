@@ -42,7 +42,7 @@ const TeamItem: React.FC<{
         </Grid>
         <Grid xs item>
             <Typography variant='body2'>
-                {team.prizes?.map(p => p.name).join('|')}
+                {team.prizes?.map(p => p?.name ?? '').join('|')}
             </Typography>
         </Grid>
     </Grid>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {
     AdditionalText,
     ModalProps, Plate
@@ -17,8 +17,9 @@ import {useEventEdit} from '../modals/event-edit'
 import {WhiteField} from '../modals/user-edit'
 import {Slide} from '@material-ui/core'
 import {createEvent} from '../../model/api'
-import {useAppState} from '../tools/use-app-state'
+import {NULL_HACKATHON, useAppState} from '../tools/use-app-state'
 import {useHistory} from 'react-router-dom'
+
 export const CreateEventApp: React.FC = () => {
     const [disabled] = useState(false)
     const [name, setName] = useState('')
@@ -28,6 +29,13 @@ export const CreateEventApp: React.FC = () => {
     const edit = useEventEdit()
 
     const {event, cEvent} = useAppState()
+    useEffect(() => {
+        if (event.id !== '-1') {
+            edit.reset()
+            event.set(NULL_HACKATHON)
+            // cEvent.set(NULL_HACKATHON)
+        }
+    }, [event.id])
     const history = useHistory()
 
     const stepOne = <div>
@@ -62,10 +70,10 @@ export const CreateEventApp: React.FC = () => {
 
     const stepThree = <div>
         <Typography variant='h2' style={{fontSize: 22, marginTop: 24}}>
-            Призовой фонд
+            Призовые места
         </Typography>
         <AdditionalText style={{marginTop: 16}}>
-            Призовой фонд позволит привлечь больше участников
+            До завершения мероприятия возможно определить призовые места
         </AdditionalText>
         <EventPrizes {...edit.prizes}/>
     </div>

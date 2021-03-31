@@ -25,6 +25,7 @@ import {EditUserButton} from '../user/edit-user-button'
 import {editUserAvatar} from '../tools/edit-images'
 import {useSnackbar} from 'notistack'
 import {UserEvents} from '../user/events'
+import {useHistory} from 'react-router-dom'
 
 const UserNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
@@ -35,12 +36,12 @@ export const SocialLink: React.FC<{ prefix?: string, site?: string, value: strin
     if (!value) return null
     return <Grid item>
         <Box clone textAlign={{md: 'center'}}>
-        <AdditionalText style={{marginLeft: 4}}>{prefix}
-            <a target='_blank' style={{
-                textDecoration: 'none',
-                color: theme.palette.primary.main
-            }}
-               href={`https://${site}${value}`}>{site}{value}</a></AdditionalText>
+            <AdditionalText style={{marginLeft: 4}}>{prefix}
+                <a target='_blank' style={{
+                    textDecoration: 'none',
+                    color: theme.palette.primary.main
+                }}
+                   href={`https://${site}${value}`}>{site}{value}</a></AdditionalText>
         </Box>
     </Grid>
 }
@@ -50,6 +51,7 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
     const {userId} = useParams()
     const {user, cEvent, cUser} = useAppState()
     const {enqueueSnackbar} = useSnackbar()
+    const history = useHistory()
 
     const onAvatarChange = useCallback(() => {
         editUserAvatar(user.id).then(result => {
@@ -76,6 +78,11 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userId, cUser.id, cEvent.id])
 
+    useEffect(() => {
+        if(!userId && cUser.isNotAuthorized) {
+            history.push('/')
+        }
+    }, [cUser.isNotAuthorized])
     if (user.notFound) {
         return <NotFound
             title='Пользователь не найден'
@@ -115,30 +122,32 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                     && <BioPlate text={user.bio}/>}
                 </Grid>
                 {(user.isNullUser || user.skills.tags.length > 0)
-                    && <Grid item container>
-                        <Grid item container>
-                            <GrayishPlate>
-                                <Grid container spacing={1}
-                                      style={{minHeight: 32}}>
-                                    {user.skills.tags.map((e) => <Grid
-                                        key={e.id} item>
-                                        <BoldText>{e.name}</BoldText>
-                                    </Grid>)}
-                                </Grid>
-                            </GrayishPlate>
-                        </Grid>
-                    </Grid>
+                && <Grid item container>
+                  <Grid item container>
+                    <GrayishPlate>
+                      <Grid container spacing={1}
+                            style={{minHeight: 32}}>
+                          {user.skills.tags.map((e) => <Grid
+                              key={e.id} item>
+                              <BoldText>{e.name}</BoldText>
+                          </Grid>)}
+                      </Grid>
+                    </GrayishPlate>
+                  </Grid>
+                </Grid>
                 }
                 <FlexSpace/>
-                <Grid item container style={{marginTop: 24, marginBottom: 24}} wrap='nowrap'>
-                        <Grid item container direction='column' justify='center' spacing={2}>
-                            <SocialLink prefix='ВКонтакте: ' site='vk.com/'
-                                        value={user.settings.vk}/>
-                            <SocialLink prefix='Телеграм: ' site='t.me/'
-                                        value={user.settings.tg}/>
-                            <SocialLink prefix='Github: ' site='github.com/'
-                                        value={user.settings.gh}/>
-                        </Grid>
+                <Grid item container style={{marginTop: 24, marginBottom: 24}}
+                      wrap='nowrap'>
+                    <Grid item container direction='column' justify='center'
+                          spacing={2}>
+                        <SocialLink prefix='ВКонтакте: ' site='vk.com/'
+                                    value={user.settings.vk}/>
+                        <SocialLink prefix='Телеграм: ' site='t.me/'
+                                    value={user.settings.tg}/>
+                        <SocialLink prefix='Github: ' site='github.com/'
+                                    value={user.settings.gh}/>
+                    </Grid>
                 </Grid>
                 <FlexSpace/>
             </Grid>
@@ -155,16 +164,19 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                 </SecondaryText>
             </Grid>
         </Grid>
-        <Grid item container direction='column'>
-            <Grid item>
-                <Title>
-                    Участие в хакатонах
-                </Title>
+        {
+            user.hackathons.length > 0 &&
+            <Grid item container direction='column'> <Grid item>
+              <Title>
+                Победы в хакатонах
+              </Title>
             </Grid>
-            <Grid item>
+              <Grid item>
                 <UserEvents/>
+              </Grid>
+              <div style={{height: 32}}/>
             </Grid>
-            <div style={{height: 32}}/>
-        </Grid>
+        }
+
     </Grid>
 }

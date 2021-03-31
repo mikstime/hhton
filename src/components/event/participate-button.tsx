@@ -8,6 +8,7 @@ import {ButtonGroup, makeStyles, Tooltip} from '@material-ui/core'
 import {ReactComponent as CancelIcon} from '../../assets/cancel.svg'
 import {usePromptModal} from '../modals/prompt'
 import {useEventEditModal} from '../modals/event-edit'
+import {HOST_DOMAIN, PREFIX} from '../../config/network'
 
 const useParticipate = () => {
     const {event, cUser} = useAppState()
@@ -76,7 +77,7 @@ const useParticipate = () => {
 
     const onFinishClick = useCallback(async () => {
         const didFinish = await finishEvent(event.id)
-        if(didFinish) {
+        if (didFinish) {
             event.change({isFinished: true})
             enqueueSnackbar('Мероприятие завершено', {variant: 'success'})
         } else {
@@ -84,14 +85,14 @@ const useParticipate = () => {
                 variant: 'error'
             })
         }
-    }, [])
+    }, [event.id])
 
     return {
         onClick,
         onLeaveClick,
         isFetching: actionId === event.id + cUser.id,
         onFinishClick,
-        onSetWinnersClick,
+        onSetWinnersClick
     }
 }
 
@@ -114,13 +115,13 @@ export const ParticipateButton: React.FC = () => {
         </SecondaryButton>
     }
 
-    if(event.founderId === cUser.id && !event.isFinished) {
+    if (event.founderId === cUser.id && !event.isFinished) {
         return <PrimaryButton onClick={onFinishClick}>
             Завершить мероприятие
         </PrimaryButton>
     }
 
-    if(event.founderId === cUser.id && event.isFinished) {
+    if (event.founderId === cUser.id && event.isFinished) {
         return <PrimaryButton onClick={onSetWinnersClick}>
             Выбрать победителей
         </PrimaryButton>
@@ -130,6 +131,13 @@ export const ParticipateButton: React.FC = () => {
         return <SecondaryButton disabled>
             Мероприятие завершено
         </SecondaryButton>
+    }
+    if (cUser.isNotAuthorized) {
+        const pageUrl = window.location.pathname.replace('/', '')
+        return <a href={`${HOST_DOMAIN}${PREFIX}/redirect?backTo=${pageUrl}`} style={{textDecoration: 'none', width: '100%', flex: '1 1 0%', display: 'flex'}}><SecondaryButton style={{flex: 1}}>
+            Участвовать
+        </SecondaryButton>
+        </a>
     }
 
     if (event.isParticipating) {

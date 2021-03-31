@@ -251,7 +251,7 @@ export const EventPrizes: React.FC<{
 
         const p = prizes.value[editing.indexOf(true)]
         if (p) {
-            const ind = g[i].teams[j].prizes?.findIndex(x => x.name === p.name)
+            const ind = g[i].teams[j].prizes?.findIndex(x => x?.name === p?.name)
             if (ind === -1) {
                 g[i].teams[j].prizes?.push(p)
             } else {
