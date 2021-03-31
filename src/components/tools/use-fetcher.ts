@@ -128,7 +128,7 @@ export const useFetcher = () => {
     }, [appState.event.id])
 
     useEffect(() => {
-        const u = appState.user
+        const u = appState.cUser
         if (u.id !== '-1') {
             const i = appState.invites
             const personal = []
