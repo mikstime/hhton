@@ -90,7 +90,7 @@ const AppNav: React.FC<GridProps> = ({children}) => {
         setMobileOpen(!mobileOpen)
     }
     let drawer
-    console.log(cEvent.id)
+
     if (cEvent.id === '-1' || cEvent.isNullEvent) {
         drawer = null
     } else {
