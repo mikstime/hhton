@@ -3,10 +3,12 @@ import {UserApp} from './user'
 import {Slide} from '@material-ui/core'
 import {useLocation} from 'react-router-dom'
 import {getFeed} from '../../model/api'
-import {useAppState} from '../tools/use-app-state'
+import {NULL_USER, useAppState} from '../tools/use-app-state'
 import styled from 'styled-components'
 import {PrimaryButton} from '../common/buttons'
-
+import {useHistory} from 'react-router-dom'
+import {useSnackbar} from 'notistack'
+import {NotFound} from './notfound'
 const StyledDiv = styled.div`
   position: fixed;
   bottom: 20px;
@@ -21,23 +23,35 @@ export const FeedApp: React.FC = () => {
     const [current, setCurrent] = useState(0)
 
     const [isFetching, setIsFetching] = useState(false)
-
-    const {event, user} = useAppState()
+    const history = useHistory()
+    const {enqueueSnackbar} = useSnackbar()
+    const {cEvent, user} = useAppState()
     useEffect(() => {
         (async () => {
-            const users = await getFeed(event.id, location.search)
-            if (users.length) {
-                setUsers(users)
+            if(cEvent.id !== '-1') {
+                const users = await getFeed(cEvent.id, location.search)
+                if (users.length) {
+                    setUsers(users)
+                }
+            }
+            if(cEvent.notFound) {
+                history.push('/user')
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [location, setUsers])
+    }, [cEvent.id, location, cEvent.notFound])
 
     const nextUser = useCallback(() => {
         (async () => {
+            if(cEvent.id === '-1') {
+                enqueueSnackbar('Не удалось загрузить пользователей', {
+                    variant: 'error'
+                })
+                return
+            }
             if (current >= users.length - 1) {
                 setIsFetching(true)
-                const newUsers = await getFeed(event.id, location.search, users[current])
+                const newUsers = await getFeed(cEvent.id, location.search, users[current])
                 if (newUsers.length) {
                     setUsers([...users, ...newUsers])
                 }
@@ -46,19 +60,20 @@ export const FeedApp: React.FC = () => {
             setCurrent(current + 1)
             setKey(Math.random())
         })()
-    }, [current, users, location, setCurrent, setIsFetching, event.id])
+    }, [current, users, location, setCurrent, setIsFetching, cEvent.id])
 
     useEffect(() => {
         if (users.length > 0) {
             user.change({id: users[current]})
+        } else {
         }
         //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [current])
+    }, [users, current])
+
     return <Fragment>
         <Slide key={key} in direction='right'>
             <div>
-                <UserApp>
-                </UserApp>
+                <UserApp/>
             </div>
         </Slide>
         <StyledDiv>

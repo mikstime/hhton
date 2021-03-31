@@ -10,7 +10,10 @@ const TeamItem: React.FC<{ user: User }> = ({user}) => {
     return <Grid item container alignItems='center'>
         <Link to={`/user/${user.id}`}
               style={{textDecoration: 'none'}}>
-        <Image disableSpinner={true} imageStyle={{borderRadius: '50%'}} style={{
+        <Image disableSpinner={true} imageStyle={{
+            borderRadius: '50%',
+            objectFit: 'cover',
+        }} style={{
             width: 24,
             paddingTop: 24,
             borderRadius: '50%',

@@ -61,14 +61,13 @@ export const useFetcher = () => {
 
     useEffect(() => {
         (async () => {
-            if (appState.user.id !== '-1' && appState.cUser.id !== '-1') {
+            if (appState.user.id !== '-1' && appState.cUser.id !== '-1' && appState.event.id !== '-1') {
                 const invited = await isInvited(appState.event.id, appState.cUser.id, appState.user.id)
                 appState.user.change({isInvited: !!invited})
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [appState.cUser.id, appState.user.id])
-
 
     useEffect(() => {
         (async () => {
