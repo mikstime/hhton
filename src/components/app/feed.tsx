@@ -71,8 +71,6 @@ export const FeedApp: React.FC = () => {
     useEffect(() => {
         if (users[current]) {
             user.change({id: users[current]})
-        } else {
-            console.log(users[current])
         }
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [users, current])
