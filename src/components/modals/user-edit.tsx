@@ -349,6 +349,7 @@ const useUserEdit = () => {
             const update = await modifyUser(diff as UserOptional & { id: string })
             setDisabled(false)
             cUser.change(diff)
+            user.change(diff)
             return update
         },
         onCancel: () => {
