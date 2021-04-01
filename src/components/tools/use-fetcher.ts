@@ -8,6 +8,7 @@ import {
     isParticipating
 } from '../../model/api'
 import {NULL_HACKATHON, NULL_USER} from './use-app-state'
+import {app} from '../../../server/src/server'
 
 
 export const useFetcher = () => {
@@ -95,13 +96,13 @@ export const useFetcher = () => {
 
     useEffect(() => {
         (async () => {
-            if (appState.user.id !== '-1' && appState.cUser.id !== '-1' && appState.event.id !== '-1') {
-                const invited = await isInvited(appState.event.id, appState.cUser.id, appState.user.id)
+            if (appState.user.id !== '-1' && appState.cUser.id !== '-1' && appState.cEvent.id !== '-1') {
+                const invited = await isInvited(appState.cEvent.id, appState.cUser.id, appState.user.id)
                 appState.user.change({isInvited: !!invited})
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [appState.cUser.id, appState.user.id])
+    }, [appState.cUser.id, appState.user.id, appState.cEvent.id])
 
     useEffect(() => {
         (async () => {
