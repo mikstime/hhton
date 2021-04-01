@@ -69,6 +69,7 @@ const WinnersField: React.FC<{ label: string, inputProps?: ButtonProps, onSelect
 
 const PrizeItem: React.FC<{
     inputProps?: InputBaseProps,
+    index: number,
     onPopperOpen?: (e: HTMLButtonElement) => void,
     onEditClick?: () => void,
     closePopper?: () => void,
@@ -82,7 +83,7 @@ const PrizeItem: React.FC<{
 }> = ({
           inputProps = {}, onDeleteClick, onCountChange,
           onNameChange, closePopper, onPopperOpen, isEditing, onEditClick,
-          name = '', count = 0
+          name = '', count = 0, index
       }) => {
     const theme = useTheme()
     const {event} = useAppState()
@@ -93,7 +94,7 @@ const PrizeItem: React.FC<{
             onChange={onNameChange}
             {...inputProps}
             disabled={!isEditing || event.isFinished}
-            placeholder='Название'
+            placeholder='Приз'
             style={{
                 paddingRight: 12,
                 display: 'block',
@@ -130,9 +131,10 @@ const PrizeItem: React.FC<{
                     </IconButton>
                 </Box>
                 <Grid item xs sm>
-                    <Box clone marginLeft={{xs: '20px', sm: '0'}}>
+                    <Typography variant='body1'>{index} место</Typography>
+                    {/*<Box clone marginLeft={{xs: '20px', sm: '0'}}>*/}
                         {nameField}
-                    </Box>
+                    {/*</Box>*/}
                 </Grid>
                 <IconButton size='small' onClick={onEditClick}>
                     {isEditing ? <SettingsIconActive/> :
@@ -199,7 +201,7 @@ export const EventPrizes: React.FC<{
     const [editing, setEditing] = useState<boolean[]>([])
     const toRender = prizes.value.map((p, i) => (
         <Grid item container key={'p-item' + i}>
-            <PrizeItem name={p.name}
+            <PrizeItem name={p.name} index={i + 1}
                        onEditClick={() => {
                            const x = editing[i]
                            const e = [...editing.map(_ => false)]
