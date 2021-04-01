@@ -28,7 +28,7 @@ export const FeedApp: React.FC = () => {
     const [isFetching, setIsFetching] = useState(false)
     const history = useHistory()
     const {enqueueSnackbar} = useSnackbar()
-    const {cEvent, user} = useAppState()
+    const {cEvent, user, cUser} = useAppState()
     const sModal = useSearchModal()
     const theme = useTheme()
     useEffect(() => {
@@ -36,7 +36,7 @@ export const FeedApp: React.FC = () => {
             if (cEvent.notFound) {
                 history.push('/user')
             }
-            if (cEvent.isFinished) {
+            if (cEvent.isFinished || (cEvent.founderId === cUser.id && cUser.id !== '-1')) {
                 history.push('/event/' + cEvent.id)
             }
             if (cEvent.id !== '-1') {

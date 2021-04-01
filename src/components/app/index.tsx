@@ -114,13 +114,16 @@ const AppNav: React.FC<GridProps> = ({children}) => {
                 </NavLink>
                 }
                 {
-                    !cUser.isNotAuthorized && cEvent.id !== '-1' && !cEvent.isFinished && !cEvent.notFound &&
-                    <Box paddingTop={2}/>
+                    !cUser.isNotAuthorized && cEvent.id !== '-1'
+                    && !cEvent.isFinished && cEvent.founderId !== cUser.id
+                    && !cEvent.notFound && <Box paddingTop={2}/>
                 }
                 {
-                    !cUser.isNotAuthorized && cEvent.id !== '-1' && !cEvent.isFinished && !cEvent.notFound &&
-                    <NavLink to={`/feed`}
-                             onClick={() => setMobileOpen(false)}>
+                    !cUser.isNotAuthorized && cEvent.id !== '-1'
+                    && !cEvent.isFinished && cEvent.founderId !== cUser.id
+                    && !cEvent.notFound
+                    && <NavLink to={`/feed`}
+                                onClick={() => setMobileOpen(false)}>
                       <AdditionalText align='right'>
                         К поиску
                       </AdditionalText>
