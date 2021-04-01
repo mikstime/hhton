@@ -33,15 +33,18 @@ export const FeedApp: React.FC = () => {
     const theme = useTheme()
     useEffect(() => {
         (async () => {
+            if (cEvent.notFound) {
+                history.push('/user')
+            }
+            if (cEvent.isFinished) {
+                history.push('/event/' + cEvent.id)
+            }
             if (cEvent.id !== '-1') {
                 const users = await getFeed(cEvent.id, location.search)
                 if (users.length) {
                     setUsers(users)
                     setCurrent(0)
                 }
-            }
-            if (cEvent.notFound) {
-                history.push('/user')
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
