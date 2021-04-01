@@ -14,7 +14,7 @@ import {usePromptModal} from '../modals/prompt'
 import {useHistory} from 'react-router-dom'
 
 const useUnite = () => {
-    const {event, user, cUser} = useAppState()
+    const {cEvent, user, cUser} = useAppState()
     const [actionId, setActionId] = useState<string | null>(null)
 
 
@@ -33,7 +33,7 @@ const useUnite = () => {
     useEffect(() => {
         if (actionId === null) return
 
-        invitePerson(event.id, cUser.id, user.id).then((wasInvited?: boolean) => {
+        invitePerson(cEvent.id, cUser.id, user.id).then((wasInvited?: boolean) => {
             if (wasInvited) {
                 user.change({isInvited: true})
             } else {
