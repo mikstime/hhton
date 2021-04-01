@@ -256,33 +256,33 @@ interface MProps extends Omit<ModalProps, 'children'> {
 const UserEditModalContext = React.createContext()
 
 const useUserEdit = () => {
-    const {user} = useAppState()
-    const [firstName, setFirstName] = useState(user.firstName)
-    const [lastName, setLastName] = useState(user.lastName)
-    const [job, setJob] = useState(user.jobName)
+    const {cUser} = useAppState()
+    const [firstName, setFirstName] = useState(cUser.firstName)
+    const [lastName, setLastName] = useState(cUser.lastName)
+    const [job, setJob] = useState(cUser.jobName)
     const [vk, setVk] = useState('')
     const [tg, setTg] = useState('')
     const [gh, setGh] = useState('')
-    const [bio, setBio] = useState(user.bio)
-    const [sDesc, setSDesc] = useState(user.skills.description)
+    const [bio, setBio] = useState(cUser.bio)
+    const [sDesc, setSDesc] = useState(cUser.skills.description)
     const [disabled, setDisabled] = useState(false)
-    const [skills, setSkills] = useState<UserSkill[]>(user.skills.tags)
+    const [skills, setSkills] = useState<UserSkill[]>(cUser.skills.tags)
     const reset = () => {
-        if (user.id !== '-1') {
-            setFirstName(user.firstName)
-            setLastName(user.lastName)
-            setJob(user.jobName)
-            setVk(user.settings.vk)
-            setTg(user.settings.tg)
-            setGh(user.settings.gh)
-            setBio(user.bio)
-            setSDesc(user.skills.description)
-            setSkills(user.skills.tags)
+        if (cUser.id !== '-1') {
+            setFirstName(cUser.firstName)
+            setLastName(cUser.lastName)
+            setJob(cUser.jobName)
+            setVk(cUser.settings.vk)
+            setTg(cUser.settings.tg)
+            setGh(cUser.settings.gh)
+            setBio(cUser.bio)
+            setSDesc(cUser.skills.description)
+            setSkills(cUser.skills.tags)
             setDisabled(false)
         }
     }
 
-    useEffect(reset, [user.id])
+    useEffect(reset, [cUser.id])
     return {
         firstName: {
             value: firstName,
@@ -331,7 +331,7 @@ const useUserEdit = () => {
         },
         disabled,
         onSubmit: async () => {
-            const diff = storeDiff(user, {
+            const diff = storeDiff(cUser, {
                 firstName,
                 lastName,
                 jobName: job,
@@ -345,10 +345,10 @@ const useUserEdit = () => {
             diff.settings = {
                 vk, tg, gh
             }
-            diff.id = user.id
+            diff.id = cUser.id
             const update = await modifyUser(diff as UserOptional & { id: string })
             setDisabled(false)
-            user.change(diff)
+            cUser.change(diff)
             return update
         },
         onCancel: () => {
