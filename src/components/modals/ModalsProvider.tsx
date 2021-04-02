@@ -3,21 +3,18 @@ import React from 'react'
 import {PromptModalProvider} from './prompt'
 import {SearchModalProvider} from './search'
 import {UserEditModalProvider} from './user-edit'
-import {EventAboutModalProvider} from './event-about'
 import {EventEditModalProvider} from './event-edit'
-import {EventWinnersModalProvider} from './event-winners'
+import {EventParticipantsModalProvider} from './event-participants'
 
 export const ModalsProvider: React.FC = ({children}) => {
     return <PromptModalProvider>
         <SearchModalProvider>
             <UserEditModalProvider>
-                <EventWinnersModalProvider>
-                    <EventAboutModalProvider>
-                        <EventEditModalProvider>
-                            {children}
-                        </EventEditModalProvider>
-                    </EventAboutModalProvider>
-                </EventWinnersModalProvider>
+                <EventEditModalProvider>
+                    <EventParticipantsModalProvider>
+                        {children}
+                    </EventParticipantsModalProvider>
+                </EventEditModalProvider>
             </UserEditModalProvider>
         </SearchModalProvider>
     </PromptModalProvider>

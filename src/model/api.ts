@@ -689,20 +689,16 @@ export const createEvent = async (data: {
     founderId: Id,
     prizes: Prize[]
 }) => {
-    // TODO зачем здесь команды
     if (!mockImplemented) {
         data.diff.founderId = data.founderId
+        let payload = Convert.eventOptional.toBackend(data.diff, data.prizes)
+        // payload.prizeList = null
         const fetches = [
             await fetch(`${HOST_DOMAIN}${PREFIX}/event`, {
                 method: 'POST',
                 credentials: 'include',
-                body: JSON.stringify(Convert.eventOptional.toBackend(data.diff, data.prizes))
+                body: JSON.stringify(payload)
             })
-            // TODO призы не должны быть массивом
-            // await fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/win`, {
-            //     method: 'POST',
-            //     credentials: 'include',
-            // })
         ]
         const eventRequest = await Promise.all(fetches)
 
