@@ -7,7 +7,7 @@ import {
     InputBaseProps,
     Typography
 } from '@material-ui/core'
-import {KeyboardDatePicker} from '@material-ui/pickers'
+import {DateTimePicker} from '@material-ui/pickers'
 
 export const NumberField: React.FC<{
     label: string, inputProps?: InputBaseProps
@@ -49,15 +49,14 @@ const DateField: React.FC<{
             </Box>
         </Grid>
         <Grid xs={12} sm item>
-            <KeyboardDatePicker
+            <DateTimePicker
                 InputProps={{
                     disableUnderline: true,
                     ...inputProps
                 }}
                 disabled={disabled}
-                disableToolbar
                 variant="inline"
-                format="dd/MM/yyyy"
+                format="dd/MM/yyyy в hh:mm'"
                 fullWidth
                 invalidDateMessage=''
                 error={false}
@@ -66,9 +65,6 @@ const DateField: React.FC<{
                 value={value}
                 onChange={(d) => {
                     onChange(d as Date)
-                }}
-                KeyboardButtonProps={{
-                    'aria-label': 'change date'
                 }}
                 style={{
                     background: 'white',
@@ -103,17 +99,17 @@ export const GeneralSection: React.FC<{
         onChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
     }
 }> = ({
-          start, finish, teamSize, usersLimit
+          start, finish, teamSize
       }) => {
     return <GrayPlate style={{marginTop: 16}}>
         <Box clone flexDirection={{xs: 'column', sm: 'row'}}>
             <Grid container spacing={2}>
                 <Grid xs item container spacing={1} direction='column'>
                     <DateField label='Начало' {...start} inputProps={{
-                        placeholder: 'дд/мм/гггг'
+                        placeholder: 'дата, время'
                     }}/>
                     <DateField label='Конец' {...finish} inputProps={{
-                        placeholder: 'дд/мм/гггг'
+                        placeholder: 'дата, время'
                     }}/>
                 </Grid>
                 <Grid xs item container spacing={1} direction='column'>
@@ -121,10 +117,6 @@ export const GeneralSection: React.FC<{
                         placeholder: 'до 10',
                         inputProps: {min: 0, max: 10, ...teamSize}
                     }}/>
-                    {/*<NumberField label='Число участников' inputProps={{*/}
-                    {/*    placeholder: '400',*/}
-                    {/*    inputProps: {min: 0, max: 10000, ...usersLimit}*/}
-                    {/*}}/>*/}
                     <FlexSpace/>
                 </Grid>
             </Grid>

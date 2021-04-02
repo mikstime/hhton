@@ -1,6 +1,11 @@
 import React, {ElementType} from 'react'
 import {Plate, PlateProps} from './plate'
-import {Box, Grid, IconButton, SvgIcon} from '@material-ui/core'
+import {
+    Grid,
+    IconButton,
+    SvgIcon,
+    TypographyProps
+} from '@material-ui/core'
 import styled from 'styled-components'
 import {AdditionalText} from './typography'
 
@@ -10,7 +15,7 @@ import {ReactComponent as InfoIcon} from '../../assets/info.svg'
 
 type ItemPlateProps = {
     text: string,
-    textPlate?: React.ElementType<any>
+    textPlate?: React.ElementType<TypographyProps>
     postIcon?: ElementType<any>
     frontIcon?: ElementType<any>,
 } & PlateProps
@@ -24,13 +29,15 @@ export const ItemPlate: React.FC<ItemPlateProps> = (
 ) => {
     const TextPlate = textPlate
     return <PaddedPlate {...rest}>
-        <Grid container wrap='nowrap'>
+        <Grid container wrap='nowrap' alignItems='center'>
             {frontIcon && text &&
-            <SvgIcon style={{marginRight: 12}} component={frontIcon}/>}
-            <Box style={{minHeight: '24px'}} alignItems='center' display='flex'>
-            <TextPlate>{text}</TextPlate>
-            {postIcon && <IconButton component={postIcon}/>}
-            </Box>
+            <Grid item>
+              <SvgIcon style={{marginRight: 12}} component={frontIcon}/>
+            </Grid>}
+            <Grid item zeroMinWidth style={{minHeight: '24px'}}>
+                <TextPlate style={{whiteSpace: 'pre-wrap', wordBreak: 'break-all'}} noWrap>{text}</TextPlate>
+            </Grid>
+            {postIcon && <Grid item><IconButton component={postIcon}/></Grid>}
         </Grid>
     </PaddedPlate>
 }

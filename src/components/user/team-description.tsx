@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {MouseEventHandler} from 'react'
 import {AdditionalText, MainText} from '../common'
 import {Box, Grid, useTheme} from '@material-ui/core'
 import Image from 'material-ui-image'
@@ -6,7 +6,7 @@ import {User} from '../tools/use-app-state/user'
 import {Link} from 'react-router-dom'
 import {useAppState} from '../tools/use-app-state'
 
-const TeamItem: React.FC<{ user: User }> = ({user}) => {
+export const TeamItem: React.FC<{ user: User, onClick?: MouseEventHandler }> = ({user, onClick}) => {
     return <Grid item container alignItems='center'>
         <Link to={`/user/${user.id}`}
               style={{textDecoration: 'none'}}>
@@ -20,7 +20,7 @@ const TeamItem: React.FC<{ user: User }> = ({user}) => {
             margin: '8px 8px 0 0'
         }} src={user.avatar}/>
         </Link>
-        <Link to={`/user/${user.id}`}
+        <Link to={`/user/${user.id}`} onClick={onClick}
               style={{textDecoration: 'none', marginTop: 8, width: 'calc(100% - 32px)'}}>
             <Box clone style={{overflow: "hidden", textOverflow: "ellipsis", width: '100%',}}>
             <AdditionalText noWrap>
