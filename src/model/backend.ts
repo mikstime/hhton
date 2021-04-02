@@ -52,8 +52,8 @@ export type BackendHackathon = {
     description: string | null,
     teamSize: number | null,
     founder: number | null,
-    dateStart: Date | null,
-    dateEnd: Date | null,
+    dateStart: string | null,
+    dateEnd: string | null,
     state: string | null,
     place: string | null,
     feed: {
@@ -119,13 +119,17 @@ const Convert = {
                 avatar: bUser.avatar || defaultAvatar,
                 skills: {
                     description: bUser.description ?? '',
-                    tags: bUser.skills?.map(s => ({id: s.id.toString(), jobId: s.jobId.toString(), name: s.name})) ?? []
+                    tags: bUser.skills?.map(s => ({
+                        id: s.id.toString(),
+                        jobId: s.jobId.toString(),
+                        name: s.name
+                    })) ?? []
                 },
                 hackathons: bUser.history ?? [],
                 id: bUser.id?.toString() ?? '-1',
                 team: {
                     name: '',
-                    members: [] as User[],
+                    members: [] as User[]
                 },
                 settings: {
                     vk: bUser.vk,
@@ -193,7 +197,6 @@ const Convert = {
                 name: p.name ?? null,
                 count: p.amount?.toString() ?? ''
             })) ?? [] as Prize[]
-
             return {
                 name: bHackathon.name ?? '',
                 id: bHackathon.id?.toString() ?? '-1',
@@ -207,12 +210,12 @@ const Convert = {
                 participants: bHackathon.feed?.users,
                 prizes: orderedPrizes,
                 settings: {
-                    start: bHackathon.dateStart ?? null,
-                    finish: bHackathon.dateEnd ?? null,
+                    start: bHackathon.dateStart && bHackathon.dateStart !== '0001-01-01T00:00:00Z' ? new Date(bHackathon.dateStart as string) : null,
+                    finish: bHackathon.dateStart && bHackathon.dateStart !== '0001-01-01T00:00:00Z' ? new Date(bHackathon.dateEnd as string) : null,
                     teamSize: bHackathon.teamSize,
                     usersLimit: 0, //@TODO usersLimit
-                    site: bHackathon.site,
-                },
+                    site: bHackathon.site
+                }
             }
         },
         toBackend: (bUser: Hackathon) => {
@@ -269,12 +272,12 @@ const Convert = {
             return bSkills.map(s => ({
                 skillID: s.id, skillName: s.name, jobID: s.jobId
             }))
-        },
+        }
     },
     job: {
         toFrontend: (bJobs: BackendJobs) => {
             return bJobs
-        },
+        }
     }
 } as {
     user: {
@@ -289,7 +292,7 @@ const Convert = {
     },
     event: {
         toFrontend: (bUser: BackendHackathon) => Hackathon,
-        toBackend: (bUser: Hackathon) => BackendHackathon|null
+        toBackend: (bUser: Hackathon) => BackendHackathon | null
     },
     eventOptional: {
         toBackend: (fEvent: HackathonOptional, prizes: Prize[]) => BackendHackathon

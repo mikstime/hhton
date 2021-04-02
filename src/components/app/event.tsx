@@ -1,10 +1,9 @@
 import React, {useCallback, useEffect} from 'react'
 import {
     Box,
-    CardActionArea,
     Grid, Grow,
     Hidden,
-    Typography
+    Typography, TypographyProps
 } from '@material-ui/core'
 import {
     AvatarPlate,
@@ -20,22 +19,24 @@ import {NotFound} from './notfound'
 import notFoundIcon from '../../assets/notfound.svg'
 import Image from 'material-ui-image'
 import {EditEventButton} from '../event/edit-event-button'
-import {useEventAboutModal} from '../modals/event-about'
 import {EditableImage} from '../common/editable-image'
 import {editEventBackground, editEventLogo} from '../tools/edit-images'
 import {useSnackbar} from 'notistack'
 import {WinnersSection} from '../event/winners'
 import {PrizePool} from '../event/prizepool'
+import {EventAbout} from '../event/about'
 
 const EventNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
 `
-
+const assurePrefix = (url: string) => url.match(/^.{3,5}\/\//) ? url : `https://${url}`
+const CaptionLink: (to: string) => React.FC<TypographyProps> = (to) => (props) => {
+    return <a target="_blank" href={assurePrefix(to)} style={{textDecoration: 'none'}}><CaptionText {...props}/></a>
+}
 export const EventApp: React.FC = () => {
     //@ts-ignore
     const {eventId} = useParams()
     const {event, cEvent, cUser} = useAppState()
-    const {open} = useEventAboutModal()
     const {enqueueSnackbar} = useSnackbar()
     const history = useHistory()
 
@@ -114,7 +115,7 @@ export const EventApp: React.FC = () => {
                                         height: '250px'
                                     }} style={{
                                         width: '100%',
-                                        borderRadius: '10px 10px 0 0',
+                                        borderRadius: '10px',
                                         overflow: 'hidden',
                                         paddingTop: '250px'
                                     }}/>
@@ -125,7 +126,7 @@ export const EventApp: React.FC = () => {
                                     height: '250px'
                                 }} style={{
                                     width: '100%',
-                                    borderRadius: '10px 10px 0 0',
+                                    borderRadius: '10px',
                                     overflow: 'hidden',
                                     paddingTop: '250px'
                                 }}/>
@@ -133,41 +134,38 @@ export const EventApp: React.FC = () => {
                         </Grid>
                         <Grid item style={{marginTop: -120}}/>
                     </Hidden>
-                    <Grid item style={{zIndex: 2}}>
+                    <Grid item container style={{zIndex: 2}}>
                         <JobPlate elevation={4}
-                                  text={event.place ? `Место проведения: ${event.place}` : ''}/>
+                                  text={!event.isNullEvent ? `Место проведения: ${event.place || 'не указано'}` : ''}/>
                     </Grid>
-                    <Grid item style={{zIndex: 2}}>
-                        <CardActionArea style={{borderRadius: 8}}
-                                        onClick={open}>
-                            <InfoPlate elevation={4} textPlate={CaptionText}
-                                       text='Подробная информация'/>
-                        </CardActionArea>
+                    <Grid item container style={{zIndex: 2}}>
+                        <InfoPlate textPlate={CaptionLink(event.settings.site ?? '')} elevation={4}
+                                   text={!event.isNullEvent ? `${event.settings.site || 'Сайт мероприятия не указан'}` : ''}/>
                     </Grid>
                 </Grid>
             </Grid>
-            {
-                event.description && <Grid item container>
-                  <Grid item container direction='column' md>
+            <Grid item container>
+                <Grid item container direction='column' md>
                     <Grid item>
-                      <Title>
-                        О мероприятии
-                          {!event.isFinished && <Hidden smDown>
-                            <Box clone marginLeft='12px'>
-                              <EditEventButton/>
-                            </Box>
-                          </Hidden>
-                          }
-                      </Title>
+                        <Title>
+                            О мероприятии
+                            {!event.isFinished && <Hidden smDown>
+                              <Box clone marginLeft='12px'>
+                                <EditEventButton/>
+                              </Box>
+                            </Hidden>
+                            }
+                        </Title>
                     </Grid>
                     <Grid item>
-                      <SecondaryText>
-                          {event.description || 'Похоже, информация о мероприятии отсутствует'}
-                      </SecondaryText>
+                        <SecondaryText>
+                            {event.description || ''}
+                        </SecondaryText>
                     </Grid>
-                  </Grid>
+                    <EventAbout/>
                 </Grid>
-            }
+            </Grid>
+
             {
                 event.isFinished &&
                 <Grow in><Grid item container direction='column'>
