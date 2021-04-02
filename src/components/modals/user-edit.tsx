@@ -302,6 +302,7 @@ const useUserEdit = () => {
         vk: {
             value: vk,
             disabled,
+            readOnly: true,
             onChange: (e: React.ChangeEvent<HTMLInputElement>) => setVk(e.target.value)
         },
         tg: {
