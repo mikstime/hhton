@@ -1,4 +1,4 @@
-import React, {Fragment, useCallback, useEffect, useState} from 'react'
+import React, {Fragment, useCallback, useContext, useEffect, useState} from 'react'
 import {UserApp} from './user'
 import {Box, Slide, useTheme} from '@material-ui/core'
 import {useLocation} from 'react-router-dom'
@@ -17,13 +17,20 @@ const StyledDiv = styled.div`
   right: 20px;
   display: flex;
 `
-export const FeedApp: React.FC = () => {
 
+export const LastUserInFeedContext = React.createContext({
+    lastUsers: 0,
+    changeLastUser: (newLastUser: number, evtID: string) => {}
+});
+export const LastUserInFeedProvider = LastUserInFeedContext.Provider;
+
+export const FeedApp: React.FC = () => {
+    const lastUsersInFeed = useContext(LastUserInFeedContext)
     const [key, setKey] = useState(Math.random())
 
     const location = useLocation()
     const [users, setUsers] = useState<string[]>([])
-    const [current, setCurrent] = useState(0)
+    const [current, setCurrent] = useState(lastUsersInFeed.lastUsers)
 
     const [isFetching, setIsFetching] = useState(false)
     const history = useHistory()
@@ -43,7 +50,8 @@ export const FeedApp: React.FC = () => {
                 const users = await getFeed(cEvent.id, location.search)
                 if (users.length) {
                     setUsers(users)
-                    setCurrent(0)
+                    // setCurrent(0)
+                    setCurrent(lastUsersInFeed.lastUsers)
                 }
             }
         })()
@@ -66,7 +74,9 @@ export const FeedApp: React.FC = () => {
                 }
                 setIsFetching(false)
             }
+            lastUsersInFeed.changeLastUser(current + 1, cEvent.id)
             setCurrent(current + 1)
+            console.log(current, lastUsersInFeed.lastUsers)
             setKey(Math.random())
         })()
     }, [current, users, location, setCurrent, setIsFetching, cEvent.id])
