@@ -5,11 +5,13 @@ import {
     personalInvites, teamInvitedDeclined, teamInvitedPending,
     teamInvites
 } from '../../model/api'
+import {useNotificationHandlers} from './notification-handlers'
 
 
 export const useInvitesFetcher = () => {
 
     const {cUser, cEvent, invites} = useAppState()
+    const nc = useNotificationHandlers()
     //incoming
     useEffect(() => {
         (async () => {
@@ -31,7 +33,7 @@ export const useInvitesFetcher = () => {
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cUser.id, cEvent.id])
+    }, [cUser.id, cEvent.id, nc.updates])
 
     //outgoing
     useEffect(() => {
@@ -53,7 +55,7 @@ export const useInvitesFetcher = () => {
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cUser.id, cEvent.id])
+    }, [cUser.id, cEvent.id, nc.updates])
 
     //history
     useEffect(() => {
@@ -75,7 +77,7 @@ export const useInvitesFetcher = () => {
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cUser.id, cEvent.id])
+    }, [cUser.id, cEvent.id, nc.updates])
     //both
     useEffect(() => {
         (async () => {
@@ -89,6 +91,6 @@ export const useInvitesFetcher = () => {
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cUser.id, invites.i.team.length, invites.i.personal.length,
-        invites.o.team.length, invites.o.personal.length])
+        invites.o.team.length, invites.o.personal.length, nc.updates])
     return null
 }

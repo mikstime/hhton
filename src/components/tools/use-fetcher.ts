@@ -8,7 +8,7 @@ import {
     isParticipating
 } from '../../model/api'
 import {NULL_HACKATHON, NULL_USER} from './use-app-state'
-import {app} from '../../../server/src/server'
+import {useNotificationHandlers} from './notification-handlers'
 
 
 export const useFetcher = () => {
@@ -17,6 +17,8 @@ export const useFetcher = () => {
     const isFetchingCuserId = useRef('-1')
     const isFetchingEventId = useRef('-1')
     const isFetchingCeventId = useRef('-1')
+
+    const nc = useNotificationHandlers()
 
     const appState = useAppState()
 
@@ -50,7 +52,7 @@ export const useFetcher = () => {
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [appState.user.id])
+    }, [appState.user.id, nc.updates])
 
     useEffect(() => {
         (async () => {
@@ -64,7 +66,7 @@ export const useFetcher = () => {
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [appState.cUser.id, appState.event.id, appState.cEvent.id])
+    }, [appState.cUser.id, appState.event.id, appState.cEvent.id, nc.updates])
 
     useEffect(() => {
         (async () => {
@@ -96,7 +98,7 @@ export const useFetcher = () => {
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [appState.cUser.id])
+    }, [appState.cUser.id, nc.updates])
 
     useEffect(() => {
         (async () => {
@@ -106,7 +108,7 @@ export const useFetcher = () => {
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [appState.cUser.id, appState.user.id, appState.cEvent.id])
+    }, [appState.cUser.id, appState.user.id, appState.cEvent.id, nc.updates])
 
     useEffect(() => {
         (async () => {
@@ -137,7 +139,7 @@ export const useFetcher = () => {
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [appState.event.id])
+    }, [appState.event.id, nc.updates])
 
     useEffect(() => {
         (async () => {
@@ -162,7 +164,7 @@ export const useFetcher = () => {
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [appState.cEvent.id])
+    }, [appState.cEvent.id, nc.updates])
 
     useEffect(() => {
         const u = appState.cUser
