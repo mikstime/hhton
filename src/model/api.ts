@@ -539,11 +539,12 @@ export const getTeamInvitesFromUrl = async (url: string) => {
             const parsedTeams = await Promise.all(
                 json.map((tID: number) => getTeamById(tID.toString()))
             )
-            // TODO возможно есть циклические ссылки
-            const usersAndTeams = parsedTeams.map((t: any) => ({
-                id: t.members[0].id,
-                team: t
-            }))
+            const usersAndTeams = parsedTeams.map((t: any) => {
+                let teamLead = {} as User
+                Object.assign(teamLead, t.members[0])
+                teamLead.team = t
+                return teamLead
+            })
             if (usersAndTeams) {
                 return usersAndTeams as User[]
             }
