@@ -189,7 +189,7 @@ const PrizeItem: React.FC<{
 export const EventPrizes: React.FC<{
     prizes: {
         value: Prize[],
-        onChange: (p: Prize[]) => void,
+        onChange: (p: Prize[], d: string[]) => void,
     },
     groups: {
         value: Group[],
@@ -199,6 +199,7 @@ export const EventPrizes: React.FC<{
     const {event} = useAppState()
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
     const [editing, setEditing] = useState<boolean[]>([])
+    const [deletedPrizes, setDeletedPrizes] = useState([] as string[])
     const toRender = prizes.value.map((p, i) => (
         <Grid item container key={'p-item' + i}>
             <PrizeItem name={p.name} index={i + 1}
@@ -211,20 +212,22 @@ export const EventPrizes: React.FC<{
                        onNameChange={(e) => {
                            const v = [...prizes.value]
                            v[i].name = e.target.value
-                           prizes.onChange(v)
+                           prizes.onChange(v, [])
                        }}
                        onCountChange={(e) => {
                            const v = [...prizes.value]
                            v[i].count = e.target.value
-                           prizes.onChange(v)
+                           prizes.onChange(v, [])
                        }}
                        onDeleteClick={() => {
                            const v = [...prizes.value]
+                           const newDeletedPrizes = deletedPrizes.concat(v[i].id ?? '-1')
                            v.splice(i, 1)
                            const e = [...editing]
                            e.splice(i, 1)
+                           setDeletedPrizes(newDeletedPrizes)
                            setEditing(e)
-                           prizes.onChange(v)
+                           prizes.onChange(v, newDeletedPrizes)
                        }}
                        count={p.count}
                        isEditing={editing[i]}
@@ -245,7 +248,7 @@ export const EventPrizes: React.FC<{
             count: '1'
         }
         setEditing([...editing.map(_ => false), true])
-        prizes.onChange([...prizes.value, p])
+        prizes.onChange([...prizes.value, p], [])
     }, [prizes.value, setEditing])
 
     const onGroupsChange = useCallback((g: Group[], i: number, j: number) => {
