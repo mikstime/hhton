@@ -3,17 +3,18 @@ import {
     Box, Divider,
     Grid, Grow
 } from '@material-ui/core'
-import {AdditionalText, GrayPlate, SubTitle} from '../common'
+import {AdditionalText, GrayPlate} from '../common'
 import {useAppState} from '../tools/use-app-state'
 import {TeamMember} from './team-member'
 import {Link} from 'react-router-dom'
+import {TeamName} from './team-name'
 
 export const TeamPage: React.FC = () => {
 
     const {cUser, cEvent} = useAppState()
 
     return <Grid container direction='column'>
-        <SubTitle style={{marginBottom: 16}}>{(cUser.team && cUser.team.name) || 'Ваша комнада'}</SubTitle>
+        <TeamName/>
         <GrayPlate style={{marginBottom: 16}}>
             <AdditionalText>
                 Это ваша команда на мероприятии&nbsp;
