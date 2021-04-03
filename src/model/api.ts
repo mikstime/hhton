@@ -485,10 +485,19 @@ export const modifyTeamName = async (eventId: string, teamId: string, newName: s
 /**
  *
  * @param eventId - id события
- * @param userId - id активного пользователя
+ * @param teamId - id команды
  */
-export const teamInvitedPending = async (eventId: string, userId: string) => {
-    return teamInvited(eventId, userId, false)
+export const teamInvitedDeclined = async (eventId: string, teamId: string) => {
+    return teamInvited(eventId, teamId, true)
+}
+
+/**
+ *
+ * @param eventId - id события
+ * @param teamId - id команды
+ */
+export const teamInvitedPending = async (eventId: string, teamId: string) => {
+    return teamInvited(eventId, teamId, false)
 }
 
 /**
@@ -496,8 +505,8 @@ export const teamInvitedPending = async (eventId: string, userId: string) => {
  * @param eventId - id события
  * @param userId - id активного пользователя
  */
-export const teamInvitedDeclined = async (eventId: string, userId: string) => {
-    return teamInvited(eventId, userId, true)
+export const personalInvitedDeclined = async (eventId: string, userId: string) => {
+    return personalInvited(eventId, userId, true)
 }
 
 /**
@@ -505,8 +514,17 @@ export const teamInvitedDeclined = async (eventId: string, userId: string) => {
  * @param eventId - id события
  * @param userId - id активного пользователя
  */
-export const teamInvited = async (eventId: string, userId: string, declined: boolean) => {
-    if (!mockImplemented && userId) {
+export const personalInvitedPending = async (eventId: string, userId: string) => {
+    return personalInvited(eventId, userId, false)
+}
+
+/**
+ *
+ * @param eventId - id события
+ * @param teamId - id активного пользователя
+ */
+export const teamInvited = async (eventId: string, teamId: string, declined: boolean) => {
+    if (!mockImplemented && teamId) {
         //@TODO rewrite with Convert
         const teams = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invited/teams?declined=${declined}`, {
             credentials: 'include'
