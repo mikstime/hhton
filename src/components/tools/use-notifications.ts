@@ -3,10 +3,11 @@ import {useEffect, useRef} from 'react'
 import {w3cwebsocket} from 'websocket'
 import {PREFIX, WS_DOMAIN} from '../../config/network'
 import {useSnackbar} from 'notistack'
+import {useNotificationHandlers} from "./notification-handlers";
 
 export const useNotifications = () => {
     const {cUser} = useAppState()
-
+    const nc = useNotificationHandlers()
     const client = useRef<null | w3cwebsocket>(null)
     const {enqueueSnackbar} = useSnackbar()
     useEffect(() => {
@@ -18,6 +19,23 @@ export const useNotifications = () => {
                 client.current = new w3cwebsocket(`${WS_DOMAIN}${PREFIX}/notification/channel/${cUser.id}`)
                 client.current.onmessage = (m) => {
                     const json = JSON.parse(m.data as string)
+                    switch (json.status) {
+                        case 'NewTeamNotification':
+                            nc.newTeamNotification()
+                            break;
+                        case 'NewMembersNotification':
+                            nc.newMembersNotification()
+                            break;
+                        case 'NewInviteNotification':
+                            nc.newInviteNotification()
+                            break;
+                        case 'NewDenyNotification':
+                            nc.newDenyNotification()
+                            break;
+                        default:
+                            console.log("Unknown json.status")
+                            nc.default()
+                    }
                     enqueueSnackbar(json.message)
                 }
                 client.current.onopen = () => {

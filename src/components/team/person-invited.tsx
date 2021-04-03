@@ -26,8 +26,8 @@ const useInviteActions = (user: User) => {
             setIsFetching(false)
             setFading(false)
 
-            const inv = invites.h.team.filter(t => t.id !== user.id)
-            invites.h.change({team: inv})
+            const inv = invites.o.team.filter(t => t.id !== user.id)
+            invites.o.change({team: inv})
             enqueueSnackbar(`Заявка отменена`, {})
         } else {
             setIsFetching(false)
