@@ -4,7 +4,7 @@ import {ThemeProvider as TP} from 'styled-components'
 import {
     BrowserRouter
 } from 'react-router-dom'
-import ruLocale from "date-fns/locale/ru";
+import ruLocale from 'date-fns/locale/ru'
 import {SnackbarProvider} from 'notistack'
 import {MuiTheme} from './style/theme'
 import {AppStateProvider} from './components/tools/use-app-state'
@@ -12,18 +12,22 @@ import {App} from './components/app'
 import {ModalsProvider} from './components/modals/ModalsProvider'
 import {MuiPickersUtilsProvider} from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
+import {FeedProvider} from './components/app/feed'
 
 const Main: React.FC = () => {
     return <ThemeProvider theme={MuiTheme}>
         <TP theme={MuiTheme}>
             <BrowserRouter>
                 <SnackbarProvider maxSnack={3}>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale}>
-                    <AppStateProvider>
-                        <ModalsProvider>
-                            <App/>
-                        </ModalsProvider>
-                    </AppStateProvider>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}
+                                             locale={ruLocale}>
+                        <AppStateProvider>
+                            <ModalsProvider>
+                                <FeedProvider>
+                                    <App/>
+                                </FeedProvider>
+                            </ModalsProvider>
+                        </AppStateProvider>
                     </MuiPickersUtilsProvider>
                 </SnackbarProvider>
             </BrowserRouter>

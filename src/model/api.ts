@@ -348,9 +348,7 @@ export const getSkills = async (job: string) => {
  */
 export const getFeed = async (eventId: string, query: string, sinceId?: string) => {
     if (!mockImplemented) {
-        // TODO получать id сразу
-        //@TODO rewrite with Convert
-        // Нечего конвертировать
+        // получать id сразу
         const event = await fetchEvent(eventId)
         if (event === null) {
             return []
@@ -642,7 +640,6 @@ export const modifyEvent = async (data: {
     founderId: Id,
     prizes: Prize[]
 }) => {
-    //@TODO implement
     // diff может содержать измененные поля даты начала, даты окончания,
     // числа участников и лимита участников (+ id ивента)
     //
@@ -651,26 +648,35 @@ export const modifyEvent = async (data: {
     // место призу присваивается аналогичное его порядковому номеру в массиве
     if (!mockImplemented) {
         data.diff.founderId = data.founderId
-        const fetches = [
-            await fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}`, {
+        const eventRequests = []
+        eventRequests.push(
+            fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}`, {
                 method: 'POST',
                 credentials: 'include',
                 body: JSON.stringify(Convert.eventOptional.toBackend(data.diff, data.prizes))
             })
-            // TODO призы не должны быть массивом
-            // await fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/win`, {
-            //     method: 'POST',
-            //     credentials: 'include',
-            // })
-        ]
-        const eventRequest = await Promise.all(fetches)
+        )
+        const prizesBackend = Convert.prize.toBackend(data.teams, data.diff.id)
+        for (let i = 0; i <= prizesBackend.length; i++) {
+            eventRequests.push(
+                fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/win`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: JSON.stringify(prizesBackend[i])
+                })
+            )
+        }
 
-        for (let response of eventRequest) {
-            if (!response.ok) {
-                return false
+        const eventResponse = await Promise.all(eventRequests)
+
+        let result = true
+        for (let response of eventResponse) {
+            if (result = result && (response.ok && response.status === 200)) {
+            } else {
+                break;
             }
         }
-        return true
+        return result
     } else {
         console.log(data)
         await sleep(300)
@@ -692,7 +698,6 @@ export const createEvent = async (data: {
     if (!mockImplemented) {
         data.diff.founderId = data.founderId
         let payload = Convert.eventOptional.toBackend(data.diff, data.prizes)
-        // payload.prizeList = null
         const fetches = [
             await fetch(`${HOST_DOMAIN}${PREFIX}/event`, {
                 method: 'POST',

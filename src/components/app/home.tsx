@@ -5,6 +5,7 @@ import {SecondaryButton} from '../common/buttons'
 import firstTriangle from '../../assets/home/first-triangle.svg'
 import {Link} from 'react-router-dom'
 import {HOST_DOMAIN, PREFIX} from "../../config/network";
+import {AdditionalText} from "../common";
 
 const RootContainer = styled(Container)`
   height: 100vh;
@@ -48,12 +49,14 @@ export const HomeApp: React.FC = () => {
                         {/*</Typography>*/}
                     </Grid>
                     <Grid item>
-                        <Link to='/event/101' style={{textDecoration: 'none'}}>
-                        <SecondaryButton style={{marginTop: 48}}>
-                            К мероприятию
-                            {/*Я хочу организовать мероприятие*/}
-                        </SecondaryButton>
-                        </Link>
+                        <a
+                            href={`${HOST_DOMAIN}${PREFIX}/redirect?backTo=user`}
+                            style={{textDecoration: 'none', marginTop: 16}}>
+                            <SecondaryButton style={{marginTop: 48}}>
+                                Войти через ВК
+                                {/*Я хочу организовать мероприятие*/}
+                            </SecondaryButton>
+                        </a>
                     </Grid>
                 </Grid>
             </RootContainer>
