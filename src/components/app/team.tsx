@@ -1,61 +1,90 @@
-import React, {Fragment, useEffect} from 'react'
+import React, {useEffect} from 'react'
 import {
-    Box, Divider,
-    Grid, Grow
+    Box,
+    Grid, Tab, Tabs
 } from '@material-ui/core'
-import {SubTitle} from '../common'
 import {useAppState} from '../tools/use-app-state'
-import {TeamMember} from '../team/team-member'
-import {TeamInvitee} from '../team/team-invitee'
-import {PersonInvitee} from '../team/person-invitee'
 import {useHistory} from 'react-router-dom'
+import {TeamPage} from '../team/team-page'
+import {IncomingPage} from '../team/incoming-page'
+import {OutgoingPage} from '../team/outgoing-page'
+import {HistoryPage} from '../team/history-page'
+
+interface TabPanelProps {
+    children?: React.ReactNode;
+    index: any;
+    value: any;
+}
+
+function TabPanel(props: TabPanelProps) {
+    const {children, value, index, ...other} = props
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            {value === index && (
+                <Box>
+                    {children}
+                </Box>
+            )}
+        </div>
+    )
+}
+
 
 export const TeamApp: React.FC = () => {
 
-    const {cUser, invites} = useAppState()
+    const {cUser} = useAppState()
     const history = useHistory()
 
     useEffect(() => {
-        if(cUser.isNotAuthorized) {
+        if (cUser.isNotAuthorized) {
             history.push('/')
         }
     }, [cUser.isNotAuthorized])
 
+    const [value, setValue] = React.useState(0)
+
+    const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+        setValue(newValue)
+    }
+
+
     return <Grid container direction='column'>
-        <SubTitle style={{marginBottom: 24}}>{(cUser.team && cUser.team.name) || 'Ваша комнада'}</SubTitle>
-        <Grid container spacing={3} direction='column'>
-            {cUser.team.members.length > 0 && cUser.team.members.map((u, i) => {
-                return <Fragment key={i}>
-                    <Grow in><TeamMember user={u}/></Grow>
-                    <Divider light flexItem style={{height: 1}}/>
-                </Fragment>
-            })
-            }
-            {!cUser.team.members.length && <Fragment>
-              <Grow in><TeamMember user={cUser}/></Grow>
-              <Divider light flexItem style={{height: 1}}/>
-            </Fragment>}
-        </Grid>
-        <SubTitle style={{marginBottom: 24, marginTop: 36}}>Хотят в
-            команду</SubTitle>
-        <Grid container spacing={3} direction='column'>
-            {invites.personal.map((u, i) => (
-                <Fragment key={i}>
-                <TeamInvitee user={u}/>
-                    <Divider light flexItem style={{height: 1}}/>
-                </Fragment>
-            ))
-            }
-        </Grid>
-        <SubTitle style={{marginBottom: 24, marginTop: 36}}>Желают объединиться</SubTitle>
-        {invites.team && <Grid spacing={2} container item>
-            {
-                invites.team.map((u) => (
-                    <PersonInvitee key={u.id} user={u}/>
-                ))
-            }
-        </Grid>
-        }
-        <Box height='150px' width='100%'/>
+        <Box clone paddingLeft={{xs: 0, md: 50}} marginLeft={{xs: 0, md: -50}}>
+            <Tabs variant="scrollable"
+                  indicatorColor="primary" style={{
+                position: 'sticky',
+                top: 0,
+                zIndex: 3,
+                backgroundColor: '#F9F9F9',
+                marginBottom: 16
+            }}
+                  textColor="primary" value={value} onChange={handleChange}
+                  aria-label="team-page tabs"
+            >
+                <Tab label="Команда"/>
+                <Tab label="Входящие заявки"/>
+                <Tab label="Исходящие заявки"/>
+                <Tab label="История заявок"/>
+            </Tabs>
+        </Box>
+        <TabPanel value={value} index={0}>
+            <TeamPage/>
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+            <IncomingPage/>
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+            <OutgoingPage/>
+        </TabPanel>
+        <TabPanel value={value} index={3}>
+            <HistoryPage/>
+        </TabPanel>
     </Grid>
 }
