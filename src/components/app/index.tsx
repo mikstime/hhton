@@ -146,16 +146,6 @@ const AppNav: React.FC<GridProps> = ({children}) => {
                       </AdditionalText>
                     </NavLink>
                 }
-                {
-                    cUser.isNotAuthorized &&
-                    <a
-                      href={`${HOST_DOMAIN}${PREFIX}/redirect?backTo=${window.location.pathname.replace('/', '')}`}
-                      style={{textDecoration: 'none', marginTop: 16}}>
-                      <AdditionalText align='right'>
-                        Регистрация
-                      </AdditionalText>
-                    </a>
-                }
             </Box>
         )
     }
