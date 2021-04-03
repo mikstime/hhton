@@ -1,31 +1,66 @@
 import {useState} from 'react'
-
+import {useSnackbar} from 'notistack'
+import {useHistory} from 'react-router-dom'
+type Message = {
+    type: string,
+    status: string,
+    message: string,
+}
 export const useNotificationHandlers: () => {
-    a: number,
-    newTeamNotification: () => void,
-    newMembersNotification: () => void,
-    newInviteNotification: () => void,
-    newDenyNotification: () => void,
-    default: () => void,
+    newTeamNotification: (m: Message) => void,
+    newMembersNotification: (m: Message) => void,
+    newInviteNotification: (m: Message) => void,
+    newDenyNotification: (m: Message) => void,
+    default: (m: Message) => void,
     updates: number,
 } = () => {
     const [updates, setUpdates] = useState(0)
+    const {enqueueSnackbar, closeSnackbar} = useSnackbar()
+    const history = useHistory()
     return {
-        a: 1,
-        newTeamNotification: () => {
+        newTeamNotification: (m: Message) => {
             setUpdates(updates + 1)
+            const key = enqueueSnackbar(m.message, {
+                onClick: () => {
+                    closeSnackbar(key);
+                    history.push('/team')
+                }
+            })
         },
-        newMembersNotification: () => {
+        newMembersNotification: (m: Message) => {
             setUpdates(updates + 1)
+            const key = enqueueSnackbar(m.message, {
+                onClick: () => {
+                    closeSnackbar(key);
+                    history.push('/team')
+                }
+            })
         },
-        newInviteNotification: () => {
+        newInviteNotification: (m: Message) => {
             setUpdates(updates + 1)
+            const key = enqueueSnackbar(m.message, {
+                onClick: () => {
+                    closeSnackbar(key);
+                    history.push('/team')
+                }
+            })
         },
-        newDenyNotification: () => {
+        newDenyNotification: (m: Message) => {
             setUpdates(updates + 1)
+            const key = enqueueSnackbar(m.message, {
+                onClick: () => {
+                    closeSnackbar(key);
+                    history.push('/team')
+                }
+            })
         },
-        default: () => {
+        default: (m: Message) => {
             setUpdates(updates + 1)
+            const key = enqueueSnackbar(m.message, {
+                onClick: () => {
+                    closeSnackbar(key);
+                }
+            })
         },
         updates,
     }
