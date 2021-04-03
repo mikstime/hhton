@@ -26,8 +26,8 @@ const useInviteActions = (user: User) => {
             setIsFetching(false)
             setFading(false)
 
-            const inv = invites.team.filter(t => t.id !== user.id)
-            invites.change({team: inv})
+            const inv = invites.i.team.filter(t => t.id !== user.id)
+            invites.i.change({team: inv})
             setIsFetching(false)
 
 
@@ -46,8 +46,8 @@ const useInviteActions = (user: User) => {
             setIsFetching(false)
             setFading(false)
 
-            const inv = invites.team.filter(t => t.id !== user.id)
-            invites.change({team: inv})
+            const inv = invites.i.team.filter(t => t.id !== user.id)
+            invites.i.change({team: inv})
             enqueueSnackbar(`Заявка отклонена`, {})
         } else {
             setIsFetching(false)

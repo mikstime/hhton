@@ -11,19 +11,26 @@ export const _useAppState: () => {
     user: User & UserActions,
     event: Hackathon & HackathonActions,
     cEvent: Hackathon & HackathonActions,
-    invites: Invites & InvitesActions,
+    invites: {
+        i: Invites & InvitesActions,
+        o: Invites & InvitesActions,
+    }
 } = () => {
     const user = useUser()
     const cUser = useUser()
     const event = useHackathon()
     const cEvent = useHackathon()
-    const invites = useInvites()
+    const invitesI = useInvites()
+    const invitesO = useInvites()
 
     return {
         user,
         event,
         cEvent,
         cUser,
-        invites,
+        invites: {
+            i: invitesI,
+            o: invitesO,
+        }
     }
 }

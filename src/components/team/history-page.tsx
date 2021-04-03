@@ -13,7 +13,7 @@ export const HistoryPage: React.FC = () => {
     return <Grid container direction='column'>
         <SubTitle style={{marginBottom: 24}}>Отклоненные заявки</SubTitle>
         <Grid container spacing={3} direction='column'>
-            {invites.personal.map((u, i) => (
+            {invites.i.personal.map((u, i) => (
                 <Fragment key={i}>
                     <TeamInvitee user={u}/>
                     <Divider light flexItem style={{height: 1}}/>
@@ -21,7 +21,7 @@ export const HistoryPage: React.FC = () => {
             ))
             }
         </Grid>
-        {!invites.personal.length && <GrayPlate style={{marginTop: 16}}>
+        {!invites.i.personal.length && <GrayPlate style={{marginTop: 16}}>
           <AdditionalText>
               Здесь будут отображаться заявки, которые отклонила Ваша команда,
               или же отклонил адресат

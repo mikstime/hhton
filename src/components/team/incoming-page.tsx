@@ -17,7 +17,7 @@ export const IncomingPage: React.FC = () => {
         <SubTitle style={{marginBottom: 24}}>Хотят в
             команду</SubTitle>
         <Grid container spacing={3} direction='column'>
-            {invites.personal.map((u, i) => (
+            {invites.i.personal.map((u, i) => (
                 <Fragment key={i}>
                     <TeamInvitee user={u}/>
                     <Divider light flexItem style={{height: 1}}/>
@@ -25,7 +25,7 @@ export const IncomingPage: React.FC = () => {
             ))
             }
         </Grid>
-        {!invites.personal.length && <GrayPlate style={{marginTop: 16}}>
+        {!invites.i.personal.length && <GrayPlate style={{marginTop: 16}}>
           <AdditionalText>
             Пока нет активных заявок. Попробуйте проявить инициативу и <Link
             style={
@@ -36,15 +36,15 @@ export const IncomingPage: React.FC = () => {
         }
         <SubTitle style={{marginBottom: 24, marginTop: 36}}>Желают
             объединиться</SubTitle>
-        {invites.team.length > 0 && <Grid spacing={2} container item>
+        {invites.i.team.length > 0 && <Grid spacing={2} container item>
             {
-                invites.team.map((u) => (
+                invites.i.team.map((u) => (
                     <PersonInvitee key={u.id} user={u}/>
                 ))
             }
         </Grid>
         }
-        {!invites.team.length && <GrayPlate>
+        {!invites.i.team.length && <GrayPlate>
           <AdditionalText>
             Сейчас нет команд, которые бы хотели объединиться.
           </AdditionalText>

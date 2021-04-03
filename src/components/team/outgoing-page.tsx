@@ -16,7 +16,7 @@ export const OutgoingPage: React.FC = () => {
     return <Grid container direction='column'>
         <SubTitle style={{marginBottom: 24}}>Предложения людям</SubTitle>
         <Grid container spacing={3} direction='column'>
-            {invites.personal.map((u, i) => (
+            {invites.o.personal.map((u, i) => (
                 <Fragment key={i}>
                     <TeamInvitee user={u}/>
                     <Divider light flexItem style={{height: 1}}/>
@@ -24,7 +24,7 @@ export const OutgoingPage: React.FC = () => {
             ))
             }
         </Grid>
-        {!invites.personal.length && <GrayPlate style={{marginTop: 16}}>
+        {!invites.o.personal.length && <GrayPlate style={{marginTop: 16}}>
           <AdditionalText>
             Нет исходящих заявок. <Link
             style={
@@ -35,15 +35,15 @@ export const OutgoingPage: React.FC = () => {
         }
         <SubTitle style={{marginBottom: 24, marginTop: 36}}>Предложения
             командам</SubTitle>
-        {invites.team.length > 0 && <Grid spacing={2} container item>
+        {invites.o.team.length > 0 && <Grid spacing={2} container item>
             {
-                invites.team.map((u) => (
+                invites.o.team.map((u) => (
                     <PersonInvitee key={u.id} user={u}/>
                 ))
             }
         </Grid>
         }
-        {!invites.team.length && <GrayPlate>
+        {!invites.o.team.length && <GrayPlate>
           <AdditionalText>
             Вы не предложили объединение ни одной из команд
           </AdditionalText>
