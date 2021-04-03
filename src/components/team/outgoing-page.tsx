@@ -8,6 +8,8 @@ import {useAppState} from '../tools/use-app-state'
 import {TeamInvitee} from './team-invitee'
 import {PersonInvitee} from './person-invitee'
 import {Link} from 'react-router-dom'
+import {PersonInvited} from './person-invited'
+import {TeamInvited} from './team-invited'
 
 export const OutgoingPage: React.FC = () => {
 
@@ -18,7 +20,7 @@ export const OutgoingPage: React.FC = () => {
         <Grid container spacing={3} direction='column'>
             {invites.o.personal.map((u, i) => (
                 <Fragment key={i}>
-                    <TeamInvitee user={u}/>
+                    <TeamInvited user={u}/>
                     <Divider light flexItem style={{height: 1}}/>
                 </Fragment>
             ))
@@ -38,7 +40,7 @@ export const OutgoingPage: React.FC = () => {
         {invites.o.team.length > 0 && <Grid spacing={2} container item>
             {
                 invites.o.team.map((u) => (
-                    <PersonInvitee key={u.id} user={u}/>
+                    <PersonInvited key={u.id} user={u}/>
                 ))
             }
         </Grid>

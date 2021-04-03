@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react'
 import {
-    Box,
+    AppBar,
+    Box, Container,
     Grid, Tab, Tabs
 } from '@material-ui/core'
 import {useAppState} from '../tools/use-app-state'
@@ -9,6 +10,7 @@ import {TeamPage} from '../team/team-page'
 import {IncomingPage} from '../team/incoming-page'
 import {OutgoingPage} from '../team/outgoing-page'
 import {HistoryPage} from '../team/history-page'
+import {Plate} from '../common'
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -56,28 +58,35 @@ export const TeamApp: React.FC = () => {
 
 
     return <Grid container direction='column'>
-        <Grid item container xs style={{
-            position: 'sticky',
-            top: 0,
-            zIndex: 3,
-        }}>
-            <Box clone paddingLeft={{xs: 0, md: 50}}
-                 marginLeft={{xs: 0, md: -50}}>
-                <Tabs variant="scrollable"
-                      indicatorColor="primary" style={{
-                    backgroundColor: '#F9F9F9',
-                    marginBottom: 16
-                }}
-                      textColor="primary" value={value} onChange={handleChange}
-                      aria-label="team-page tabs"
-                >
-                    <Tab label="Команда"/>
-                    <Tab label="Входящие заявки"/>
-                    <Tab label="Исходящие заявки"/>
-                    <Tab label="История заявок"/>
-                </Tabs>
-            </Box>
-        </Grid>
+        <Box
+            paddingLeft={{sm: '50px'}}
+            marginLeft={{sm: '-50px'}}
+            width={{
+                xs: '100%',
+                sm: 'calc( 100vw - 48px - 48px - 200px)',
+                md: 'calc( 800px - 48px - 48px)'
+            }
+            }
+            style={{
+                position: 'sticky',
+                top: 0,
+                zIndex: 3,
+                backgroundColor: '#F9F9F9',
+            }}>
+            <Tabs variant="scrollable"
+                  indicatorColor="primary" style={{
+                marginBottom: 16
+            }}
+                  textColor="primary" value={value} onChange={handleChange}
+                  aria-label="team-page tabs"
+            >
+                <Tab label="Команда"/>
+                <Tab label="Входящие заявки"/>
+                <Tab label="Исходящие заявки"/>
+                <Tab label="История заявок"/>
+            </Tabs>
+
+        </Box>
         <TabPanel value={value} index={0}>
             <TeamPage/>
         </TabPanel>

@@ -57,11 +57,14 @@ export const useFetcher = () => {
             if (appState.cUser.id !== '-1' && appState.event.id !== '-1') {
                 const participating = await isParticipating(appState.event.id, appState.cUser.id)
                 appState.event.change({isParticipating: !!participating})
+            }
+            if (appState.cUser.id !== '-1' && appState.cEvent.id !== '-1') {
+                const participating = await isParticipating(appState.cEvent.id, appState.cUser.id)
                 appState.cEvent.change({isParticipating: !!participating})
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [appState.cUser.id, appState.event.id])
+    }, [appState.cUser.id, appState.event.id, appState.cEvent.id])
 
     useEffect(() => {
         (async () => {
