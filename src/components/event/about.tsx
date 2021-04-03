@@ -24,7 +24,7 @@ export const EventAbout: React.FC = () => {
                                 style={{marginRight: 16, width: 140}}>Дата
                                 начала:</AdditionalText>
                             <Typography
-                                variant='body1'>{event.settings.start ? format(event.settings.start, 'dd/MM/yyyy в hh:mm') : 'Не известна'}</Typography>
+                                variant='body1'>{event.settings.start ? format(event.settings.start, 'dd/MM/yyyy в H:mm') : 'Не известна'}</Typography>
                         </Grid>
                     </Box>
                     <Box clone flexDirection={{xs: 'column', md: 'row'}}>
@@ -33,7 +33,7 @@ export const EventAbout: React.FC = () => {
                                 style={{marginRight: 16, width: 140}}>Дата
                                 окончания:</AdditionalText>
                             <Typography
-                                variant='body1'>{event.settings.finish ? format(event.settings.finish, 'dd/MM/yyyy в hh:mm') : 'Не известна'}</Typography>
+                                variant='body1'>{event.settings.finish ? format(event.settings.finish, 'dd/MM/yyyy в H:mm') : 'Не известна'}</Typography>
                         </Grid>
                     </Box>
                 </Grid>

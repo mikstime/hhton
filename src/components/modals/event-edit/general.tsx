@@ -56,9 +56,10 @@ const DateField: React.FC<{
                 }}
                 disabled={disabled}
                 variant="inline"
-                format="dd/MM/yyyy в hh:mm'"
+                format="dd/MM/yyyy в H:mm'"
                 fullWidth
                 invalidDateMessage=''
+                ampm={false}
                 error={false}
                 helperText={null}
                 margin="normal"
