@@ -8,6 +8,8 @@ import {useAppState} from '../tools/use-app-state'
 import {TeamInvitee} from './team-invitee'
 import {Link} from 'react-router-dom'
 import {PersonInvitee} from './person-invitee'
+import {PersonDeclined} from './person-declined'
+import {TeamDeclined} from './team-declined'
 
 export const HistoryPage: React.FC = () => {
 
@@ -18,7 +20,7 @@ export const HistoryPage: React.FC = () => {
         <Grid container spacing={3} direction='column'>
             {invites.h.personal.map((u, i) => (
                 <Fragment key={i}>
-                    <TeamInvitee user={u}/>
+                    <TeamDeclined user={u}/>
                     <Divider light flexItem style={{height: 1}}/>
                 </Fragment>
             ))
@@ -34,14 +36,14 @@ export const HistoryPage: React.FC = () => {
         {invites.h.team.length > 0 && <Grid spacing={2} container item>
             {
                 invites.h.team.map((u) => (
-                    <PersonInvitee key={u.id} user={u}/>
+                    <PersonDeclined key={u.id} user={u}/>
                 ))
             }
         </Grid>
         }
-        {!invites.o.team.length && <GrayPlate>
+        {!invites.h.team.length && <GrayPlate>
           <AdditionalText>
-            Ниодна команда не отклонила заявку
+            Ни одна команда не отклонила заявку
           </AdditionalText>
         </GrayPlate>}
         <Box height='150px' width='100%'/>

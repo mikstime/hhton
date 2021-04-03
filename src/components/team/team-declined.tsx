@@ -1,49 +1,11 @@
-import React, {useCallback, useState} from 'react'
+import React from 'react'
 import {User} from '../tools/use-app-state/user'
-import {Box, Chip, Grid, IconButton} from '@material-ui/core'
+import {Box, Chip, Grid} from '@material-ui/core'
 import {Link} from 'react-router-dom'
 import {AvatarPlate} from '../common'
 import {NameTypography} from '../common/typography'
-import {ReactComponent as ThumbsUpIcon} from '../../assets/thumbs_up.svg'
-import {ReactComponent as ThumbsDownIcon} from '../../assets/thumbs_down.svg'
-import {useAppState} from '../tools/use-app-state'
-import {useSnackbar} from 'notistack'
-import {acceptInvite, declineInvite} from '../../model/api'
 import {useChipStyles} from './team-member'
 import {SocialLink} from '../app/user'
-import {ReactComponent as KickIcon} from '../../assets/kick.svg'
-
-const useInviteActions = (user: User) => {
-    const [isFetching, setIsFetching] = useState(false)
-    const [fading, setFading] = useState(true)
-    const {cEvent, cUser, invites} = useAppState()
-
-    const {enqueueSnackbar} = useSnackbar()
-
-    const decline = useCallback(async () => {
-        setIsFetching(true)
-        const didDecline = await declineInvite(cEvent.id, cUser.id, user.id)
-        if (didDecline) {
-            setIsFetching(false)
-            setFading(false)
-
-            const inv = invites.o.personal.filter(t => t.id !== user.id)
-            invites.o.change({personal: inv})
-            enqueueSnackbar(`Заявка отменена`, {})
-        } else {
-            setIsFetching(false)
-            enqueueSnackbar(`Не удалось отменить заявку`, {
-                variant: 'error',
-            })
-        }
-    }, [cUser.id, cEvent.id, user.id, invites, enqueueSnackbar])
-    return {
-        isFetching,
-        fading,
-        decline
-    }
-}
-
 
 const Skills: React.FC<{ user: User }> = ({user}) => {
     const classes = useChipStyles()
@@ -54,10 +16,11 @@ const Skills: React.FC<{ user: User }> = ({user}) => {
 }
 
 
-export const TeamInvited: React.FC<{ user: User }> = ({user}) => {
-    const {isFetching, decline} = useInviteActions(user)
-
-    return <Grid item container spacing={2}>
+export const TeamDeclined: React.FC<{ user: User }> = ({user}) => {
+    return <Grid item container spacing={2} style={{
+        opacity: 0.7,
+        pointerEvents: 'none',
+    }}>
         <Grid item md={5} xs={9} sm={5}>
             <Link to={`/user/${user.id}`}
                   style={{textDecoration: 'none'}}>
@@ -94,12 +57,6 @@ export const TeamInvited: React.FC<{ user: User }> = ({user}) => {
                   direction='column'
                   justify='center' alignItems='center'>
                 <Grid item>
-                    <IconButton disabled={isFetching} onClick={decline}>
-                        <Box clone width={{xs: '24px', md: '48px'}}
-                             height={{xs: '24px', md: '48px'}}>
-                            <KickIcon/>
-                        </Box>
-                    </IconButton>
                 </Grid>
             </Grid>
         </Box>
