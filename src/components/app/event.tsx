@@ -31,7 +31,10 @@ const EventNameGrid = styled(Grid)`
 `
 const assurePrefix = (url: string) => url.match(/^.{3,5}\/\//) ? url : `https://${url}`
 const CaptionLink: (to: string) => React.FC<TypographyProps> = (to) => (props) => {
+    if(to) {
     return <a target="_blank" href={assurePrefix(to)} style={{textDecoration: 'none'}}><CaptionText {...props}/></a>
+    }
+    return <CaptionText {...props}/>
 }
 export const EventApp: React.FC = () => {
     //@ts-ignore

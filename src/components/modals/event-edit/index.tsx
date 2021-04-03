@@ -58,6 +58,7 @@ export const useEventEdit = () => {
     const [prizes, setPrizes] = useState<Prize[]>([])
     const [groups, setGroups] = useState<Group[]>([])
     const [disabled, setDisabled] = useState(false)
+    const [deletedPrizes, setDeletedPrizes] = useState([] as string[])
 
     useEffect(() => {
         (async () => {
@@ -93,6 +94,7 @@ export const useEventEdit = () => {
         setPlace(event.place)
         setSite(event.settings.site ?? '')
         setPrizes(event.prizes)
+        setDeletedPrizes([])
         setDisabled(false)
         // }
     }
@@ -104,6 +106,7 @@ export const useEventEdit = () => {
         setPlace('')
         setSite('')
         setPrizes([])
+        setDeletedPrizes([])
         setDisabled(false)
     }
 
@@ -133,9 +136,14 @@ export const useEventEdit = () => {
         setSite(e.target.value)
     }, [setSite])
 
-    const onPrizesChange = useCallback((p) => {
+    const onPrizesChange = useCallback((p, d) => {
+        console.log(d, deletedPrizes)
+        setDeletedPrizes(d)
         setPrizes(p)
-    }, [setPrizes])
+    }, [setDeletedPrizes, setPrizes])
+    // const onPrizesChange = useCallback((p) => {
+    //     setPrizes(p)
+    // }, [setPrizes])
 
     const onGroupsChange = useCallback((g) => {
         setGroups(g)
@@ -234,7 +242,8 @@ export const useEventEdit = () => {
                 diff: diff as HackathonOptional & { id: string },
                 founderId: event.founderId,
                 prizes,
-                teams: teams
+                teams: teams,
+                deletedPrizes: deletedPrizes
             })
             setDisabled(false)
             event.change({

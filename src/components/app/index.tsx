@@ -101,7 +101,7 @@ const AppNav: React.FC<GridProps> = ({children}) => {
                          onClick={() => setMobileOpen(false)}>
                   <AdditionalText
                     align='right'>
-                    К мероприятию
+                      {cEvent.name || 'К мероприятию'}
                   </AdditionalText>
                 </NavLink>
                 }

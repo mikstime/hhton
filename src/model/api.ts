@@ -464,6 +464,132 @@ export const getTeam = async (eventId: string, userId: string) => {
  * @param eventId - id события
  * @param userId - id активного пользователя
  */
+export const modifyTeamName = async (eventId: string, teamId: string, newName: string) => {
+    if (!mockImplemented) {
+        const name = await fetch(`${HOST_DOMAIN}${PREFIX}/team/${teamId}`,
+            {
+                method: 'POST',
+                credentials: 'include',
+                body: JSON.stringify({
+                    eventid: Number(eventId),
+                    name: newName
+                })
+            })
+        return (name.ok && name.status === 200)
+    } else {
+        await sleep(300)
+        return true
+    }
+}
+
+/**
+ *
+ * @param eventId - id события
+ * @param userId - id активного пользователя
+ */
+export const teamInvitedPending = async (eventId: string, userId: string) => {
+    return teamInvited(eventId, userId, false)
+}
+
+/**
+ *
+ * @param eventId - id события
+ * @param userId - id активного пользователя
+ */
+export const teamInvitedDeclined = async (eventId: string, userId: string) => {
+    return teamInvited(eventId, userId, true)
+}
+
+/**
+ *
+ * @param eventId - id события
+ * @param userId - id активного пользователя
+ */
+export const teamInvited = async (eventId: string, userId: string, declined: boolean) => {
+    if (!mockImplemented && userId) {
+        //@TODO rewrite with Convert
+        const teams = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invited/teams?declined=${declined}`, {
+            credentials: 'include'
+        })
+
+        if (teams.ok) {
+            const json = await teams.json()
+            try {
+                const parsedTeams = await Promise.all(
+                    json.map((tID: number) => fetch(`${HOST_DOMAIN}${PREFIX}/team/${tID}`, {
+                        credentials: 'include'
+                    }))
+                )
+                //@ts-ignore
+                const teams1 = await Promise.all(parsedTeams.map(p => p.json()))
+                if (teams1) {
+                    let result = [] as User[]
+
+                    if (teams1) {
+                        //@ts-ignore
+                        teams1.forEach((v: { members: BackendUser[] }) => {
+                            if (v.members) {
+                                result.push(Convert.user.toFrontend(v.members[0]))
+                            } else {
+                                console.log('members is null')
+                            }
+                        })
+                    }
+
+                    return result
+                }
+
+                return []
+            } catch (e) {
+                return []
+            }
+        } else {
+            return []
+        }
+    } else {
+        await sleep(300)
+        return TEST_USERS.slice(2, 4)
+    }
+}
+
+/**
+ *
+ * @param eventId - id события
+ * @param userId - id активного пользователя
+ */
+export const personalInvited = async (eventId: string, userId: string, declined: boolean) => {
+    if (!mockImplemented && userId) {
+        try {
+            const users = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invited/users?declined=${declined}`, {
+                credentials: 'include'
+            })
+
+            if (users.ok) {
+                const json = await users.json()
+
+                //@TODO не хватает полей у пользователя (косяк бекенда)
+                const fullUsers = await Promise.all(json.map((jID: number) => fetchUser(jID.toString())))
+                if (fullUsers) {
+                    return fullUsers as User[]
+                }
+                return [] as User[]
+            } else {
+                return []
+            }
+        } catch (e) {
+            return []
+        }
+    } else {
+        await sleep(300)
+        return TEST_USERS.slice(1, 3)
+    }
+}
+
+/**
+ *
+ * @param eventId - id события
+ * @param userId - id активного пользователя
+ */
 export const teamInvites = async (eventId: string, userId: string) => {
     if (!mockImplemented && userId) {
         //@TODO rewrite with Convert
@@ -638,7 +764,8 @@ export const modifyEvent = async (data: {
     diff: HackathonOptional & { id: Id },
     teams: Team[],
     founderId: Id,
-    prizes: Prize[]
+    prizes: Prize[],
+    deletedPrizes: string[],
 }) => {
     // diff может содержать измененные поля даты начала, даты окончания,
     // числа участников и лимита участников (+ id ивента)
@@ -656,8 +783,20 @@ export const modifyEvent = async (data: {
                 body: JSON.stringify(Convert.eventOptional.toBackend(data.diff, data.prizes))
             })
         )
+        if (data.deletedPrizes.length > 0) {
+            eventRequests.push(
+                fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/prize`, {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    body: JSON.stringify(
+                        data.deletedPrizes.map((id) => ({
+                            id: Number(id)
+                        })))
+                })
+            )
+        }
         const prizesBackend = Convert.prize.toBackend(data.teams, data.diff.id)
-        for (let i = 0; i <= prizesBackend.length; i++) {
+        for (let i = 0; i < prizesBackend.length; i++) {
             eventRequests.push(
                 fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/win`, {
                     method: 'POST',
