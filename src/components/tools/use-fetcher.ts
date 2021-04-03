@@ -163,7 +163,7 @@ export const useFetcher = () => {
     useEffect(() => {
         const u = appState.cUser
         if (u.id !== '-1') {
-            const i = appState.invites
+            const i = appState.invites.i
             const personal = []
             const team = []
             const uTeam = []

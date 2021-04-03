@@ -256,7 +256,7 @@ interface MProps extends Omit<ModalProps, 'children'> {
 const UserEditModalContext = React.createContext()
 
 const useUserEdit = () => {
-    const {cUser} = useAppState()
+    const {cUser, user} = useAppState()
     const [firstName, setFirstName] = useState(cUser.firstName)
     const [lastName, setLastName] = useState(cUser.lastName)
     const [job, setJob] = useState(cUser.jobName)
@@ -349,6 +349,7 @@ const useUserEdit = () => {
             const update = await modifyUser(diff as UserOptional & { id: string })
             setDisabled(false)
             cUser.change(diff)
+            user.change(diff)
             return update
         },
         onCancel: () => {

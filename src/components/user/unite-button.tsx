@@ -94,11 +94,11 @@ export const UniteButton: React.FC = () => {
             onSubmit: async () => {
                 const didDecline = await declineInvite(cEvent.id, cUser.id, user.id)
                 if (didDecline) {
-                    invites.set({
-                        team: invites.team
+                    invites.i.set({
+                        team: invites.i.team
                             .filter(t => !t.team.members
                                 .find(tt => user.id.toString() === tt.id)),
-                        personal: invites.personal.filter(t => t.id.toString() !== user.id)
+                        personal: invites.i.personal.filter(t => t.id.toString() !== user.id)
                     })
                     pModal.close()
                     enqueueSnackbar(`Вы отклонили заявку`)
@@ -116,11 +116,11 @@ export const UniteButton: React.FC = () => {
     const onUniteClick = async () => {
         const didAccept = await acceptInvite(cEvent.id, cUser.id, user.id)
         if(didAccept) {
-            invites.set({
-                team: invites.team
+            invites.i.set({
+                team: invites.i.team
                     .filter(t => !t.team.members
                         .find(tt => user.id.toString() === tt.id)),
-                personal: invites.personal.filter(t => t.id.toString() !== user.id)
+                personal: invites.i.personal.filter(t => t.id.toString() !== user.id)
             })
             history.push('/team')
             enqueueSnackbar(`Вы объединились`)
@@ -139,8 +139,8 @@ export const UniteButton: React.FC = () => {
         </Link>
     }
 
-    const didInviteMe = !!invites.team.find(t => t.team.members.find(tt => user.id.toString() === tt.id))
-        || !!invites.personal.find(t => t.id.toString() === user.id)
+    const didInviteMe = !!invites.i.team.find(t => t.team.members.find(tt => user.id.toString() === tt.id))
+        || !!invites.i.personal.find(t => t.id.toString() === user.id)
 
     if(didInviteMe) {
         return <ButtonGroup variant="contained" color="primary">
