@@ -57,6 +57,7 @@ export const useFetcher = () => {
             if (appState.cUser.id !== '-1' && appState.event.id !== '-1') {
                 const participating = await isParticipating(appState.event.id, appState.cUser.id)
                 appState.event.change({isParticipating: !!participating})
+                appState.cEvent.change({isParticipating: !!participating})
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps

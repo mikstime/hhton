@@ -21,7 +21,7 @@ export const EventAbout: React.FC = () => {
                     <Box clone flexDirection={{xs: 'column', md: 'row'}}>
                         <Grid item container>
                             <AdditionalText
-                                style={{marginRight: 16}}>Дата
+                                style={{marginRight: 16, width: 140}}>Дата
                                 начала:</AdditionalText>
                             <Typography
                                 variant='body1'>{event.settings.start ? format(event.settings.start, 'dd/MM/yyyy в hh:mm') : 'Не известна'}</Typography>
@@ -30,23 +30,23 @@ export const EventAbout: React.FC = () => {
                     <Box clone flexDirection={{xs: 'column', md: 'row'}}>
                         <Grid item container wrap='nowrap'>
                             <AdditionalText
-                                style={{marginRight: 16}}>Дата
+                                style={{marginRight: 16, width: 140}}>Дата
                                 окончания:</AdditionalText>
                             <Typography
                                 variant='body1'>{event.settings.finish ? format(event.settings.finish, 'dd/MM/yyyy в hh:mm') : 'Не известна'}</Typography>
                         </Grid>
                     </Box>
                 </Grid>
-                <Grid item container xs spacing={2}>
+                <Grid item container xs>
                     <Box clone flexDirection={{xs: 'column', md: 'row'}}>
-                        <Grid item container>
+                        <Grid item container style={{marginBottom: 16}}>
                             <AdditionalText style={{marginRight: 16}}>Размер
                                 команды:</AdditionalText>
                             <Typography
                                 variant='body1'>{event.settings.teamSize ? (event.settings.teamSize + ' чел. ') : 'любой'}</Typography>
                         </Grid>
                     </Box>
-                    <Grid item container>
+                    <Grid item container xs>
                         <CardActionArea style={{borderRadius: 8}}
                                         onClick={open}>
                             <InfoPlate elevation={4} textPlate={CaptionText}

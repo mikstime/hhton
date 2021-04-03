@@ -105,29 +105,24 @@ const AppNav: React.FC<GridProps> = ({children}) => {
                   </AdditionalText>
                 </NavLink>
                 }
-                <Box paddingTop={2}/>
-                {!cEvent.isNullEvent && cUser.id !== cEvent.founderId && cUser.id !== '-1' &&
-                <NavLink to={`/team`} onClick={() => setMobileOpen(false)}>
-                  <AdditionalText align='right'>
-                    К команде
-                  </AdditionalText>
-                </NavLink>
-                }
                 {
-                    !cUser.isNotAuthorized && cEvent.id !== '-1'
+                    cEvent.isParticipating && !cUser.isNotAuthorized && cEvent.id !== '-1'
                     && !cEvent.isFinished && cEvent.founderId !== cUser.id
-                    && !cEvent.notFound && <Box paddingTop={2}/>
-                }
-                {
-                    !cUser.isNotAuthorized && cEvent.id !== '-1'
-                    && !cEvent.isFinished && cEvent.founderId !== cUser.id
-                    && !cEvent.notFound
-                    && <NavLink to={`/feed`}
+                    && !cEvent.notFound && <Fragment>
+                      <Box paddingTop={2}/>
+                      <NavLink to={`/team`} onClick={() => setMobileOpen(false)}>
+                        <AdditionalText align='right'>
+                          К команде
+                        </AdditionalText>
+                      </NavLink>
+                      <Box paddingTop={2}/>
+                      <NavLink to={`/feed`}
                                 onClick={() => setMobileOpen(false)}>
                       <AdditionalText align='right'>
                         К поиску
                       </AdditionalText>
                     </NavLink>
+                    </Fragment>
                 }
                 <Box paddingTop={2}/>
                 {cUser.id !== '-1' && !cUser.isNullUser &&
@@ -150,16 +145,6 @@ const AppNav: React.FC<GridProps> = ({children}) => {
                         Создать мероприятие
                       </AdditionalText>
                     </NavLink>
-                }
-                {
-                    cUser.isNotAuthorized &&
-                    <a
-                      href={`${HOST_DOMAIN}${PREFIX}/redirect?backTo=${window.location.pathname.replace('/', '')}`}
-                      style={{textDecoration: 'none', marginTop: 16}}>
-                      <AdditionalText align='right'>
-                        Регистрация
-                      </AdditionalText>
-                    </a>
                 }
             </Box>
         )

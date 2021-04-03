@@ -141,7 +141,7 @@ export const ParticipateButton: React.FC = () => {
                       flex: '1 1 0%',
                       display: 'flex'
                   }}><SecondaryButton style={{flex: 1}}>
-            Участвовать
+            Регистрация
         </SecondaryButton>
         </a>
     }
