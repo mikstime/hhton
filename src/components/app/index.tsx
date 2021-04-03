@@ -1,9 +1,9 @@
-import React, {Fragment, useState} from 'react'
+import React, {Fragment} from 'react'
 import {Switch, Route, Link, LinkProps} from 'react-router-dom'
 import {UserApp} from './user'
 import {EventApp} from './event'
 import {TeamApp} from './team'
-import {FeedApp, LastUserInFeedProvider} from './feed'
+import {FeedApp} from './feed'
 // import {DevTools} from '../tools/dev-tools'
 import {HomeApp} from './home'
 import {useFetcher} from '../tools/use-fetcher'
@@ -248,19 +248,6 @@ export const App: React.FC = () => {
     useAuth()
     useNotifications()
 
-    const changeLastUserInFeed = function(newLastUser: number, evtID: string) {
-        const newState = {
-            lastUsers: newLastUser,
-            changeLastUser: lastUserInFeed.changeLastUser
-        }
-
-        setLastUserInFeed(newState)
-    }
-    const [lastUserInFeed, setLastUserInFeed] = useState({
-        lastUsers: 0,
-        changeLastUser: changeLastUserInFeed,
-    })
-
     return <Switch>
         <Route path='/event/create'>
             <AppNav>
@@ -307,9 +294,7 @@ export const App: React.FC = () => {
         <Route path='/feed'>
             <AppNav>
                 <RootContainer>
-                    <LastUserInFeedProvider value={lastUserInFeed}>
                         <FeedApp/>
-                    </LastUserInFeedProvider>
                 </RootContainer>
             </AppNav>
         </Route>
