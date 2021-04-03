@@ -1,8 +1,8 @@
 import {useEffect} from 'react'
 import {useAppState} from './use-app-state'
 import {
-    getTeam,
-    personalInvites,
+    getTeam, personalInvitedDeclined, personalInvitedPending,
+    personalInvites, teamInvitedDeclined, teamInvitedPending,
     teamInvites
 } from '../../model/api'
 
@@ -36,25 +36,46 @@ export const useInvitesFetcher = () => {
     //outgoing
     useEffect(() => {
         (async () => {
-            // if (cEvent.id !== '-1' && cUser.id !== '-1') {
-            //     const [team, personal] = await Promise.all([
-            //         teamInvitedPending(cEvent.id, cUser.id),
-            //         personalInvitedPending(cEvent.id, cUser.id),
-            //     ])
-            //
-            //     invites.o.set({team, personal})
-            //
-            //     const t = team.map(u => getTeam(cEvent.id, u.id))
-            //     const teams = await Promise.all(t)
-            //     teams.forEach((t, i) => {
-            //         team[i].team = t
-            //     })
-            //     invites.o.set({team, personal})
-            // }
+            if (cEvent.id !== '-1' && cUser.id !== '-1') {
+                const [team, personal] = await Promise.all([
+                    teamInvitedPending(cEvent.id, cUser.id),
+                    personalInvitedPending(cEvent.id, cUser.id),
+                ])
+
+                invites.o.set({team, personal})
+
+                const t = team.map(u => getTeam(cEvent.id, u.id))
+                const teams = await Promise.all(t)
+                teams.forEach((t, i) => {
+                    team[i].team = t
+                })
+                invites.o.set({team, personal})
+            }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cUser.id, cEvent.id])
 
+    //history
+    useEffect(() => {
+        (async () => {
+            if (cEvent.id !== '-1' && cUser.id !== '-1') {
+                const [team, personal] = await Promise.all([
+                    teamInvitedDeclined(cEvent.id, cUser.id),
+                    personalInvitedDeclined(cEvent.id, cUser.id),
+                ])
+
+                invites.h.set({team, personal})
+
+                const t = team.map(u => getTeam(cEvent.id, u.id))
+                const teams = await Promise.all(t)
+                teams.forEach((t, i) => {
+                    team[i].team = t
+                })
+                invites.h.set({team, personal})
+            }
+        })()
+        //eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cUser.id, cEvent.id])
     //both
     useEffect(() => {
         (async () => {

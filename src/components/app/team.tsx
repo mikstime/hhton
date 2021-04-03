@@ -56,24 +56,28 @@ export const TeamApp: React.FC = () => {
 
 
     return <Grid container direction='column'>
-        <Box clone paddingLeft={{xs: 0, md: 50}} marginLeft={{xs: 0, md: -50}}>
-            <Tabs variant="scrollable"
-                  indicatorColor="primary" style={{
-                position: 'sticky',
-                top: 0,
-                zIndex: 3,
-                backgroundColor: '#F9F9F9',
-                marginBottom: 16
-            }}
-                  textColor="primary" value={value} onChange={handleChange}
-                  aria-label="team-page tabs"
-            >
-                <Tab label="Команда"/>
-                <Tab label="Входящие заявки"/>
-                <Tab label="Исходящие заявки"/>
-                <Tab label="История заявок"/>
-            </Tabs>
-        </Box>
+        <Grid item container xs style={{
+            position: 'sticky',
+            top: 0,
+            zIndex: 3,
+        }}>
+            <Box clone paddingLeft={{xs: 0, md: 50}}
+                 marginLeft={{xs: 0, md: -50}}>
+                <Tabs variant="scrollable"
+                      indicatorColor="primary" style={{
+                    backgroundColor: '#F9F9F9',
+                    marginBottom: 16
+                }}
+                      textColor="primary" value={value} onChange={handleChange}
+                      aria-label="team-page tabs"
+                >
+                    <Tab label="Команда"/>
+                    <Tab label="Входящие заявки"/>
+                    <Tab label="Исходящие заявки"/>
+                    <Tab label="История заявок"/>
+                </Tabs>
+            </Box>
+        </Grid>
         <TabPanel value={value} index={0}>
             <TeamPage/>
         </TabPanel>
