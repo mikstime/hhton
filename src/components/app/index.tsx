@@ -294,7 +294,7 @@ export const App: React.FC = () => {
         <Route path='/feed'>
             <AppNav>
                 <RootContainer>
-                    <FeedApp/>
+                        <FeedApp/>
                 </RootContainer>
             </AppNav>
         </Route>

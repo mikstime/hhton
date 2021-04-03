@@ -1,4 +1,11 @@
-import React, {Fragment, useCallback, useEffect, useState} from 'react'
+import React, {
+    Dispatch,
+    Fragment,
+    SetStateAction,
+    useCallback,
+    useEffect,
+    useState
+} from 'react'
 import {UserApp} from './user'
 import {Box, Slide, useTheme} from '@material-ui/core'
 import {useLocation} from 'react-router-dom'
@@ -17,13 +24,43 @@ const StyledDiv = styled.div`
   right: 20px;
   display: flex;
 `
+//@ts-ignore
+const FeedContext = React.createContext();
+
+export const FeedProvider: React.FC = ({children}) => {
+
+    const [users, setUsers] = useState<string[]>([])
+    const [current, setCurrent] = useState(0)
+    //event id can be accessed with useAppState
+
+    const val = {
+        current, setCurrent,
+        users, setUsers,
+    }
+
+    return <FeedContext.Provider value={val}>
+        {children}
+    </FeedContext.Provider>;
+}
+
+const useFeed = () => {
+    const context = React.useContext(FeedContext)
+
+    if (context === undefined) {
+        throw new Error('useFeed must be used within a FeedProvider')
+    }
+    return context as {
+        current: number, setCurrent: Dispatch<SetStateAction<number>>,
+        users: string[], setUsers: Dispatch<SetStateAction<string[]>>
+    }
+}
+
 export const FeedApp: React.FC = () => {
 
     const [key, setKey] = useState(Math.random())
 
     const location = useLocation()
-    const [users, setUsers] = useState<string[]>([])
-    const [current, setCurrent] = useState(0)
+    const {current, setCurrent, users, setUsers} = useFeed()
 
     const [isFetching, setIsFetching] = useState(false)
     const history = useHistory()
@@ -40,10 +77,9 @@ export const FeedApp: React.FC = () => {
                 history.push('/event/' + cEvent.id)
             }
             if (cEvent.id !== '-1') {
-                const users = await getFeed(cEvent.id, location.search)
-                if (users.length) {
-                    setUsers(users)
-                    setCurrent(0)
+                const newUsers = await getFeed(cEvent.id, location.search)
+                if (newUsers.length) {
+                    setUsers([...users, ...newUsers])
                 }
             }
         })()

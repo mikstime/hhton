@@ -98,6 +98,12 @@ type BackendJobs = {
     name: string,
 }[]
 
+type BackendPrizes = {
+    prizeID: number,
+    eventID: number,
+    teamID: number,
+}[]
+
 export type Jobs = {
     name: string,
     id: number
@@ -250,6 +256,23 @@ const Convert = {
             }
         }
     },
+    prize: {
+        toBackend: (fTeams: Team[], evtID: String) => {
+            let result = [] as BackendPrizes
+            for (let i = 0; i < fTeams.length; i++) {
+                if (fTeams[i].prizes && fTeams[i].prizes!.length !== 0) {
+                    const p = fTeams[i].prizes![0];
+                    result.push({
+                        prizeID: Number(p.id),
+                        eventID: Number(evtID),
+                        teamID: Number(fTeams[i].id),
+                    })
+                }
+            }
+
+            return result
+        }
+    },
     team: {
         toFrontend: (bTeam: BackendTeam) => {
             return {
@@ -296,6 +319,9 @@ const Convert = {
     },
     eventOptional: {
         toBackend: (fEvent: HackathonOptional, prizes: Prize[]) => BackendHackathon
+    },
+    prize: {
+        toBackend: (fTeams: Team[], evtID: String) => BackendPrizes
     },
     team: {
         toFrontend: (bUser: BackendTeam) => Team,
