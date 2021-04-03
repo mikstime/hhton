@@ -14,7 +14,7 @@ export const useAuth = () => {
     useEffect(() => {
         (async () => {
             const eventId = localStorage.getItem('eventId')
-            const userId = '181853117'//await checkUser()//'181853117'
+            const userId = await checkUser()//'181853117'
 
             if(eventId) {
                 cEvent.change({id: eventId})

@@ -58,37 +58,35 @@ export const TeamApp: React.FC = () => {
 
 
     return <Grid container direction='column'>
-        <Grid item zeroMinWidth>
-            <Container>
-            <Box
-                width={{
-                    xs: '100%',
-                    sm: 'calc( 100vw - 48px - 48px - 200px)',
-                    md: 'calc( 800px - 48px - 48px)'
-                }
-                }
-                style={{
+        <Box
+            paddingLeft={{sm: '50px'}}
+            marginLeft={{sm: '-50px'}}
+            width={{
+                xs: '100%',
+                sm: 'calc( 100vw - 48px - 48px - 200px)',
+                md: 'calc( 800px - 48px - 48px)'
+            }
+            }
+            style={{
                 position: 'sticky',
                 top: 0,
                 zIndex: 3,
+                backgroundColor: '#F9F9F9',
             }}>
-                <Tabs variant="scrollable"
-                      indicatorColor="primary" style={{
-                    backgroundColor: '#F9F9F9',
-                    marginBottom: 16
-                }}
-                      textColor="primary" value={value} onChange={handleChange}
-                      aria-label="team-page tabs"
-                >
-                    <Tab label="Команда"/>
-                    <Tab label="Входящие заявки"/>
-                    <Tab label="Исходящие заявки"/>
-                    <Tab label="История заявок"/>
-                </Tabs>
+            <Tabs variant="scrollable"
+                  indicatorColor="primary" style={{
+                marginBottom: 16
+            }}
+                  textColor="primary" value={value} onChange={handleChange}
+                  aria-label="team-page tabs"
+            >
+                <Tab label="Команда"/>
+                <Tab label="Входящие заявки"/>
+                <Tab label="Исходящие заявки"/>
+                <Tab label="История заявок"/>
+            </Tabs>
 
-            </Box>
-            </Container>
-        </Grid>
+        </Box>
         <TabPanel value={value} index={0}>
             <TeamPage/>
         </TabPanel>
