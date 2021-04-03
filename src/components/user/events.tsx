@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {Theme, createStyles, makeStyles} from '@material-ui/core/styles'
 import GridList from '@material-ui/core/GridList'
 import GridListTile from '@material-ui/core/GridListTile'
-import {GridListTileBar, Grow, Hidden, IconButton} from '@material-ui/core'
+import {Box, GridListTileBar, Grow, Hidden, IconButton} from '@material-ui/core'
 import StarBorderIcon from '@material-ui/icons/StarBorder'
 import {Id, useUser} from '../tools/use-app-state/user'
 import {useAppState} from '../tools/use-app-state'
@@ -83,22 +83,32 @@ export const UserEvents: React.FC = () => {
         </GridListTile>
     ))
     return (
-        <div className={classes.root}>
-            <Hidden smDown>
-                <GridList spacing={16} cols={2.5} className={classes.gridList}>
-                    {toRender}
-                </GridList>
-            </Hidden>
-            <Hidden mdUp xsDown>
-                <GridList spacing={16} cols={1.5} className={classes.gridList}>
-                    {toRender}
-                </GridList>
-            </Hidden>
-            <Hidden smUp>
-                <GridList spacing={16} cols={1.1} className={classes.gridList}>
-                    {toRender}
-                </GridList>
-            </Hidden>
-        </div>
+        <Box clone width={{
+            xs: '100%',
+            sm: 'calc( 100vw - 48px - 48px - 200px)',
+            md: 'calc( 800px - 48px - 48px)'
+        }
+        }>
+            <div className={classes.root}>
+                <Hidden smDown>
+                    <GridList spacing={16} cols={2.5}
+                              className={classes.gridList}>
+                        {toRender}
+                    </GridList>
+                </Hidden>
+                <Hidden mdUp xsDown>
+                    <GridList spacing={16} cols={1.5}
+                              className={classes.gridList}>
+                        {toRender}
+                    </GridList>
+                </Hidden>
+                <Hidden smUp>
+                    <GridList spacing={16} cols={1.1}
+                              className={classes.gridList}>
+                        {toRender}
+                    </GridList>
+                </Hidden>
+            </div>
+        </Box>
     )
 }
