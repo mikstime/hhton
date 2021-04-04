@@ -108,7 +108,7 @@ export const WinnersSection: React.FC = () => {
                 <Box clone>
                     <Grid container alignItems='stretch'>
                         {!event.isNullEvent && !winners.length &&
-                        <Grid xs item container alignItems='center'
+                        <Grid xs item container spacing={1} alignItems='center'
                               style={{
                                   height: 40
                               }}><Typography>
