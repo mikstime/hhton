@@ -85,26 +85,25 @@ const MultilineGrayField: React.FC<{ label: string, inputProps?: InputBaseProps 
 const GrayField: React.FC<{ label: string, inputProps?: InputBaseProps }> = ({label, inputProps = {}}) => {
     return <Box clone flexDirection={{xs: 'column', sm: 'row'}}>
         <Grid item xs container alignItems='baseline'>
-            <Grid xs={12} md='auto' item style={{marginRight: 16}}>
-                <Box clone textAlign={{md: 'right'}}>
-                    <Typography variant='body2' style={{color: '#6F7985', minHeight: 24}}>
-                        {label}
-                    </Typography>
-                </Box>
-            </Grid>
-            {/*<Grid xs={12} sm item>*/}
+        <Grid xs={12} md='auto' item style={{marginRight: 16}}>
+            <Box clone textAlign={{md: 'right'}}>
+                <Typography variant='body2' style={{color: '#6F7985'}}>
+                    {label}
+                </Typography>
+            </Box>
+        </Grid>
+        {/*<Grid xs={12} sm item>*/}
             <InputBase fullWidth={true} {...inputProps} style={{
                 background: 'white',
                 borderRadius: 8,
                 paddingLeft: 12,
                 paddingRight: 12,
-                minHeight: 24,
                 display: 'block',
                 height: 32,
                 ...(inputProps.style || {})
             }}/>
-            {/*</Grid>*/}
-        </Grid>
+        {/*</Grid>*/}
+    </Grid>
     </Box>
 }
 
