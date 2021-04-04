@@ -22,8 +22,13 @@ export const useInvitesFetcher = () => {
                     getTeam(cEvent.id, cUser.id)
                 ])
 
-                // TODO
                 cUser.change({team: userTeam})
+                invites.i.set({team, personal})
+                const t = team.map(u => getTeam(cEvent.id, u.id))
+                const teams = await Promise.all(t)
+                teams.forEach((t, i) => {
+                    team[i].team = t
+                })
                 invites.i.set({team, personal})
             }
         })()
@@ -39,7 +44,13 @@ export const useInvitesFetcher = () => {
                     personalInvitedPending(cEvent.id, cUser.id),
                 ])
 
-                // TODO
+                invites.o.set({team, personal})
+
+                const t = team.map(u => getTeam(cEvent.id, u.id))
+                const teams = await Promise.all(t)
+                teams.forEach((t, i) => {
+                    team[i].team = t
+                })
                 invites.o.set({team, personal})
             }
         })()
@@ -55,7 +66,13 @@ export const useInvitesFetcher = () => {
                     personalInvitedDeclined(cEvent.id, cUser.id),
                 ])
 
-                // TODO
+                invites.h.set({team, personal})
+
+                const t = team.map(u => getTeam(cEvent.id, u.id))
+                const teams = await Promise.all(t)
+                teams.forEach((t, i) => {
+                    team[i].team = t
+                })
                 invites.h.set({team, personal})
             }
         })()
