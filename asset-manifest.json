@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.js": "/hhton/static/js/main.919789dd.chunk.js",
-    "main.js.map": "/hhton/static/js/main.919789dd.chunk.js.map",
+    "main.js": "/hhton/static/js/main.be45037d.chunk.js",
+    "main.js.map": "/hhton/static/js/main.be45037d.chunk.js.map",
     "runtime-main.js": "/hhton/static/js/runtime-main.d754d495.js",
     "runtime-main.js.map": "/hhton/static/js/runtime-main.d754d495.js.map",
-    "static/js/2.abe1accb.chunk.js": "/hhton/static/js/2.abe1accb.chunk.js",
-    "static/js/2.abe1accb.chunk.js.map": "/hhton/static/js/2.abe1accb.chunk.js.map",
+    "static/js/2.bb3de96a.chunk.js": "/hhton/static/js/2.bb3de96a.chunk.js",
+    "static/js/2.bb3de96a.chunk.js.map": "/hhton/static/js/2.bb3de96a.chunk.js.map",
     "index.html": "/hhton/index.html",
-    "static/js/2.abe1accb.chunk.js.LICENSE.txt": "/hhton/static/js/2.abe1accb.chunk.js.LICENSE.txt",
+    "static/js/2.bb3de96a.chunk.js.LICENSE.txt": "/hhton/static/js/2.bb3de96a.chunk.js.LICENSE.txt",
     "static/media/back.aabac1f0.svg": "/hhton/static/media/back.aabac1f0.svg",
     "static/media/background.d6d21316.png": "/hhton/static/media/background.d6d21316.png",
     "static/media/bio.27d45da0.svg": "/hhton/static/media/bio.27d45da0.svg",
@@ -39,7 +39,7 @@
   },
   "entrypoints": [
     "static/js/runtime-main.d754d495.js",
-    "static/js/2.abe1accb.chunk.js",
-    "static/js/main.919789dd.chunk.js"
+    "static/js/2.bb3de96a.chunk.js",
+    "static/js/main.be45037d.chunk.js"
   ]
 }
