@@ -612,9 +612,11 @@ export const getPersonalInvitesFromUrl = async (url: string) => {
 
         if (users.ok) {
             const json = await users.json()
-            const usersIDs = json.map((id: number) => fetchUser(id.toString()))
+            const usersIDs = await Promise.all(
+                json.map((id: number) => fetchUser(id.toString()))
+            ) as string[]
 
-            return getFullUsersByID(usersIDs)
+            return await getFullUsersByID(usersIDs)
         } else {
             return []
         }
