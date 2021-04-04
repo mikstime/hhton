@@ -362,7 +362,7 @@ export const getFeed = async (eventId: string, query: string, sinceId?: string) 
             const json = await feedRequest.json()
             let result = [] as string[]
 
-            if (!json.users)
+            if(!json.users)
                 return []
             json.users.forEach((v: { id: Id }) => {
                 result.push(v.id)
@@ -612,11 +612,9 @@ export const getPersonalInvitesFromUrl = async (url: string) => {
 
         if (users.ok) {
             const json = await users.json()
-            const usersIDs = await Promise.all(
-                json.map((id: number) => fetchUser(id.toString()))
-            ) as string[]
+            const usersIDs = json.map((id: number) => fetchUser(id.toString()))
 
-            return await getFullUsersByID(usersIDs)
+            return getFullUsersByID(usersIDs)
         } else {
             return []
         }
@@ -795,7 +793,7 @@ export const modifyEvent = async (data: {
         for (let response of eventResponse) {
             if (result = result && (response.ok && response.status === 200)) {
             } else {
-                break
+                break;
             }
         }
         return result
@@ -922,8 +920,8 @@ export const getEventTeams = async (eventId: string) => {
             })
         if (finish.ok) {
             const j = await finish.json()
-            if (j) {
-                return await Promise.all(j.map((j: Team) => getTeamById(j.id ?? ''))) as Team[]
+            if(j) {
+            return await Promise.all(j.map((j: Team) => getTeamById(j.id ?? ''))) as Team[]
             }
         }
         return []
@@ -941,17 +939,17 @@ export const getWinners = async (eventId: string) => {
             })
         if (finish.ok) {
             const j = await finish.json()
-            if (!j)
+            if(!j)
                 return []
             const ts = await Promise.all(j.map((j: Team) => getTeamById(j.id ?? ''))) as Team[]
             //@ts-ignore
-            const r = j?.map((j, i) => ({
+            const r = j?.map((j, i) =>({
                 ...ts[i],
                 prizes: [{
-                    id: j.prize.id,
-                    name: j.prize.name,
-                    place: j.prize.place,
-                    count: j.prize.amount
+                id: j.prize.id,
+                name: j.prize.name,
+                place: j.prize.place,
+                count: j.prize.amount,
                 }]
             })) ?? []
             return r as Team[]
@@ -959,23 +957,6 @@ export const getWinners = async (eventId: string) => {
         return []
     } else {
         await sleep(300)
-        return []
-    }
-}
-
-export const getActiveEvents = async (userId: string) => {
-    const res = await fetch(
-        `${HOST_DOMAIN}${PREFIX}/user/${userId}/events`,
-        {credentials: 'include'})
-
-    if(res.ok) {
-        const json = await res.json()
-        if(json) {
-            return json.map(Convert.event.toFrontend)
-        } else {
-            return []
-        }
-    } else {
         return []
     }
 }
