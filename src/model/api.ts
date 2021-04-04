@@ -394,7 +394,6 @@ export const getTeamById = async (teamId: string) => {
             const json = await team.json()
             if (json) {
                 const t = Convert.team.toFrontend(json)
-                //@TODO Пользователи прилетают не полные. Поправить на беке
                 t.members = await Promise.all(json.members?.map((j: BackendUser) => fetchUser(j.id!.toString())).filter((u: User | null) => u) ?? [])
                 return t
             } else {
@@ -434,7 +433,6 @@ export const getTeam = async (eventId: string, userId: string) => {
             const json = await team.json()
             if (json) {
                 const t = Convert.team.toFrontend(json)
-                //@TODO Пользователи прилетают не полные. Поправить на беке
                 t.members = await Promise.all(json.members.map((j: BackendUser) => fetchUser(j.id!.toString())).filter((u: User | null) => u))
                 return t
             } else {
@@ -957,5 +955,43 @@ export const getWinners = async (eventId: string) => {
     } else {
         await sleep(300)
         return []
+    }
+}
+
+export const voteFor = async (userID: string, eventID: string, teamID: string) => {
+    if (!mockImplemented) {
+        const voted = await fetch(`${HOST_DOMAIN}${PREFIX}/team/${teamID}/vote`,
+            {
+                method: 'POST',
+                credentials: 'include',
+                body: JSON.stringify({
+                    eventID: Number(eventID),
+                    forWhomID: Number(userID),
+                    state: 1
+                })
+            })
+        return (voted.ok && voted.status === 200)
+    } else {
+        await sleep(300)
+        return true
+    }
+}
+
+export const unVoteFor = async (userID: string, eventID: string, teamID: string) => {
+    if (!mockImplemented) {
+        const voted = await fetch(`${HOST_DOMAIN}${PREFIX}/team/${teamID}/vote`,
+            {
+                method: 'POST',
+                credentials: 'include',
+                body: JSON.stringify({
+                    eventID: Number(eventID),
+                    forWhomID: Number(userID),
+                    state: 0
+                })
+            })
+        return (voted.ok && voted.status === 200)
+    } else {
+        await sleep(300)
+        return true
     }
 }
