@@ -612,7 +612,7 @@ export const getPersonalInvitesFromUrl = async (url: string) => {
 
         if (users.ok) {
             const json = await users.json()
-            const usersIDs = json.map((id: number) => fetchUser(id.toString()))
+            const usersIDs = json.map((id: number) => id.toString())
 
             return getFullUsersByID(usersIDs)
         } else {
@@ -775,7 +775,6 @@ export const modifyEvent = async (data: {
         }
         const prizesBackend = Convert.prize.toBackend(data.teams, data.diff.id)
         for (let i = 0; i < prizesBackend.length; i++) {
-            console.log(prizesBackend[i])
             eventRequests.push(
                 fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/win`, {
                     method: 'POST',
