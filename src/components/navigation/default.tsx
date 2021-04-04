@@ -1,6 +1,6 @@
-import React, {Fragment, MouseEventHandler} from 'react'
-import {Box, Grid} from '@material-ui/core'
-import {MenuBase, MenuProps, NavLink} from './common'
+import React, {Fragment} from 'react'
+import {Box} from '@material-ui/core'
+import {EventLink, MenuBase, MenuProps, NavLink} from './common'
 import {AdditionalText} from '../common'
 import {useAppState} from '../tools/use-app-state'
 
@@ -8,15 +8,7 @@ import {useAppState} from '../tools/use-app-state'
 export const DefaultMenu: React.FC<MenuProps> = ({onClick}) => {
     const {cEvent, cUser} = useAppState()
     return <MenuBase>
-        {!cEvent.isNullEvent && cEvent.id !== '-1' &&
-        <NavLink to={`/event/${cEvent.id}`}
-                 onClick={onClick}>
-          <AdditionalText
-            align='right'>
-              {cEvent.name || 'К мероприятию'}
-          </AdditionalText>
-        </NavLink>
-        }
+        <EventLink onClick={onClick}/>
         {
             cEvent.isParticipating && !cUser.isNotAuthorized && cEvent.id !== '-1'
             && !cEvent.isFinished && cEvent.founderId !== cUser.id

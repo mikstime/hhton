@@ -1,7 +1,8 @@
 import React from 'react'
-import {Grid} from '@material-ui/core'
+import {EventLink, MenuBase, MenuProps} from './common'
 
-export const LoadingMenu: React.FC = () => {
-    return <Grid container>
-    </Grid>
+export const LoadingMenu: React.FC<MenuProps> = ({onClick}) => {
+    return <MenuBase>
+        <EventLink onClick={onClick}/>
+    </MenuBase>
 }

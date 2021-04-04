@@ -1,16 +1,13 @@
-import React, {Fragment, useCallback} from 'react'
+import React, {useCallback} from 'react'
 import {
     AppBar,
-    Box, createStyles, Drawer,
+    createStyles, Drawer,
     GridProps,
     Hidden,
     IconButton, makeStyles, Theme,
-    Toolbar, useTheme
+    Toolbar
 } from '@material-ui/core'
 import {useAppState} from '../tools/use-app-state'
-import {AdditionalText} from '../common'
-import {Link, LinkProps} from 'react-router-dom'
-import {NavLink} from './common'
 import {DefaultMenu} from './default'
 import {LoadingMenu} from './loading'
 import {OwnerMenu} from './owner'
@@ -43,6 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
         // necessary for content to be below app bar
         toolbar: theme.mixins.toolbar,
         drawerPaper: {
+            padding: 24,
             paddingTop: 64,
             boxSizing: 'border-box',
             width: drawerWidth,
@@ -74,7 +72,7 @@ export const AppNavigation: React.FC<GridProps> = ({children}) => {
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen)
     }
-    let drawer = <LoadingMenu/>
+    let drawer = <LoadingMenu onClick={onLinkClick}/>
 
     if (cEvent.id === '-1' || cEvent.isNullEvent) {
         drawer = <DefaultMenu onClick={onLinkClick}/>
