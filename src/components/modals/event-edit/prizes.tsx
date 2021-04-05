@@ -193,7 +193,7 @@ export const EventPrizes: React.FC<{
     },
     groups: {
         value: Group[],
-        onChange: (g: Group[]) => void
+        onChange: (g: Group[], d: {wID: string, dpID: string, upID: string}) => void
     }
 }> = ({prizes, groups}) => {
     const {event} = useAppState()
@@ -252,20 +252,27 @@ export const EventPrizes: React.FC<{
     }, [prizes.value, setEditing])
 
     const onGroupsChange = useCallback((g: Group[], i: number, j: number) => {
+        // TODO id призов не должно быть пустым
         if (!g[i].teams[j].prizes) g[i].teams[j].prizes = []
 
         const p = prizes.value[editing.indexOf(true)]
+        const deletedPrize = {wID: g[i].teams[j].id ?? '', dpID: '', upID: ''}
         if (p) {
-            const ind = g[i].teams[j].prizes?.findIndex(x => x?.name === p?.name)
+            const ind = g[i].teams[j].prizes?.findIndex(x => x?.id === p?.id)
             if (ind === -1) {
-                g[i].teams[j].prizes?.push(p)
+                // TODO Ограничил количество призов на команду
+                // g[i].teams[j].prizes?.push(p)
+                g[i].teams[j].prizes = [p]
+                deletedPrize.upID = p?.id ?? ''
             } else {
                 if (ind !== undefined) {
                     g[i].teams[j].prizes?.splice(ind, 1)
+                    deletedPrize.dpID = p?.id ?? ''
                 }
             }
         }
-        groups.onChange(g)
+
+        groups.onChange(g, deletedPrize)
     }, [groups.onChange, editing, prizes.value])
 
     return <GrayPlate style={{marginTop: 16}}>

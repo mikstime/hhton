@@ -747,6 +747,7 @@ export const modifyEvent = async (data: {
     teams: Team[],
     founderId: Id,
     prizes: Prize[],
+    deletedWinners: {},
     deletedPrizes: string[],
 }) => {
     if (!mockImplemented) {
@@ -771,13 +772,14 @@ export const modifyEvent = async (data: {
                 })
             )
         }
+        // TODO удалять призы
         const prizesBackend = Convert.prize.toBackend(data.teams, data.diff.id)
-        for (let i = 0; i < prizesBackend.length; i++) {
+        for (let prize of prizesBackend) {
             eventRequests.push(
                 fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/win`, {
                     method: 'POST',
                     credentials: 'include',
-                    body: JSON.stringify(prizesBackend[i])
+                    body: JSON.stringify(prize)
                 })
             )
         }
@@ -986,6 +988,7 @@ export const unVoteFor = async (userID: string, eventID: string, teamID: string)
                 body: JSON.stringify({
                     eventID: Number(eventID),
                     forWhomID: Number(userID),
+                    // TODO проверить
                     state: 0
                 })
             })

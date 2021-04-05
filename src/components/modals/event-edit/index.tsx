@@ -57,6 +57,7 @@ export const useEventEdit = () => {
     const [site, setSite] = useState<string>('')
     const [prizes, setPrizes] = useState<Prize[]>([])
     const [groups, setGroups] = useState<Group[]>([])
+    const [deletedWinners, setDeletedWinners] = useState<{}>({})
     const [disabled, setDisabled] = useState(false)
     const [deletedPrizes, setDeletedPrizes] = useState([] as string[])
 
@@ -95,6 +96,7 @@ export const useEventEdit = () => {
         setSite(event.settings.site ?? '')
         setPrizes(event.prizes)
         setDeletedPrizes([])
+        setDeletedWinners({})
         setDisabled(false)
         // }
     }
@@ -107,6 +109,7 @@ export const useEventEdit = () => {
         setSite('')
         setPrizes([])
         setDeletedPrizes([])
+        setDeletedWinners({})
         setDisabled(false)
     }
 
@@ -145,9 +148,28 @@ export const useEventEdit = () => {
     //     setPrizes(p)
     // }, [setPrizes])
 
-    const onGroupsChange = useCallback((g) => {
+    const onGroupsChange = useCallback((g, d) => {
+        // TODO тут состояние сохраняется
+        const newDeletedWinners = deletedWinners
+        // @ts-ignore
+        let deletedWinnersArray = newDeletedWinners[d.wID]
+        if (deletedWinnersArray) {
+            if (d.upID !== '') {
+                deletedWinnersArray = deletedWinnersArray.filter((p: string) => p !== d.upID)
+            } else if (d.dpID !== '') {
+                deletedWinnersArray.push(d.dpID)
+            }
+        } else {
+            if (d.dpID !== '') {
+                deletedWinnersArray = [d.dpID]
+            }
+        }
+        // @ts-ignore
+        newDeletedWinners[d.wID] = deletedWinnersArray
+        console.log('Призы будут удалены: ', newDeletedWinners)
+        setDeletedWinners(newDeletedWinners)
         setGroups(g)
-    }, [setGroups])
+    }, [deletedWinners, setDeletedWinners, setGroups])
 
     return {
         general: {
@@ -243,6 +265,7 @@ export const useEventEdit = () => {
                 founderId: event.founderId,
                 prizes,
                 teams: teams,
+                deletedWinners: deletedWinners,
                 deletedPrizes: deletedPrizes
             })
             setDisabled(false)

@@ -6,12 +6,12 @@ import {
     Typography
 } from '@material-ui/core'
 import {Plate} from '../../common'
-import {Team} from '../../tools/use-app-state/user'
+import {Prize, Team} from '../../tools/use-app-state/user'
 import {PrimaryButton} from '../../common/buttons'
 
 export type Group = {
     title: string,
-    teams: (Team & { selected?: boolean })[],
+    teams: (Team & { selected?: boolean, deletedPrizes?: Prize[] })[],
 }
 export const teamsToGroups = (teams: Team[]) => {
     const groups: Group[] = []
