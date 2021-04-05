@@ -33,11 +33,11 @@ jobs:
         run: yarn install
 
       - name: Build_dev
-        if: ${{ contains(github.ref, 'develop') && contains(github.event_name, 'push') }}
+        if: ${{ contains(github.ref, 'develop') }}
         run: REACT_APP_ENV=dev yarn build:react
 
       - name: Build_prod
-        if: ${{ contains(github.ref, 'master') && contains(github.event_name, 'push') }}
+        if: ${{ contains(github.ref, 'master') }}
         run: REACT_APP_ENV=prod yarn build:react
 
       - uses: actions/upload-artifact@master
@@ -47,7 +47,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    if: contains(github.ref, 'develop') && contains(github.event_name, 'push')
+    if: contains(github.event_name, 'push')
     needs: build
     steps:
       - uses: actions/download-artifact@master
@@ -56,7 +56,7 @@ jobs:
           path: ./build
 
       - name: copy file via ssh password
-        if: ${{ contains(github.ref, 'develop') && contains(github.event_name, 'push') }}
+        if: ${{ contains(github.ref, 'develop') }}
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -68,7 +68,7 @@ jobs:
           strip_components: 1
 
       - name: copy file via ssh password
-        if: ${{ contains(github.ref, 'develop') && contains(github.event_name, 'push') }}
+        if: ${{ contains(github.ref, 'master') }}
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.PROD_HOST }}
