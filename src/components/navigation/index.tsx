@@ -11,6 +11,7 @@ import {useAppState} from '../tools/use-app-state'
 import {DefaultMenu} from './default'
 import {LoadingMenu} from './loading'
 import {OwnerMenu} from './owner'
+import {UnAuthMenu} from './unauth'
 
 const drawerWidth = 200
 
@@ -74,13 +75,15 @@ export const AppNavigation: React.FC<GridProps> = ({children}) => {
     }
     let drawer = <LoadingMenu onClick={onLinkClick}/>
 
-    if (cEvent.id === '-1' || cEvent.isNullEvent) {
-        drawer = <DefaultMenu onClick={onLinkClick}/>
-    }
     if(cEvent.founderId === cUser.id) {
         drawer = <OwnerMenu onClick={onLinkClick}/>
     }
-
+    if (cUser.id === '-1') {
+        drawer = <UnAuthMenu onClick={onLinkClick}/>
+    }
+    if (cUser.id !== '-1' && cEvent.id !== '-1') {
+        drawer = <DefaultMenu onClick={onLinkClick}/>
+    }
     return <div className={classes.root}>
         <Hidden smUp implementation="css">
             <AppBar position="fixed" className={classes.appBar}>

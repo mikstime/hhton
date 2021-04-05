@@ -27,6 +27,19 @@ export const NavLink: React.FC<LinkProps> = ({children, ...props}) => {
     </Box>
 }
 
+export const ExtLink: React.FC<{href: string}> = ({children, href}) => {
+    const theme = useTheme()
+    return <Box clone color={theme.typography.body2.color} paddingTop={2}>
+        <a href={href} style={{textDecoration: 'none'}}>
+            <AdditionalText style={{
+                paddingLeft: 8
+            }}>
+                {children}
+            </AdditionalText>
+        </a>
+    </Box>
+}
+
 export type MenuProps = {
     onClick: MouseEventHandler
 }
