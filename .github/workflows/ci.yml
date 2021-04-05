@@ -32,18 +32,23 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Build
-        run: yarn build:react
+      - name: Build_dev
+        if: ${{ contains(github.ref, 'develop') && contains(github.event_name, 'push') }}
+        run: REACT_APP_ENV=dev yarn build:react
+
+      - name: Build_prod
+        if: ${{ contains(github.ref, 'master') && contains(github.event_name, 'push') }}
+        run: REACT_APP_ENV=prod yarn build:react
 
       - uses: actions/upload-artifact@master
         with:
           name: uploaded_files
           path: ./build
 
-  deploy_dev:
+  deploy:
     runs-on: ubuntu-latest
     if: contains(github.ref, 'develop') && contains(github.event_name, 'push')
-    needs: build
+    needs: build_dev
     steps:
       - uses: actions/download-artifact@master
         with:
@@ -51,6 +56,7 @@ jobs:
           path: ./build
 
       - name: copy file via ssh password
+        if: ${{ contains(github.ref, 'develop') && contains(github.event_name, 'push') }}
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -59,4 +65,16 @@ jobs:
           port: 22
           source: "build/*"
           target: "/var/www/dev.team-up.online/html/hhton"
+          strip_components: 1
+
+      - name: copy file via ssh password
+        if: ${{ contains(github.ref, 'develop') && contains(github.event_name, 'push') }}
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USERNAME }}
+          password: ${{ secrets.PROD_PASSWORD }}
+          port: 22
+          source: "build/*"
+          target: "/var/www/team-up.online/html/hhton"
           strip_components: 1
