@@ -48,7 +48,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     if: contains(github.ref, 'develop') && contains(github.event_name, 'push')
-    needs: build_dev
+    needs: build
     steps:
       - uses: actions/download-artifact@master
         with:
