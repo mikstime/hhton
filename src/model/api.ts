@@ -433,6 +433,7 @@ export const getTeam = async (eventId: string, userId: string) => {
             const json = await team.json()
             if (json) {
                 const t = Convert.team.toFrontend(json)
+                //@TODO Пользователи прилетают не полные. Поправить на беке
                 t.members = await Promise.all(json.members.map((j: BackendUser) => fetchUser(j.id!.toString())).filter((u: User | null) => u))
                 return t
             } else {

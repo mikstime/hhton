@@ -83,29 +83,26 @@ const MultilineGrayField: React.FC<{ label: string, inputProps?: InputBaseProps 
 
 
 const GrayField: React.FC<{ label: string, inputProps?: InputBaseProps }> = ({label, inputProps = {}}) => {
-    return <Box clone flexDirection={{xs: 'column', sm: 'row'}}>
-        <Grid item xs container alignItems='baseline'>
-            <Grid xs={12} md='auto' item style={{marginRight: 16}}>
-                <Box clone textAlign={{md: 'right'}}>
-                    <Typography variant='body2' style={{color: '#6F7985', minHeight: 24}}>
-                        {label}
-                    </Typography>
-                </Box>
-            </Grid>
-            {/*<Grid xs={12} sm item>*/}
-            <InputBase fullWidth={true} {...inputProps} style={{
+    return <Grid item xs container alignItems='baseline'>
+        <Grid xs={12} md='auto' item style={{marginRight: 16}}>
+            <Box clone textAlign={{md: 'right'}}>
+                <Typography variant='body2' style={{color: '#6F7985'}}>
+                    {label}
+                </Typography>
+            </Box>
+        </Grid>
+        <Grid xs={12} sm item>
+            <InputBase {...inputProps} style={{
                 background: 'white',
                 borderRadius: 8,
                 paddingLeft: 12,
                 paddingRight: 12,
-                minHeight: 24,
                 display: 'block',
                 height: 32,
                 ...(inputProps.style || {})
             }}/>
-            {/*</Grid>*/}
         </Grid>
-    </Box>
+    </Grid>
 }
 
 export const WhiteField: React.FC<{ label: string, prefix?: string, inputProps?: InputBaseProps }> = ({label, prefix, inputProps = {}}) => {
@@ -124,21 +121,20 @@ export const WhiteField: React.FC<{ label: string, prefix?: string, inputProps?:
         </Grid>
         <Grid item xs sm>
             <Box clone marginLeft={{xs: '20px', sm: '0'}}>
-                <InputBase fullWidth {...inputProps} style={{
-                    // paddingLeft: 12,
-                    paddingRight: 12,
-                    display: 'block',
-                    height: 32,
-                    ...(inputProps.style || {})
-                }}/>
+            <InputBase fullWidth {...inputProps} style={{
+                // paddingLeft: 12,
+                paddingRight: 12,
+                display: 'block',
+                height: 32,
+                ...(inputProps.style || {})
+            }}/>
             </Box>
         </Grid>
     </Grid>
 }
 
 export const WhiteFieldLabel: React.FC<{ label: string }> = ({label}) => {
-    return <Hidden smUp><Typography variant='body2'
-                                    style={{color: '#6F7985', marginTop: 16}}>
+    return <Hidden smUp><Typography variant='body2' style={{color: '#6F7985', marginTop: 16}}>
         {label}
     </Typography>
     </Hidden>
@@ -173,7 +169,7 @@ const Skills: React.FC<{
                     selectSkills({
                         ...selectedSkills,
                         [jobs[selectedJob].name]: aSkills.map((sk) => {
-                            return !!value.find(s => s.id === sk.id)
+                            return !!value.find(s => s.id === sk.id);
 
                         })
                     })
@@ -208,8 +204,7 @@ const Skills: React.FC<{
 
         <div className={classes.root}>
             {
-                jobs.map((j, i) => <Zoom key={j.name} in><Chip
-                    disabled={disabled}
+                jobs.map((j, i) => <Zoom key={j.name} in><Chip disabled={disabled}
                     onClick={
                         () => {
                             if (selectedJob === i) {
@@ -239,15 +234,15 @@ const Skills: React.FC<{
             {
                 skills[jobs[selectedJob]?.name]?.map((j, i) => (
                     <Zoom key={j.id} in><Chip disabled={disabled}
-                                              onClick={
-                                                  () => {
-                                                      const selected = {...selectedSkills}
-                                                      selected[jobs[selectedJob]?.name][i] = !selected[jobs[selectedJob]?.name][i]
-                                                      selectSkills(selected)
-                                                  }
-                                              }
-                                              className={selectedSkills[jobs[selectedJob]?.name]?.[i] ? classes.selected : ''}
-                                              label={j.name}
+                        onClick={
+                            () => {
+                                const selected = {...selectedSkills}
+                                selected[jobs[selectedJob]?.name][i] = !selected[jobs[selectedJob]?.name][i]
+                                selectSkills(selected)
+                            }
+                        }
+                        className={selectedSkills[jobs[selectedJob]?.name]?.[i] ? classes.selected : ''}
+                        label={j.name}
                     /></Zoom>))
             }
         </div>

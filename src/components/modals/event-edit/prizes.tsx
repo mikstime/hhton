@@ -118,7 +118,7 @@ const PrizeItem: React.FC<{
         }}/>
     </Grid>
 
-    return <Box clone marginTop={{xs: '16px', sm: '16px'}}>
+    return <Box clone marginTop={{xs: 0, sm: '16px'}}>
         <Plate padding={12}>
             <Grid container alignItems='center'
                   style={{minHeight: 32}}>

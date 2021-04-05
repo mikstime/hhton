@@ -32,29 +32,22 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Build
-        run: yarn build:react
+      - name: Build_dev
+        if: ${{ contains(github.ref, 'develop') }}
+        run: REACT_APP_ENV=dev yarn build:react
+
+      - name: Build_prod
+        if: ${{ contains(github.ref, 'master') }}
+        run: REACT_APP_ENV=prod yarn build:react
 
       - uses: actions/upload-artifact@master
         with:
           name: uploaded_files
           path: ./build
 
-      - name: Deploy
-        run: |
-          git config --global user.name $user_name
-          git config --global user.email $user_email
-          git remote set-url origin https://${github_token}@github.com/${repository}
-          npm run deploy
-        env:
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
-          github_token: ${{ secrets.ACTIONS_DEPLOY_ACCESS_TOKEN }}
-          repository: ${{ github.repository }}
-
-  deploy_dev:
+  deploy:
     runs-on: ubuntu-latest
-    if: contains(github.ref, 'master')
+    if: contains(github.event_name, 'push')
     needs: build
     steps:
       - uses: actions/download-artifact@master
@@ -63,11 +56,24 @@ jobs:
           path: ./build
 
       - name: copy file via ssh password
+        if: ${{ contains(github.ref, 'develop') }}
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
+          port: 22
+          source: "build/*"
+          target: "/var/www/dev.team-up.online/html/hhton"
+          strip_components: 1
+
+      - name: copy file via ssh password
+        if: ${{ contains(github.ref, 'master') }}
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USERNAME }}
+          password: ${{ secrets.PROD_PASSWORD }}
           port: 22
           source: "build/*"
           target: "/var/www/team-up.online/html/hhton"
