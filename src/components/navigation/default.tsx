@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {EventLink, MenuBase, MenuProps, NavLink} from './common'
 import {useAppState} from '../tools/use-app-state'
 
@@ -9,19 +9,19 @@ export const DefaultMenu: React.FC<MenuProps> = ({onClick}) => {
     const isActive = cEvent.isParticipating && !cEvent.isFinished
     return <MenuBase>
         <EventLink onClick={onClick}/>
-        {
-            isActive && <Fragment>
-              <NavLink to={`/team`} onClick={onClick}>
-                К команде
-              </NavLink>
-              <NavLink to={`/feed`}
-                       onClick={onClick}>
-                К поиску
-              </NavLink>
-            </Fragment>
+        {isActive &&
+        <NavLink to={`/team`} onClick={onClick}>
+          Команда
+        </NavLink>
         }
         <NavLink to={`/user`} onClick={onClick}>
-            К себе
+            Моя анкета
         </NavLink>
+        {isActive &&
+        <NavLink to={`/feed`}
+                 onClick={onClick}>
+          Поиск участников
+        </NavLink>
+        }
     </MenuBase>
 }

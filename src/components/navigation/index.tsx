@@ -41,8 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
         // necessary for content to be below app bar
         toolbar: theme.mixins.toolbar,
         drawerPaper: {
-            padding: 24,
-            paddingTop: 64,
+            padding: '8px 0 24px 24px',
             boxSizing: 'border-box',
             width: drawerWidth,
             background: 'transparent',
@@ -75,13 +74,11 @@ export const AppNavigation: React.FC<GridProps> = ({children}) => {
     }
     let drawer = <LoadingMenu onClick={onLinkClick}/>
 
-    if(cEvent.founderId === cUser.id) {
+    if (cEvent.founderId === cUser.id) {
         drawer = <OwnerMenu onClick={onLinkClick}/>
-    }
-    if (cUser.id === '-1') {
+    } else if (cUser.id === '-1') {
         drawer = <UnAuthMenu onClick={onLinkClick}/>
-    }
-    if (cUser.id !== '-1' && cEvent.id !== '-1') {
+    } else if (cUser.id !== '-1' && cEvent.id !== '-1') {
         drawer = <DefaultMenu onClick={onLinkClick}/>
     }
     return <div className={classes.root}>
@@ -100,6 +97,7 @@ export const AppNavigation: React.FC<GridProps> = ({children}) => {
                 </Toolbar>
             </AppBar>
         </Hidden>
+
         <nav className={classes.drawer} aria-label="mailbox folders">
             {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
             <Hidden smUp implementation="css">
@@ -127,7 +125,7 @@ export const AppNavigation: React.FC<GridProps> = ({children}) => {
                     variant="permanent"
                     open
                 >
-                    {drawer}
+                        {drawer}
                 </Drawer>
             </Hidden>
         </nav>

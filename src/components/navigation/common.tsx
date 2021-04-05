@@ -1,4 +1,4 @@
-import React, {MouseEventHandler, useCallback, useState} from 'react'
+import React, {MouseEventHandler, useCallback, useEffect, useState} from 'react'
 import {Link, LinkProps} from 'react-router-dom'
 import {
     CircularProgress,
@@ -14,11 +14,17 @@ import {ReactComponent as CloseIcon} from '../../assets/navigation/close.svg'
 import {Hackathon} from '../tools/use-app-state/hackathon'
 import {getActiveEvents} from '../../model/api'
 import {useHistory} from 'react-router-dom'
-export const NavLink: React.FC<LinkProps> = ({children, ...props}) => {
+import Image from 'material-ui-image'
+import logoImage from '../../assets/navigation/logo.png'
+
+export const NavLink: React.FC<LinkProps & { wrap?: boolean }> = ({children, wrap, ...props}) => {
     const theme = useTheme()
-    return <Box clone color={theme.typography.body2.color} paddingTop={2}>
-        <Link {...props} style={{textDecoration: 'none'}}>
-            <AdditionalText style={{
+    return <Box clone color={theme.typography.body2.color} marginTop={3}>
+        <Link {...props}
+              style={{textDecoration: 'none', ...(props.style || {})}}>
+            <AdditionalText noWrap={!wrap} style={{
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
                 paddingLeft: 8
             }}>
                 {children}
@@ -27,9 +33,9 @@ export const NavLink: React.FC<LinkProps> = ({children, ...props}) => {
     </Box>
 }
 
-export const ExtLink: React.FC<{href: string}> = ({children, href}) => {
+export const ExtLink: React.FC<{ href: string }> = ({children, href}) => {
     const theme = useTheme()
-    return <Box clone color={theme.typography.body2.color} paddingTop={2}>
+    return <Box clone color={theme.typography.body2.color} marginTop={3}>
         <a href={href} style={{textDecoration: 'none'}}>
             <AdditionalText style={{
                 paddingLeft: 8
@@ -45,7 +51,15 @@ export type MenuProps = {
 }
 
 export const MenuBase: React.FC = ({children}) => {
-    return <Box display='flex' flexDirection='column'>
+    return <Box display='flex'
+                flexDirection='column'>
+        <Link to='/'>
+            <Box display='flex' justifyContent='center'><Image style={{
+                paddingTop: 40,
+                width: 113,
+                background: 'none'
+            }} src={logoImage} onDragStart={e => e.preventDefault()}/></Box>
+        </Link>
         {children}
     </Box>
 }
@@ -68,12 +82,11 @@ const EventItem: React.FC<{
     event: Hackathon, onClick?: MouseEventHandler
 }> = ({event, onClick}) => {
 
-    const classes = useEventItemStyles(
-
-    )
-    return <Grid item className={classes.root} onClick={onClick}>
-        <Box clone paddingLeft='8px'>
-            <AdditionalText>
+    const classes = useEventItemStyles()
+    return <Grid item xs zeroMinWidth className={classes.root}
+                 onClick={onClick}>
+        <Box clone paddingLeft='8px' overflow='hidden'>
+            <AdditionalText noWrap>
                 {event.name || ''}
             </AdditionalText>
         </Box>
@@ -95,17 +108,26 @@ export const EventLink: React.FC<EventLinkProps> = (props) => {
         setIsLoading(false)
     }, [setIsOpen, isOpen])
 
+    useEffect(() => {
+        if (cUser.id === '-1') {
+            setIsOpen(false)
+        }
+    }, [cUser.id])
     let toRender = null
 
     if (events.length && isOpen) {
-        toRender = events.map(e => <EventItem key={e.id} event={e} onClick={(ev) => {
-            setIsOpen(false)
-            props.onClick?.(ev)
-            history.push(`/event/${e.id}`)
-        }}/>)
-    } else if(isOpen) {
+        toRender = events.map(e => <EventItem
+            key={e.id}
+            event={e}
+            onClick={(ev) => {
+                setIsOpen(false)
+                props.onClick?.(ev)
+                history.push(`/event/${e.id}`)
+            }}
+        />)
+    } else if (isOpen) {
         toRender = <AdditionalText align='center'>
-            Нет доступных мероприятий
+            Здесь будут мероприятия, в которых Вы участвуете
         </AdditionalText>
     }
     if (isLoading) {
@@ -119,17 +141,24 @@ export const EventLink: React.FC<EventLinkProps> = (props) => {
             borderRadius: '10px'
         }}>
             <Grid container direction='column' spacing={1}>
-                <Grid item container alignItems='center' justify='flex-end'>
-                    <Grid item xs>
-                        <NavLink to={`/event/${cEvent.id}`}>
+                <Grid item container alignItems='center' justify='flex-end'
+                      wrap='nowrap'>
+                    <Grid item xs style={{minHeight: 21}}>
+                        <NavLink wrap to={`/event/${cEvent.id}`}
+                                 onClick={(ev) => {
+                                     setIsOpen(false)
+                                     props.onClick?.(ev)
+                                 }}>
                             {cEvent.name}
                         </NavLink>
                     </Grid>
-                    <Box clone paddingLeft='12px'>
+                    <Box clone paddingLeft='12px' width={42}>
                         <Grid item>
+                            {cUser.id !== '-1' &&
                             <IconButton size='small' onClick={onClick}>
                                 {isOpen ? <CloseIcon/> : <OpenIcon/>}
                             </IconButton>
+                            }
                         </Grid>
                     </Box>
                 </Grid>
