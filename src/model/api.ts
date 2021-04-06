@@ -362,7 +362,7 @@ export const getFeed = async (eventId: string, query: string, sinceId?: string) 
             const json = await feedRequest.json()
             let result = [] as string[]
 
-            if (!json.users)
+            if(!json.users)
                 return []
             json.users.forEach((v: { id: Id }) => {
                 result.push(v.id)
@@ -394,7 +394,6 @@ export const getTeamById = async (teamId: string) => {
             const json = await team.json()
             if (json) {
                 const t = Convert.team.toFrontend(json)
-                //@TODO Пользователи прилетают не полные. Поправить на беке
                 t.members = await Promise.all(json.members?.map((j: BackendUser) => fetchUser(j.id!.toString())).filter((u: User | null) => u) ?? [])
                 return t
             } else {
@@ -612,11 +611,9 @@ export const getPersonalInvitesFromUrl = async (url: string) => {
 
         if (users.ok) {
             const json = await users.json()
-            const usersIDs = await Promise.all(
-                json.map((id: number) => fetchUser(id.toString()))
-            ) as string[]
+            const usersIDs = json.map((id: number) => id.toString())
 
-            return await getFullUsersByID(usersIDs)
+            return getFullUsersByID(usersIDs)
         } else {
             return []
         }
@@ -751,6 +748,7 @@ export const modifyEvent = async (data: {
     teams: Team[],
     founderId: Id,
     prizes: Prize[],
+    deletedWinners: {},
     deletedPrizes: string[],
 }) => {
     if (!mockImplemented) {
@@ -775,14 +773,14 @@ export const modifyEvent = async (data: {
                 })
             )
         }
+        // TODO удалять призы
         const prizesBackend = Convert.prize.toBackend(data.teams, data.diff.id)
-        for (let i = 0; i < prizesBackend.length; i++) {
-            console.log(prizesBackend[i])
+        for (let prize of prizesBackend) {
             eventRequests.push(
                 fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/win`, {
                     method: 'POST',
                     credentials: 'include',
-                    body: JSON.stringify(prizesBackend[i])
+                    body: JSON.stringify(prize)
                 })
             )
         }
@@ -795,7 +793,7 @@ export const modifyEvent = async (data: {
         for (let response of eventResponse) {
             if (result = result && (response.ok && response.status === 200)) {
             } else {
-                break
+                break;
             }
         }
         return result
@@ -922,8 +920,8 @@ export const getEventTeams = async (eventId: string) => {
             })
         if (finish.ok) {
             const j = await finish.json()
-            if (j) {
-                return await Promise.all(j.map((j: Team) => getTeamById(j.id ?? ''))) as Team[]
+            if(j) {
+            return await Promise.all(j.map((j: Team) => getTeamById(j.id ?? ''))) as Team[]
             }
         }
         return []
@@ -941,17 +939,17 @@ export const getWinners = async (eventId: string) => {
             })
         if (finish.ok) {
             const j = await finish.json()
-            if (!j)
+            if(!j)
                 return []
             const ts = await Promise.all(j.map((j: Team) => getTeamById(j.id ?? ''))) as Team[]
             //@ts-ignore
-            const r = j?.map((j, i) => ({
+            const r = j?.map((j, i) =>({
                 ...ts[i],
                 prizes: [{
-                    id: j.prize.id,
-                    name: j.prize.name,
-                    place: j.prize.place,
-                    count: j.prize.amount
+                id: j.prize.id,
+                name: j.prize.name,
+                place: j.prize.place,
+                count: j.prize.amount,
                 }]
             })) ?? []
             return r as Team[]
@@ -963,19 +961,41 @@ export const getWinners = async (eventId: string) => {
     }
 }
 
-export const getActiveEvents = async (userId: string) => {
-    const res = await fetch(
-        `${HOST_DOMAIN}${PREFIX}/user/${userId}/events`,
-        {credentials: 'include'})
-
-    if(res.ok) {
-        const json = await res.json()
-        if(json) {
-            return json.map(Convert.event.toFrontend)
-        } else {
-            return []
-        }
+export const voteFor = async (userID: string, eventID: string, teamID: string) => {
+    if (!mockImplemented) {
+        const voted = await fetch(`${HOST_DOMAIN}${PREFIX}/team/${teamID}/vote`,
+            {
+                method: 'POST',
+                credentials: 'include',
+                body: JSON.stringify({
+                    eventID: Number(eventID),
+                    forWhomID: Number(userID),
+                    state: 1
+                })
+            })
+        return (voted.ok && voted.status === 200)
     } else {
-        return []
+        await sleep(300)
+        return true
+    }
+}
+
+export const unVoteFor = async (userID: string, eventID: string, teamID: string) => {
+    if (!mockImplemented) {
+        const voted = await fetch(`${HOST_DOMAIN}${PREFIX}/team/${teamID}/vote`,
+            {
+                method: 'POST',
+                credentials: 'include',
+                body: JSON.stringify({
+                    eventID: Number(eventID),
+                    forWhomID: Number(userID),
+                    // TODO проверить
+                    state: 0
+                })
+            })
+        return (voted.ok && voted.status === 200)
+    } else {
+        await sleep(300)
+        return true
     }
 }

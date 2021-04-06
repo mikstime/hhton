@@ -94,15 +94,44 @@ export const FeedApp: React.FC = () => {
                 })
                 return
             }
-            if (current >= users.length - 1) {
+            let newCurrent = current
+            if (newCurrent >= users.length - 1) {
                 setIsFetching(true)
                 const newUsers = await getFeed(cEvent.id, location.search, users[current])
                 if (newUsers.length) {
-                    setUsers([...users, ...newUsers])
+                    // setUsers([...users, ...newUsers])
+                    setUsers([...newUsers])
+                    newCurrent = -1
                 }
                 setIsFetching(false)
             }
-            setCurrent(current + 1)
+            console.log(current)
+            setCurrent(newCurrent + 1)
+            setKey(Math.random())
+        })()
+    }, [current, users, location, setCurrent, setIsFetching, cEvent.id])
+
+    const prevUser = useCallback(() => {
+        (async () => {
+            if (cEvent.id === '-1') {
+                enqueueSnackbar('Не удалось загрузить пользователей', {
+                    variant: 'error'
+                })
+                return
+            }
+            let newCurrent = current
+            if (newCurrent <= 0) {
+                setIsFetching(true)
+                const newUsers = await getFeed(cEvent.id, location.search, users[current])
+                if (newUsers.length) {
+                    // setUsers([...users, ...newUsers])
+                    setUsers([...newUsers])
+                    newCurrent = newUsers.length
+                }
+                setIsFetching(false)
+            }
+            console.log(newCurrent)
+            setCurrent(newCurrent - 1)
             setKey(Math.random())
         })()
     }, [current, users, location, setCurrent, setIsFetching, cEvent.id])
@@ -122,6 +151,13 @@ export const FeedApp: React.FC = () => {
             </div>
         </Slide>
         <StyledDiv>
+            <PrimaryButton disabled={isFetching}
+                           style={{
+                               height: 48,
+                               marginRight: theme.spacing(1),
+                               boxShadow: theme.shadows[1]
+                           }}
+                           onClick={prevUser}>Предыдущий</PrimaryButton>
             <PrimaryButton disabled={isFetching}
                            style={{
                                height: 48,
