@@ -193,7 +193,7 @@ export const EventPrizes: React.FC<{
     },
     groups: {
         value: Group[],
-        onChange: (g: Group[], d: {wID: string, dpID: string, upID: string}) => void
+        onChange: (g: Group[], d: {wID: string, dpID: string, upID: string}[]) => void
     }
 }> = ({prizes, groups}) => {
     const {event} = useAppState()
@@ -256,18 +256,21 @@ export const EventPrizes: React.FC<{
         if (!g[i].teams[j].prizes) g[i].teams[j].prizes = []
 
         const p = prizes.value[editing.indexOf(true)]
-        const deletedPrize = {wID: g[i].teams[j].id ?? '', dpID: '', upID: ''}
+        const deletedPrize = []
         if (p) {
             const ind = g[i].teams[j].prizes?.findIndex(x => x?.id === p?.id)
             if (ind === -1) {
                 // TODO Ограничил количество призов на команду
                 // g[i].teams[j].prizes?.push(p)
+                for (let prize of g[i].teams[j].prizes ?? []) {
+                    deletedPrize.push({wID: g[i].teams[j].id ?? '', dpID: prize?.id ?? '', upID: ''})
+                }
                 g[i].teams[j].prizes = [p]
-                deletedPrize.upID = p?.id ?? ''
+                deletedPrize.push({wID: g[i].teams[j].id ?? '', dpID: '', upID: p?.id ?? ''})
             } else {
                 if (ind !== undefined) {
                     g[i].teams[j].prizes?.splice(ind, 1)
-                    deletedPrize.dpID = p?.id ?? ''
+                    deletedPrize.push({wID: g[i].teams[j].id ?? '', dpID: p?.id ?? '', upID: ''})
                 }
             }
         }

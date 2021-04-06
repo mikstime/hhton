@@ -148,24 +148,26 @@ export const useEventEdit = () => {
     //     setPrizes(p)
     // }, [setPrizes])
 
-    const onGroupsChange = useCallback((g, d) => {
+    const onGroupsChange = useCallback((g, dArray) => {
         // TODO тут состояние сохраняется
         const newDeletedWinners = deletedWinners
-        // @ts-ignore
-        let deletedWinnersArray = newDeletedWinners[d.wID]
-        if (deletedWinnersArray) {
-            if (d.upID !== '') {
-                deletedWinnersArray = deletedWinnersArray.filter((p: string) => p !== d.upID)
-            } else if (d.dpID !== '') {
-                deletedWinnersArray.push(d.dpID)
+        for (let d of dArray) {
+            // @ts-ignore
+            let deletedWinnersArray = newDeletedWinners[d.wID]
+            if (deletedWinnersArray) {
+                if (d.upID !== '') {
+                    deletedWinnersArray = deletedWinnersArray.filter((p: string) => p !== d.upID)
+                } else if (d.dpID !== '') {
+                    deletedWinnersArray.push(d.dpID)
+                }
+            } else {
+                if (d.dpID !== '') {
+                    deletedWinnersArray = [d.dpID]
+                }
             }
-        } else {
-            if (d.dpID !== '') {
-                deletedWinnersArray = [d.dpID]
-            }
+            // @ts-ignore
+            newDeletedWinners[d.wID] = deletedWinnersArray
         }
-        // @ts-ignore
-        newDeletedWinners[d.wID] = deletedWinnersArray
         console.log('Призы будут удалены: ', newDeletedWinners)
         setDeletedWinners(newDeletedWinners)
         setGroups(g)
