@@ -40,16 +40,17 @@ export const DefaultMenu: React.FC<MenuProps> = ({onClick}) => {
     return <MenuBase>
         <EventLink onClick={onClick}/>
         {toRender}
-        <Box clone position='absolute' bottom='24px' left='16px' right='16px'>
-            <Button style={{
-                textTransform: 'none'
-            }} onClick={() => {
-                setIsHost(!isHost)
-            }}>
-                <AdditionalText color={isHost ? 'primary' : 'initial'}>
-                    Режим организатора
-                </AdditionalText>
-            </Button>
-        </Box>
+        {/*<Box clone position='absolute' bottom='24px' left='16px' right='16px'>*/}
+        <Box height='100%'/>
+        <Button style={{
+            textTransform: 'none'
+        }} onClick={() => {
+            setIsHost(!isHost)
+        }}>
+            <AdditionalText color={isHost ? 'primary' : 'initial'}>
+                Режим организатора
+            </AdditionalText>
+        </Button>
+        {/*</Box>*/}
     </MenuBase>
 }
