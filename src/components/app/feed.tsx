@@ -17,6 +17,8 @@ import {useHistory} from 'react-router-dom'
 import {useSnackbar} from 'notistack'
 import {useSearchModal} from '../modals/search'
 import {ReactComponent as TweakIcon} from '../../assets/tweak.svg'
+import {ReactComponent as BackIcon} from '../../assets/back_gray.svg'
+import {ReactComponent as SearchIcon} from '../../assets/search.svg'
 
 const StyledDiv = styled.div`
   position: fixed;
@@ -24,8 +26,13 @@ const StyledDiv = styled.div`
   right: 20px;
   display: flex;
 `
+
+const StyledDiv2 = styled.div`
+  position: fixed;
+  display: flex;
+`
 //@ts-ignore
-const FeedContext = React.createContext();
+const FeedContext = React.createContext()
 
 export const FeedProvider: React.FC = ({children}) => {
 
@@ -35,12 +42,12 @@ export const FeedProvider: React.FC = ({children}) => {
 
     const val = {
         current, setCurrent,
-        users, setUsers,
+        users, setUsers
     }
 
     return <FeedContext.Provider value={val}>
         {children}
-    </FeedContext.Provider>;
+    </FeedContext.Provider>
 }
 
 const useFeed = () => {
@@ -94,15 +101,42 @@ export const FeedApp: React.FC = () => {
                 })
                 return
             }
-            if (current >= users.length - 1) {
+            let newCurrent = current
+            if (newCurrent >= users.length - 1) {
                 setIsFetching(true)
                 const newUsers = await getFeed(cEvent.id, location.search, users[current])
                 if (newUsers.length) {
-                    setUsers([...users, ...newUsers])
+                    // setUsers([...users, ...newUsers])
+                    setUsers([...newUsers])
+                    newCurrent = -1
                 }
                 setIsFetching(false)
             }
-            setCurrent(current + 1)
+            setCurrent(newCurrent + 1)
+            setKey(Math.random())
+        })()
+    }, [current, users, location, setCurrent, setIsFetching, cEvent.id])
+
+    const prevUser = useCallback(() => {
+        (async () => {
+            if (cEvent.id === '-1') {
+                enqueueSnackbar('Не удалось загрузить пользователей', {
+                    variant: 'error'
+                })
+                return
+            }
+            let newCurrent = current
+            if (newCurrent <= 0) {
+                setIsFetching(true)
+                const newUsers = await getFeed(cEvent.id, location.search, users[current])
+                if (newUsers.length) {
+                    // setUsers([...users, ...newUsers])
+                    setUsers([...newUsers])
+                    newCurrent = newUsers.length
+                }
+                setIsFetching(false)
+            }
+            setCurrent(newCurrent - 1)
             setKey(Math.random())
         })()
     }, [current, users, location, setCurrent, setIsFetching, cEvent.id])
@@ -121,26 +155,54 @@ export const FeedApp: React.FC = () => {
                 <Box height='70px'/>
             </div>
         </Slide>
+        <Box clone left={{ md: '220px'}} right={{xs: '20px'}} bottom={{xs: 76, md: 20,}}>
+            <StyledDiv2>
+                <PrimaryButton disabled={isFetching}
+                               style={{
+                                   height: 48,
+                                   backgroundColor: '#F0F2F5',
+                                   boxShadow: theme.shadows[1],
+                                   marginRight: theme.spacing(1)
+                               }}
+                               onClick={() => {
+                                   sModal.actions.open({
+                                       current: 'smart',
+                                       props: {
+                                           canGoBack: false
+                                       }
+                                   })
+                               }
+                               }><TweakIcon/></PrimaryButton>
+                <PrimaryButton disabled={isFetching}
+                               style={{
+                                   height: 48,
+                                   backgroundColor: '#F0F2F5',
+                                   boxShadow: theme.shadows[1],
+                               }}
+                               onClick={() => {
+                                   sModal.actions.open({
+                                       current: 'user',
+                                       props: {
+                                           canGoBack: false
+                                       }
+                                   })
+                               }
+                               }><SearchIcon/></PrimaryButton>
+            </StyledDiv2>
+        </Box>
         <StyledDiv>
             <PrimaryButton disabled={isFetching}
                            style={{
                                height: 48,
                                backgroundColor: '#F0F2F5',
-                               boxShadow: theme.shadows[1],
-                               marginRight: theme.spacing(1)
+                               marginRight: theme.spacing(1),
+                               boxShadow: theme.shadows[1]
                            }}
-                           onClick={() => {
-                               sModal.actions.open({
-                                   current: 'smart',
-                                   props: {
-                                       canGoBack: false
-                                   }
-                               })
-                           }
-                           }><TweakIcon/></PrimaryButton>
+                           onClick={prevUser}><BackIcon/></PrimaryButton>
             <PrimaryButton disabled={isFetching}
                            style={{
                                height: 48,
+                               width: 136,
                                boxShadow: theme.shadows[1]
                            }}
                            onClick={nextUser}>Следующий</PrimaryButton>

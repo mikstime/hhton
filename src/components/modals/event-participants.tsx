@@ -1,7 +1,8 @@
 import React, {MouseEventHandler, useCallback, useEffect, useState} from 'react'
 import {
+    AdditionalText,
     Modal,
-    ModalProps,
+    ModalProps
 } from '../common'
 import {
     CircularProgress,
@@ -29,7 +30,7 @@ const _useEventParticipantsModal = () => {
     return {
         open,
         close,
-        isOpen,
+        isOpen
     }
 }
 
@@ -40,7 +41,9 @@ interface MProps extends Omit<ModalProps, 'children'> {
 const EventParticipantsModalContext = React.createContext()
 
 const TeamSection: React.FC<{ team: Team, onClick?: MouseEventHandler }> = ({team, onClick}) => {
-    const members = team.members?.map(m => <TeamItem onClick={onClick} user={m}/>) ?? 'Нет участников'
+    const members = team.members?.map((m, i) => <TeamItem key={i}
+                                                          onClick={onClick}
+                                                          user={m}/>) ?? 'Нет участников'
     return <Grid item container direction='column'>
         <Grid item>
             <Typography variant='body1'>{team.name}</Typography>
@@ -51,19 +54,34 @@ const TeamSection: React.FC<{ team: Team, onClick?: MouseEventHandler }> = ({tea
 export const EventParticipantsModal: React.FC<MProps> = ({children, ...props}) => {
 
     const [teams, setTeams] = useState<Team[]>([])
+    const [isLoading, setIsLoading] = useState(false)
     const {cEvent} = useAppState()
     useEffect(() => {
         (async () => {
             if (cEvent.id !== '-1') {
                 setTeams([])
+                setIsLoading(true)
                 const t = await getEventTeams(cEvent.id)
+                setIsLoading(false)
                 setTeams(t)
             }
         })()
     }, [cEvent.id])
-    const r = teams.length > 0 ? teams.map(t => <TeamSection onClick={props.close} team={t} key={t.id}/>) :
-        <Grid item container justify='center'>
+    let r
+    if (isLoading) {
+        r = <Grid item container justify='center'>
             <CircularProgress color='primary' size='3rem'/></Grid>
+    } else if (teams.length > 0) {
+        r = teams.map((t, i) => <TeamSection onClick={props.close} team={t}
+                                             key={i}/>)
+    } else {
+        r = <Grid item container justify='center'>
+            <AdditionalText>
+                Участники отсутствуют
+            </AdditionalText>
+        </Grid>
+    }
+
     return <Modal
         onClose={props.close}{...props}>
         <Grid container direction='column' spacing={4}>
@@ -73,7 +91,7 @@ export const EventParticipantsModal: React.FC<MProps> = ({children, ...props}) =
                 </Typography>
             </Grid>
             <Grid item container direction='column' spacing={3}>
-            {r}
+                {r}
             </Grid>
             <Grid item container justify='flex-end'>
                 <PrimaryButton onClick={props.close}>Понятно</PrimaryButton>

@@ -4,7 +4,7 @@ import {checkUser, fetchEvent} from '../../model/api'
 
 export const useAuth = () => {
 
-    const {cEvent, event, cUser} = useAppState()
+    const {cEvent, cUser} = useAppState()
 
     useEffect(() => {
         if(cEvent.id !== '-1') {
@@ -15,7 +15,6 @@ export const useAuth = () => {
         (async () => {
             const eventId = localStorage.getItem('eventId')
             const userId = await checkUser()//'181853117'
-
             if(eventId) {
                 cEvent.change({id: eventId})
                 const e = await fetchEvent(eventId)

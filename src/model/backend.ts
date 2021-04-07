@@ -257,6 +257,7 @@ const Convert = {
         }
     },
     prize: {
+        // TODO учитывается только 1 приз
         toBackend: (fTeams: Team[], evtID: String) => {
             let result = [] as BackendPrizes
             for (let i = 0; i < fTeams.length; i++) {
