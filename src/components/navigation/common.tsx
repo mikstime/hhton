@@ -51,7 +51,7 @@ export type MenuProps = {
 }
 
 export const MenuBase: React.FC = ({children}) => {
-    return <Box display='flex'
+    return <Box display='flex' height='100%'
                 flexDirection='column'>
         <Link to='/'>
             <Box display='flex' justifyContent='center'><Image style={{
