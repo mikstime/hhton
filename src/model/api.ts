@@ -461,7 +461,8 @@ export const getTeam = async (eventId: string, userId: string) => {
 /**
  *
  * @param eventId - id события
- * @param userId - id активного пользователя
+ * @param teamId - id активной команды
+ * @param newName
  */
 export const modifyTeamName = async (eventId: string, teamId: string, newName: string) => {
     if (!mockImplemented) {
@@ -997,5 +998,22 @@ export const unVoteFor = async (userID: string, eventID: string, teamID: string)
     } else {
         await sleep(300)
         return true
+    }
+}
+
+export const getActiveEvents = async (userId: string) => {
+    const res = await fetch(
+        `${HOST_DOMAIN}${PREFIX}/user/${userId}/events`,
+        {credentials: 'include'})
+
+    if(res.ok) {
+        const json = await res.json()
+        if(json) {
+            return json.map(Convert.event.toFrontend)
+        } else {
+            return []
+        }
+    } else {
+        return []
     }
 }

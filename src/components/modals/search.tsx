@@ -208,7 +208,7 @@ const SearchStart: React.FC<UseSearchModalType & MProps> = ({state: {onSmartClic
 
 const SearchUser: React.FC<UseSearchModalType & MProps> = ({...props}) => {
 
-    const {event} = useAppState()
+    const {cEvent} = useAppState()
     const [results, setResults] = useState<User[]>([])
     const [value, setValue] = useState('')
     const field = useRef<HTMLInputElement>(null)
@@ -217,7 +217,7 @@ const SearchUser: React.FC<UseSearchModalType & MProps> = ({...props}) => {
         (async () => {
             if (value.trim().length) {
                 setIsLoading(true)
-                const users = await findUsers(value, event.id)
+                const users = await findUsers(value, cEvent.id)
                 setIsLoading(false)
                 if (field.current) {
                     if (field.current.value === value) {
@@ -295,10 +295,10 @@ const SearchUser: React.FC<UseSearchModalType & MProps> = ({...props}) => {
                           <GrayPlate style={{marginTop: 16}}>
                             <Grid container alignItems='center'>
                               <Typography variant='body1'>
-                                team-up.online/event/{event.id}</Typography>
+                                team-up.online/event/{cEvent.id}</Typography>
                               <FlexSpace/>
                               <Button onClick={() => {
-                                  const str = `https://team-up.online/event/${event.id}`
+                                  const str = `https://team-up.online/event/${cEvent.id}`
                                   copyTextToClipboard(str)
                               }}>
                                 <CopyIcon/>

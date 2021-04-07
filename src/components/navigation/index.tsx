@@ -74,9 +74,10 @@ export const AppNavigation: React.FC<GridProps> = ({children}) => {
     }
     let drawer = <LoadingMenu onClick={onLinkClick}/>
 
-    if (cEvent.founderId === cUser.id) {
+    if (cEvent.founderId === cUser.id && cEvent.founderId !== '-1') {
         drawer = <OwnerMenu onClick={onLinkClick}/>
     } else if (cUser.id === '-1') {
+        console.log(cUser)
         drawer = <UnAuthMenu onClick={onLinkClick}/>
     } else if (cUser.id !== '-1' && cEvent.id !== '-1') {
         drawer = <DefaultMenu onClick={onLinkClick}/>

@@ -149,7 +149,7 @@ export const EventLink: React.FC<EventLinkProps> = (props) => {
                                      setIsOpen(false)
                                      props.onClick?.(ev)
                                  }}>
-                            {cEvent.name}
+                            {cEvent.name || (isLoading ? '' : 'Нет активного мероприятия')}
                         </NavLink>
                     </Grid>
                     <Box clone paddingLeft='12px' width={42}>
