@@ -262,7 +262,6 @@ export const EventPrizes: React.FC<{
             if (ind === -1) {
                 // TODO Ограничил количество призов на команду
                 // g[i].teams[j].prizes?.push(p)
-                console.log('g[i].teams[j].prizes: ', g[i].teams[j].prizes)
                 for (let prize of g[i].teams[j].prizes ?? []) {
                     deletedPrize.push({wID: g[i].teams[j].id ?? '', dpID: prize?.id ?? '', upID: ''})
                 }
@@ -276,7 +275,6 @@ export const EventPrizes: React.FC<{
             }
         }
 
-        console.log('Отдано: ', deletedPrize)
         groups.onChange(g, deletedPrize)
     }, [groups.onChange, editing, prizes.value])
 

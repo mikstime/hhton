@@ -1021,7 +1021,7 @@ export const unVoteFor = async (userID: string, eventID: string, teamID: string)
                     eventID: Number(eventID),
                     forWhomID: Number(userID),
                     // TODO проверить
-                    state: 0
+                    state: -1
                 })
             })
         return (voted.ok && voted.status === 200)
