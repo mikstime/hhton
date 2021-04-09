@@ -169,6 +169,8 @@ export const useEventEdit = () => {
 
     const onGroupsChange = useCallback((g, winnersToProcess) => {
         // TODO тут состояние сохраняется
+        console.log('winnersToProcess: ', winnersToProcess)
+        console.log('originalWinners: ', originalWinners)
         const newDeletedWinners = deletedWinners
         const newAddWinners = addWinners
         for (let d of winnersToProcess) {
@@ -213,6 +215,8 @@ export const useEventEdit = () => {
             }
         }
 
+        console.log('newAddWinners: ', newAddWinners)
+        console.log('newDeletedWinners: ', newDeletedWinners)
         setAddWinners(newAddWinners)
         setDeletedWinners(newDeletedWinners)
         setGroups(g)

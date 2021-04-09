@@ -784,18 +784,20 @@ export const modifyEvent = async (data: {
                 continue
             }
             // @ts-ignore
-            for (let pID of data.deletedWinners[tID])
-            eventRequests.push(
-                fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/unwin`, {
-                    method: 'POST',
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        prizeID: Number(pID),
-                        teamID: Number(tID),
-                        eventID: Number(data.diff.id)
+            for (let pID of data.deletedWinners[tID]) {
+                console.log('delete: ', tID, pID)
+                eventRequests.push(
+                    fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/unwin`, {
+                        method: 'POST',
+                        credentials: 'include',
+                        body: JSON.stringify({
+                            prizeID: Number(pID),
+                            teamID: Number(tID),
+                            eventID: Number(data.diff.id)
+                        })
                     })
-                })
-            )
+                )
+            }
         }
         // Награждаем победителей
         for (let tID of Object.keys(data.addWinners)) {
@@ -804,7 +806,7 @@ export const modifyEvent = async (data: {
                 continue
             }
             // @ts-ignore
-            for (let pID of data.addWinners[tID])
+            for (let pID of data.addWinners[tID]) {
                 eventRequests.push(
                     fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/win`, {
                         method: 'POST',
@@ -816,6 +818,7 @@ export const modifyEvent = async (data: {
                         })
                     })
                 )
+            }
         }
 
         const eventResponse = await Promise.all(eventRequests)
