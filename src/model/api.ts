@@ -749,12 +749,14 @@ export const modifyEvent = async (data: {
     teams: Team[],
     founderId: Id,
     prizes: Prize[],
+    addWinners: {},
     deletedWinners: {},
     deletedPrizes: string[],
 }) => {
     if (!mockImplemented) {
         data.diff.founderId = data.founderId
         const eventRequests = []
+        // Обновляем евент
         eventRequests.push(
             fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}`, {
                 method: 'POST',
@@ -762,6 +764,7 @@ export const modifyEvent = async (data: {
                 body: JSON.stringify(Convert.eventOptional.toBackend(data.diff, data.prizes))
             })
         )
+        // Удаляем призы
         if (data.deletedPrizes.length > 0) {
             eventRequests.push(
                 fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/prize`, {
@@ -774,21 +777,48 @@ export const modifyEvent = async (data: {
                 })
             )
         }
-        // TODO удалять призы
-        const prizesBackend = Convert.prize.toBackend(data.teams, data.diff.id)
-        for (let prize of prizesBackend) {
+        // Удаляем победителей
+        for (let tID of Object.keys(data.deletedWinners)) {
+            // @ts-ignore
+            if (data.deletedWinners[tID] === undefined) {
+                continue
+            }
+            // @ts-ignore
+            for (let pID of data.deletedWinners[tID])
             eventRequests.push(
-                fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/win`, {
+                fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/unwin`, {
                     method: 'POST',
                     credentials: 'include',
-                    body: JSON.stringify(prize)
+                    body: JSON.stringify({
+                        prizeID: Number(pID),
+                        teamID: Number(tID),
+                        eventID: Number(data.diff.id)
+                    })
                 })
             )
         }
+        // Награждаем победителей
+        for (let tID of Object.keys(data.addWinners)) {
+            // @ts-ignore
+            if (data.addWinners[tID] === undefined) {
+                continue
+            }
+            // @ts-ignore
+            for (let pID of data.addWinners[tID])
+                eventRequests.push(
+                    fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/win`, {
+                        method: 'POST',
+                        credentials: 'include',
+                        body: JSON.stringify({
+                            prizeID: Number(pID),
+                            teamID: Number(tID),
+                            eventID: Number(data.diff.id)
+                        })
+                    })
+                )
+        }
 
         const eventResponse = await Promise.all(eventRequests)
-
-        const json = await eventResponse[0].json()
 
         let result = true
         for (let response of eventResponse) {
@@ -947,7 +977,7 @@ export const getWinners = async (eventId: string) => {
             const r = j?.map((j, i) =>({
                 ...ts[i],
                 prizes: [{
-                id: j.prize.id,
+                id: j.prize.id.toString(),
                 name: j.prize.name,
                 place: j.prize.place,
                 count: j.prize.amount,

@@ -203,6 +203,7 @@ const Convert = {
                 name: p.name ?? null,
                 count: p.amount?.toString() ?? ''
             })) ?? [] as Prize[]
+
             return {
                 name: bHackathon.name ?? '',
                 id: bHackathon.id?.toString() ?? '-1',
