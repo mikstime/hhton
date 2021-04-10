@@ -12,6 +12,7 @@ import {
 } from '../components/tools/use-app-state/user'
 import Convert, {BackendHackathon, BackendUser, Jobs} from './backend'
 import {HackathonOptional} from '../components/tools/use-app-state/hackathon'
+import {Message} from "../components/tools/notification-handlers";
 
 const useMock = false
 const mockImplemented = false
@@ -666,6 +667,26 @@ export const acceptInvite = async (eventId: string, inviteeId: string, inviterId
  * @param inviteeId - current user!!!
  * @param inviterId
  */
+export const unInvite = async (eventId: string, inviteeId: string, inviterId: string) => {
+    if (!mockImplemented) {
+        const ban = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${inviterId}/uninvite`,
+            {
+                credentials: 'include',
+                method: 'POST'
+            })
+        return (ban.ok && ban.status === 200)
+    } else {
+        await sleep(300)
+        return true
+    }
+}
+
+/**
+ *
+ * @param eventId
+ * @param inviteeId - current user!!!
+ * @param inviterId
+ */
 export const banInvite = async (eventId: string, inviteeId: string, inviterId: string) => {
     if (!mockImplemented) {
         const ban = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${inviterId}/ban`,
@@ -965,6 +986,25 @@ export const getEventTeams = async (eventId: string) => {
     }
 }
 
+export const getEventUsers = async (eventId: string) => {
+    if (!mockImplemented) {
+        const finish = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/users`,
+            {
+                credentials: 'include'
+            })
+        if (finish.ok) {
+            const j = await finish.json()
+            if(j) {
+                return Convert.users.toFrontend(j)
+            }
+        }
+        return []
+    } else {
+        await sleep(300)
+        return []
+    }
+}
+
 export const getWinners = async (eventId: string) => {
     if (!mockImplemented) {
         const finish = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/teams/win`,
@@ -1043,6 +1083,23 @@ export const getActiveEvents = async (userId: string) => {
         const json = await res.json()
         if(json) {
             return json.map(Convert.event.toFrontend)
+        } else {
+            return []
+        }
+    } else {
+        return []
+    }
+}
+
+export const getNotificationsHistory = async (userID: string) => {
+    const res = await fetch(
+        `${HOST_DOMAIN}${PREFIX}/notification/${userID}/last`,
+        {credentials: 'include'})
+
+    if(res.ok) {
+        const json = await res.json()
+        if(json) {
+            return json as Message[]
         } else {
             return []
         }

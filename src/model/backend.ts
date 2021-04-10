@@ -68,6 +68,7 @@ export type BackendHackathon = {
         name: string | null,
         place: number | null,
         amount: number | null,
+        total: number | null,
         winnerTeamIDs: number[] | null
     }[] | null
 }
@@ -194,14 +195,14 @@ const Convert = {
     },
     event: {
         toFrontend: (bHackathon: BackendHackathon) => {
-            // const currentDate = new Date()
             const orderedPrizes = bHackathon.prizeList?.sort((left, right) => {
                     return (left.place ?? 0) - (right.place ?? 0)
                 }
             ).map((p) => ({
                 id: p.id?.toString() ?? '',
                 name: p.name ?? null,
-                count: p.amount?.toString() ?? ''
+                total: p.total ?? '0',
+                count: p.amount ?? 0 > 0 ? p.amount?.toString() ?? '0' : '0'
             })) ?? [] as Prize[]
 
             return {
@@ -252,6 +253,7 @@ const Convert = {
                     name: p.name ?? null,
                     place: i,
                     amount: Number(p.count) ?? null,
+                    total: Number(p.total) ?? null,
                     winnerTeamIDs: null
                 }))
             }

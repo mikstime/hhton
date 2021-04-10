@@ -31,6 +31,12 @@ export const useNotifications = () => {
                         case 'NewDenyNotification':
                             nc.newDenyNotification(json)
                             break
+                        case 'NewTeamLeadNotification':
+                            nc.newTeamLeadNotification(json)
+                            break
+                        case 'NewVoteNotification':
+                            nc.newVoteNotification(json)
+                            break
                         default:
                             console.log('Unknown json.status')
                             nc.default(json)
