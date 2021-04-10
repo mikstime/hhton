@@ -666,6 +666,26 @@ export const acceptInvite = async (eventId: string, inviteeId: string, inviterId
  * @param inviteeId - current user!!!
  * @param inviterId
  */
+export const unInvite = async (eventId: string, inviteeId: string, inviterId: string) => {
+    if (!mockImplemented) {
+        const ban = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${inviterId}/uninvite`,
+            {
+                credentials: 'include',
+                method: 'POST'
+            })
+        return (ban.ok && ban.status === 200)
+    } else {
+        await sleep(300)
+        return true
+    }
+}
+
+/**
+ *
+ * @param eventId
+ * @param inviteeId - current user!!!
+ * @param inviterId
+ */
 export const banInvite = async (eventId: string, inviteeId: string, inviterId: string) => {
     if (!mockImplemented) {
         const ban = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${inviterId}/ban`,
