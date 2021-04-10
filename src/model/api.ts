@@ -1021,25 +1021,6 @@ export const getEventUsers = async (eventId: string) => {
     }
 }
 
-export const getEventUsers = async (eventId: string) => {
-    if (!mockImplemented) {
-        const finish = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/users`,
-            {
-                credentials: 'include'
-            })
-        if (finish.ok) {
-            const j = await finish.json()
-            if(j) {
-                return Convert.users.toFrontend(j)
-            }
-        }
-        return []
-    } else {
-        await sleep(300)
-        return []
-    }
-}
-
 export const getWinners = async (eventId: string) => {
     if (!mockImplemented) {
         const finish = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/teams/win`,
