@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import {useSnackbar} from 'notistack'
 import {useHistory} from 'react-router-dom'
-type Message = {
+export type Message = {
     type: string,
     status: string,
     message: string,
