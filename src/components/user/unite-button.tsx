@@ -68,6 +68,10 @@ export const UniteButton: React.FC = () => {
     const {enqueueSnackbar} = useSnackbar()
     const pModal = usePromptModal()
 
+    if (cEvent.isNullEvent || cEvent.notFound) {
+        return null
+    }
+
     if (user.isNullUser || !user.team) {
         return <PrimaryButton disabled/>
     }

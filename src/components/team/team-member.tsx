@@ -11,14 +11,20 @@ import {
 import {Link} from 'react-router-dom'
 import {AvatarPlate} from '../common'
 import {NameTypography} from '../common/typography'
-import {ReactComponent as KickActiveIcon} from '../../assets/kick_active.svg'
-import {ReactComponent as KickIcon} from '../../assets/kick.svg'
+import {ReactComponent as KickActiveIcon} from '../../assets/team/kick_active.svg'
+import {ReactComponent as KickIconBase} from '../../assets/team/kick.svg'
+import {ReactComponent as VoteActiveIcon} from '../../assets/team/vote_active.svg'
+import {ReactComponent as VoteIconBase} from '../../assets/team/vote.svg'
 import {useAppState} from '../tools/use-app-state'
 import {SocialLink} from '../app/user'
 
 
+const KickIcon: React.FC<{ active: boolean }> = ({active, ...props}) => {
+    return active ? <KickActiveIcon {...props}/> : <KickIconBase {...props}/>
+}
+
 const VoteIcon: React.FC<{ active: boolean }> = ({active, ...props}) => {
-    return active ? <KickActiveIcon {...props}/> : <KickIcon {...props}/>
+    return active ? <VoteActiveIcon {...props}/> : <VoteIconBase {...props}/>
 }
 
 export const useChipStyles = makeStyles((theme: Theme) =>
@@ -87,14 +93,13 @@ export const TeamMember: React.FC<{ user: User }> = ({user}) => {
     const [didVote] = useState(false)
 
     const {cUser} = useAppState()
-
     return <Grid item container spacing={2}>
         <Grid item md={5} xs={9} sm={5}>
             <Link to={`/user/${user.id}`}
                   style={{textDecoration: 'none'}}>
                 <AvatarPlate padding={24} src={user.avatar} style={{
                     position: 'sticky',
-                    top: 24,
+                    top: 24
                 }}/>
             </Link>
         </Grid>
@@ -107,8 +112,10 @@ export const TeamMember: React.FC<{ user: User }> = ({user}) => {
                 <Grid item>
                     <Skills user={user}/>
                 </Grid>
-                <Grid item container style={{marginTop: 24, marginBottom: 24}} wrap='nowrap'>
-                    <Grid item container direction='column' justify='center' spacing={2}>
+                <Grid item container style={{marginTop: 24, marginBottom: 24}}
+                      wrap='nowrap'>
+                    <Grid item container direction='column' justify='center'
+                          spacing={2}>
                         <SocialLink prefix='ВКонтакте: ' site='vk.com/'
                                     value={user.settings.vk}/>
                         <SocialLink prefix='Телеграм: ' site='t.me/'
@@ -128,7 +135,10 @@ export const TeamMember: React.FC<{ user: User }> = ({user}) => {
                     <IconButton>
                       <Box clone width={{xs: '24px', md: '48px'}}
                            height={{xs: '24px', md: '48px'}}>
-                        <VoteIcon active={didVote}/>
+                          {cUser.isTeamLead ?
+                              <KickIcon active={didVote}/> :
+                              <VoteIcon active={didVote}/>
+                          }
                       </Box>
                     </IconButton>
                     }

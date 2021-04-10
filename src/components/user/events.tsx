@@ -2,11 +2,9 @@ import React, {useEffect, useState} from 'react'
 import {Theme, createStyles, makeStyles} from '@material-ui/core/styles'
 import GridList from '@material-ui/core/GridList'
 import GridListTile from '@material-ui/core/GridListTile'
-import {Box, GridListTileBar, Grow, Hidden, IconButton} from '@material-ui/core'
-import StarBorderIcon from '@material-ui/icons/StarBorder'
-import {Id, useUser} from '../tools/use-app-state/user'
+import {Box, GridListTileBar, Hidden} from '@material-ui/core'
+import {Id} from '../tools/use-app-state/user'
 import {useAppState} from '../tools/use-app-state'
-import {Hackathon} from '../tools/use-app-state/hackathon'
 import {fetchEvent} from '../../model/api'
 import {Link} from 'react-router-dom'
 
@@ -85,8 +83,9 @@ export const UserEvents: React.FC = () => {
     return (
         <Box clone width={{
             xs: 'calc(100vw - 36px)',
-            sm: 'calc( 100vw - 48px - 48px - 200px)',
-            md: 'calc( 800px - 48px - 48px)'
+            sm: 'calc( 100vw - 48px - 200px)',
+            md: 'calc( 800px - 48px - 48px)',
+            lg: '912px',
         }
         }>
             <div className={classes.root}>

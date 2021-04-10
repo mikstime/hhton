@@ -22,7 +22,7 @@ export const useInvitesFetcher = () => {
                     getTeam(cEvent.id, cUser.id)
                 ])
 
-                cUser.change({team: userTeam})
+                cUser.change({team: userTeam, isTeamLead: userTeam.teamLead?.id === cUser.id})
                 invites.i.set({team, personal})
                 const t = team.map(u => getTeam(cEvent.id, u.id))
                 const teams = await Promise.all(t)
@@ -85,7 +85,7 @@ export const useInvitesFetcher = () => {
             if (cUser.id !== '-1' && cEvent.id !== '-1') {
                 const team = await getTeam(cEvent.id, cUser.id)
                 if (team) {
-                    cUser.change({team})
+                    cUser.change({team, isTeamLead: team.teamLead?.id === cUser.id})
                 }
             }
         })()

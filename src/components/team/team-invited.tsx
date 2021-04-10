@@ -4,14 +4,14 @@ import {Box, Chip, Grid, IconButton} from '@material-ui/core'
 import {Link} from 'react-router-dom'
 import {AvatarPlate} from '../common'
 import {NameTypography} from '../common/typography'
-import {ReactComponent as ThumbsUpIcon} from '../../assets/thumbs_up.svg'
-import {ReactComponent as ThumbsDownIcon} from '../../assets/thumbs_down.svg'
+// import {ReactComponent as ThumbsUpIcon} from '../../assets/thumbs_up.svg'
+// import {ReactComponent as ThumbsDownIcon} from '../../assets/thumbs_down.svg'
 import {useAppState} from '../tools/use-app-state'
 import {useSnackbar} from 'notistack'
-import {acceptInvite, declineInvite} from '../../model/api'
+import {declineInvite} from '../../model/api'
 import {useChipStyles} from './team-member'
 import {SocialLink} from '../app/user'
-import {ReactComponent as KickIcon} from '../../assets/kick.svg'
+import {ReactComponent as KickIcon} from '../../assets/team/kick.svg'
 
 const useInviteActions = (user: User) => {
     const [isFetching, setIsFetching] = useState(false)

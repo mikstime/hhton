@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react'
 import {
-    AppBar,
-    Box, Container,
+    Box,
     Grid, Tab, Tabs
 } from '@material-ui/core'
 import {useAppState} from '../tools/use-app-state'
@@ -10,7 +9,7 @@ import {TeamPage} from '../team/team-page'
 import {IncomingPage} from '../team/incoming-page'
 import {OutgoingPage} from '../team/outgoing-page'
 import {HistoryPage} from '../team/history-page'
-import {Plate} from '../common'
+
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -63,13 +62,14 @@ export const TeamApp: React.FC = () => {
             marginLeft={{sm: '-50px'}}
             width={{
                 xs: 'calc(100vw - 36px)',
-                sm: 'calc( 100vw - 48px - 48px - 200px)',
-                md: 'calc( 800px - 48px - 48px)'
+                sm: 'calc( 100vw - 48px - 200px)',
+                md: 'calc( 800px - 48px - 48px)',
+                lg: '912px',
             }
             }
             style={{
                 position: 'sticky',
-                top: 0,
+                top: 64,
                 zIndex: 3,
                 backgroundColor: '#F9F9F9',
             }}>

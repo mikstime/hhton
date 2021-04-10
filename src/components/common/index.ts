@@ -3,12 +3,13 @@ import {GrayPlate, GrayishPlate} from './gray-plate'
 import {FlexSpace, Root} from './reusable'
 import {AvatarPlate} from './avatar-plate'
 import {ItemPlate} from './item-plate'
-import {Title, AdditionalText, MainText, SubTitle} from './typography'
-import {Modal, ModalProps} from './modal'
+import {Title, AdditionalText, LabelText, MainText, SubTitle} from './typography'
+import {Modal, ModalProps as MP} from './modal'
 
 export {
     Plate,
     GrayPlate,
+    LabelText,
     GrayishPlate,
     FlexSpace,
     AvatarPlate,
@@ -20,4 +21,4 @@ export {
     Root,
     Modal
 }
-export type { ModalProps }
+export type ModalProps = MP

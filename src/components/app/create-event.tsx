@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {
-    AdditionalText,
-    ModalProps, Plate
+    AdditionalText, Plate
 } from '../common'
 import {
     Box,
@@ -28,7 +27,7 @@ export const CreateEventApp: React.FC = () => {
 
     const edit = useEventEdit()
 
-    const {event, cEvent} = useAppState()
+    const {event, cEvent, settings} = useAppState()
     useEffect(() => {
         if (event.id !== '-1') {
             edit.nullReset()
@@ -37,6 +36,12 @@ export const CreateEventApp: React.FC = () => {
         }
     }, [event.id])
     const history = useHistory()
+
+    useEffect(() => {
+        if(!settings.isHostMode) {
+            history.push('/user')
+        }
+    }, [settings.isHostMode])
 
     const stepOne = <div>
         <Typography variant='h2' style={{fontSize: 22}}>
