@@ -12,6 +12,7 @@ import {
 } from '../components/tools/use-app-state/user'
 import Convert, {BackendHackathon, BackendUser, Jobs} from './backend'
 import {HackathonOptional} from '../components/tools/use-app-state/hackathon'
+import {Message} from "../components/tools/notification-handlers";
 
 const useMock = false
 const mockImplemented = false
@@ -682,6 +683,26 @@ export const acceptInvite = async (eventId: string, inviteeId: string, inviterId
  * @param inviteeId - current user!!!
  * @param inviterId
  */
+export const unInvite = async (eventId: string, inviteeId: string, inviterId: string) => {
+    if (!mockImplemented) {
+        const ban = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${inviterId}/uninvite`,
+            {
+                credentials: 'include',
+                method: 'POST'
+            })
+        return (ban.ok && ban.status === 200)
+    } else {
+        await sleep(300)
+        return true
+    }
+}
+
+/**
+ *
+ * @param eventId
+ * @param inviteeId - current user!!!
+ * @param inviterId
+ */
 export const banInvite = async (eventId: string, inviteeId: string, inviterId: string) => {
     if (!mockImplemented) {
         const ban = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${inviterId}/ban`,
@@ -765,12 +786,14 @@ export const modifyEvent = async (data: {
     teams: Team[],
     founderId: Id,
     prizes: Prize[],
+    addWinners: {},
     deletedWinners: {},
     deletedPrizes: string[],
 }) => {
     if (!mockImplemented) {
         data.diff.founderId = data.founderId
         const eventRequests = []
+        // Обновляем евент
         eventRequests.push(
             fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}`, {
                 method: 'POST',
@@ -778,6 +801,7 @@ export const modifyEvent = async (data: {
                 body: JSON.stringify(Convert.eventOptional.toBackend(data.diff, data.prizes))
             })
         )
+        // Удаляем призы
         if (data.deletedPrizes.length > 0) {
             eventRequests.push(
                 fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/prize`, {
@@ -790,21 +814,51 @@ export const modifyEvent = async (data: {
                 })
             )
         }
-        // TODO удалять призы
-        const prizesBackend = Convert.prize.toBackend(data.teams, data.diff.id)
-        for (let prize of prizesBackend) {
-            eventRequests.push(
-                fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/win`, {
-                    method: 'POST',
-                    credentials: 'include',
-                    body: JSON.stringify(prize)
-                })
-            )
+        // Удаляем победителей
+        for (let tID of Object.keys(data.deletedWinners)) {
+            // @ts-ignore
+            if (data.deletedWinners[tID] === undefined) {
+                continue
+            }
+            // @ts-ignore
+            for (let pID of data.deletedWinners[tID]) {
+                console.log('delete: ', tID, pID)
+                eventRequests.push(
+                    fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/unwin`, {
+                        method: 'POST',
+                        credentials: 'include',
+                        body: JSON.stringify({
+                            prizeID: Number(pID),
+                            teamID: Number(tID),
+                            eventID: Number(data.diff.id)
+                        })
+                    })
+                )
+            }
+        }
+        // Награждаем победителей
+        for (let tID of Object.keys(data.addWinners)) {
+            // @ts-ignore
+            if (data.addWinners[tID] === undefined) {
+                continue
+            }
+            // @ts-ignore
+            for (let pID of data.addWinners[tID]) {
+                eventRequests.push(
+                    fetch(`${HOST_DOMAIN}${PREFIX}/event/${data.diff.id}/win`, {
+                        method: 'POST',
+                        credentials: 'include',
+                        body: JSON.stringify({
+                            prizeID: Number(pID),
+                            teamID: Number(tID),
+                            eventID: Number(data.diff.id)
+                        })
+                    })
+                )
+            }
         }
 
         const eventResponse = await Promise.all(eventRequests)
-
-        const json = await eventResponse[0].json()
 
         let result = true
         for (let response of eventResponse) {
@@ -967,6 +1021,25 @@ export const getEventUsers = async (eventId: string) => {
     }
 }
 
+export const getEventUsers = async (eventId: string) => {
+    if (!mockImplemented) {
+        const finish = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/users`,
+            {
+                credentials: 'include'
+            })
+        if (finish.ok) {
+            const j = await finish.json()
+            if(j) {
+                return Convert.users.toFrontend(j)
+            }
+        }
+        return []
+    } else {
+        await sleep(300)
+        return []
+    }
+}
+
 export const getWinners = async (eventId: string) => {
     if (!mockImplemented) {
         const finish = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/teams/win`,
@@ -982,7 +1055,7 @@ export const getWinners = async (eventId: string) => {
             const r = j?.map((j, i) =>({
                 ...ts[i],
                 prizes: [{
-                id: j.prize.id,
+                id: j.prize.id.toString(),
                 name: j.prize.name,
                 place: j.prize.place,
                 count: j.prize.amount,
@@ -1026,7 +1099,7 @@ export const unVoteFor = async (userID: string, eventID: string, teamID: string)
                     eventID: Number(eventID),
                     forWhomID: Number(userID),
                     // TODO проверить
-                    state: 0
+                    state: -1
                 })
             })
         return (voted.ok && voted.status === 200)
@@ -1053,6 +1126,7 @@ export const getActiveEvents = async (userId: string) => {
     }
 }
 
+
 export const getTopEvents = async () => {
     const res = await fetch(
         `${HOST_DOMAIN}${PREFIX}/event/top`,
@@ -1062,6 +1136,24 @@ export const getTopEvents = async () => {
         const json = await res.json()
         if(json) {
             return json.map(Convert.event.toFrontend)
+        } else {
+            return []
+        }
+    } else {
+        return []
+    }
+}
+    
+    
+export const getNotificationsHistory = async (userID: string) => {
+    const res = await fetch(
+        `${HOST_DOMAIN}${PREFIX}/notification/${userID}/last`,
+        {credentials: 'include'})
+
+    if(res.ok) {
+        const json = await res.json()
+        if(json) {
+            return json as Message[]
         } else {
             return []
         }

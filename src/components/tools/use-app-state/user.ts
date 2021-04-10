@@ -51,6 +51,7 @@ export type Prize = {
     name: string,
     id?: Id,
     count: string,
+    total: string,
     winners?: Team[]
 }
 

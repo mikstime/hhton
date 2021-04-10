@@ -78,12 +78,12 @@ const PrizeItem: React.FC<{
     onWinnersChange?: () => void,
     onDeleteClick?: () => void,
     name?: string,
-    count: string,
+    total: string,
     isEditing?: boolean,
 }> = ({
           inputProps = {}, onDeleteClick, onCountChange,
           onNameChange, closePopper, onPopperOpen, isEditing, onEditClick,
-          name = '', count = 0, index
+          name = '', total = 0, index
       }) => {
     const theme = useTheme()
     const {event} = useAppState()
@@ -113,7 +113,7 @@ const PrizeItem: React.FC<{
                 boxShadow: theme.shadows[4]
             },
             inputProps: {min: 0, max: 100},
-            value: count,
+            value: total,
             onChange: onCountChange
         }}/>
     </Grid>
@@ -216,7 +216,7 @@ export const EventPrizes: React.FC<{
                        }}
                        onCountChange={(e) => {
                            const v = [...prizes.value]
-                           v[i].count = e.target.value
+                           v[i].total = e.target.value
                            prizes.onChange(v, [])
                        }}
                        onDeleteClick={() => {
@@ -229,7 +229,7 @@ export const EventPrizes: React.FC<{
                            setEditing(e)
                            prizes.onChange(v, newDeletedPrizes)
                        }}
-                       count={p.count}
+                       total={p.total}
                        isEditing={editing[i]}
                        closePopper={() => setAnchorEl(null)}
                        onPopperOpen={(r) => {
@@ -245,7 +245,8 @@ export const EventPrizes: React.FC<{
     const addPrize = useCallback(() => {
         const p = {
             name: '',
-            count: '1'
+            count: '1',
+            total: '1'
         }
         setEditing([...editing.map(_ => false), true])
         prizes.onChange([...prizes.value, p], [])

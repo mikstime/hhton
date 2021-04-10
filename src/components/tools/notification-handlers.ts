@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import {useSnackbar} from 'notistack'
 import {useHistory} from 'react-router-dom'
-type Message = {
+export type Message = {
     type: string,
     status: string,
     message: string,
@@ -11,6 +11,8 @@ export const useNotificationHandlers: () => {
     newMembersNotification: (m: Message) => void,
     newInviteNotification: (m: Message) => void,
     newDenyNotification: (m: Message) => void,
+    newTeamLeadNotification: (m: Message) => void,
+    newVoteNotification: (m: Message) => void,
     default: (m: Message) => void,
     updates: number,
 } = () => {
@@ -53,6 +55,14 @@ export const useNotificationHandlers: () => {
                     history.push('/team')
                 }
             })
+        },
+        newTeamLeadNotification: (m: Message) => {
+            // TODO Implement
+            console.log("Implement")
+        },
+        newVoteNotification: (m: Message) => {
+            // TODO Implement
+            console.log("Implement")
         },
         default: (m: Message) => {
             setUpdates(updates + 1)

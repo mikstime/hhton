@@ -11,7 +11,7 @@ export const PrizePool: React.FC<{ prizes: Prize[] }> = ({prizes}) => {
                 listStyleType: 'circle',
                 marginTop: 16,
             }}>
-                {i + 1}. {p.name} - {p.count}шт.
+                {i + 1}. {p.name} - {p.total}шт.
             </Typography>
         </Grid>
     ))
