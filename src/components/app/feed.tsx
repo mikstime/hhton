@@ -22,15 +22,9 @@ import {ReactComponent as SearchIcon} from '../../assets/search.svg'
 
 const StyledDiv = styled.div`
   position: fixed;
-  bottom: 20px;
-  right: 20px;
   display: flex;
 `
 
-const StyledDiv2 = styled.div`
-  position: fixed;
-  display: flex;
-`
 //@ts-ignore
 const FeedContext = React.createContext()
 
@@ -155,8 +149,16 @@ export const FeedApp: React.FC = () => {
                 <Box height='70px'/>
             </div>
         </Slide>
-        <Box clone left={{ md: '220px'}} right={{xs: '20px'}} bottom={{xs: 76, md: 20,}}>
-            <StyledDiv2>
+        <Box clone
+             height={48}
+             width={138}
+             left={{
+            md: 'max(224px, calc((100vw - 912px) / 2 + 100px))',
+            lg: `calc((100vw - 912px) / 2 - 24px + 100px)`
+        }}
+             right={{xs: '20px'}} bottom={{xs: 76, md: 20}}
+             top={{lg: 'min(calc(100vh - 68px), 1000px)'}}>
+            <StyledDiv>
                 <PrimaryButton disabled={isFetching}
                                style={{
                                    height: 48,
@@ -177,7 +179,7 @@ export const FeedApp: React.FC = () => {
                                style={{
                                    height: 48,
                                    backgroundColor: '#F0F2F5',
-                                   boxShadow: theme.shadows[1],
+                                   boxShadow: theme.shadows[1]
                                }}
                                onClick={() => {
                                    sModal.actions.open({
@@ -188,24 +190,33 @@ export const FeedApp: React.FC = () => {
                                    })
                                }
                                }><SearchIcon/></PrimaryButton>
-            </StyledDiv2>
+            </StyledDiv>
         </Box>
-        <StyledDiv>
-            <PrimaryButton disabled={isFetching}
-                           style={{
-                               height: 48,
-                               backgroundColor: '#F0F2F5',
-                               marginRight: theme.spacing(1),
-                               boxShadow: theme.shadows[1]
-                           }}
-                           onClick={prevUser}><BackIcon/></PrimaryButton>
-            <PrimaryButton disabled={isFetching}
-                           style={{
-                               height: 48,
-                               width: 136,
-                               boxShadow: theme.shadows[1]
-                           }}
-                           onClick={nextUser}>Следующий</PrimaryButton>
-        </StyledDiv>
+        <Box clone height={48} right={{
+            xs: '20px',
+            md: '20px',
+            // md: 'max(48px, calc((100vw - 912px) / 2 - 24px))',
+            lg: `calc((100vw - 960px - 200px) / 2 + 24px) !important`
+        }}
+             bottom={20}
+             top={{lg: 'min(calc(100vh - 68px), 1000px)'}}>
+            <StyledDiv>
+                <PrimaryButton disabled={isFetching}
+                               style={{
+                                   height: 48,
+                                   backgroundColor: '#F0F2F5',
+                                   marginRight: theme.spacing(1),
+                                   boxShadow: theme.shadows[1]
+                               }}
+                               onClick={prevUser}><BackIcon/></PrimaryButton>
+                <PrimaryButton disabled={isFetching}
+                               style={{
+                                   height: 48,
+                                   width: 136,
+                                   boxShadow: theme.shadows[1]
+                               }}
+                               onClick={nextUser}>Следующий</PrimaryButton>
+            </StyledDiv>
+        </Box>
     </Fragment>
 }

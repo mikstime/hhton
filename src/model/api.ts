@@ -17,8 +17,14 @@ import {Message} from "../components/tools/notification-handlers";
 const useMock = false
 const mockImplemented = false
 
-
-const TEST_USERS: User[] = []
+const getTestUser = (id: Id) => ({...NULL_USER, id, firstName: 'Test',
+    lastName: 'User'+id, avatar: logo})
+const TEST_USERS: User[] = [
+    getTestUser('1001'),
+    getTestUser('1002'),
+    getTestUser('1003'),
+    getTestUser('1004'),
+]
 
 export const fetchUser = async (id: Id) => {
     if (!mockImplemented) {
@@ -425,6 +431,16 @@ export const getTeamById = async (teamId: string) => {
  * @param userId - id пользователя, чью команду запрашиваем
  */
 export const getTeam = async (eventId: string, userId: string) => {
+    // await sleep(300)
+    // return {
+    //     members: TEST_USERS.slice(0, 3),
+    //     name: 'Команда мечты',
+    //     votes: {
+    //         1001: 3,
+    //         1002: 2,
+    //     },
+    //     teamLead: getTestUser('1001')//{...NULL_USER, id: userId}
+    // } as Team
     if (!mockImplemented) {
         const team = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${userId}/team`, {
             credentials: 'include'
@@ -976,7 +992,26 @@ export const getEventTeams = async (eventId: string) => {
         if (finish.ok) {
             const j = await finish.json()
             if(j) {
-            return await Promise.all(j.map((j: Team) => getTeamById(j.id ?? ''))) as Team[]
+                return await Promise.all(j.map((j: Team) => getTeamById(j.id ?? ''))) as Team[]
+            }
+        }
+        return []
+    } else {
+        await sleep(300)
+        return []
+    }
+}
+
+export const getEventUsers = async (eventId: string) => {
+    if (!mockImplemented) {
+        const finish = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/users`,
+            {
+                credentials: 'include'
+            })
+        if (finish.ok) {
+            const j = await finish.json()
+            if(j) {
+                return Convert.users.toFrontend(j)
             }
         }
         return []
@@ -1091,6 +1126,25 @@ export const getActiveEvents = async (userId: string) => {
     }
 }
 
+
+export const getTopEvents = async () => {
+    const res = await fetch(
+        `${HOST_DOMAIN}${PREFIX}/event/top`,
+        {credentials: 'include'})
+
+    if(res.ok) {
+        const json = await res.json()
+        if(json) {
+            return json.map(Convert.event.toFrontend)
+        } else {
+            return []
+        }
+    } else {
+        return []
+    }
+}
+    
+    
 export const getNotificationsHistory = async (userID: string) => {
     const res = await fetch(
         `${HOST_DOMAIN}${PREFIX}/notification/${userID}/last`,

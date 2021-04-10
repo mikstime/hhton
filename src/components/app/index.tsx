@@ -14,7 +14,6 @@ import {
 } from '@material-ui/core'
 import styled from 'styled-components'
 import {useNotifications} from '../tools/use-notifications'
-import {HostApp} from './host'
 import {CreateEventApp} from './create-event'
 import {AppNavigation} from '../navigation'
 
@@ -89,11 +88,12 @@ export const App: React.FC = () => {
                 </RootContainer>
             </AppNavigation>
         </Route>
-        <Route path='/host'>
-            <HostApp/>
-        </Route>
         <Route>
+            <AppNavigation>
+                <RootContainer>
             <HomeApp/>
+        </RootContainer>
+      </AppNavigation>
         </Route>
     </Switch>
 }

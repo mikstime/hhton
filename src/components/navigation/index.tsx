@@ -10,7 +10,6 @@ import {
 import {useAppState} from '../tools/use-app-state'
 import {DefaultMenu} from './default'
 import {LoadingMenu} from './loading'
-import {OwnerMenu} from './owner'
 import {UnAuthMenu} from './unauth'
 
 const drawerWidth = 200
@@ -27,10 +26,10 @@ const useStyles = makeStyles((theme: Theme) =>
             }
         },
         appBar: {
-            [theme.breakpoints.up('sm')]: {
-                width: `calc(100% - ${drawerWidth}px)`,
-                marginLeft: drawerWidth
-            }
+            // width: `calc(100% - ${drawerWidth}px)`,
+            // width: `calc((100vw - 912px - ${drawerWidth}px) / 2 - 24px)`,
+            backgroundColor: '#F9F9F9',
+            marginLeft: drawerWidth,
         },
         menuButton: {
             marginRight: theme.spacing(2),
@@ -41,15 +40,24 @@ const useStyles = makeStyles((theme: Theme) =>
         // necessary for content to be below app bar
         toolbar: theme.mixins.toolbar,
         drawerPaper: {
-            padding: '8px 0 24px 24px',
+            padding: `8px 0 24px 24px`,
             boxSizing: 'border-box',
+            [theme.breakpoints.up('md')]: {
+                marginLeft: `calc((100vw - 912px - ${drawerWidth}px) / 2 - 24px)`,
+                width: drawerWidth
+            },
+            [theme.breakpoints.down('md')]: {
+                marginLeft: 0
+            },
             width: drawerWidth,
             background: 'transparent',
             border: 'none'
         },
         drawerPaper2: {
             width: drawerWidth,
-            padding: theme.spacing(3)
+            // padding: theme.spacing(3),
+            height: 'calc(100vh - 24px)',
+            padding: `8px 24px 24px 24px`,
         },
         content: {
             flexGrow: 1,
@@ -75,15 +83,17 @@ export const AppNavigation: React.FC<GridProps> = ({children}) => {
     let drawer = <LoadingMenu onClick={onLinkClick}/>
 
     if (cEvent.founderId === cUser.id && cEvent.founderId !== '-1') {
-        drawer = <OwnerMenu onClick={onLinkClick}/>
+        drawer = <DefaultMenu onClick={onLinkClick}/>
+        // drawer = <OwnerMenu onClick={onLinkClick}/>
     } else if (cUser.id === '-1') {
         drawer = <UnAuthMenu onClick={onLinkClick}/>
     } else if (cUser.id !== '-1' && cEvent.id !== '-1') {
         drawer = <DefaultMenu onClick={onLinkClick}/>
     }
+
     return <div className={classes.root}>
-        <Hidden smUp implementation="css">
-            <AppBar position="fixed" className={classes.appBar}>
+        <Hidden smUp implementation="js">
+            <AppBar position="fixed">
                 <Toolbar>
                     <IconButton
                         color="inherit"
@@ -97,10 +107,18 @@ export const AppNavigation: React.FC<GridProps> = ({children}) => {
                 </Toolbar>
             </AppBar>
         </Hidden>
-
+        {/*<Hidden smDown implementation="js">*/}
+        {/*    <AppBar position="fixed" className={classes.appBar} elevation={0}>*/}
+        {/*        <Toolbar>*/}
+        {/*                <Box paddingLeft='200px' width='100%'>*/}
+        {/*                    <NotificationsSection/>*/}
+        {/*                </Box>*/}
+        {/*        </Toolbar>*/}
+        {/*    </AppBar>*/}
+        {/*</Hidden>*/}
         <nav className={classes.drawer} aria-label="mailbox folders">
             {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-            <Hidden smUp implementation="css">
+            <Hidden smUp implementation="js">
                 <Drawer className={classes.drawer}
                         container={container}
                         variant="temporary"
@@ -125,7 +143,7 @@ export const AppNavigation: React.FC<GridProps> = ({children}) => {
                     variant="permanent"
                     open
                 >
-                        {drawer}
+                    {drawer}
                 </Drawer>
             </Hidden>
         </nav>

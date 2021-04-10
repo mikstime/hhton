@@ -9,36 +9,66 @@ import {TeamMember} from './team-member'
 import {Link} from 'react-router-dom'
 import {TeamName} from './team-name'
 
+const LeaderSection: React.FC = () => {
+
+    const {cUser} = useAppState()
+
+    if(!cUser.team.teamLead) {
+        return null
+    }
+
+    if (cUser.team.teamLead.id === cUser.id) {
+        return <AdditionalText>
+            <b>Вы</b> – лидер команды
+        </AdditionalText>
+    }
+
+    if (cUser.team.teamLead.id !== cUser.id) {
+        return <AdditionalText>
+            <b>{cUser.team.teamLead.firstName} {cUser.team.teamLead.lastName}</b> – лидер команды
+        </AdditionalText>
+    }
+
+    return null
+}
+
 export const TeamPage: React.FC = () => {
 
     const {cUser, cEvent} = useAppState()
 
     return <Grid container direction='column'>
-        <TeamName/>
+        <Grid item container alignItems='baseline'>
+            <TeamName/>
+            <Box flex={1}/>
+            <LeaderSection/>
+        </Grid>
         <GrayPlate style={{marginBottom: 16}}>
             <AdditionalText>
                 Это ваша команда на мероприятии&nbsp;
-                <Link style={{textDecoration: 'none'}} to={`/event/${cEvent.id}`}>
+                <Link style={{textDecoration: 'none'}}
+                      to={`/event/${cEvent.id}`}>
                     {cEvent.name}
-                </Link>. По окончании отбора состав команды автоматически утвердится.
+                </Link>. По окончании отбора состав команды автоматически
+                утвердится.
                 <br/><br/>
-                А пока что можете найти человека или команду при помощи <Link to='/feed' style={
+                А пока что можете найти человека или команду при помощи <Link
+                to='/feed' style={
                 {textDecoration: 'none'}
             }>умного поиска</Link>
             </AdditionalText>
         </GrayPlate>
         <Grid container spacing={3} direction='column'>
-            {cUser.team.members.length > 0 && cUser.team.members.map((u, i) => {
+            <Fragment>
+                <Grow in><TeamMember user={cUser}/></Grow>
+                <Divider light flexItem style={{height: 1}}/>
+            </Fragment>
+            {cUser.team.members.length > 0 && cUser.team.members.filter(m => m.id !== cUser.id).map((u, i) => {
                 return <Fragment key={i}>
                     <Grow in><TeamMember user={u}/></Grow>
                     <Divider light flexItem style={{height: 1}}/>
                 </Fragment>
             })
             }
-            {!cUser.team.members.length && <Fragment>
-              <Grow in><TeamMember user={cUser}/></Grow>
-              <Divider light flexItem style={{height: 1}}/>
-            </Fragment>}
         </Grid>
         <Box height='150px' width='100%'/>
     </Grid>

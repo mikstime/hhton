@@ -102,7 +102,7 @@ const useStyles = makeStyles({
     }
 })
 export const ParticipateButton: React.FC = () => {
-    const {event, cUser} = useAppState()
+    const {event, cUser, settings} = useAppState()
     const {isFetching, onClick, onLeaveClick, onFinishClick, onSetWinnersClick} = useParticipate()
     const classes = useStyles()
 
@@ -115,13 +115,13 @@ export const ParticipateButton: React.FC = () => {
         </SecondaryButton>
     }
 
-    if (event.founderId === cUser.id && !event.isFinished) {
+    if (event.founderId === cUser.id && !event.isFinished && settings.isHostMode) {
         return <PrimaryButton onClick={onFinishClick}>
             Завершить мероприятие
         </PrimaryButton>
     }
 
-    if (event.founderId === cUser.id && event.isFinished) {
+    if (event.founderId === cUser.id && event.isFinished && settings.isHostMode) {
         return <PrimaryButton onClick={onSetWinnersClick}>
             Выбрать победителей
         </PrimaryButton>

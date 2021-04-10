@@ -26,6 +26,7 @@ import {editUserAvatar} from '../tools/edit-images'
 import {useSnackbar} from 'notistack'
 import {UserEvents} from '../user/events'
 import {useHistory, useLocation} from 'react-router-dom'
+import {FillPrompt} from '../user/fill-prompt'
 
 const UserNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
@@ -127,8 +128,8 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                     <GrayishPlate>
                       <Grid container spacing={1}
                             style={{minHeight: 32}}>
-                          {user.skills.tags.map((e) => <Grid
-                              key={e.id} item>
+                          {user.skills.tags.map((e, i) => <Grid
+                              key={i} item>
                               <BoldText>{e.name}</BoldText>
                           </Grid>)}
                       </Grid>
@@ -136,6 +137,7 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                   </Grid>
                 </Grid>
                 }
+                <FillPrompt/>
                 <FlexSpace/>
                 <Grid item container style={{marginTop: 24, marginBottom: 24}}
                       wrap='nowrap'>
@@ -169,6 +171,7 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
             <Grid item container direction='column'> <Grid item>
               <Title>
                 Победы в хакатонах
+                <span style={{color: '#818C99'}}>{cUser.hackathons.length}</span>
               </Title>
             </Grid>
               <Grid item>
