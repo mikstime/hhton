@@ -1,7 +1,7 @@
 import {useEffect} from 'react'
 import {useAppState} from './use-app-state'
 import {
-    getTeam, personalInvitedDeclined, personalInvitedPending,
+    getTeam, getVotes, personalInvitedDeclined, personalInvitedPending,
     personalInvites, teamInvitedDeclined, teamInvitedPending,
     teamInvites
 } from '../../model/api'
@@ -16,15 +16,19 @@ export const useInvitesFetcher = () => {
     useEffect(() => {
         (async () => {
             if (cEvent.id !== '-1' && cUser.id !== '-1') {
-                const [team, personal, userTeam] = await Promise.all([
+                const [team, personal, userTeam, votes] = await Promise.all([
                     teamInvites(cEvent.id, cUser.id),
                     personalInvites(cEvent.id, cUser.id),
-                    getTeam(cEvent.id, cUser.id)
+                    getTeam(cEvent.id, cUser.id),
+                    getVotes(cEvent.id, cUser.id),
                 ])
 
                 cUser.change({
-                    team: userTeam,
-                    isTeamLead: userTeam.teamLead?.id === cUser.id
+                    team: {
+                        ...userTeam,
+                        ...votes,
+                    },
+                    isTeamLead: userTeam.teamLead?.id === cUser.id,
                 })
                 invites.i.set({team, personal})
             }
@@ -62,21 +66,21 @@ export const useInvitesFetcher = () => {
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cUser.id, cEvent.id, nc.updates])
     //both
-    useEffect(() => {
-        (async () => {
-            //update team when invite is accepted or declined
-            if (cUser.id !== '-1' && cEvent.id !== '-1') {
-                const team = await getTeam(cEvent.id, cUser.id)
-                if (team) {
-                    cUser.change({
-                        team,
-                        isTeamLead: team.teamLead?.id === cUser.id
-                    })
-                }
-            }
-        })()
-        //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cUser.id, invites.i.team.length, invites.i.personal.length,
-        invites.o.team.length, invites.o.personal.length, nc.updates])
+    // useEffect(() => {
+    //     (async () => {
+    //         //update team when invite is accepted or declined
+    //         if (cUser.id !== '-1' && cEvent.id !== '-1') {
+    //             const team = await getTeam(cEvent.id, cUser.id)
+    //             if (team) {
+    //                 cUser.change({
+    //                     team,
+    //                     isTeamLead: team.teamLead?.id === cUser.id
+    //                 })
+    //             }
+    //         }
+    //     })()
+    //     //eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [cUser.id, invites.i.team.length, invites.i.personal.length,
+    //     invites.o.team.length, invites.o.personal.length, nc.updates])
     return null
 }

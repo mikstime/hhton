@@ -10,12 +10,13 @@ import {useAppState} from '../tools/use-app-state'
 import {useSnackbar} from 'notistack'
 import {useChipStyles} from './team-member'
 import {SocialLink} from '../app/user'
+import {useNotificationHandlers} from '../tools/notification-handlers'
 
 const useInviteActions = (user: User) => {
     const [isFetching, setIsFetching] = useState(false)
     const [fading, setFading] = useState(true)
     const {cEvent, cUser, invites} = useAppState()
-
+    const nc = useNotificationHandlers()
     const {enqueueSnackbar} = useSnackbar()
 
     const decline = useCallback(async () => {
@@ -34,7 +35,8 @@ const useInviteActions = (user: User) => {
                 variant: 'error'
             })
         }
-    }, [cUser.id, cEvent.id, user.id, invites, enqueueSnackbar])
+        nc.update()
+    }, [cUser.id, cEvent.id, user.id, invites, enqueueSnackbar, nc.update])
     return {
         isFetching,
         fading,
