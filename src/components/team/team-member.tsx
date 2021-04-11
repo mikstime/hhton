@@ -121,7 +121,7 @@ export const TeamMember: React.FC<{ user: User}> = ({user}) => {
                     variant: 'error'
                 })
             }
-        } else {
+        } else if(cUser.team.myVote !== '-1') {
             const didUnVote = await unVoteFor(user.id, cEvent.id, cUser.team.id ?? '-1')
             if(didUnVote) {
                 //nop
