@@ -2,11 +2,10 @@ import React, {useCallback, useState} from 'react'
 import {User} from '../tools/use-app-state/user'
 import {Box, Chip, Grid} from '@material-ui/core'
 import {AvatarPlate} from '../common'
-import {PrimaryButton} from '../common/buttons'
 import {InviteButton} from '../event/invite-button'
 import {NameTypography} from '../common/typography'
 import {TeamDescription} from '../user/team-description'
-import {acceptInvite, declineInvite} from '../../model/api'
+import {unInvite} from '../../model/api'
 import {useAppState} from '../tools/use-app-state'
 import {useSnackbar} from 'notistack'
 import {useChipStyles} from './team-member'
@@ -21,7 +20,7 @@ const useInviteActions = (user: User) => {
 
     const decline = useCallback(async () => {
         setIsFetching(true)
-        const didDecline = await declineInvite(cEvent.id, cUser.id, user.id)
+        const didDecline = await unInvite(cEvent.id, cUser.id, user.id)
         if (didDecline) {
             setIsFetching(false)
             setFading(false)

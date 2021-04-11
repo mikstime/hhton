@@ -8,7 +8,7 @@ import {NameTypography} from '../common/typography'
 // import {ReactComponent as ThumbsDownIcon} from '../../assets/thumbs_down.svg'
 import {useAppState} from '../tools/use-app-state'
 import {useSnackbar} from 'notistack'
-import {declineInvite} from '../../model/api'
+import {unInvite} from '../../model/api'
 import {useChipStyles} from './team-member'
 import {SocialLink} from '../app/user'
 import {ReactComponent as KickIcon} from '../../assets/team/kick.svg'
@@ -22,7 +22,7 @@ const useInviteActions = (user: User) => {
 
     const decline = useCallback(async () => {
         setIsFetching(true)
-        const didDecline = await declineInvite(cEvent.id, cUser.id, user.id)
+        const didDecline = await unInvite(cEvent.id, cUser.id, user.id)
         if (didDecline) {
             setIsFetching(false)
             setFading(false)

@@ -5,8 +5,6 @@ import {
 } from '@material-ui/core'
 import {AdditionalText, GrayPlate, SubTitle} from '../common'
 import {useAppState} from '../tools/use-app-state'
-import {TeamInvitee} from './team-invitee'
-import {PersonInvitee} from './person-invitee'
 import {Link} from 'react-router-dom'
 import {PersonInvited} from './person-invited'
 import {TeamInvited} from './team-invited'
