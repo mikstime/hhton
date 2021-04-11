@@ -139,9 +139,8 @@ export const EventLink: React.FC<EventLinkProps> = (props) => {
         const ids: {[key: string]: boolean} = {}
         const x = [...e1, ...e2].filter((e) => {
             if(!ids[e.id]) {
-                return e.id !== cEvent.id
-            } else {
                 ids[e.id] = true
+                return e.id !== cEvent.id
             }
             return false
         })
