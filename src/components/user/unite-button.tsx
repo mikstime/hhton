@@ -3,7 +3,6 @@ import {PrimaryButton, SecondaryButton} from '../common/buttons'
 import {useAppState} from '../tools/use-app-state'
 import {
     acceptInvite,
-    declineInvite,
     invitePerson, unInvite
 } from '../../model/api'
 import {useSnackbar} from 'notistack'
@@ -65,7 +64,7 @@ export const UniteButton: React.FC = () => {
 
     const classes = useStyles()
     const {onClick, isFetching} = useUnite()
-    const {cUser, cEvent, user, invites} = useAppState()
+    const {cUser, cEvent, user, invites, settings} = useAppState()
     const history = useHistory()
     const {enqueueSnackbar} = useSnackbar()
     const pModal = usePromptModal()
@@ -140,6 +139,15 @@ export const UniteButton: React.FC = () => {
     if(!cEvent.isParticipating) {
         return null
     }
+
+    if(settings.isHostMode) {
+        return <PrimaryButton style={{width: '100%'}} onClick={() => {
+            settings.setIsHostMode(false)
+        }}>
+            Режим участника
+        </PrimaryButton>
+    }
+
     if ((user.id === cUser.id || inMyTeam)) {
         return <Link to='/team' style={{textDecoration: 'none'}}>
             <SecondaryButton style={{width: '100%'}}>

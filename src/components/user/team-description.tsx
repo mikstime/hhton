@@ -35,13 +35,13 @@ const TO_SHOW = 40
 export const TeamDescription: React.FC<{ noName?: boolean, user: User }> = ({user, noName}) => {
 
     const theme = useTheme()
-    const {cUser, cEvent} = useAppState()
+    const {cUser, cEvent, settings} = useAppState()
 
     const filtered = user.team.members.filter(u => u.id !== user.id)
     const usersToShow = filtered.slice(0, TO_SHOW)
     const more = filtered.length - TO_SHOW > 0 ? filtered.length - TO_SHOW : 0
 
-    if(cEvent.id === '-1' || cEvent.notFound) {
+    if(cEvent.id === '-1' || cEvent.notFound || cEvent.isFinished || settings.isHostMode) {
         return null
     }
 

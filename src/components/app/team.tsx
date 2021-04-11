@@ -40,11 +40,23 @@ function TabPanel(props: TabPanelProps) {
 
 export const TeamApp: React.FC = () => {
 
-    const {cUser} = useAppState()
+    const {cUser, cEvent, settings} = useAppState()
     const history = useHistory()
     const location = useLocation()
 
     const [value, setValue] = React.useState(0)
+
+    useEffect(() => {
+        (async () => {
+            if (cEvent.notFound) {
+                history.push('/user')
+            }
+            if (cUser.notFound || cEvent.isFinished || settings.isHostMode) {
+                history.push('/event/' + cEvent.id)
+            }
+        })()
+        //eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cEvent.id, location, cEvent.notFound, cEvent.isParticipating, settings.isHostMode])
 
     useEffect(() => {
         if (location.hash === '#team') {

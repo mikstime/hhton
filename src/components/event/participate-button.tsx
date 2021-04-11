@@ -123,6 +123,14 @@ export const ParticipateButton: React.FC = () => {
         </PrimaryButton>
     }
 
+    if (event.founderId !== cUser.id && !event.isFinished && settings.isHostMode) {
+        return <PrimaryButton onClick={() => {
+            settings.setIsHostMode(false)
+        }}>
+            Режим участника
+        </PrimaryButton>
+    }
+
     if (event.founderId === cUser.id && event.isFinished && settings.isHostMode) {
         return <PrimaryButton onClick={onSetWinnersClick}>
             Выбрать победителей

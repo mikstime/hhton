@@ -74,7 +74,7 @@ export const FeedApp: React.FC = () => {
             if (cEvent.notFound) {
                 history.push('/user')
             }
-            if (cEvent.isFinished || (settings.isHostMode && cEvent.founderId === cUser.id && cUser.id !== '-1')) {
+            if (cUser.notFound || cEvent.isFinished || settings.isHostMode) {
                 history.push('/event/' + cEvent.id)
             }
             if (cEvent.id !== '-1') {

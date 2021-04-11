@@ -136,7 +136,16 @@ export const EventLink: React.FC<EventLinkProps> = (props) => {
         setIsOpen(!isOpen)
         setIsLoading(true)
         const [e1, e2] = await Promise.all([getActiveEvents(cUser.id), getHostEvents()])
-        setEvents([...e1.filter((e: Hackathon) => e.id !== cEvent.id), ...e2.filter((e: Hackathon) => e.id !== cEvent.id)])
+        const ids: {[key: string]: boolean} = {}
+        const x = [...e1, ...e2].filter((e) => {
+            if(!ids[e.id]) {
+                return e.id === cEvent.id
+            } else {
+                ids[e.id] = true
+            }
+            return false
+        })
+        setEvents(x)
         setIsLoading(false)
     }, [setIsOpen, isOpen])
 
