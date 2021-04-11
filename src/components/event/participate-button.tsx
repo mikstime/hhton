@@ -11,7 +11,7 @@ import {useEventEditModal} from '../modals/event-edit'
 import {HOST_DOMAIN, PREFIX} from '../../config/network'
 
 const useParticipate = () => {
-    const {event, cUser} = useAppState()
+    const {event, cEvent, cUser} = useAppState()
 
     const [actionId, setActionId] = useState<string | null>(null)
 
@@ -34,6 +34,7 @@ const useParticipate = () => {
         joinEvent(cUser.id, event.id).then((didJoin?: boolean) => {
             if (didJoin) {
                 event.change({isParticipating: true})
+                cEvent.change({isParticipating: true})
                 enqueueSnackbar(`Вы участвуете в мероприятии ${event.name}`, {
                     variant: 'success'
                 })
@@ -57,6 +58,7 @@ const useParticipate = () => {
                 const didLeave = await leaveEvent(cUser.id, event.id)
                 if (didLeave) {
                     event.change({isParticipating: false})
+                    cEvent.change({isParticipating: false})
                     pModal.close()
                     enqueueSnackbar(`Вы более не участвуете в мероприятии ${event.name}`)
 
