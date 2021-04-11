@@ -58,5 +58,5 @@ export const useNotifications = () => {
                 console.log(e)
             }
         }
-    }, [cUser.id])
+    }, [cUser.id, nc])
 }
