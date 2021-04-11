@@ -91,7 +91,7 @@ const Skills: React.FC<{ user: User }> = ({user}) => {
 }
 
 
-export const TeamMember: React.FC<{ user: User}> = ({user}) => {
+export const TeamMember: React.FC<{ user: User }> = ({user}) => {
 
     const {cUser, cEvent} = useAppState()
     const team = cUser.team
@@ -100,7 +100,7 @@ export const TeamMember: React.FC<{ user: User}> = ({user}) => {
     const nc = useNotificationHandlers()
     const onKick = useCallback(async () => {
         const didKick = await kickTeamMember(cEvent.id, cUser.team.id ?? '-1', user.id)
-        if(didKick) {
+        if (didKick) {
             enqueueSnackbar('Пользователь исключен')
         } else {
             enqueueSnackbar('Не удалось исключить из команды', {
@@ -112,21 +112,29 @@ export const TeamMember: React.FC<{ user: User}> = ({user}) => {
     }, [enqueueSnackbar, cEvent.id, cUser.team.id, user.id, nc.update])
 
     const onVote = useCallback(async () => {
-        if(cUser.team.myVote !== user.id) {
-            const didUnVote = await unVoteFor(user.id, cEvent.id, cUser.team.id ?? '-1')
+        if (cUser.team.myVote !== user.id && cUser.team.myVote !== '-1' && cUser.team.myVote) {
+            const didUnVote = await unVoteFor(cUser.team.myVote, cEvent.id, cUser.team.id ?? '-1')
             const didVote = await voteFor(user.id, cEvent.id, cUser.team.id ?? '-1')
-            if(didVote && didUnVote) {
+            if (didVote && didUnVote) {
             } else {
                 enqueueSnackbar('Не удалось проголосовать', {
                     variant: 'error'
                 })
             }
-        } else if(cUser.team.myVote !== '-1') {
+        } else if (cUser.team.myVote === user.id) {
             const didUnVote = await unVoteFor(user.id, cEvent.id, cUser.team.id ?? '-1')
-            if(didUnVote) {
+            if (didUnVote) {
                 //nop
             } else {
                 enqueueSnackbar('Не удалось забрать голос', {
+                    variant: 'error'
+                })
+            }
+        } else {
+            const didVote = await voteFor(user.id, cEvent.id, cUser.team.id ?? '-1')
+            if (didVote) {
+            } else {
+                enqueueSnackbar('Не удалось проголосовать', {
                     variant: 'error'
                 })
             }
@@ -149,7 +157,8 @@ export const TeamMember: React.FC<{ user: User}> = ({user}) => {
                   direction='column'>
                 <Grid item container>
                     <NameTypography user={user}/>
-                    {(user.isTeamLead || team?.teamLead?.id === user.id) && <AdditionalText>&nbsp;Лидер</AdditionalText>}
+                    {(user.isTeamLead || team?.teamLead?.id === user.id) &&
+                    <AdditionalText>&nbsp;Лидер</AdditionalText>}
                 </Grid>
                 <Grid item>
                     <Skills user={user}/>
@@ -175,7 +184,7 @@ export const TeamMember: React.FC<{ user: User}> = ({user}) => {
                 <Grid item>
                     {user.id !== cUser.id &&
                     <IconButton onClick={() => {
-                        if(cUser.isTeamLead) {
+                        if (cUser.isTeamLead) {
                             onKick()
                         } else {
                             onVote()
