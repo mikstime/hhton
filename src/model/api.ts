@@ -17,9 +17,9 @@ import {Message} from '../components/tools/notification-handlers'
 const useMock = false
 const mockImplemented = false
 
-const getTestUser = (id: Id): User =>  ({
+const getTestUser = (id: Id): User => ({
     ...NULL_USER, id, firstName: 'Test',
-    lastName: 'User' + id, avatar: logo,
+    lastName: 'User' + id, avatar: logo
 })
 const TEST_USERS: User[] = [
     getTestUser('1001'),
@@ -508,7 +508,7 @@ export const getTeamVotes = async (teamID: string, userId: string) => {
     } else {
         return {
             1001: 3,
-            1002: 2,
+            1002: 2
         }
     }
 }
@@ -547,21 +547,21 @@ export const getVotes = async (teamID: string, userId: string) => {
         if (result.length === 2) {
             return {
                 votes: result[0],
-                myVote: result[1],
+                myVote: result[1]
             }
         } else {
             return {
                 votes: {},
-                myVote: '0',
+                myVote: '-1'
             }
         }
     } else {
         return {
             votes: {
                 1001: 3,
-                    1002: 2,
+                1002: 2
             },
-            myVote: '1001',
+            myVote: '1001'
         }
     }
 }
