@@ -485,19 +485,84 @@ export const getTeam = async (eventId: string, userId: string) => {
     }
 }
 
+export const getTeamVotes = async (teamID: string, userId: string) => {
+    if (!mockImplemented) {
+        const voteRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/team/${teamID}/votes`, {
+            credentials: 'include'
+        })
+
+        if (voteRequest.ok) {
+            const json = await voteRequest.json()
+            let result = {}
+
+            if (json) {
+                for (let v of json) {
+                    // @ts-ignore
+                    result[v.userid] = v.votes
+                }
+            }
+            return result
+        } else {
+            return {}
+        }
+    } else {
+        return {
+            1001: 3,
+            1002: 2,
+        }
+    }
+}
+
+export const getMyVotes = async (teamID: string, userId: string) => {
+    if (!mockImplemented) {
+        const voteRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/team/${teamID}/myvote`, {
+            credentials: 'include'
+        })
+
+        if (voteRequest.ok) {
+            const json = await voteRequest.json()
+            let result = '0'
+
+            if (json) {
+                result = json.forWhomID.toString()
+            }
+            return result
+        } else {
+            return '0'
+        }
+    } else {
+        return '1001'
+    }
+}
+
 /**
  *
  * @param eventId – активное событие
  * @param userId – авторизованный юзер
  */
-export const getVotes = async (eventId: string, userId: string) => {
-    await sleep(300)
-    return {
-        votes: {
-            1001: 3,
-            1002: 2,
-        },
-        myVote: '1001',
+export const getVotes = async (teamID: string, userId: string) => {
+    if (!mockImplemented) {
+        const result = await Promise.all([getTeamVotes(teamID, userId), getMyVotes(teamID, userId)])
+
+        if (result.length === 2) {
+            return {
+                votes: result[0],
+                myVote: result[1],
+            }
+        } else {
+            return {
+                votes: {},
+                myVote: '0',
+            }
+        }
+    } else {
+        return {
+            votes: {
+                1001: 3,
+                    1002: 2,
+            },
+            myVote: '1001',
+        }
     }
 }
 /**
