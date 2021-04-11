@@ -23,7 +23,7 @@ export const useInvitesFetcher = () => {
                 ])
                 let votes = {}
                 if(userTeam.id) {
-                    votes = await getVotes(userTeam.id, cEvent.id, cUser.id)
+                    votes = await getVotes(userTeam.id, cUser.id)
                 }
                 cUser.change({
                     team: {
