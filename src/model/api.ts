@@ -437,11 +437,6 @@ export const getTeam = async (eventId: string, userId: string) => {
     // return {
     //     members: TEST_USERS.slice(0, 3),
     //     name: 'Команда мечты',
-    //     votes: {
-    //         1001: 3,
-    //         1002: 2,
-    //     },
-    //     myVote: '1001',
     //     teamLead: getTestUser('2'),//{...NULL_USER, id: userId},
     // } as Team
     if (!mockImplemented) {
@@ -478,6 +473,21 @@ export const getTeam = async (eventId: string, userId: string) => {
     }
 }
 
+/**
+ *
+ * @param eventId – активное событие
+ * @param userId – авторизованный юзер
+ */
+export const getVotes = async (eventId: string, userId: string) => {
+    await sleep(300)
+    return {
+        votes: {
+            1001: 3,
+            1002: 2,
+        },
+        myVote: '1001',
+    }
+}
 /**
  *
  * @param eventId - id события
