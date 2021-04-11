@@ -66,7 +66,7 @@ export const FeedApp: React.FC = () => {
     const [isFetching, setIsFetching] = useState(false)
     const history = useHistory()
     const {enqueueSnackbar} = useSnackbar()
-    const {cEvent, user, cUser} = useAppState()
+    const {cEvent, user, cUser, settings} = useAppState()
     const sModal = useSearchModal()
     const theme = useTheme()
     useEffect(() => {
@@ -74,7 +74,7 @@ export const FeedApp: React.FC = () => {
             if (cEvent.notFound) {
                 history.push('/user')
             }
-            if (cEvent.isFinished || (cEvent.founderId === cUser.id && cUser.id !== '-1')) {
+            if (cEvent.isFinished || (settings.isHostMode && cEvent.founderId === cUser.id && cUser.id !== '-1')) {
                 history.push('/event/' + cEvent.id)
             }
             if (cEvent.id !== '-1') {
@@ -85,7 +85,7 @@ export const FeedApp: React.FC = () => {
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cEvent.id, location, cEvent.notFound])
+    }, [cEvent.id, location, cEvent.notFound, cEvent.isParticipating, settings.isHostMode])
 
     const nextUser = useCallback(() => {
         (async () => {
