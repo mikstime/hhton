@@ -1,4 +1,4 @@
-const env = process.env.REACT_APP_ENV
+const env = 'dev'//process.env.REACT_APP_ENV
 
 // @ts-ignore
 export const WS_DOMAIN = env === 'dev' ? 'wss://dev.team-up.online' : env === 'prod' ? 'wss://team-up.online' : 'ws://localhost:8080'

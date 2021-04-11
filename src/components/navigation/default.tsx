@@ -25,7 +25,7 @@ export const DefaultMenu: React.FC<MenuProps> = ({onClick}) => {
             <NavLink to={`/event/create`}
                      icon={<CreateTeamIcon/>}
                      onClick={onClick}>
-                Создать мероприятие
+                Новое мероприятие
             </NavLink>
         </Fragment>
     } else {

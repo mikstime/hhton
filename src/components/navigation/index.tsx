@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react'
 import {
-    AppBar,
+    AppBar, Box,
     createStyles, Drawer,
     GridProps,
     Hidden,
@@ -116,7 +116,7 @@ export const AppNavigation: React.FC<GridProps> = ({children}) => {
         {/*        </Toolbar>*/}
         {/*    </AppBar>*/}
         {/*</Hidden>*/}
-        <nav className={classes.drawer} aria-label="mailbox folders">
+        <nav className={classes.drawer} aria-label="navigation mobile">
             {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
             <Hidden smUp implementation="js">
                 <Drawer className={classes.drawer}
@@ -133,6 +133,7 @@ export const AppNavigation: React.FC<GridProps> = ({children}) => {
                         }}
                 >
                     {drawer}
+                    <Box height='64px'/>
                 </Drawer>
             </Hidden>
             <Hidden xsDown implementation="css">

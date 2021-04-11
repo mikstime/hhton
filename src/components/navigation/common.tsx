@@ -18,7 +18,7 @@ import {LabelText, GrayishPlate} from '../common'
 import {ReactComponent as OpenIcon} from '../../assets/navigation/open.svg'
 import {ReactComponent as CloseIcon} from '../../assets/navigation/close.svg'
 import {Hackathon} from '../tools/use-app-state/hackathon'
-import {getActiveEvents} from '../../model/api'
+import {getActiveEvents, getHostEvents} from '../../model/api'
 import {useHistory} from 'react-router-dom'
 import Image from 'material-ui-image'
 import logoImage from '../../assets/navigation/logo.png'
@@ -135,8 +135,8 @@ export const EventLink: React.FC<EventLinkProps> = (props) => {
     const onClick = useCallback(async () => {
         setIsOpen(!isOpen)
         setIsLoading(true)
-        const e = await getActiveEvents(cUser.id)
-        setEvents(e.filter((e: Hackathon) => e.id !== cEvent.id))
+        const [e1, e2] = await Promise.all([getActiveEvents(cUser.id), getHostEvents()])
+        setEvents([...e1.filter((e: Hackathon) => e.id !== cEvent.id), ...e2.filter((e: Hackathon) => e.id !== cEvent.id)])
         setIsLoading(false)
     }, [setIsOpen, isOpen])
 

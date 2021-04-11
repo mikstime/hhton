@@ -763,7 +763,7 @@ export const modifyUser = async (user: UserOptional & { id: Id }) => {
                 {
                     method: 'POST',
                     credentials: 'include',
-                    body: JSON.stringify(backUser.skills)
+                    body: JSON.stringify(backUser.skills.length > 0 ? backUser.skills : null)
                 })
 
             success = modifySkillsRequest.ok && modifySkillsRequest.status === 200
@@ -1093,6 +1093,23 @@ export const unVoteFor = async (userID: string, eventID: string, teamID: string)
 export const getActiveEvents = async (userId: string) => {
     const res = await fetch(
         `${HOST_DOMAIN}${PREFIX}/user/${userId}/events`,
+        {credentials: 'include'})
+
+    if(res.ok) {
+        const json = await res.json()
+        if(json) {
+            return json.map(Convert.event.toFrontend)
+        } else {
+            return []
+        }
+    } else {
+        return []
+    }
+}
+
+export const getHostEvents = async () => {
+    const res = await fetch(
+        `${HOST_DOMAIN}${PREFIX}/founder/events`,
         {credentials: 'include'})
 
     if(res.ok) {
