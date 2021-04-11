@@ -4,7 +4,7 @@ import {useAppState} from '../tools/use-app-state'
 import {
     acceptInvite,
     declineInvite,
-    invitePerson
+    invitePerson, unInvite
 } from '../../model/api'
 import {useSnackbar} from 'notistack'
 import {Link} from 'react-router-dom'
@@ -31,13 +31,6 @@ const useUnite = () => {
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user, cUser, setActionId])
 
-    useEffect(() => {
-        if (user.isNullUser) return
-        if (user.isInvited) return
-
-        const id = user.id + cUser.id
-        setActionId(id)
-    }, [nc.updates])
     useEffect(() => {
         if (actionId === null) return
 
@@ -105,7 +98,7 @@ export const UniteButton: React.FC = () => {
             accept: 'Да',
             decline: 'Оставить заявку',
             onSubmit: async () => {
-                const didDecline = await declineInvite(cEvent.id, cUser.id, user.id)
+                const didDecline = await unInvite(cEvent.id, cUser.id, user.id)
                 if (didDecline) {
                     invites.i.set({
                         team: invites.i.team

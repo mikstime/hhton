@@ -62,10 +62,12 @@ export const _useNotificationHandlers: () => {
         },
         newTeamLeadNotification: (m: Message) => {
             // TODO Implement
+            setUpdates(updates + 1)
             console.log("Implement")
         },
         newVoteNotification: (m: Message) => {
             // TODO Implement
+            setUpdates(updates + 1)
             console.log("Implement")
         },
         default: (m: Message) => {
