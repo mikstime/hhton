@@ -56,19 +56,7 @@ export const TeamApp: React.FC = () => {
         } else if (location.hash === '#blocked') {
             setValue(3)
         }
-    }, [])
-
-    useEffect(() => {
-        if (value === 0) {
-            history.replace('#team')
-        } else if (value === 1) {
-            history.replace('#incoming')
-        } else if (value === 2) {
-            history.replace('#outgoing')
-        } else if (value === 3) {
-            history.replace('#blocked')
-        }
-    }, [value])
+    }, [location.hash])
 
     useEffect(() => {
         if (cUser.isNotAuthorized) {
@@ -79,6 +67,15 @@ export const TeamApp: React.FC = () => {
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue)
+        if (newValue === 0) {
+            history.replace('#team')
+        } else if (newValue === 1) {
+            history.replace('#incoming')
+        } else if (newValue === 2) {
+            history.replace('#outgoing')
+        } else if (newValue === 3) {
+            history.replace('#blocked')
+        }
     }
 
 

@@ -17,6 +17,13 @@ export const TeamName: React.FC = () => {
         setValue(cUser.team.name)
         setIsEditing(false)
     }, [cUser.team.name])
+
+    if(!cUser.isTeamLead && cUser.team.name) {
+        return <SubTitle
+            style={{marginBottom: 16}}>
+            {value}
+        </SubTitle>
+    }
     if (cUser.team && cUser.team.name) {
         if (isEditing) {
             return <Grid container style={{marginBottom: 16}}>

@@ -63,6 +63,7 @@ export type Team = {
     votes?: {
         [userId: string]: number
     },
+    myVote?: Id,
     teamLead?: User,
 }
 

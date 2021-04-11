@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useCallback} from 'react'
 import {User} from '../tools/use-app-state/user'
 import {
     Box, Chip,
@@ -9,7 +9,7 @@ import {
     Theme
 } from '@material-ui/core'
 import {Link} from 'react-router-dom'
-import {AvatarPlate} from '../common'
+import {AdditionalText, AvatarPlate} from '../common'
 import {NameTypography} from '../common/typography'
 import {ReactComponent as KickActiveIcon} from '../../assets/team/kick_active.svg'
 import {ReactComponent as KickIconBase} from '../../assets/team/kick.svg'
@@ -17,6 +17,9 @@ import {ReactComponent as VoteActiveIcon} from '../../assets/team/vote_active.sv
 import {ReactComponent as VoteIconBase} from '../../assets/team/vote.svg'
 import {useAppState} from '../tools/use-app-state'
 import {SocialLink} from '../app/user'
+import {kickTeamMember, unVoteFor, voteFor} from '../../model/api'
+import {useSnackbar} from 'notistack'
+import {useNotificationHandlers} from '../tools/notification-handlers'
 
 
 const KickIcon: React.FC<{ active: boolean }> = ({active, ...props}) => {
@@ -88,11 +91,49 @@ const Skills: React.FC<{ user: User }> = ({user}) => {
 }
 
 
-export const TeamMember: React.FC<{ user: User }> = ({user}) => {
+export const TeamMember: React.FC<{ user: User}> = ({user}) => {
 
-    const [didVote] = useState(false)
+    const {cUser, cEvent} = useAppState()
+    const team = cUser.team
+    const didVote = team.myVote === user.id
+    const {enqueueSnackbar} = useSnackbar()
+    const nc = useNotificationHandlers()
+    const onKick = useCallback(async () => {
+        const didKick = await kickTeamMember(cEvent.id, cUser.team.id ?? '-1', user.id)
+        if(didKick) {
+            enqueueSnackbar('Пользователь исключен')
+        } else {
+            enqueueSnackbar('Не удалось исключить из команды', {
+                variant: 'error'
+            })
+        }
+        nc.update()
 
-    const {cUser} = useAppState()
+    }, [enqueueSnackbar, cEvent.id, cUser.team.id, user.id, nc.update])
+
+    const onVote = useCallback(async () => {
+        if(cUser.team.myVote !== user.id) {
+            const didUnVote = await unVoteFor(user.id, cEvent.id, cUser.team.id ?? '-1')
+            const didVote = await voteFor(cEvent.id, cUser.team.id ?? '-1', user.id)
+            if(didVote && didUnVote) {
+            } else {
+                enqueueSnackbar('Не удалось проголосовать', {
+                    variant: 'error'
+                })
+            }
+        } else {
+            const didUnVote = await unVoteFor(user.id, cEvent.id, cUser.team.id ?? '-1')
+            if(didUnVote) {
+                //nop
+            } else {
+                enqueueSnackbar('Не удалось забрать голос', {
+                    variant: 'error'
+                })
+            }
+        }
+        nc.update()
+    }, [enqueueSnackbar, cEvent.id, cUser.team.id, user.id, nc.update])
+
     return <Grid item container spacing={2}>
         <Grid item md={5} xs={9} sm={5}>
             <Link to={`/user/${user.id}`}
@@ -108,6 +149,7 @@ export const TeamMember: React.FC<{ user: User }> = ({user}) => {
                   direction='column'>
                 <Grid item container>
                     <NameTypography user={user}/>
+                    {(user.isTeamLead || team?.teamLead?.id === user.id) && <AdditionalText>&nbsp;Лидер</AdditionalText>}
                 </Grid>
                 <Grid item>
                     <Skills user={user}/>
@@ -132,11 +174,17 @@ export const TeamMember: React.FC<{ user: User }> = ({user}) => {
                   justify='center' alignItems='center'>
                 <Grid item>
                     {user.id !== cUser.id &&
-                    <IconButton>
+                    <IconButton onClick={() => {
+                        if(cUser.isTeamLead) {
+                            onKick()
+                        } else {
+                            onVote()
+                        }
+                    }}>
                       <Box clone width={{xs: '24px', md: '48px'}}
                            height={{xs: '24px', md: '48px'}}>
                           {cUser.isTeamLead ?
-                              <KickIcon active={didVote}/> :
+                              <KickIcon active={false}/> :
                               <VoteIcon active={didVote}/>
                           }
                       </Box>

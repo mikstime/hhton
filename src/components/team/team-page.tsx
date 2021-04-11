@@ -8,7 +8,6 @@ import {useAppState} from '../tools/use-app-state'
 import {TeamMember} from './team-member'
 import {Link} from 'react-router-dom'
 import {TeamName} from './team-name'
-import {PrimaryButton} from '../common/buttons'
 import {leaveTeam} from '../../model/api'
 import {useSnackbar} from 'notistack'
 
@@ -44,7 +43,7 @@ export const TeamPage: React.FC = () => {
         <Grid item container alignItems='baseline'>
             <TeamName/>
             <Box flex={1}/>
-            {/*<LeaderSection/>*/}
+            <LeaderSection/>
         </Grid>
         <GrayPlate style={{marginBottom: 16}}>
             <AdditionalText>

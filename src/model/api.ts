@@ -17,9 +17,9 @@ import {Message} from '../components/tools/notification-handlers'
 const useMock = false
 const mockImplemented = false
 
-const getTestUser = (id: Id) => ({
+const getTestUser = (id: Id): User =>  ({
     ...NULL_USER, id, firstName: 'Test',
-    lastName: 'User' + id, avatar: logo
+    lastName: 'User' + id, avatar: logo,
 })
 const TEST_USERS: User[] = [
     getTestUser('1001'),
@@ -441,7 +441,8 @@ export const getTeam = async (eventId: string, userId: string) => {
     //         1001: 3,
     //         1002: 2,
     //     },
-    //     teamLead: getTestUser('1001')//{...NULL_USER, id: userId}
+    //     myVote: '1001',
+    //     teamLead: getTestUser('2'),//{...NULL_USER, id: userId},
     // } as Team
     if (!mockImplemented) {
         const team = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${userId}/team`, {
@@ -1175,4 +1176,9 @@ export const leaveTeam = async (teamId: string) => {
     } else {
         return false
     }
+}
+
+export const kickTeamMember = async (eventId: Id, teamId: Id, userId: Id) => {
+    await sleep(300)
+    return true
 }

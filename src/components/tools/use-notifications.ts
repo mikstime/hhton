@@ -37,11 +37,10 @@ export const useNotifications = () => {
                             nc.newVoteNotification(json)
                             break
                         default:
-                            console.log('Unknown json.status')
                             nc.default(json)
                     }
                 }
-                client.current.onerror = (e) => {
+                client.current.onerror = () => {
                 }
             } catch (e) {
                 console.log(e)

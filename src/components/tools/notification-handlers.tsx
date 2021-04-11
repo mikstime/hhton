@@ -63,12 +63,16 @@ export const _useNotificationHandlers: () => {
         newTeamLeadNotification: (m: Message) => {
             // TODO Implement
             setUpdates(updates + 1)
-            console.log("Implement")
+            const key = enqueueSnackbar(m.message, {
+                onClick: () => {
+                    closeSnackbar(key);
+                    history.push('/team#outgoing')
+                }
+            })
         },
         newVoteNotification: (m: Message) => {
             // TODO Implement
             setUpdates(updates + 1)
-            console.log("Implement")
         },
         default: (m: Message) => {
             setUpdates(updates + 1)
