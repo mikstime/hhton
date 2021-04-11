@@ -45,6 +45,16 @@ export const TeamDescription: React.FC<{ noName?: boolean, user: User }> = ({use
         return null
     }
 
+    if(cUser.id === user.id && !cEvent.isParticipating) {
+        return <Grid item container direction='column'>
+            <AdditionalText style={{marginTop: 12}} align='center'>
+                Вы не участвуете в мероприятии <Link
+                style={{textDecoration: 'none'}}
+                to={`/event/${cEvent.id}`}>{cEvent.name}</Link>
+            </AdditionalText>
+        </Grid>
+    }
+
     if (!user.isNullUser && user.team) {
         if (user.team.members && user.team.members.length > 1) {
             return <Grid item container direction='column'>

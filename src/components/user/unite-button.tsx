@@ -135,7 +135,10 @@ export const UniteButton: React.FC = () => {
         }
     }
 
-    if (user.id === cUser.id || inMyTeam) {
+    if(!cEvent.isParticipating) {
+        return null
+    }
+    if ((user.id === cUser.id || inMyTeam)) {
         return <Link to='/team' style={{textDecoration: 'none'}}>
             <SecondaryButton style={{width: '100%'}}>
                 Управление командой
