@@ -142,7 +142,7 @@ export const TeamMember: React.FC<{ user: User }> = ({user}) => {
             }
         }
         nc.update()
-    }, [enqueueSnackbar, cEvent.id, cUser.team.id, user.id, nc.update])
+    }, [enqueueSnackbar, cEvent.id, cUser.team.id, user.id, nc.update, cUser.team.myVote])
 
     return <Grid item container spacing={2}>
         <Grid item md={5} xs={9} sm={5}>
