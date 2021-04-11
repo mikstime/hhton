@@ -32,6 +32,13 @@ const useUnite = () => {
     }, [user, cUser, setActionId])
 
     useEffect(() => {
+        if (user.isNullUser) return
+        if (user.isInvited) return
+
+        const id = user.id + cUser.id
+        setActionId(id)
+    }, [nc.updates])
+    useEffect(() => {
         if (actionId === null) return
 
         invitePerson(cEvent.id, cUser.id, user.id).then((wasInvited?: boolean) => {
