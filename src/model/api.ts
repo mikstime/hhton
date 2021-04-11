@@ -404,6 +404,12 @@ export const getTeamById = async (teamId: string) => {
             if (json) {
                 const t = Convert.team.toFrontend(json)
                 t.members = await Promise.all(json.members?.map((j: BackendUser) => fetchUser(j.id!.toString())).filter((u: User | null) => u) ?? [])
+                for (let u of t.members) {
+                    if (u.id === t.teamLead?.id ?? 0) {
+                        u.isTeamLead = true
+                        t.teamLead = u
+                    }
+                }
                 return t
             } else {
                 return {
@@ -455,6 +461,12 @@ export const getTeam = async (eventId: string, userId: string) => {
                 const t = Convert.team.toFrontend(json)
                 //@TODO Пользователи прилетают не полные. Поправить на беке
                 t.members = await Promise.all(json.members.map((j: BackendUser) => fetchUser(j.id!.toString())).filter((u: User | null) => u))
+                for (let u of t.members) {
+                    if (u.id === t.teamLead?.id ?? 0) {
+                        u.isTeamLead = true
+                        t.teamLead = u
+                    }
+                }
                 return t
             } else {
                 return {

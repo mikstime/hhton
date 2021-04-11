@@ -79,7 +79,8 @@ type BackendTeam = {
     members: BackendUser[],
     name: string,
     id: number,
-    prize: Prize
+    prize: Prize,
+    leadid: number
 }
 
 type BackendSkills = {
@@ -283,7 +284,8 @@ const Convert = {
                 members: bTeam.members?.map(u => (Convert.user.toFrontend(u))) ?? [],
                 name: bTeam.name,
                 id: bTeam.id.toString(),
-                prizes: [bTeam.prize] as Prize[]
+                prizes: [bTeam.prize] as Prize[],
+                teamLead: {id: bTeam.leadid.toString()}
             }
         }
     },
