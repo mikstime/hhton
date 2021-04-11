@@ -55,7 +55,7 @@ const useStyles = makeStyles(theme => ({
 const SnackMessage = forwardRef<HTMLDivElement, { id: string | number, message: string | React.ReactNode }>((props, ref) => {
     const classes = useStyles();
     const { closeSnackbar } = useSnackbar();
-    console.log(props)
+    // console.log(props)
     const handleDismiss = useCallback(() => {
         closeSnackbar(props.id);
     }, [props.id, closeSnackbar]);
