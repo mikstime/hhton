@@ -16,19 +16,21 @@ export const useInvitesFetcher = () => {
     useEffect(() => {
         (async () => {
             if (cEvent.id !== '-1' && cUser.id !== '-1') {
-                const [team, personal, userTeam, votes] = await Promise.all([
+                const [team, personal, userTeam] = await Promise.all([
                     teamInvites(cEvent.id, cUser.id),
                     personalInvites(cEvent.id, cUser.id),
-                    getTeam(cEvent.id, cUser.id),
-                    getVotes(cEvent.id, cUser.id),
+                    getTeam(cEvent.id, cUser.id)
                 ])
-
+                let votes = {}
+                if(userTeam.id) {
+                    votes = await getVotes(userTeam.id, cEvent.id, cUser.id)
+                }
                 cUser.change({
                     team: {
                         ...userTeam,
-                        ...votes,
+                        ...votes
                     },
-                    isTeamLead: userTeam.teamLead?.id === cUser.id,
+                    isTeamLead: userTeam.teamLead?.id === cUser.id
                 })
                 invites.i.set({team, personal})
             }

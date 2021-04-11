@@ -10,6 +10,7 @@ import {Link} from 'react-router-dom'
 import {TeamName} from './team-name'
 import {leaveTeam} from '../../model/api'
 import {useSnackbar} from 'notistack'
+import {useNotificationHandlers} from '../tools/notification-handlers'
 
 const LeaderSection: React.FC = () => {
 
@@ -39,6 +40,8 @@ export const TeamPage: React.FC = () => {
 
     const {cUser, cEvent} = useAppState()
     const {enqueueSnackbar} = useSnackbar()
+    const nc = useNotificationHandlers()
+
     return <Grid container direction='column'>
         <Grid item container alignItems='baseline'>
             <TeamName/>
@@ -92,6 +95,7 @@ export const TeamPage: React.FC = () => {
                         variant: 'error'
                     })
                 }
+                nc.update()
             }}>Покинуть команду</Button>
             </Grid>
         }
