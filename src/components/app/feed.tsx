@@ -30,10 +30,14 @@ const FeedContext = React.createContext()
 
 export const FeedProvider: React.FC = ({children}) => {
 
+    const {cEvent} = useAppState()
     const [users, setUsers] = useState<string[]>([])
     const [current, setCurrent] = useState(0)
-    //event id can be accessed with useAppState
 
+    useEffect(() => {
+        setUsers([])
+        setCurrent(0)
+    }, [cEvent.id])
     const val = {
         current, setCurrent,
         users, setUsers
