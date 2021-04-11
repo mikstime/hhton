@@ -58,7 +58,7 @@ const EventItem: React.FC<{ event: Hackathon }> = ({event}) => {
                     <Link to={`/event/${event.id}`}
                           style={{textDecoration: 'none'}}>
                         <Typography style={{width: 100}} align='center'>
-                            {event.settings.start ? format(event.settings.start, 'dd/MM/yyyy') : 'Идет'}
+                            {event.settings.start ? format(event.settings.start, 'dd/MM/yyyy') : '–'}
                         </Typography>
                     </Link>
                 </Grid>
