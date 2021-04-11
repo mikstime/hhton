@@ -72,11 +72,13 @@ export const _useNotificationHandlers: () => {
         },
         default: (m: Message) => {
             setUpdates(updates + 1)
-            const key = enqueueSnackbar(m.message, {
-                onClick: () => {
-                    closeSnackbar(key);
-                }
-            })
+            if(m.message) {
+                const key = enqueueSnackbar(m.message, {
+                    onClick: () => {
+                        closeSnackbar(key);
+                    }
+                })
+            }
         },
         updates,
     }
