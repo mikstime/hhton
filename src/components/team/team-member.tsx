@@ -114,7 +114,7 @@ export const TeamMember: React.FC<{ user: User}> = ({user}) => {
     const onVote = useCallback(async () => {
         if(cUser.team.myVote !== user.id) {
             const didUnVote = await unVoteFor(user.id, cEvent.id, cUser.team.id ?? '-1')
-            const didVote = await voteFor(cEvent.id, cUser.team.id ?? '-1', user.id)
+            const didVote = await voteFor(user.id, cEvent.id, cUser.team.id ?? '-1')
             if(didVote && didUnVote) {
             } else {
                 enqueueSnackbar('Не удалось проголосовать', {
