@@ -15,21 +15,16 @@ export const useInvitesFetcher = () => {
     //incoming
     useEffect(() => {
         (async () => {
-            console.log('incoming')
             if (cEvent.id !== '-1' && cUser.id !== '-1') {
-                console.log('incoming', nc.updates)
                 const [team, personal, userTeam] = await Promise.all([
                     teamInvites(cEvent.id, cUser.id),
                     personalInvites(cEvent.id, cUser.id),
                     getTeam(cEvent.id, cUser.id)
                 ])
 
-                cUser.change({team: userTeam, isTeamLead: userTeam.teamLead?.id === cUser.id})
-                invites.i.set({team, personal})
-                const t = team.map(u => getTeam(cEvent.id, u.id))
-                const teams = await Promise.all(t)
-                teams.forEach((t, i) => {
-                    team[i].team = t
+                cUser.change({
+                    team: userTeam,
+                    isTeamLead: userTeam.teamLead?.id === cUser.id
                 })
                 invites.i.set({team, personal})
             }
@@ -40,21 +35,12 @@ export const useInvitesFetcher = () => {
     //outgoing
     useEffect(() => {
         (async () => {
-            console.log('outgoing')
             if (cEvent.id !== '-1' && cUser.id !== '-1') {
-                console.log('outgoing', nc.updates)
                 const [team, personal] = await Promise.all([
                     teamInvitedPending(cEvent.id, cUser.id),
-                    personalInvitedPending(cEvent.id, cUser.id),
+                    personalInvitedPending(cEvent.id, cUser.id)
                 ])
 
-                invites.o.set({team, personal})
-
-                const t = team.map(u => getTeam(cEvent.id, u.id))
-                const teams = await Promise.all(t)
-                teams.forEach((t, i) => {
-                    team[i].team = t
-                })
                 invites.o.set({team, personal})
             }
         })()
@@ -64,21 +50,12 @@ export const useInvitesFetcher = () => {
     //history
     useEffect(() => {
         (async () => {
-            console.log('history')
             if (cEvent.id !== '-1' && cUser.id !== '-1') {
-                console.log('history', nc.updates)
                 const [team, personal] = await Promise.all([
                     teamInvitedDeclined(cEvent.id, cUser.id),
-                    personalInvitedDeclined(cEvent.id, cUser.id),
+                    personalInvitedDeclined(cEvent.id, cUser.id)
                 ])
 
-                invites.h.set({team, personal})
-
-                const t = team.map(u => getTeam(cEvent.id, u.id))
-                const teams = await Promise.all(t)
-                teams.forEach((t, i) => {
-                    team[i].team = t
-                })
                 invites.h.set({team, personal})
             }
         })()
@@ -87,13 +64,14 @@ export const useInvitesFetcher = () => {
     //both
     useEffect(() => {
         (async () => {
-            console.log('both')
             //update team when invite is accepted or declined
             if (cUser.id !== '-1' && cEvent.id !== '-1') {
-                console.log('both', nc.updates)
                 const team = await getTeam(cEvent.id, cUser.id)
                 if (team) {
-                    cUser.change({team, isTeamLead: team.teamLead?.id === cUser.id})
+                    cUser.change({
+                        team,
+                        isTeamLead: team.teamLead?.id === cUser.id
+                    })
                 }
             }
         })()

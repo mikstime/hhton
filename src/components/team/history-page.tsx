@@ -13,7 +13,7 @@ export const HistoryPage: React.FC = () => {
     const {invites} = useAppState()
 
     return <Grid container direction='column'>
-        <SubTitle style={{marginBottom: 24}}>Отклоненные индивидуальные заявки</SubTitle>
+        <SubTitle style={{marginBottom: 24}}>Заблокированные индивидуальные заявки</SubTitle>
         <Grid container spacing={3} direction='column'>
             {invites.h.personal.map((u, i) => (
                 <Fragment key={i}>
@@ -25,11 +25,11 @@ export const HistoryPage: React.FC = () => {
         </Grid>
         {!invites.h.personal.length && <GrayPlate style={{marginTop: 16}}>
           <AdditionalText>
-            Нет отклоненных заявок.
+            Нет заблокированных заявок.
           </AdditionalText>
         </GrayPlate>
         }
-        <SubTitle style={{marginBottom: 24, marginTop: 36}}>Отклоненные командные заявки</SubTitle>
+        <SubTitle style={{marginBottom: 24, marginTop: 36}}>Заблокированные командные заявки</SubTitle>
         {invites.h.team.length > 0 && <Grid spacing={2} container item>
             {
                 invites.h.team.map((u) => (
@@ -40,7 +40,7 @@ export const HistoryPage: React.FC = () => {
         }
         {!invites.h.team.length && <GrayPlate>
           <AdditionalText>
-            Ни одна команда не отклонила заявку
+            Нет заблокированных командных заявок
           </AdditionalText>
         </GrayPlate>}
         <Box height='150px' width='100%'/>

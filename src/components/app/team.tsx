@@ -82,7 +82,7 @@ export const TeamApp: React.FC = () => {
                 <Tab label="Команда"/>
                 <Tab label="Входящие заявки"/>
                 <Tab label="Исходящие заявки"/>
-                <Tab label="История заявок"/>
+                <Tab label="Заблокированные заявки"/>
             </Tabs>
 
         </Box>
