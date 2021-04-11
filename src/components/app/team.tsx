@@ -56,7 +56,7 @@ export const TeamApp: React.FC = () => {
         } else if (location.hash === '#blocked') {
             setValue(3)
         }
-    }, [location.hash])
+    }, [])
 
     useEffect(() => {
         if (value === 0) {
