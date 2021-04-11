@@ -478,7 +478,7 @@ export const getTeam = async (eventId: string, userId: string) => {
  * @param eventId – активное событие
  * @param userId – авторизованный юзер
  */
-export const getVotes = async (eventId: string, userId: string) => {
+export const getVotes = async (teamId: string, eventId: string, userId: string) => {
     await sleep(300)
     return {
         votes: {
