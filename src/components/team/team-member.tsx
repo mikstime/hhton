@@ -150,7 +150,7 @@ export const TeamMember: React.FC<{ user: User }> = ({user}) => {
                   style={{textDecoration: 'none'}}>
                 <AvatarPlate padding={24} src={user.avatar} style={{
                     position: 'sticky',
-                    top: 24
+                    top: 88
                 }}/>
             </Link>
         </Grid>
