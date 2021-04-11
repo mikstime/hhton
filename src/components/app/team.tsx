@@ -4,7 +4,7 @@ import {
     Grid, Tab, Tabs
 } from '@material-ui/core'
 import {useAppState} from '../tools/use-app-state'
-import {useHistory} from 'react-router-dom'
+import {useHistory, useLocation} from 'react-router-dom'
 import {TeamPage} from '../team/team-page'
 import {IncomingPage} from '../team/incoming-page'
 import {OutgoingPage} from '../team/outgoing-page'
@@ -42,6 +42,33 @@ export const TeamApp: React.FC = () => {
 
     const {cUser} = useAppState()
     const history = useHistory()
+    const location = useLocation()
+
+    const [value, setValue] = React.useState(0)
+
+    useEffect(() => {
+        if (location.hash === '#team') {
+            setValue(0)
+        } else if (location.hash === '#incoming') {
+            setValue(1)
+        } else if (location.hash === '#outgoing') {
+            setValue(2)
+        } else if (location.hash === '#blocked') {
+            setValue(3)
+        }
+    }, [location.hash])
+
+    useEffect(() => {
+        if (value === 0) {
+            history.replace('#team')
+        } else if (value === 1) {
+            history.replace('#incoming')
+        } else if (value === 2) {
+            history.replace('#outgoing')
+        } else if (value === 3) {
+            history.replace('#blocked')
+        }
+    }, [value])
 
     useEffect(() => {
         if (cUser.isNotAuthorized) {
@@ -49,7 +76,6 @@ export const TeamApp: React.FC = () => {
         }
     }, [cUser.isNotAuthorized])
 
-    const [value, setValue] = React.useState(0)
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue)
@@ -64,13 +90,13 @@ export const TeamApp: React.FC = () => {
                 xs: 'calc(100vw - 36px)',
                 sm: 'calc( 100vw - 48px - 200px)',
                 md: 'calc( 800px - 48px - 48px)',
-                lg: '912px',
+                lg: '912px'
             }}
             style={{
                 position: 'sticky',
                 top: 0,
                 zIndex: 3,
-                backgroundColor: '#F9F9F9',
+                backgroundColor: '#F9F9F9'
             }}>
             <Tabs variant="scrollable"
                   indicatorColor="primary" style={{

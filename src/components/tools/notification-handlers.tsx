@@ -29,7 +29,7 @@ export const _useNotificationHandlers: () => {
             const key = enqueueSnackbar(m.message, {
                 onClick: () => {
                     closeSnackbar(key);
-                    history.push('/team')
+                    history.push('/team#team')
                 }
             })
         },
@@ -38,7 +38,7 @@ export const _useNotificationHandlers: () => {
             const key = enqueueSnackbar(m.message, {
                 onClick: () => {
                     closeSnackbar(key);
-                    history.push('/team')
+                    history.push('/team#team')
                 }
             })
         },
@@ -47,7 +47,7 @@ export const _useNotificationHandlers: () => {
             const key = enqueueSnackbar(m.message, {
                 onClick: () => {
                     closeSnackbar(key);
-                    history.push('/team')
+                    history.push('/team#incoming')
                 }
             })
         },
@@ -56,7 +56,7 @@ export const _useNotificationHandlers: () => {
             const key = enqueueSnackbar(m.message, {
                 onClick: () => {
                     closeSnackbar(key);
-                    history.push('/team')
+                    history.push('/team#outgoing')
                 }
             })
         },
