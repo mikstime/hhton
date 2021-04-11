@@ -7,7 +7,7 @@ import {
     NavLink
 } from './common'
 import {useAppState} from '../tools/use-app-state'
-import {Box} from '@material-ui/core'
+import {Box, Fade} from '@material-ui/core'
 import {ReactComponent as SearchIcon} from '../../assets/navigation/search.svg'
 import {ReactComponent as TeamIcon} from '../../assets/navigation/team.svg'
 import {ReactComponent as UserIcon} from '../../assets/navigation/user.svg'
@@ -22,34 +22,42 @@ export const DefaultMenu: React.FC<MenuProps> = ({onClick}) => {
 
     if (settings.isHostMode) {
         toRender = <Fragment>
-            <NavLink to={`/event/create`}
-                     icon={<CreateTeamIcon/>}
-                     onClick={onClick}>
-                Новое мероприятие
-            </NavLink>
+            <Fade in>
+                <NavLink to={`/event/create`}
+                         icon={<CreateTeamIcon/>}
+                         onClick={onClick}>
+                    Новое мероприятие
+                </NavLink>
+            </Fade>
         </Fragment>
     } else {
         toRender = <Fragment>
             {isActive &&
-            <NavLink to={`/feed`}
-                     icon={<SearchIcon/>}
-                     onClick={onClick}>
-              Поиск участников
-            </NavLink>
+            <Fade in>
+              <NavLink to={`/feed`}
+                       icon={<SearchIcon/>}
+                       onClick={onClick}>
+                Поиск участников
+              </NavLink>
+            </Fade>
             }
             {isActive &&
-            <NavLink to={`/team`}
-                     icon={<TeamIcon/>}
-                     onClick={onClick}>
-              Команда
-            </NavLink>
+            <Fade in>
+              <NavLink to={`/team`}
+                       icon={<TeamIcon/>}
+                       onClick={onClick}>
+                Команда
+              </NavLink>
+            </Fade>
             }
-            <NavLink to={`/user`}
-                     icon={<UserIcon/>}
-                     onClick={onClick}
-            >
-                Моя анкета
-            </NavLink>
+            <Fade in>
+                <NavLink to={`/user`}
+                         icon={<UserIcon/>}
+                         onClick={onClick}
+                >
+                    Моя анкета
+                </NavLink>
+            </Fade>
         </Fragment>
     }
     return <MenuBase>

@@ -135,7 +135,7 @@ export const EventParticipantsModal: React.FC<MProps> = ({children, ...props}) =
                 setTeams(t)
             }
         })()
-    }, [cEvent.id])
+    }, [cEvent.id, cEvent.isParticipating])
 
     useEffect(() => {
         (async () => {
@@ -147,7 +147,7 @@ export const EventParticipantsModal: React.FC<MProps> = ({children, ...props}) =
                 setUsers(u)
             }
         })()
-    }, [cEvent.id])
+    }, [cEvent.id, cEvent.isParticipating])
 
     let r
     if (isLoading) {
