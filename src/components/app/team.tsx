@@ -65,11 +65,10 @@ export const TeamApp: React.FC = () => {
                 sm: 'calc( 100vw - 48px - 200px)',
                 md: 'calc( 800px - 48px - 48px)',
                 lg: '912px',
-            }
-            }
+            }}
             style={{
                 position: 'sticky',
-                top: 64,
+                top: 0,
                 zIndex: 3,
                 backgroundColor: '#F9F9F9',
             }}>

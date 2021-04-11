@@ -12,18 +12,20 @@ import {
 } from '../components/tools/use-app-state/user'
 import Convert, {BackendHackathon, BackendUser, Jobs} from './backend'
 import {HackathonOptional} from '../components/tools/use-app-state/hackathon'
-import {Message} from "../components/tools/notification-handlers";
+import {Message} from '../components/tools/notification-handlers'
 
 const useMock = false
 const mockImplemented = false
 
-const getTestUser = (id: Id) => ({...NULL_USER, id, firstName: 'Test',
-    lastName: 'User'+id, avatar: logo})
+const getTestUser = (id: Id) => ({
+    ...NULL_USER, id, firstName: 'Test',
+    lastName: 'User' + id, avatar: logo
+})
 const TEST_USERS: User[] = [
     getTestUser('1001'),
     getTestUser('1002'),
     getTestUser('1003'),
-    getTestUser('1004'),
+    getTestUser('1004')
 ]
 
 export const fetchUser = async (id: Id) => {
@@ -369,7 +371,7 @@ export const getFeed = async (eventId: string, query: string, sinceId?: string) 
             const json = await feedRequest.json()
             let result = [] as string[]
 
-            if(!json.users)
+            if (!json.users)
                 return []
             json.users.forEach((v: { id: Id }) => {
                 result.push(v.id)
@@ -864,7 +866,7 @@ export const modifyEvent = async (data: {
         for (let response of eventResponse) {
             if (result = result && (response.ok && response.status === 200)) {
             } else {
-                break;
+                break
             }
         }
         return result
@@ -991,7 +993,7 @@ export const getEventTeams = async (eventId: string) => {
             })
         if (finish.ok) {
             const j = await finish.json()
-            if(j) {
+            if (j) {
                 return await Promise.all(j.map((j: Team) => getTeamById(j.id ?? ''))) as Team[]
             }
         }
@@ -1010,7 +1012,7 @@ export const getEventUsers = async (eventId: string) => {
             })
         if (finish.ok) {
             const j = await finish.json()
-            if(j) {
+            if (j) {
                 return Convert.users.toFrontend(j)
             }
         }
@@ -1029,17 +1031,17 @@ export const getWinners = async (eventId: string) => {
             })
         if (finish.ok) {
             const j = await finish.json()
-            if(!j)
+            if (!j)
                 return []
             const ts = await Promise.all(j.map((j: Team) => getTeamById(j.id ?? ''))) as Team[]
             //@ts-ignore
-            const r = j?.map((j, i) =>({
+            const r = j?.map((j, i) => ({
                 ...ts[i],
                 prizes: [{
-                id: j.prize.id.toString(),
-                name: j.prize.name,
-                place: j.prize.place,
-                count: j.prize.amount,
+                    id: j.prize.id.toString(),
+                    name: j.prize.name,
+                    place: j.prize.place,
+                    count: j.prize.amount
                 }]
             })) ?? []
             return r as Team[]
@@ -1095,9 +1097,9 @@ export const getActiveEvents = async (userId: string) => {
         `${HOST_DOMAIN}${PREFIX}/user/${userId}/events`,
         {credentials: 'include'})
 
-    if(res.ok) {
+    if (res.ok) {
         const json = await res.json()
-        if(json) {
+        if (json) {
             return json.map(Convert.event.toFrontend)
         } else {
             return []
@@ -1112,9 +1114,9 @@ export const getHostEvents = async () => {
         `${HOST_DOMAIN}${PREFIX}/founder/events`,
         {credentials: 'include'})
 
-    if(res.ok) {
+    if (res.ok) {
         const json = await res.json()
-        if(json) {
+        if (json) {
             return json.map(Convert.event.toFrontend)
         } else {
             return []
@@ -1130,9 +1132,9 @@ export const getTopEvents = async () => {
         `${HOST_DOMAIN}${PREFIX}/event/top`,
         {credentials: 'include'})
 
-    if(res.ok) {
+    if (res.ok) {
         const json = await res.json()
-        if(json) {
+        if (json) {
             return json.map(Convert.event.toFrontend)
         } else {
             return []
@@ -1141,21 +1143,36 @@ export const getTopEvents = async () => {
         return []
     }
 }
-    
-    
+
+
 export const getNotificationsHistory = async (userID: string) => {
     const res = await fetch(
         `${HOST_DOMAIN}${PREFIX}/notification/${userID}/last`,
         {credentials: 'include'})
 
-    if(res.ok) {
+    if (res.ok) {
         const json = await res.json()
-        if(json) {
+        if (json) {
             return json as Message[]
         } else {
             return []
         }
     } else {
         return []
+    }
+}
+
+export const leaveTeam = async (teamId: string) => {
+    const res = await fetch(
+        `${HOST_DOMAIN}${PREFIX}/team/${teamId}/leave`,
+        {
+            method: 'POST',
+            credentials: 'include'
+        })
+
+    if (res.ok) {
+        return true
+    } else {
+        return false
     }
 }

@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react'
 import {
-    Box, Divider,
+    Box, Button, Divider,
     Grid, Grow
 } from '@material-ui/core'
 import {AdditionalText, GrayPlate} from '../common'
@@ -8,12 +8,15 @@ import {useAppState} from '../tools/use-app-state'
 import {TeamMember} from './team-member'
 import {Link} from 'react-router-dom'
 import {TeamName} from './team-name'
+import {PrimaryButton} from '../common/buttons'
+import {leaveTeam} from '../../model/api'
+import {useSnackbar} from 'notistack'
 
 const LeaderSection: React.FC = () => {
 
     const {cUser} = useAppState()
 
-    if(!cUser.team.teamLead) {
+    if (!cUser.team.teamLead) {
         return null
     }
 
@@ -25,7 +28,8 @@ const LeaderSection: React.FC = () => {
 
     if (cUser.team.teamLead.id !== cUser.id) {
         return <AdditionalText>
-            <b>{cUser.team.teamLead.firstName} {cUser.team.teamLead.lastName}</b> – лидер команды
+            <b>{cUser.team.teamLead.firstName} {cUser.team.teamLead.lastName}</b> –
+            лидер команды
         </AdditionalText>
     }
 
@@ -35,12 +39,12 @@ const LeaderSection: React.FC = () => {
 export const TeamPage: React.FC = () => {
 
     const {cUser, cEvent} = useAppState()
-
+    const {enqueueSnackbar} = useSnackbar()
     return <Grid container direction='column'>
         <Grid item container alignItems='baseline'>
             <TeamName/>
             <Box flex={1}/>
-            <LeaderSection/>
+            {/*<LeaderSection/>*/}
         </Grid>
         <GrayPlate style={{marginBottom: 16}}>
             <AdditionalText>
@@ -71,5 +75,27 @@ export const TeamPage: React.FC = () => {
             }
         </Grid>
         <Box height='150px' width='100%'/>
+        {
+            cUser.team.id && <Grid item><Button onClick={async () => {
+                if (cUser.team.id) {
+                    const didLeave = await leaveTeam(cUser.team.id)
+                    if (didLeave) {
+                        enqueueSnackbar('Вы покинули команду', {
+                            variant: 'success'
+                        })
+                    } else {
+                        enqueueSnackbar('Не удалось покинуть команду', {
+                            variant: 'error'
+                        })
+                    }
+                } else {
+                    enqueueSnackbar('Не удалось покинуть команду', {
+                        variant: 'error'
+                    })
+                }
+            }}>Покинуть команду</Button>
+            </Grid>
+        }
+        <Box height='32px' width='100%'/>
     </Grid>
 }
