@@ -15,7 +15,9 @@ export const useInvitesFetcher = () => {
     //incoming
     useEffect(() => {
         (async () => {
+            console.log('incoming')
             if (cEvent.id !== '-1' && cUser.id !== '-1') {
+                console.log('incoming', nc.updates)
                 const [team, personal, userTeam] = await Promise.all([
                     teamInvites(cEvent.id, cUser.id),
                     personalInvites(cEvent.id, cUser.id),
@@ -38,7 +40,9 @@ export const useInvitesFetcher = () => {
     //outgoing
     useEffect(() => {
         (async () => {
+            console.log('outgoing')
             if (cEvent.id !== '-1' && cUser.id !== '-1') {
+                console.log('outgoing', nc.updates)
                 const [team, personal] = await Promise.all([
                     teamInvitedPending(cEvent.id, cUser.id),
                     personalInvitedPending(cEvent.id, cUser.id),
@@ -60,7 +64,9 @@ export const useInvitesFetcher = () => {
     //history
     useEffect(() => {
         (async () => {
+            console.log('history')
             if (cEvent.id !== '-1' && cUser.id !== '-1') {
+                console.log('history', nc.updates)
                 const [team, personal] = await Promise.all([
                     teamInvitedDeclined(cEvent.id, cUser.id),
                     personalInvitedDeclined(cEvent.id, cUser.id),
@@ -81,8 +87,10 @@ export const useInvitesFetcher = () => {
     //both
     useEffect(() => {
         (async () => {
+            console.log('both')
             //update team when invite is accepted or declined
             if (cUser.id !== '-1' && cEvent.id !== '-1') {
+                console.log('both', nc.updates)
                 const team = await getTeam(cEvent.id, cUser.id)
                 if (team) {
                     cUser.change({team, isTeamLead: team.teamLead?.id === cUser.id})

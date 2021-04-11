@@ -17,6 +17,7 @@ export const useNotifications = () => {
             try {
                 client.current = new w3cwebsocket(`${WS_DOMAIN}${PREFIX}/notification/channel/${cUser.id}`)
                 client.current.onmessage = (m) => {
+                    console.log('use-nc', nc.updates)
                     const json = JSON.parse(m.data as string)
                     switch (json.status) {
                         case 'NewTeamNotification':
