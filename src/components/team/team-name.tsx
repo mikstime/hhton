@@ -31,7 +31,7 @@ export const TeamName: React.FC = () => {
                     <IconButton size='small' disabled={isLoading}
                                 onClick={async () => {
                                     setIsLoading(true)
-                                    const didSave = await modifyTeamName(cUser.team.id ?? '', cEvent.id, value)
+                                    const didSave = await modifyTeamName(cEvent.id, cUser.team.id ?? '', value)
                                     if (didSave) {
                                     } else {
                                         const k = enqueueSnackbar('Не удалось изменить название', {
