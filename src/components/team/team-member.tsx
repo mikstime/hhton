@@ -20,6 +20,7 @@ import {SocialLink} from '../app/user'
 import {kickTeamMember, unVoteFor, voteFor} from '../../model/api'
 import {useSnackbar} from 'notistack'
 import {useNotificationHandlers} from '../tools/notification-handlers'
+import {usePromptModal} from '../modals/prompt'
 
 
 const KickIcon: React.FC<{ active: boolean }> = ({active, ...props}) => {
@@ -98,6 +99,7 @@ export const TeamMember: React.FC<{ user: User }> = ({user}) => {
     const didVote = team.myVote === user.id
     const {enqueueSnackbar} = useSnackbar()
     const nc = useNotificationHandlers()
+    const pModal = usePromptModal()
     const onKick = useCallback(async () => {
         const didKick = await kickTeamMember(cEvent.id, cUser.team.id ?? '-1', user.id)
         if (didKick) {
@@ -158,9 +160,9 @@ export const TeamMember: React.FC<{ user: User }> = ({user}) => {
             <Grid item xs sm={5} md={5} container spacing={2}
                   direction='column'>
                 <Grid item container>
-                    <NameTypography user={user}/>
+                    <NameTypography user={user}/>&nbsp;
                     {(user.isTeamLead || team?.teamLead?.id === user.id) &&
-                    <AdditionalText>&nbsp;Лидер</AdditionalText>}
+                    <AdditionalText>Лидер</AdditionalText>}
                 </Grid>
                 <Grid item>
                     <Skills user={user}/>
@@ -186,22 +188,37 @@ export const TeamMember: React.FC<{ user: User }> = ({user}) => {
                 <Grid item>
                     {user.id !== cUser.id &&
                     <IconButton onClick={() => {
-                        if (cUser.isTeamLead) {
-                            onKick()
-                        } else {
-                            onVote()
-                        }
+                        onVote()
                     }}>
                       <Box clone width={{xs: '24px', md: '48px'}}
                            height={{xs: '24px', md: '48px'}}>
-                          {cUser.isTeamLead ?
-                              <KickIcon active={false}/> :
-                              <VoteIcon active={didVote}/>
-                          }
+                        <VoteIcon active={didVote}/>
                       </Box>
                     </IconButton>
                     }
                 </Grid>
+                {user.id !== cUser.id &&
+                <Grid item>
+                  <IconButton
+                    size='small' style={{margin: 'auto'}}
+                    onClick={() => {
+                        pModal.open({
+                            onSubmit: () => {
+                                onKick()
+                                pModal.close()
+                            },
+                            message: `Исключить пользователя из команды?`,
+                            accept: 'Исключить',
+                            decline: 'Оставить'
+                        })
+                    }}>
+                      {cUser.isTeamLead &&
+                      <Box clone width={{xs: '24px'}}
+                           height={{xs: '24px'}}><KickIcon
+                        active={false}/></Box>}
+                  </IconButton>
+                </Grid>
+                }
             </Grid>
         </Box>
     </Grid>
