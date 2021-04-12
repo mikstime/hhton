@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import {useSnackbar} from 'notistack'
 import {useHistory} from 'react-router-dom'
+import {useAppState} from './use-app-state'
 export type Message = {
     type: string,
     status: string,
@@ -20,6 +21,7 @@ export const _useNotificationHandlers: () => {
     const [updates, setUpdates] = useState(0)
     const {enqueueSnackbar, closeSnackbar} = useSnackbar()
     const history = useHistory()
+    const {settings, cEvent} = useAppState()
     return {
         update: () => {
             setUpdates(updates + 1)
@@ -29,6 +31,8 @@ export const _useNotificationHandlers: () => {
             const key = enqueueSnackbar(m.message, {
                 onClick: () => {
                     closeSnackbar(key);
+                    settings.setIsHostMode(false)
+                    cEvent.change({id: m.type})
                     history.push('/team#team')
                 }
             })
@@ -38,6 +42,8 @@ export const _useNotificationHandlers: () => {
             const key = enqueueSnackbar(m.message, {
                 onClick: () => {
                     closeSnackbar(key);
+                    settings.setIsHostMode(false)
+                    cEvent.change({id: m.type})
                     history.push('/team#team')
                 }
             })
@@ -47,6 +53,8 @@ export const _useNotificationHandlers: () => {
             const key = enqueueSnackbar(m.message, {
                 onClick: () => {
                     closeSnackbar(key);
+                    settings.setIsHostMode(false)
+                    cEvent.change({id: m.type})
                     history.push('/team#incoming')
                 }
             })
@@ -56,6 +64,8 @@ export const _useNotificationHandlers: () => {
             const key = enqueueSnackbar(m.message, {
                 onClick: () => {
                     closeSnackbar(key);
+                    settings.setIsHostMode(false)
+                    cEvent.change({id: m.type})
                     history.push('/team#team')
                 }
             })
@@ -65,6 +75,8 @@ export const _useNotificationHandlers: () => {
             const key = enqueueSnackbar(m.message, {
                 onClick: () => {
                     closeSnackbar(key);
+                    settings.setIsHostMode(false)
+                    cEvent.change({id: m.type})
                     history.push('/team#team')
                 }
             })
