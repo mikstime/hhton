@@ -1266,6 +1266,16 @@ export const leaveTeam = async (teamId: string) => {
 }
 
 export const kickTeamMember = async (eventId: Id, teamId: Id, userId: Id) => {
-    await sleep(300)
-    return true
+    const res = await fetch(
+        `${HOST_DOMAIN}${PREFIX}/team/${teamId}/kick`,
+        {
+            method: 'POST',
+            credentials: 'include'
+        })
+
+    if (res.ok) {
+        return true
+    } else {
+        return false
+    }
 }
