@@ -1270,7 +1270,8 @@ export const kickTeamMember = async (eventId: Id, teamId: Id, userId: Id) => {
         `${HOST_DOMAIN}${PREFIX}/team/${teamId}/kick`,
         {
             method: 'POST',
-            credentials: 'include'
+            credentials: 'include',
+            body: JSON.stringify({uid: userId})
         })
 
     if (res.ok) {
