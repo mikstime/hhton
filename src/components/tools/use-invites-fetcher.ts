@@ -67,5 +67,22 @@ export const useInvitesFetcher = () => {
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cUser.id, cEvent.id, nc.updates])
+    //both
+    // useEffect(() => {
+    //     (async () => {
+    //         //update team when invite is accepted or declined
+    //         if (cUser.id !== '-1' && cEvent.id !== '-1') {
+    //             const team = await getTeam(cEvent.id, cUser.id)
+    //             if (team) {
+    //                 cUser.change({
+    //                     team,
+    //                     isTeamLead: team.teamLead?.id === cUser.id
+    //                 })
+    //             }
+    //         }
+    //     })()
+    //     //eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [cUser.id, invites.i.team.length, invites.i.personal.length,
+    //     invites.o.team.length, invites.o.personal.length, nc.updates])
     return null
 }

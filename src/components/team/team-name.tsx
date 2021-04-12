@@ -6,7 +6,6 @@ import {ReactComponent as EditImage} from '../../assets/edit.svg'
 import {ReactComponent as SaveImage} from '../../assets/save.svg'
 import {modifyTeamName} from '../../model/api'
 import {useSnackbar} from 'notistack'
-import {useNotificationHandlers} from '../tools/notification-handlers'
 
 export const TeamName: React.FC = () => {
     const {cUser, cEvent} = useAppState()
@@ -14,7 +13,6 @@ export const TeamName: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [value, setValue] = useState('')
     const {enqueueSnackbar, closeSnackbar} = useSnackbar()
-    const nc = useNotificationHandlers()
     useEffect(() => {
         setValue(cUser.team.name)
         setIsEditing(false)
@@ -45,7 +43,6 @@ export const TeamName: React.FC = () => {
                                     }
                                     setIsEditing(false)
                                     setIsLoading(false)
-                                    nc.update()
                                 }}>
                         <SaveImage/>
                     </IconButton>
