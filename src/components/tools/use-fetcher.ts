@@ -23,11 +23,6 @@ export const useFetcher = () => {
     const appState = useAppState()
 
     useEffect(() => {
-        isFetchingUserId.current = '-1'
-        isFetchingCuserId.current = '-1'
-    }, [nc.updates])
-
-    useEffect(() => {
         (async () => {
             if (appState.user.id !== isFetchingUserId.current && appState.user.id !== '-1') {
                 isFetchingUserId.current = appState.user.id
