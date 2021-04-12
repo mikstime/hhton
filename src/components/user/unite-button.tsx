@@ -73,7 +73,7 @@ export const UniteButton: React.FC = () => {
         return null
     }
 
-    if (user.isNullUser || !user.team) {
+    if (user.isNullUser || !user.team || user.isLoading) {
         return <PrimaryButton disabled/>
     }
 

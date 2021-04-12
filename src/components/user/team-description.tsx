@@ -41,7 +41,7 @@ export const TeamDescription: React.FC<{ noName?: boolean, user: User }> = ({use
     const usersToShow = filtered.slice(0, TO_SHOW)
     const more = filtered.length - TO_SHOW > 0 ? filtered.length - TO_SHOW : 0
 
-    if(cEvent.id === '-1' || cEvent.notFound || cEvent.isFinished || settings.isHostMode) {
+    if(cEvent.id === '-1' || cEvent.notFound || cEvent.isFinished || settings.isHostMode || user.isLoading) {
         return null
     }
 
