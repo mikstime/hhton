@@ -36,12 +36,35 @@ const LeaderSection: React.FC = () => {
     return null
 }
 
-export const TeamPage: React.FC = () => {
-
-    const {cUser, cEvent} = useAppState()
+const LeaveButton: React.FC = () => {
+    const {cUser} = useAppState()
     const {enqueueSnackbar} = useSnackbar()
     const nc = useNotificationHandlers()
 
+    return <Button onClick={async () => {
+        if (cUser.team.id) {
+            const didLeave = await leaveTeam(cUser.team.id)
+            if (didLeave) {
+                enqueueSnackbar('Вы покинули команду', {
+                    variant: 'success'
+                })
+            } else {
+                enqueueSnackbar('Не удалось покинуть команду', {
+                    variant: 'error'
+                })
+            }
+        } else {
+            enqueueSnackbar('Не удалось покинуть команду', {
+                variant: 'error'
+            })
+        }
+        nc.update()
+    }}>Покинуть команду</Button>
+}
+
+export const TeamPage: React.FC = () => {
+
+    const {cUser, cEvent} = useAppState()
     return <Grid container direction='column'>
         <Grid item container alignItems='baseline'>
             <TeamName/>
@@ -78,25 +101,8 @@ export const TeamPage: React.FC = () => {
         </Grid>
         <Box height='150px' width='100%'/>
         {
-            cUser.team.id && <Grid item><Button onClick={async () => {
-                if (cUser.team.id) {
-                    const didLeave = await leaveTeam(cUser.team.id)
-                    if (didLeave) {
-                        enqueueSnackbar('Вы покинули команду', {
-                            variant: 'success'
-                        })
-                    } else {
-                        enqueueSnackbar('Не удалось покинуть команду', {
-                            variant: 'error'
-                        })
-                    }
-                } else {
-                    enqueueSnackbar('Не удалось покинуть команду', {
-                        variant: 'error'
-                    })
-                }
-                nc.update()
-            }}>Покинуть команду</Button>
+            cUser.team.id && <Grid item>
+                <LeaveButton/>
             </Grid>
         }
         <Box height='32px' width='100%'/>
