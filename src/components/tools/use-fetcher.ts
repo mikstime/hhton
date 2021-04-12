@@ -178,56 +178,56 @@ export const useFetcher = () => {
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [appState.cEvent.id, nc.updates])
 
-    // useEffect(() => {
-    //     const u = appState.cUser
-    //     if (u.id !== '-1') {
-    //         const i = appState.invites.i
-    //         const personal = []
-    //         const team = []
-    //         const uTeam = []
-    //         for (let p of i.personal) {
-    //             if (p.id === u.id) {
-    //                 personal.push(u)
-    //             } else {
-    //                 personal.push(p)
-    //             }
-    //         }
-    //
-    //         for (let t of i.team) {
-    //             if (t.id === u.id) {
-    //                 team.push(u)
-    //             } else {
-    //                 team.push(t)
-    //             }
-    //         }
-    //
-    //         for (let t of u.team.members) {
-    //             if (t.id === u.id) {
-    //                 uTeam.push(u)
-    //             } else {
-    //                 uTeam.push(t)
-    //             }
-    //         }
-    //
-    //         i.set({team, personal})
-    //         if(appState.user.id === u.id && !appState.user.isLoading) {
-    //             u.change({
-    //                 ...appState.user,
-    //                 team: {
-    //                     ...u.team,
-    //                     members: uTeam,
-    //                 },
-    //             })
-    //         } else {
-    //             u.change({
-    //                 team: {
-    //                     ...u.team,
-    //                     members: uTeam,
-    //                 },
-    //             })
-    //         }
-    //     }
-    // }, [appState.user.firstName, appState.user.lastName, appState.user.bio,
-    //     appState.user.avatar, appState.user.skills])
+    useEffect(() => {
+        const u = appState.cUser
+        if (u.id !== '-1') {
+            const i = appState.invites.i
+            const personal = []
+            const team = []
+            const uTeam = []
+            for (let p of i.personal) {
+                if (p.id === u.id) {
+                    personal.push(u)
+                } else {
+                    personal.push(p)
+                }
+            }
+
+            for (let t of i.team) {
+                if (t.id === u.id) {
+                    team.push(u)
+                } else {
+                    team.push(t)
+                }
+            }
+
+            for (let t of u.team.members) {
+                if (t.id === u.id) {
+                    uTeam.push(u)
+                } else {
+                    uTeam.push(t)
+                }
+            }
+
+            i.set({team, personal})
+            if(appState.user.id === u.id && !appState.user.isLoading) {
+                u.change({
+                    ...appState.user,
+                    team: {
+                        ...u.team,
+                        members: uTeam,
+                    },
+                })
+            } else {
+                u.change({
+                    team: {
+                        ...u.team,
+                        members: uTeam,
+                    },
+                })
+            }
+        }
+    }, [appState.user.firstName, appState.user.lastName, appState.user.bio,
+        appState.user.avatar, appState.user.skills])
     return null
 }
