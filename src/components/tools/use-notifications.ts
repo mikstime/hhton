@@ -11,7 +11,7 @@ export const useNotifications = () => {
     const client = useRef<null | w3cwebsocket>(null)
     const shouldReconnect = useRef(true)
     useEffect(() => {
-        if (cUser.id !== '-1' && !cUser.isLoading) {
+        if (cUser.id !== '-1' && !cUser.isNullUser) {
             if (client.current) {
                 shouldReconnect.current = false
                 client.current.close()
@@ -23,7 +23,7 @@ export const useNotifications = () => {
                 `${WS_DOMAIN}${PREFIX}/notification/channel/${cUser.id}`
             )
         }
-    }, [cUser.id, cUser.isLoading])
+    }, [cUser.id, cUser.isNullUser])
 
     useEffect(() => {
         if (!client.current) return
