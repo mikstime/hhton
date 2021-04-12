@@ -21,7 +21,7 @@ import {Hackathon} from '../tools/use-app-state/hackathon'
 import {getActiveEvents, getHostEvents} from '../../model/api'
 import {useHistory} from 'react-router-dom'
 import Image from 'material-ui-image'
-import logoImage from '../../assets/navigation/logo.png'
+import logoImage from '../../assets/navigation/teamup.svg'
 
 export const NavLink: React.FC<LinkProps & { wrap?: boolean, icon?: ReactElement }> = ({children, wrap, icon, ...props}) => {
     const theme = useTheme()
