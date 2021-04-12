@@ -79,8 +79,10 @@ const Skills: React.FC<{ user: User }> = ({user}) => {
 
 export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
 
+    const {cUser} = useAppState()
     const {isFetching, submit, decline} = useInviteActions(user)
 
+    const canAccept = cUser.team.members.length <= 1 || cUser.isTeamLead
     return <Grid item container spacing={2}
                  style={{overflow: 'visible'}}>
         <Grid item container md={8} xs={12} sm={12}>
@@ -90,7 +92,7 @@ export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
                                  <Grid container item xs={12}>
                                          <Grid container item xs={12} sm={6} md={7}>
                                              <PrimaryButton onClick={submit}
-                                                            disabled={isFetching}
+                                                            disabled={isFetching || !canAccept}
                                                             style={{flex: 1}}>
                                                  Объединиться
                                              </PrimaryButton>
@@ -99,7 +101,7 @@ export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
                                      <Grid container item xs={12} sm={6} md={5}
                                            justify='center'>
                                          <InviteButton onClick={decline}
-                                                       disabled={isFetching}>
+                                                       disabled={isFetching || !canAccept}>
                                              Отклонить
                                          </InviteButton>
                                      </Grid>

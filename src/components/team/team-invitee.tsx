@@ -79,8 +79,10 @@ const Skills: React.FC<{ user: User }> = ({user}) => {
 
 
 export const TeamInvitee: React.FC<{ user: User }> = ({user}) => {
+    const {cUser} = useAppState()
     const {isFetching, submit, decline} = useInviteActions(user)
 
+    const canAccept = cUser.team.members.length <= 1 || cUser.isTeamLead
     return <Grid item container spacing={2}>
         <Grid item md={5} xs={9} sm={5}>
             <Link to={`/user/${user.id}`}
@@ -118,7 +120,7 @@ export const TeamInvitee: React.FC<{ user: User }> = ({user}) => {
                   direction='column'
                   justify='center' alignItems='center'>
                 <Grid item>
-                    <IconButton disabled={isFetching} onClick={submit}>
+                    <IconButton disabled={isFetching || !canAccept} onClick={submit}>
                         <Box clone width={{xs: '24px', md: '48px'}}
                              height={{xs: '24px', md: '48px'}}>
                             <ThumbsUpIcon/>
@@ -126,7 +128,7 @@ export const TeamInvitee: React.FC<{ user: User }> = ({user}) => {
                     </IconButton>
                 </Grid>
                 <Grid item>
-                    <IconButton disabled={isFetching} onClick={decline}>
+                    <IconButton disabled={isFetching || !canAccept} onClick={decline}>
                         <Box clone width={{xs: '24px', md: '48px'}}
                              height={{xs: '24px', md: '48px'}}>
                             <ThumbsDownIcon/>
