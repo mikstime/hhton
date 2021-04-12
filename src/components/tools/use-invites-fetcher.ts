@@ -40,6 +40,13 @@ export const useInvitesFetcher = () => {
                         },
                         isTeamLead: userTeam.teamLead?.id === cUser.id
                     })
+                } else if(userTeam.members.find(u => u.id === user.id)) {
+                    user.change({
+                        team: {
+                            ...userTeam,
+                        },
+                        isTeamLead: userTeam.teamLead?.id === user.id
+                    })
                 }
                 invites.i.set({team, personal})
             }
