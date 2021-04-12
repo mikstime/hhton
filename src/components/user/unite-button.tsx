@@ -173,6 +173,6 @@ export const UniteButton: React.FC = () => {
     }
 
     return <PrimaryButton onClick={onClick}>
-        {user.team ? 'Присоединиться' : 'Объединиться'}
+        {user.team.members.length > 0 ? 'Присоединиться' : 'Объединиться'}
     </PrimaryButton>
 }
