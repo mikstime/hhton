@@ -10,7 +10,7 @@ import {useNotificationHandlers} from './notification-handlers'
 
 export const useInvitesFetcher = () => {
 
-    const {cUser, cEvent, invites} = useAppState()
+    const {user, cUser, cEvent, invites} = useAppState()
     const nc = useNotificationHandlers()
     //incoming
     useEffect(() => {
@@ -32,6 +32,15 @@ export const useInvitesFetcher = () => {
                     },
                     isTeamLead: userTeam.teamLead?.id === cUser.id
                 })
+                if(user.id === cUser.id) {
+                    user.change({
+                        team: {
+                            ...userTeam,
+                            ...votes
+                        },
+                        isTeamLead: userTeam.teamLead?.id === cUser.id
+                    })
+                }
                 invites.i.set({team, personal})
             }
         })()
