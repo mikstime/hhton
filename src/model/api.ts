@@ -441,9 +441,10 @@ export const getTeamById = async (teamId: string) => {
 export const getTeam = async (eventId: string, userId: string) => {
     // await sleep(300)
     // return {
-    //     members: TEST_USERS.slice(0, 3),
+    //     members: TEST_USERS.slice(0, 1),
     //     name: 'Команда мечты',
-    //     teamLead: getTestUser('2'),//{...NULL_USER, id: userId},
+    //     teamLead: getTestUser('1'),
+    //     id: '1'
     // } as Team
     if (!mockImplemented) {
         const team = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${userId}/team`, {
@@ -645,8 +646,8 @@ export const getTeamInvitesFromUrl = async (url: string) => {
         try {
             const parsedTeams = await Promise.all(
                 json.map((tID: number) => getTeamById(tID.toString()))
-            )
-            const usersAndTeams = parsedTeams.map((t: any) => {
+            ) as Team[]
+            const usersAndTeams = parsedTeams.filter((t: Team) => t.members.length > 0).map((t: any) => {
                 let teamLead = {} as User
                 Object.assign(teamLead, t.members[0])
                 teamLead.team = t
