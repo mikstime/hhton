@@ -1271,7 +1271,7 @@ export const kickTeamMember = async (eventId: Id, teamId: Id, userId: Id) => {
         {
             method: 'POST',
             credentials: 'include',
-            body: JSON.stringify({uid: userId})
+            body: JSON.stringify({uid: Number(userId)})
         })
 
     if (res.ok) {
