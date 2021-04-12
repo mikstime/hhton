@@ -41,6 +41,7 @@ export const TeamPage: React.FC = () => {
     const {cUser, cEvent} = useAppState()
     const {enqueueSnackbar} = useSnackbar()
     const nc = useNotificationHandlers()
+    console.log(cUser.team)
     return <Grid container direction='column'>
         <Grid item container alignItems='baseline'>
             <TeamName/>

@@ -214,15 +214,17 @@ export const useFetcher = () => {
                 u.change({
                     ...appState.user,
                     team: {
-                        ...u.team,
+                        name: u.team.name,
                         members: uTeam,
+                        teamLead: u.team.teamLead,
                     },
                 })
             } else {
                 u.change({
                     team: {
-                        ...u.team,
+                        name: u.team.name,
                         members: uTeam,
+                        teamLead: u.team.teamLead,
                     },
                 })
             }
