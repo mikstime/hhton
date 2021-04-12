@@ -21,6 +21,7 @@ import {useChipStyles} from '../common/skill-chip'
 import {getJobs, getSkills, modifyUser} from '../../model/api'
 import {UserOptional, UserSkill} from '../tools/use-app-state/user'
 import {useAppState} from '../tools/use-app-state'
+import {useNotificationHandlers} from '../tools/notification-handlers'
 
 const _useUserEditModal = () => {
     const [isOpen, setIsOpen] = useState(false)
@@ -267,6 +268,7 @@ const useUserEdit = () => {
     const [sDesc, setSDesc] = useState(cUser.skills.description)
     const [disabled, setDisabled] = useState(false)
     const [skills, setSkills] = useState<UserSkill[]>(cUser.skills.tags)
+    const nc = useNotificationHandlers()
     const reset = () => {
         if (cUser.id !== '-1') {
             setFirstName(cUser.firstName)
@@ -350,6 +352,7 @@ const useUserEdit = () => {
             setDisabled(false)
             cUser.change(diff)
             user.change(diff)
+            nc.update()
             return update
         },
         onCancel: () => {
