@@ -196,6 +196,8 @@ export const TeamMember: React.FC<{ user: User }> = ({user}) => {
                       </Box>
                     </IconButton>
                     }
+                    {team.members.length > 0 &&
+                    <AdditionalText align='center'>{team.votes?.[user.id] || 0}/{team.members.length}</AdditionalText>}
                 </Grid>
                 {user.id !== cUser.id &&
                 <Grid item>
