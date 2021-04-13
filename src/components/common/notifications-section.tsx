@@ -71,7 +71,7 @@ const NotificationsPopover: React.FC<Omit<PopoverProps, 'children'> & { notifica
             <Grid item onClick={(e) => {
                 nc.navigation[n.status] ? nc.navigation[n.status](n) : nc.navigation.default(n)
                 props.onClose?.(e, 'backdropClick')
-            }} style={{marginBottom: 8}}>
+            }} style={{marginBottom: 8, cursor: 'pointer'}}>
 
                 <Image disableSpinner
                        style={{width: 24, height: 24, padding: 0}}
@@ -80,7 +80,7 @@ const NotificationsPopover: React.FC<Omit<PopoverProps, 'children'> & { notifica
             <Grid item xs zeroMinWidth onClick={(e) => {
                 nc.navigation[n.status] ? nc.navigation[n.status](n) : nc.navigation.default(n)
                 props.onClose?.(e, 'backdropClick')
-            }}>
+            }} style={{cursor: 'pointer'}}>
                 <AdditionalText noWrap
                                 style={{
                                     marginLeft: 12
@@ -109,7 +109,7 @@ const NotificationsPopover: React.FC<Omit<PopoverProps, 'children'> & { notifica
                       onClick={(e) => {
                           nc.navigation[notifications[0].status] ? nc.navigation[notifications[0].status](notifications[0]) : nc.navigation.default(notifications[0])
                           props.onClose?.(e, 'backdropClick')
-                      }}>
+                      }} style={{cursor: 'pointer'}}>
                     <AdditionalText noWrap
                                     style={{marginLeft: 12}}>{notifications[0].message}</AdditionalText>
                 </Grid>
@@ -179,6 +179,7 @@ export const NotificationSection: React.FC = () => {
                                                 }
                                             }}><NotificationIcon/></div>
                                         <Grid item zeroMinWidth
+                                              style={{cursor: 'pointer'}}
                                               onClick={(e) => {
                                                   nc.navigation[notifications[0].status] ? nc.navigation[notifications[0].status](notifications[0]) : nc.navigation.default(notifications[0])
                                               }}>
