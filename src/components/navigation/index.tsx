@@ -11,7 +11,11 @@ import {useAppState} from '../tools/use-app-state'
 import {DefaultMenu} from './default'
 import {LoadingMenu} from './loading'
 import {UnAuthMenu} from './unauth'
-
+import {
+    NotificationSection,
+    NotificationSectionSmall
+} from '../common/notifications-section'
+import {ReactComponent as MenuIcon} from '../../assets/navigation/menu.svg'
 const drawerWidth = 200
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -102,8 +106,10 @@ export const AppNavigation: React.FC<GridProps> = ({children}) => {
                         onClick={handleDrawerToggle}
                         className={classes.menuButton}
                     >
-                        Меню
+                        <MenuIcon/>
                     </IconButton>
+                    <Box flex={1}/>
+                    <NotificationSectionSmall/>
                 </Toolbar>
             </AppBar>
         </Hidden>

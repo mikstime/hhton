@@ -80,11 +80,11 @@ export type MenuProps = {
     onClick: MouseEventHandler
 }
 
-export const MenuBase: React.FC = ({children}) => {
+export const MenuBase: React.FC<EventLinkProps> = ({children, onClick}) => {
     return <Box display='flex' height='100%'
                 maxHeight={1040}
                 flexDirection='column'>
-        <Link to='/'>
+        <Link to='/' onClick={onClick}>
             <Box display='flex' justifyContent='center'><Image style={{
                 paddingTop: 40,
                 width: 113,
