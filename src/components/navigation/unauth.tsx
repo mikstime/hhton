@@ -7,7 +7,7 @@ import {Box} from '@material-ui/core'
 export const UnAuthMenu: React.FC<MenuProps> = ({onClick}) => {
 
     const pageUrl = window.location.pathname.replace('/', '')
-    return <MenuBase>
+    return <MenuBase onClick={onClick}>
         <EventLink onClick={onClick}/>
         {/*<NavLink to='/events'>*/}
         {/*    Другие мероприятия*/}

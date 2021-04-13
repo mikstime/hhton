@@ -82,7 +82,7 @@ export const UserEvents: React.FC = () => {
     ))
     return (
         <Box clone width={{
-            xs: 'calc(100vw - 36px)',
+            xs: 'calc(100vw - 48px)',
             sm: 'calc( 100vw - 48px - 200px)',
             md: 'calc( 800px - 48px - 48px)',
             lg: '912px',

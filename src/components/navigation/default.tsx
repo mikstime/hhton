@@ -60,7 +60,7 @@ export const DefaultMenu: React.FC<MenuProps> = ({onClick}) => {
             </Fade>
         </Fragment>
     }
-    return <MenuBase>
+    return <MenuBase onClick={onClick}>
         <EventLink onClick={onClick}/>
         {toRender}
         <Box height='100%'/>

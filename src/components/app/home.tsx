@@ -223,6 +223,6 @@ export const HomeApp: React.FC = () => {
                 </Box>
             </Grid>
         </Container>
-        <div style={{height: 32}}/>
+        <div style={{height: 100}}/>
     </Root>
 }
