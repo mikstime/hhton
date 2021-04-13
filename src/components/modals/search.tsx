@@ -128,7 +128,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
         const fjob = encodeURIComponent(jobs[selectedJob]?.name || '')
         const fskills = skills.filter((s, i) => selectedSkills[i]).map(s => encodeURIComponent(s.name))
         if (fskills.length) {
-            history.push(`/feed?job=${fjob}&skill=${fskills.join('&skill=')}`)
+            history.push(`/feed?job=${fjob}&skills=${fskills.join('&skills=')}`)
         } else if (fjob) {
             history.push(`/feed?job=${fjob}`)
         } else {
