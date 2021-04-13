@@ -166,7 +166,7 @@ export const EventLink: React.FC<EventLinkProps> = (props) => {
             }}
         />)
     } else if (isOpen) {
-        toRender = <LabelText style={{paddingLeft: 12}}>
+        toRender = <LabelText style={{paddingLeft: 12, color: '#818C99'}}>
             Здесь будут мероприятия, в которых Вы участвуете
         </LabelText>
     }
