@@ -31,7 +31,7 @@ export const ItemPlate: React.FC<ItemPlateProps> = (
     return <PaddedPlate {...rest}>
         <Grid container wrap='nowrap' alignItems='center'>
             {frontIcon && text &&
-            <Grid item>
+            <Grid item style={{alignSelf: 'flex-start'}}>
               <SvgIcon style={{marginRight: 12}} component={frontIcon}/>
             </Grid>}
             <Grid item zeroMinWidth style={{minHeight: '24px'}}>

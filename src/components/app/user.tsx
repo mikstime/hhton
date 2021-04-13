@@ -119,8 +119,8 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                     }
                 </Grid>
                 <Grid item>
-                    {(user.isNullUser || user.bio.length > 0)
-                    && <BioPlate text={user.bio}/>}
+                    {(user.isNullUser || user.skills.description.length > 0)
+                    && <BioPlate text={user.skills.description}/>}
                 </Grid>
                 {(user.isNullUser || user.skills.tags.length > 0)
                 && <Grid item container>
@@ -154,24 +154,26 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                 <FlexSpace/>
             </Grid>
         </Grid>
-        <Grid item container direction='column'>
-            <Grid item>
-                <Title>
-                    Навыки
-                </Title>
-            </Grid>
-            <Grid item>
-                <SecondaryText>
-                    {user.skills.description || 'Пользователь не указал данные о своих профессиональных навыках'}
-                </SecondaryText>
-            </Grid>
+        {user.bio && <Grid item container direction='column'>
+          <Grid item>
+            <Title>
+              О себе
+            </Title>
+          </Grid>
+          <Grid item>
+            <SecondaryText>
+                {user.bio}
+            </SecondaryText>
+          </Grid>
         </Grid>
+        }
         {
             user.hackathons.length > 0 &&
             <Grid item container direction='column'> <Grid item>
               <Title>
                 Победы в хакатонах
-                <span style={{color: '#818C99'}}>{cUser.hackathons.length}</span>
+                <span
+                  style={{color: '#818C99'}}>{cUser.hackathons.length}</span>
               </Title>
             </Grid>
               <Grid item>
