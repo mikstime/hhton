@@ -29,12 +29,16 @@ const useGenerateHandles = (action: () => void, keys: string[], nav: { [key: str
     return keys.reduce((a, k) => {
         a[k] = (m: Message) => {
             action()
-            const key = enqueueSnackbar(m.message, {
-                onClick: () => {
-                    closeSnackbar(key)
-                    nav[k](m)
-                }
-            })
+            if(m.message) {
+                const key = enqueueSnackbar(m.message, {
+                    onClick: () => {
+                        closeSnackbar(key)
+                        nav[k](m)
+                    }
+                })
+            } else {
+                nav[k](m)
+            }
         }
 
         return a
@@ -80,8 +84,7 @@ export const _useNotificationHandlers: () => {
             cEvent.change({id: m.type})
             history.push('/team#team')
         },
-        NewVoteNotification: () => {
-        },
+        NewVoteNotification: () => {},
         default: (m: Message) => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
