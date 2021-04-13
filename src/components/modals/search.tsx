@@ -9,7 +9,7 @@ import {
 } from '../common'
 import {
     Avatar, Button, Chip,
-    Grid,
+    Grid, IconButton,
     InputBase,
     Omit,
     Slide,
@@ -297,12 +297,12 @@ const SearchUser: React.FC<UseSearchModalType & MProps> = ({...props}) => {
                               <Typography variant='body1'>
                                 team-up.online/event/{cEvent.id}</Typography>
                               <FlexSpace/>
-                              <Button onClick={() => {
+                              <IconButton size='small' onClick={() => {
                                   const str = `https://team-up.online/event/${cEvent.id}`
                                   copyTextToClipboard(str)
                               }}>
                                 <CopyIcon/>
-                              </Button>
+                              </IconButton>
                             </Grid>
                           </GrayPlate>
                         </Grid>
