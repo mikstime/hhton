@@ -6,7 +6,7 @@ import {
     Grid,
     IconButton,
     makeStyles,
-    Theme
+    Theme, Tooltip
 } from '@material-ui/core'
 import {Link} from 'react-router-dom'
 import {AdditionalText, AvatarPlate} from '../common'
@@ -194,33 +194,36 @@ export const TeamMember: React.FC<{ user: User }> = ({user}) => {
                   justify='center' alignItems='center'>
                 <Grid item>
                     {user.id !== cUser.id &&
-                    <IconButton disabled={isFetching} onClick={() => {
-                        onVote()
-                    }}>
-                      <Box clone width={{xs: '24px', md: '48px'}}
-                           height={{xs: '24px', md: '48px'}}>
-                        <VoteIcon active={didVote}/>
-                      </Box>
-                    </IconButton>
+                    <Tooltip title='Член команды с наибольшим числом голосов становится лидером команды'>
+                      <IconButton disabled={isFetching} onClick={() => {
+                          onVote()
+                      }}>
+                        <Box clone width={{xs: '24px', md: '48px'}}
+                             height={{xs: '24px', md: '48px'}}>
+                          <VoteIcon active={didVote}/>
+                        </Box>
+                      </IconButton>
+                    </Tooltip>
                     }
                     {team.members.length > 0 &&
-                    <AdditionalText align='center'>{team.votes?.[user.id] || 0}/{team.members.length}</AdditionalText>}
+                    <AdditionalText
+                      align='center'>{team.votes?.[user.id] || 0}/{team.members.length}</AdditionalText>}
                 </Grid>
                 {user.id !== cUser.id &&
                 <Grid item>
                   <IconButton disabled={isFetching}
-                    size='small' style={{margin: 'auto'}}
-                    onClick={() => {
-                        pModal.open({
-                            onSubmit: () => {
-                                onKick()
-                                pModal.close()
-                            },
-                            message: `Исключить пользователя из команды?`,
-                            accept: 'Исключить',
-                            decline: 'Оставить'
-                        })
-                    }}>
+                              size='small' style={{margin: 'auto'}}
+                              onClick={() => {
+                                  pModal.open({
+                                      onSubmit: () => {
+                                          onKick()
+                                          pModal.close()
+                                      },
+                                      message: `Исключить пользователя из команды?`,
+                                      accept: 'Исключить',
+                                      decline: 'Оставить'
+                                  })
+                              }}>
                       {cUser.isTeamLead &&
                       <Box clone width={{xs: '24px'}}
                            height={{xs: '24px'}}><KickIcon

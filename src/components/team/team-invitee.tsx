@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react'
 import {User} from '../tools/use-app-state/user'
-import {Box, Chip, Grid, IconButton} from '@material-ui/core'
+import {Box, Chip, Grid, IconButton, Tooltip} from '@material-ui/core'
 import {Link} from 'react-router-dom'
 import {AvatarPlate} from '../common'
 import {NameTypography} from '../common/typography'
@@ -36,7 +36,7 @@ const useInviteActions = (user: User) => {
         } else {
             setIsFetching(false)
             enqueueSnackbar(`Не удалось принять заявку`, {
-                variant: 'error',
+                variant: 'error'
             })
         }
         nc.update()
@@ -55,7 +55,7 @@ const useInviteActions = (user: User) => {
         } else {
             setIsFetching(false)
             enqueueSnackbar(`Не удалось отклонить заявку`, {
-                variant: 'error',
+                variant: 'error'
             })
         }
         nc.update()
@@ -89,7 +89,7 @@ export const TeamInvitee: React.FC<{ user: User }> = ({user}) => {
                   style={{textDecoration: 'none'}}>
                 <AvatarPlate padding={24} src={user.avatar} style={{
                     position: 'sticky',
-                    top: 24,
+                    top: 24
                 }}/>
             </Link>
         </Grid>
@@ -102,8 +102,10 @@ export const TeamInvitee: React.FC<{ user: User }> = ({user}) => {
                 <Grid item>
                     <Skills user={user}/>
                 </Grid>
-                <Grid item container style={{marginTop: 24, marginBottom: 24}} wrap='nowrap'>
-                    <Grid item container direction='column' justify='center' spacing={2}>
+                <Grid item container style={{marginTop: 24, marginBottom: 24}}
+                      wrap='nowrap'>
+                    <Grid item container direction='column' justify='center'
+                          spacing={2}>
                         <SocialLink prefix='ВКонтакте: ' site='vk.com/'
                                     value={user.settings.vk}/>
                         <SocialLink prefix='Телеграм: ' site='t.me/'
@@ -120,20 +122,32 @@ export const TeamInvitee: React.FC<{ user: User }> = ({user}) => {
                   direction='column'
                   justify='center' alignItems='center'>
                 <Grid item>
-                    <IconButton disabled={isFetching || !canAccept} onClick={submit}>
-                        <Box clone width={{xs: '24px', md: '48px'}}
-                             height={{xs: '24px', md: '48px'}}>
-                            <ThumbsUpIcon/>
-                        </Box>
-                    </IconButton>
+                    <Tooltip
+                        title={canAccept ? '' : 'Данное действие доступно лидеру команды'}>
+                        <div>
+                            <IconButton disabled={isFetching || !canAccept}
+                                        onClick={submit}>
+                                <Box clone width={{xs: '24px', md: '48px'}}
+                                     height={{xs: '24px', md: '48px'}}>
+                                    <ThumbsUpIcon/>
+                                </Box>
+                            </IconButton>
+                        </div>
+                    </Tooltip>
                 </Grid>
                 <Grid item>
-                    <IconButton disabled={isFetching || !canAccept} onClick={decline}>
-                        <Box clone width={{xs: '24px', md: '48px'}}
-                             height={{xs: '24px', md: '48px'}}>
-                            <ThumbsDownIcon/>
-                        </Box>
-                    </IconButton>
+                    <Tooltip
+                        title={canAccept ? '' : 'Данное действие доступно лидеру команды'}>
+                        <div>
+                            <IconButton disabled={isFetching || !canAccept}
+                                        onClick={decline}>
+                                <Box clone width={{xs: '24px', md: '48px'}}
+                                     height={{xs: '24px', md: '48px'}}>
+                                    <ThumbsDownIcon/>
+                                </Box>
+                            </IconButton>
+                        </div>
+                    </Tooltip>
                 </Grid>
             </Grid>
         </Box>

@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react'
 import {
     Box, Button, Divider,
-    Grid, Grow
+    Grid, Grow, Tooltip
 } from '@material-ui/core'
 import {AdditionalText, GrayPlate} from '../common'
 import {useAppState} from '../tools/use-app-state'
@@ -21,16 +21,26 @@ const LeaderSection: React.FC = () => {
     }
 
     if (cUser.team.teamLead.id === cUser.id) {
-        return <AdditionalText>
-            <b>Вы</b> – лидер команды
-        </AdditionalText>
+        return <Tooltip
+            title='Теперь Вы можете принимать решение о приеме и отклонении заявок, а также исключать членов команды'>
+            <div>
+                <AdditionalText>
+                    <b>Вы</b> – лидер команды
+                </AdditionalText>
+            </div>
+        </Tooltip>
     }
 
     if (cUser.team.teamLead.id !== cUser.id) {
-        return <AdditionalText>
-            <b>{cUser.team.teamLead.firstName} {cUser.team.teamLead.lastName}</b> –
-            лидер команды
-        </AdditionalText>
+        return <Tooltip
+            title='Лидер команды может принимать решение о приеме и отклонении заявок, а также исключать членов команды'>
+            <div>
+                <AdditionalText>
+                    <b>{cUser.team.teamLead.firstName} {cUser.team.teamLead.lastName}</b> –
+                    лидер команды
+                </AdditionalText>
+            </div>
+        </Tooltip>
     }
 
     return null
@@ -102,7 +112,7 @@ export const TeamPage: React.FC = () => {
         <Box height='150px' width='100%'/>
         {
             cUser.team.id && <Grid item>
-                <LeaveButton/>
+              <LeaveButton/>
             </Grid>
         }
         <Box height='32px' width='100%'/>

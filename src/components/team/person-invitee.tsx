@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react'
 import {User} from '../tools/use-app-state/user'
-import {Box, Chip, Grid} from '@material-ui/core'
+import {Box, Chip, Grid, Tooltip} from '@material-ui/core'
 import {AvatarPlate} from '../common'
 import {PrimaryButton} from '../common/buttons'
 import {InviteButton} from '../event/invite-button'
@@ -90,28 +90,41 @@ export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
                          afterChildren={
                              <Box clone paddingTop={2} flex='1'>
                                  <Grid container item xs={12}>
-                                         <Grid container item xs={12} sm={6} md={7}>
-                                             <PrimaryButton onClick={submit}
-                                                            disabled={isFetching || !canAccept}
-                                                            style={{flex: 1}}>
-                                                 Объединиться
-                                             </PrimaryButton>
-                                         </Grid>
-                                     <Box clone paddingLeft={2}>
-                                     <Grid container item xs={12} sm={6} md={5}
-                                           justify='center'>
-                                         <InviteButton onClick={decline}
-                                                       disabled={isFetching || !canAccept}>
-                                             Отклонить
-                                         </InviteButton>
+                                     <Grid container item xs={12} sm={6} md={7}>
+                                         <Tooltip
+                                             title={canAccept ? '' : 'Данное действие доступно лидеру команды'}>
+                                             <div>
+                                                 <PrimaryButton onClick={submit}
+                                                                disabled={isFetching || !canAccept}
+                                                                style={{flex: 1}}>
+                                                     Объединиться
+                                                 </PrimaryButton>
+                                             </div>
+                                         </Tooltip>
                                      </Grid>
+                                     <Box clone paddingLeft={2}>
+                                         <Grid container item xs={12} sm={6}
+                                               md={5}
+                                               justify='center'>
+                                             <Tooltip
+                                                 title={canAccept ? '' : 'Данное действие доступно лидеру команды'}>
+                                                 <div>
+                                                     <InviteButton
+                                                         onClick={decline}
+                                                         disabled={isFetching || !canAccept}>
+                                                         Отклонить
+                                                     </InviteButton>
+                                                 </div>
+                                             </Tooltip>
+                                         </Grid>
                                      </Box>
                                  </Grid>
                              </Box>}
                          avatarProps={{wrap: 'nowrap', xs: 12, sm: 6, md: 7}}>
                 <Grid xs sm={6} md={5} item container
                       direction='column'>
-                    <Box paddingLeft={{xs: 0, sm: 2}} marginTop={{xs: 1, md: 0}}>
+                    <Box paddingLeft={{xs: 0, sm: 2}}
+                         marginTop={{xs: 1, md: 0}}>
                         <Grid item container>
                             <NameTypography user={user}/>
                         </Grid>
@@ -126,8 +139,10 @@ export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
             <Grid item>
                 <Skills user={user}/>
             </Grid>
-            <Grid item container style={{marginTop: 24, marginBottom: 24}} wrap='nowrap'>
-                <Grid item container direction='column' justify='center' spacing={2}>
+            <Grid item container style={{marginTop: 24, marginBottom: 24}}
+                  wrap='nowrap'>
+                <Grid item container direction='column' justify='center'
+                      spacing={2}>
                     <SocialLink prefix='ВКонтакте: ' site='vk.com/'
                                 value={user.settings.vk}/>
                     <SocialLink prefix='Телеграм: ' site='t.me/'
