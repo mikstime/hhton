@@ -7,18 +7,23 @@ import {
     NavLink
 } from './common'
 import {useAppState} from '../tools/use-app-state'
-import {Box, Fade} from '@material-ui/core'
+import {Badge, Box, Fade} from '@material-ui/core'
 import {ReactComponent as SearchIcon} from '../../assets/navigation/search.svg'
 import {ReactComponent as TeamIcon} from '../../assets/navigation/team.svg'
 import {ReactComponent as UserIcon} from '../../assets/navigation/user.svg'
 import {ReactComponent as CreateTeamIcon} from '../../assets/navigation/create_team.svg'
 
 export const DefaultMenu: React.FC<MenuProps> = ({onClick}) => {
-    const {cEvent, settings} = useAppState()
+    const {cEvent, settings, invites} = useAppState()
 
     const isActive = cEvent.isParticipating && !cEvent.isFinished
 
     let toRender
+
+    const teamIcon = (invites.i.team.length > 0
+        || invites.i.personal.length > 0 ) ?
+        <Badge variant='dot' color='primary'><TeamIcon/></Badge>
+        : <TeamIcon/>
 
     if (settings.isHostMode) {
         toRender = <Fragment>
@@ -44,7 +49,7 @@ export const DefaultMenu: React.FC<MenuProps> = ({onClick}) => {
             {isActive &&
             <Fade in>
               <NavLink to={`/team`}
-                       icon={<TeamIcon/>}
+                       icon={teamIcon}
                        onClick={onClick}>
                 Команда
               </NavLink>
