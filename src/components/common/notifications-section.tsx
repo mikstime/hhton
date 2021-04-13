@@ -18,10 +18,13 @@ import {ReactComponent as OpenIcon} from '../../assets/navigation/open.svg'
 import {ReactComponent as CloseIcon} from '../../assets/navigation/close.svg'
 import Image from 'material-ui-image'
 import {useAppState} from '../tools/use-app-state'
-import {Message, useNotificationHandlers} from '../tools/notification-handlers'
+import {
+    Message,
+    NC,
+    useNotificationHandlers
+} from '../tools/notification-handlers'
 import {fetchEvent, getNotificationsHistory} from '../../model/api'
 import {Hackathon} from '../tools/use-app-state/hackathon'
-import {Link} from 'react-router-dom'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -49,7 +52,7 @@ const NotificationsPopover: React.FC<Omit<PopoverProps, 'children'> & { notifica
 
     const classes = useStyles()
     const [logos, setLogos] = useState<string[]>([])
-
+    const nc = useNotificationHandlers()
     useEffect(() => {
         (async () => {
             if (props.open) {
@@ -65,24 +68,23 @@ const NotificationsPopover: React.FC<Omit<PopoverProps, 'children'> & { notifica
         return <Grid key={i} container wrap='nowrap'
                      alignItems='center'
                      style={{padding: '0 8px 8px 8px'}}>
-            <Grid item>
-                <Link style={{textDecoration: 'none', marginBottom: 8}}
-                      onClick={(e) => props.onClose?.(e, 'backdropClick')}
-                      to={`/event/${n.type}`}>
-                    <Image disableSpinner
-                           style={{width: 24, height: 24, padding: 0}}
-                           imageStyle={{borderRadius: 4}} src={logos[i] || ''}/>
-                </Link>
+            <Grid item onClick={(e) => {
+                nc.navigation[n.status as NC] ? nc.navigation[n.status as NC](n) : nc.navigation.default(n)
+                props.onClose?.(e, 'backdropClick')
+            }} style={{marginBottom: 8}}>
+
+                <Image disableSpinner
+                       style={{width: 24, height: 24, padding: 0}}
+                       imageStyle={{borderRadius: 4}} src={logos[i] || ''}/>
             </Grid>
-            <Grid item xs zeroMinWidth>
-                <Link key={i} style={{textDecoration: 'none'}}
-                      onClick={(e) => props.onClose?.(e, 'backdropClick')}
-                      to={`/event/${n.type}`}>
-                    <AdditionalText noWrap
-                                    style={{
-                                        marginLeft: 12
-                                    }}>{n.message}</AdditionalText>
-                </Link>
+            <Grid item xs zeroMinWidth onClick={(e) => {
+                nc.navigation[n.status as NC] ? nc.navigation[n.status as NC](n) : nc.navigation.default(n)
+                props.onClose?.(e, 'backdropClick')
+            }}>
+                <AdditionalText noWrap
+                                style={{
+                                    marginLeft: 12
+                                }}>{n.message}</AdditionalText>
             </Grid>
         </Grid>
     })
@@ -103,13 +105,13 @@ const NotificationsPopover: React.FC<Omit<PopoverProps, 'children'> & { notifica
                   wrap='nowrap'
                   style={{padding: 8}}>
                 <NotificationIcon/>
-                <Grid item zeroMinWidth>
-                    <Link style={{textDecoration: 'none'}}
-                          onClick={(e) => props.onClose?.(e, 'backdropClick')}
-                          to={`/event/${notifications[0].type}`}>
-                        <AdditionalText noWrap
-                                        style={{marginLeft: 12}}>{notifications[0].message}</AdditionalText>
-                    </Link>
+                <Grid item zeroMinWidth
+                      onClick={(e) => {
+                          nc.navigation[notifications[0].status as NC] ? nc.navigation[notifications[0].status as NC](notifications[0]) : nc.navigation.default(notifications[0])
+                          props.onClose?.(e, 'backdropClick')
+                      }}>
+                    <AdditionalText noWrap
+                                    style={{marginLeft: 12}}>{notifications[0].message}</AdditionalText>
                 </Grid>
                 <Box flex={1}/>
                 <Box clone paddingLeft='12px' width={42}>
@@ -176,14 +178,13 @@ export const NotificationSection: React.FC = () => {
                                                     setIsOpen(!isOpen)
                                                 }
                                             }}><NotificationIcon/></div>
-                                        <Grid item zeroMinWidth>
-                                            <Link
-                                                style={{textDecoration: 'none'}}
-                                                to={`/event/${notifications[0].type}`}>
-                                                <AdditionalText
-                                                    noWrap
-                                                    style={{marginLeft: 12}}>{notifications[0].message}</AdditionalText>
-                                            </Link>
+                                        <Grid item zeroMinWidth
+                                              onClick={(e) => {
+                                                  nc.navigation[notifications[0].status as NC] ? nc.navigation[notifications[0].status as NC](notifications[0]) : nc.navigation.default(notifications[0])
+                                              }}>
+                                            <AdditionalText
+                                                noWrap
+                                                style={{marginLeft: 12}}>{notifications[0].message}</AdditionalText>
                                         </Grid>
                                         <Box clone paddingLeft='12px'
                                              width={42}>
