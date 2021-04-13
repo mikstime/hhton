@@ -69,7 +69,7 @@ const NotificationsPopover: React.FC<Omit<PopoverProps, 'children'> & { notifica
                      alignItems='center'
                      style={{padding: '0 8px 8px 8px'}}>
             <Grid item onClick={(e) => {
-                nc.navigation[n.status as NC] ? nc.navigation[n.status as NC](n) : nc.navigation.default(n)
+                nc.navigation[n.status] ? nc.navigation[n.status](n) : nc.navigation.default(n)
                 props.onClose?.(e, 'backdropClick')
             }} style={{marginBottom: 8}}>
 
@@ -78,7 +78,7 @@ const NotificationsPopover: React.FC<Omit<PopoverProps, 'children'> & { notifica
                        imageStyle={{borderRadius: 4}} src={logos[i] || ''}/>
             </Grid>
             <Grid item xs zeroMinWidth onClick={(e) => {
-                nc.navigation[n.status as NC] ? nc.navigation[n.status as NC](n) : nc.navigation.default(n)
+                nc.navigation[n.status] ? nc.navigation[n.status](n) : nc.navigation.default(n)
                 props.onClose?.(e, 'backdropClick')
             }}>
                 <AdditionalText noWrap
@@ -107,7 +107,7 @@ const NotificationsPopover: React.FC<Omit<PopoverProps, 'children'> & { notifica
                 <NotificationIcon/>
                 <Grid item zeroMinWidth
                       onClick={(e) => {
-                          nc.navigation[notifications[0].status as NC] ? nc.navigation[notifications[0].status as NC](notifications[0]) : nc.navigation.default(notifications[0])
+                          nc.navigation[notifications[0].status] ? nc.navigation[notifications[0].status](notifications[0]) : nc.navigation.default(notifications[0])
                           props.onClose?.(e, 'backdropClick')
                       }}>
                     <AdditionalText noWrap
@@ -180,7 +180,7 @@ export const NotificationSection: React.FC = () => {
                                             }}><NotificationIcon/></div>
                                         <Grid item zeroMinWidth
                                               onClick={(e) => {
-                                                  nc.navigation[notifications[0].status as NC] ? nc.navigation[notifications[0].status as NC](notifications[0]) : nc.navigation.default(notifications[0])
+                                                  nc.navigation[notifications[0].status] ? nc.navigation[notifications[0].status](notifications[0]) : nc.navigation.default(notifications[0])
                                               }}>
                                             <AdditionalText
                                                 noWrap

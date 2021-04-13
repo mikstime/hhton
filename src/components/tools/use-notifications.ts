@@ -2,7 +2,7 @@ import {useAppState} from './use-app-state'
 import {useEffect, useRef} from 'react'
 import {w3cwebsocket} from 'websocket'
 import {PREFIX, WS_DOMAIN} from '../../config/network'
-import {useNotificationHandlers} from './notification-handlers'
+import {Message, useNotificationHandlers} from './notification-handlers'
 
 
 export const useNotifications = () => {
@@ -24,34 +24,12 @@ export const useNotifications = () => {
             )
         }
     }, [cUser.id, cUser.isNullUser])
-
     useEffect(() => {
         if (!client.current) return
 
         client.current.onmessage = (m) => {
-            const json = JSON.parse(m.data as string)
-            switch (json.status) {
-                case 'NewTeamNotification':
-                    nc.newTeamNotification(json)
-                    break
-                case 'NewMembersNotification':
-                    nc.newMembersNotification(json)
-                    break
-                case 'NewInviteNotification':
-                    nc.newInviteNotification(json)
-                    break
-                case 'NewDenyNotification':
-                    nc.newDenyNotification(json)
-                    break
-                case 'NewTeamLeadNotification':
-                    nc.newTeamLeadNotification(json)
-                    break
-                case 'NewVoteNotification':
-                    nc.newVoteNotification(json)
-                    break
-                default:
-                    nc.default(json)
-            }
+            const json = JSON.parse(m.data as string) as Message
+            nc[json.status] ? nc[json.status](json) : nc.default(json)
         }
         client.current.onerror = () => {
         }

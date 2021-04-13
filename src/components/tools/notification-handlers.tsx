@@ -5,23 +5,23 @@ import {useAppState} from './use-app-state'
 
 export type Message = {
     type: string,
-    status: string,
+    status: NC,
     message: string,
 }
-export type NC = 'newTeamNotification'
-    | 'newMembersNotification'
-    | 'newInviteNotification'
-    | 'newDenyNotification'
-    | 'newTeamLeadNotification'
-    | 'newVoteNotification'
+export type NC = 'NewTeamNotification'
+    | 'NewMembersNotification'
+    | 'NewInviteNotification'
+    | 'NewDenyNotification'
+    | 'NewTeamLeadNotification'
+    | 'NewVoteNotification'
 
 const keys = [
-    'newTeamNotification',
-    'newMembersNotification',
-    'newInviteNotification',
-    'newDenyNotification',
-    'newTeamLeadNotification',
-    'newVoteNotification'
+    'NewTeamNotification',
+    'NewMembersNotification',
+    'NewInviteNotification',
+    'NewDenyNotification',
+    'NewTeamLeadNotification',
+    'NewVoteNotification'
 ]
 
 const useGenerateHandles = (action: () => void, keys: string[], nav: { [key: string]: (m: Message) => void }) => {
@@ -55,32 +55,32 @@ export const _useNotificationHandlers: () => {
     const {settings, cEvent} = useAppState()
 
     const navigation = {
-        newTeamNotification: (m: Message) => {
+        NewTeamNotification: (m: Message) => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
             history.push('/team#team')
         },
-        newMembersNotification: (m: Message) => {
+        NewMembersNotification: (m: Message) => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
             history.push('/team#team')
         },
-        newInviteNotification: (m: Message) => {
+        NewInviteNotification: (m: Message) => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
             history.push('/team#incoming')
         },
-        newDenyNotification: (m: Message) => {
+        NewDenyNotification: (m: Message) => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
             history.push('/team#team')
         },
-        newTeamLeadNotification: (m: Message) => {
+        NewTeamLeadNotification: (m: Message) => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
             history.push('/team#team')
         },
-        newVoteNotification: () => {
+        NewVoteNotification: () => {
         },
         default: (m: Message) => {
             settings.setIsHostMode(false)
