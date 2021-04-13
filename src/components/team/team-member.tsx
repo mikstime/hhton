@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useState} from 'react'
 import {User} from '../tools/use-app-state/user'
 import {
     Box, Chip,
@@ -100,7 +100,11 @@ export const TeamMember: React.FC<{ user: User }> = ({user}) => {
     const {enqueueSnackbar} = useSnackbar()
     const nc = useNotificationHandlers()
     const pModal = usePromptModal()
+    const [isKicking, setIsKicking] = useState(false)
+    const [isVoting, setIsVoting] = useState(false)
+    const isFetching = isKicking || isVoting
     const onKick = useCallback(async () => {
+        setIsKicking(true)
         const didKick = await kickTeamMember(cEvent.id, cUser.team.id ?? '-1', user.id)
         if (didKick) {
             enqueueSnackbar('Пользователь исключен')
@@ -109,11 +113,13 @@ export const TeamMember: React.FC<{ user: User }> = ({user}) => {
                 variant: 'error'
             })
         }
+        setIsKicking(false)
         nc.update()
 
     }, [enqueueSnackbar, cEvent.id, cUser.team.id, user.id, nc.update])
 
     const onVote = useCallback(async () => {
+        setIsVoting(true)
         if (cUser.team.myVote !== user.id && cUser.team.myVote !== '-1' && cUser.team.myVote) {
             // const didUnVote = await unVoteFor(cUser.team.myVote, cEvent.id, cUser.team.id ?? '-1')
             const didVote = await voteFor(user.id, cEvent.id, cUser.team.id ?? '-1')
@@ -143,6 +149,7 @@ export const TeamMember: React.FC<{ user: User }> = ({user}) => {
                 })
             }
         }
+        setIsVoting(false)
         nc.update()
     }, [enqueueSnackbar, cEvent.id, cUser.team.id, user.id, nc.update, cUser.team.myVote])
 
@@ -187,7 +194,7 @@ export const TeamMember: React.FC<{ user: User }> = ({user}) => {
                   justify='center' alignItems='center'>
                 <Grid item>
                     {user.id !== cUser.id &&
-                    <IconButton onClick={() => {
+                    <IconButton disabled={isFetching} onClick={() => {
                         onVote()
                     }}>
                       <Box clone width={{xs: '24px', md: '48px'}}
@@ -201,7 +208,7 @@ export const TeamMember: React.FC<{ user: User }> = ({user}) => {
                 </Grid>
                 {user.id !== cUser.id &&
                 <Grid item>
-                  <IconButton
+                  <IconButton disabled={isFetching}
                     size='small' style={{margin: 'auto'}}
                     onClick={() => {
                         pModal.open({
