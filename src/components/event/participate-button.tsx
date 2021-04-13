@@ -78,15 +78,23 @@ const useParticipate = () => {
     }, [])
 
     const onFinishClick = useCallback(async () => {
-        const didFinish = await finishEvent(event.id)
-        if (didFinish) {
-            event.change({isFinished: true})
-            enqueueSnackbar('Мероприятие завершено', {variant: 'success'})
-        } else {
-            enqueueSnackbar('Не удалось завершить меропритяие', {
-                variant: 'error'
-            })
-        }
+        pModal.open({
+            message: 'Завершить мероприятие?',
+            accept: 'Завершить',
+            decline: 'Отмена',
+            onSubmit: async () => {
+                const didFinish = await finishEvent(event.id)
+                if (didFinish) {
+                    event.change({isFinished: true})
+                    enqueueSnackbar('Мероприятие завершено', {variant: 'success'})
+                } else {
+                    enqueueSnackbar('Не удалось завершить меропритяие', {
+                        variant: 'error'
+                    })
+                }
+                pModal.close()
+            }
+        })
     }, [event.id])
 
     return {
