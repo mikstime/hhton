@@ -2,7 +2,7 @@ import React, {useCallback, useEffect} from 'react'
 import {
     Box,
     Grid,
-    GridProps, useTheme
+    GridProps, Hidden, useTheme
 } from '@material-ui/core'
 import {
     AvatarPlate,
@@ -29,7 +29,7 @@ import {useHistory, useLocation} from 'react-router-dom'
 import {FillPrompt} from '../user/fill-prompt'
 
 const UserNameGrid = styled(Grid)`
-  padding: 12px 0 0 12px !important;
+  padding: 12px 0 8px 12px !important;
 `
 
 export const SocialLink: React.FC<{ prefix?: string, site?: string, value: string }> = ({prefix = '', site = '', value}) => {
@@ -94,6 +94,19 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
 
     return <Grid container direction='column' {...rest}>
         <Grid item container spacing={2}>
+            <Hidden mdUp>
+                <Box clone padding={{
+                    xs: '24px 0 0 12px !important',
+                    sm: '12px 0 0 12px !important'
+                }}>
+                    <Grid item container alignItems='center'>
+                        <NameTypography user={user}/>
+                        <Box clone marginLeft='12px'>
+                            <EditUserButton/>
+                        </Box>
+                    </Grid>
+                </Box>
+            </Hidden>
             <Grid item container md={5}>
                 <Grid item xs>
                     <AvatarPlate src={user.avatar}
@@ -106,22 +119,23 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                 </Grid>
             </Grid>
             <Grid item container md spacing={2} direction='column'>
-                <UserNameGrid item container alignItems='center'>
-                    <NameTypography user={user}/>
-                    <Box clone marginLeft='12px'>
-                        <EditUserButton/>
-                    </Box>
-                </UserNameGrid>
-                <Grid item>
-                    {(user.isNullUser || user.jobName.length > 0)
-                    && <JobPlate
-                      text={user.jobName ? `Место работы: ${user.jobName}` : ''}/>
-                    }
+                <Hidden smDown>
+                    <UserNameGrid item container alignItems='center'>
+                        <NameTypography user={user}/>
+                        <Box clone marginLeft='12px'>
+                            <EditUserButton/>
+                        </Box>
+                    </UserNameGrid>
+                </Hidden>
+                {(user.isNullUser || user.jobName.length > 0)
+                && <Grid item> <JobPlate
+                  text={user.jobName ? `Место работы: ${user.jobName}` : ''}/>
                 </Grid>
-                <Grid item>
-                    {(user.isNullUser || user.skills.description.length > 0)
-                    && <BioPlate text={user.skills.description}/>}
-                </Grid>
+                }
+                {(user.isNullUser || user.skills.description.length > 0)
+                &&
+                <Grid item><BioPlate text={user.skills.description}/> </Grid>}
+
                 {(user.isNullUser || user.skills.tags.length > 0)
                 && <Grid item container>
                   <Grid item container>
@@ -154,18 +168,19 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                 <FlexSpace/>
             </Grid>
         </Grid>
-        {user.bio && <Grid item container direction='column'>
-          <Grid item>
-            <Title>
-              О себе
-            </Title>
-          </Grid>
-          <Grid item>
-            <SecondaryText>
-                {user.bio}
-            </SecondaryText>
-          </Grid>
-        </Grid>
+        {
+            user.bio && <Grid item container direction='column'>
+              <Grid item>
+                <Title>
+                  О себе
+                </Title>
+              </Grid>
+              <Grid item>
+                <SecondaryText>
+                    {user.bio}
+                </SecondaryText>
+              </Grid>
+            </Grid>
         }
         {
             user.hackathons.length > 0 &&
