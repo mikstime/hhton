@@ -65,6 +65,7 @@ export const FeedApp: React.FC = () => {
     const [key, setKey] = useState(Math.random())
 
     const location = useLocation()
+    const [lastLocation, setLastLocation] = useState(location.search)
     const {current, setCurrent, users, setUsers} = useFeed()
 
     const [isFetching, setIsFetching] = useState(false)
@@ -73,6 +74,7 @@ export const FeedApp: React.FC = () => {
     const {cEvent, user, cUser, settings} = useAppState()
     const sModal = useSearchModal()
     const theme = useTheme()
+
     useEffect(() => {
         (async () => {
             if (cEvent.notFound) {
@@ -83,7 +85,11 @@ export const FeedApp: React.FC = () => {
             }
             if (cEvent.id !== '-1') {
                 const newUsers = await getFeed(cEvent.id, location.search)
-                if (newUsers.length) {
+                if(location.search !== lastLocation) {
+                    setLastLocation(location.search)
+                    setCurrent(0)
+                    setUsers([...newUsers])
+                } else {
                     setUsers([...users, ...newUsers])
                 }
             }
