@@ -17,8 +17,13 @@ import {EventPrizes} from './prizes'
 import {Additional} from './additional'
 import {Prize, Team} from '../../tools/use-app-state/user'
 import {Group, teamsToGroups} from './select-team-popover'
-import {getEventTeams, getWinners, modifyEvent} from '../../../model/api'
-import {useAppState} from '../../tools/use-app-state'
+import {
+    fetchEvent,
+    getEventTeams,
+    getWinners,
+    modifyEvent
+} from '../../../model/api'
+import {NULL_HACKATHON, useAppState} from '../../tools/use-app-state'
 import {
     HackathonOptional,
     HackathonSettings
@@ -49,6 +54,7 @@ const _useEventEditModal = () => {
 export const useEventEdit = () => {
     const {event} = useAppState()
 
+    const [description, setDescription] = useState<string>('')
     const [start, setStart] = useState<Date | null>(null)
     const [finish, setFinish] = useState<Date | null>(null)
     const [teamSize, setTeamSize] = useState<string>('')
@@ -100,10 +106,11 @@ export const useEventEdit = () => {
                 setGroups(g)
             }
         })()
-    }, [event.id, event.isFinished])
+    }, [event.id, event.isFinished, event])
 
     const reset = () => {
         // if (event.id !== '-1') {
+        setDescription(event.description)
         setStart(event.settings.start ?? null)
         setFinish(event.settings.finish ?? null)
         setTeamSize(event.settings.teamSize?.toString() ?? '')
@@ -119,6 +126,7 @@ export const useEventEdit = () => {
         // }
     }
     const nullReset = () => {
+        setDescription('')
         setStart(null)
         setFinish( null)
         setTeamSize('')
@@ -133,7 +141,11 @@ export const useEventEdit = () => {
         setDisabled(false)
     }
 
-    useEffect(reset, [event.id, event.name, event.prizes])
+    useEffect(reset, [event])
+
+    const onDescriptionChange = useCallback((e) => {
+        setDescription(e.target.value)
+    }, [setUsersLimit])
 
     const onStartChange = useCallback((d: Date) => {
         setStart(d)
@@ -163,14 +175,11 @@ export const useEventEdit = () => {
         setDeletedPrizes(d)
         setPrizes(p)
     }, [setDeletedPrizes, setPrizes])
-    // const onPrizesChange = useCallback((p) => {
-    //     setPrizes(p)
-    // }, [setPrizes])
 
     const onGroupsChange = useCallback((g, winnersToProcess) => {
         // TODO тут состояние сохраняется
-        console.log('winnersToProcess: ', winnersToProcess)
-        console.log('originalWinners: ', originalWinners)
+        // console.log('winnersToProcess: ', winnersToProcess)
+        // console.log('originalWinners: ', originalWinners)
         const newDeletedWinners = deletedWinners
         const newAddWinners = addWinners
         for (let d of winnersToProcess) {
@@ -214,9 +223,8 @@ export const useEventEdit = () => {
                 newAddWinners[d.wID] = addedWinnersArray
             }
         }
-
-        console.log('newAddWinners: ', newAddWinners)
-        console.log('newDeletedWinners: ', newDeletedWinners)
+        // console.log('newAddWinners: ', newAddWinners)
+        // console.log('newDeletedWinners: ', newDeletedWinners)
         setAddWinners(newAddWinners)
         setDeletedWinners(newDeletedWinners)
         setGroups(g)
@@ -224,6 +232,11 @@ export const useEventEdit = () => {
 
     return {
         general: {
+            description: {
+                value: description,
+                onChange: onDescriptionChange,
+                disabled
+            },
             start: {
                 value: start,
                 onChange: onStartChange,
@@ -271,7 +284,7 @@ export const useEventEdit = () => {
         },
         getSubmit: () => {
             const diff = storeDiff(event, {
-                place
+                place, description
             })
             diff.settings = {
                 start,
@@ -295,7 +308,7 @@ export const useEventEdit = () => {
         },
         onSubmit: async () => {
             const diff = storeDiff(event, {
-                place
+                place, description
             })
             diff.settings = {
                 start,
@@ -321,10 +334,6 @@ export const useEventEdit = () => {
                 deletedPrizes: deletedPrizes
             })
             setDisabled(false)
-            event.change({
-                ...diff,
-                prizes
-            })//@TODO winners
             // const update = await modifyUser(diff as UserOptional & { id: string })
             // setDisabled(false)
             // user.change(diff)
@@ -346,7 +355,7 @@ const EventEditModalContext = React.createContext()
 
 export const EventEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({children, onSubmitClick, ...props}) => {
     const [disabled, setDisabled] = useState(false)
-
+    const {event, cEvent} = useAppState()
     const {enqueueSnackbar} = useSnackbar()
     const edit = useEventEdit()
     useEffect(() => {
@@ -395,9 +404,24 @@ export const EventEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = (
                 <Grid item>
                     <SecondaryButton disabled={disabled} onClick={async (e) => {
                         const didSave = await edit.onSubmit()
-                        if (didSave) {
-                            props.close?.(e)
+                        const newEvent = await fetchEvent(event.id)
+                        if (newEvent) {
+                                event.set(newEvent)
+                                cEvent.set(newEvent)
                         } else {
+                                event.set({
+                                    ...NULL_HACKATHON,
+                                    id: event.id,
+                                    notFound: true
+                                })
+                                cEvent.set({
+                                    ...NULL_HACKATHON,
+                                    id: event.id,
+                                    notFound: true
+                                })
+                        }
+                        props.close?.(e)
+                        if (!didSave) {
                             enqueueSnackbar('Не удалось обновить данные', {variant: 'error'})
                         }
                     }}>

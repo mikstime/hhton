@@ -21,10 +21,11 @@ import {NumberField} from './general'
 import {Group, SelectTeamPopover} from './select-team-popover'
 import {useAppState} from '../../tools/use-app-state'
 import {Prize} from '../../tools/use-app-state/user'
-
+import {useLocation} from 'react-router-dom'
 const WinnersField: React.FC<{ label: string, inputProps?: ButtonProps, onSelect?: (r: HTMLButtonElement) => void }> = ({onSelect, label, inputProps: {onClick, ...rest} = {}}) => {
     const r = useRef<HTMLButtonElement>(null)
     const {event} = useAppState()
+    const location = useLocation()
     const toRender = <Grid item xs container alignItems='center'
                            justify='flex-end'>
         <Grid xs={12} md='auto' item style={{marginRight: 16}}>
@@ -38,7 +39,7 @@ const WinnersField: React.FC<{ label: string, inputProps?: ButtonProps, onSelect
             if (r.current)
                 onSelect?.(r.current)
         }}>
-            <Button disabled={!event.isFinished} ref={r} {...rest} style={{
+            <Button disabled={location.pathname.includes('create') ||  !event.isFinished} ref={r} {...rest} style={{
                 background: 'white',
                 borderRadius: 8,
                 paddingLeft: 12,
@@ -58,7 +59,7 @@ const WinnersField: React.FC<{ label: string, inputProps?: ButtonProps, onSelect
             </Button>
         </Box>
     </Grid>
-    if (event.isFinished)
+    if (!location.pathname.includes('create') &&  event.isFinished && event.isFinished)
         return toRender
 
     return <Tooltip
@@ -87,13 +88,14 @@ const PrizeItem: React.FC<{
       }) => {
     const theme = useTheme()
     const {event} = useAppState()
+    const location = useLocation()
 
     const nameField = isEditing ? <InputBase
             fullWidth
             value={name}
             onChange={onNameChange}
             {...inputProps}
-            disabled={!isEditing || event.isFinished}
+            disabled={!isEditing || (!location.pathname.includes('create') &&  event.isFinished)}
             placeholder='Приз'
             style={{
                 paddingRight: 12,
@@ -108,7 +110,7 @@ const PrizeItem: React.FC<{
                              direction='column'>
         <NumberField label='Количество' inputProps={{
             placeholder: '1',
-            disabled: !isEditing || event.isFinished,
+            disabled: !isEditing || (!location.pathname.includes('create') &&  event.isFinished),
             style: {
                 boxShadow: theme.shadows[4]
             },
@@ -118,13 +120,13 @@ const PrizeItem: React.FC<{
         }}/>
     </Grid>
 
-    return <Box clone marginTop={{xs: 0, sm: '16px'}}>
+    return <Box clone marginTop={{xs: '8px', sm: '16px'}}>
         <Plate padding={12}>
             <Grid container alignItems='center'
                   style={{minHeight: 32}}>
                 <Box clone width={isEditing ? 32 : 0}>
                     <IconButton size='small'
-                                disabled={!isEditing || event.isFinished}
+                                disabled={!isEditing || (!location.pathname.includes('create') &&  event.isFinished)}
                                 onClick={onDeleteClick}
                                 style={{marginRight: 12, transition: '.3s'}}>
                         <DeleteIcon/>
@@ -146,7 +148,7 @@ const PrizeItem: React.FC<{
                 <div>
                     <Box clone flexDirection={{xs: 'column', sm: 'row'}}>
                         <Grid container spacing={2}>
-                            {event.isFinished ?
+                            {(!location.pathname.includes('create') &&  event.isFinished) ?
                                 <Tooltip
                                     title='Изменение призов невозможно после окончания мероприятия'>{countField}</Tooltip>
                                 : countField}
@@ -200,6 +202,7 @@ export const EventPrizes: React.FC<{
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
     const [editing, setEditing] = useState<boolean[]>([])
     const [deletedPrizes, setDeletedPrizes] = useState([] as string[])
+    const location = useLocation()
     const toRender = prizes.value.map((p, i) => (
         <Grid item container key={'p-item' + i}>
             <PrizeItem name={p.name} index={i + 1}
@@ -290,15 +293,15 @@ export const EventPrizes: React.FC<{
                                    setAnchorEl(null)
                                }}/>
             {toRender.length > 0 && toRender}
-            <Grid item container justify='flex-end'>
+            <Grid item container justify='flex-end' alignItems='center'>
                 {toRender.length === 0 &&
-                  <Typography variant='body2' style={{lineHeight: '48px', marginRight: '32px'}}>Нажмите
+                  <Typography variant='body2' style={{marginRight: '32px'}}>Нажмите
                     на иконку справа, чтобы
                     добавить награду</Typography>}
-                <Box clone width='32px' height='32px' marginTop={1}
-                     marginBottom={1}
+                <Box clone width='32px' height='32px'
+                     marginTop={toRender.length === 0 ? 0 : 1}
                      marginRight='10px'>
-                    <IconButton disabled={event.isFinished} onClick={addPrize}>
+                    <IconButton disabled={!location.pathname.includes('create') &&  event.isFinished} onClick={addPrize}>
                         +
                     </IconButton>
                 </Box>

@@ -2,7 +2,7 @@ import React, {ChangeEventHandler} from 'react'
 import {FlexSpace, GrayPlate} from '../../common'
 import {
     Box,
-    Grid,
+    Grid, GridProps,
     InputBase,
     InputBaseProps,
     Typography
@@ -43,7 +43,7 @@ const DateField: React.FC<{
         <Grid xs={12} md='auto' item style={{marginRight: 16}}>
             <Box clone textAlign={{md: 'right'}}>
                 <Typography variant='body2'
-                            style={{color: '#6F7985', width: 60}}>
+                            style={{color: '#6F7985', width: 114}}>
                     {label}
                 </Typography>
             </Box>
@@ -81,8 +81,40 @@ const DateField: React.FC<{
     </Grid>
 }
 
+const MultilineGrayField: React.FC<{ label: string, inputProps?: InputBaseProps } & GridProps> = ({label, inputProps = {}, ...rest}) => {
+    return <Grid item xs container alignItems='baseline' {...rest}>
+        <Box clone width={{md: '130px'}} paddingRight={2}>
+            <Grid xs={12} md='auto' item>
+                <Box clone textAlign={{md: 'right'}}>
+                    <Typography variant='body2' style={{color: '#6F7985'}}>
+                        {label}
+                    </Typography>
+                </Box>
+            </Grid>
+        </Box>
+        <Grid xs={12} md item>
+            <InputBase
+                multiline
+                rowsMin={3}
+                rows={3}
+                rowsMax={10}
+                {...inputProps} style={{
+                background: 'white',
+                borderRadius: 8,
+                paddingLeft: 12,
+                paddingRight: 12,
+                display: 'block',
+                ...(inputProps.style || {})
+            }}/>
+        </Grid>
+    </Grid>
+}
 
 export const GeneralSection: React.FC<{
+    description: {
+        value: string,
+        onChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>,
+    },
     start: {
         value: Date | null,
         onChange: (d: Date) => void,
@@ -100,9 +132,15 @@ export const GeneralSection: React.FC<{
         onChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
     }
 }> = ({
-          start, finish, teamSize
+          start, finish, teamSize, description
       }) => {
     return <GrayPlate style={{marginTop: 16}}>
+        <Grid direction='column' container spacing={4}>
+            <MultilineGrayField label='О мероприятии' inputProps={{
+                placeholder: 'Напишите здесь все, что не укладывается в другие поля',
+                ...description
+            }}/>
+        </Grid>
         <Box clone flexDirection={{xs: 'column', sm: 'row'}}>
             <Grid container spacing={2}>
                 <Grid xs item container spacing={1} direction='column'>

@@ -1,17 +1,19 @@
 import React, {useCallback, useState} from 'react'
 import {User} from '../tools/use-app-state/user'
-import {Box, Chip, Grid, Tooltip} from '@material-ui/core'
+import {Box, Chip, Grid, IconButton, Tooltip} from '@material-ui/core'
 import {AvatarPlate} from '../common'
 import {PrimaryButton} from '../common/buttons'
 import {InviteButton} from '../event/invite-button'
 import {NameTypography} from '../common/typography'
 import {TeamDescription} from '../user/team-description'
-import {acceptInvite, declineInvite} from '../../model/api'
+import {acceptInvite, banInvite, declineInvite} from '../../model/api'
 import {useAppState} from '../tools/use-app-state'
 import {useSnackbar} from 'notistack'
 import {useChipStyles} from './team-member'
 import {SocialLink} from '../app/user'
 import {useNotificationHandlers} from '../tools/notification-handlers'
+import {ReactComponent as BlockIcon} from '../../assets/team/block.svg'
+import {ReactComponent as UnBlockIcon} from '../../assets/team/unblock.svg'
 
 const useInviteActions = (user: User) => {
     const [isFetching, setIsFetching] = useState(false)
@@ -20,6 +22,26 @@ const useInviteActions = (user: User) => {
     const nc = useNotificationHandlers()
 
     const {enqueueSnackbar} = useSnackbar()
+
+    const block = useCallback(async () => {
+        setIsFetching(true)
+        const didBlock = await banInvite(cEvent.id, cUser.id, user.id)
+        if (didBlock) {
+            setIsFetching(false)
+            setFading(false)
+
+            const inv = invites.i.team.filter(t => t.id !== user.id)
+            invites.i.change({team: inv})
+            setIsFetching(false)
+            enqueueSnackbar(`Заявка заблокирована`)
+        } else {
+            setIsFetching(false)
+            enqueueSnackbar(`Не удалось заблокироавть заявку`, {
+                variant: 'error'
+            })
+        }
+        nc.update()
+    }, [cUser.id, cEvent.id, user.id, invites, enqueueSnackbar, nc.update])
 
     const submit = useCallback(async () => {
         setIsFetching(true)
@@ -63,6 +85,7 @@ const useInviteActions = (user: User) => {
         isFetching,
         fading,
         submit,
+        block,
         decline
     }
 }
@@ -80,7 +103,7 @@ const Skills: React.FC<{ user: User }> = ({user}) => {
 export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
 
     const {cUser} = useAppState()
-    const {isFetching, submit, decline} = useInviteActions(user)
+    const {isFetching, submit, decline, block} = useInviteActions(user)
 
     const canAccept = cUser.team.members.length <= 1 || cUser.isTeamLead
     return <Grid item container spacing={2}
@@ -90,33 +113,30 @@ export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
                          afterChildren={
                              <Box clone paddingTop={2} flex='1'>
                                  <Grid container item xs={12}>
-                                     <Grid container item xs={12} sm={6} md={7}>
+                                     <Tooltip
+                                         title={canAccept ? '' : 'Данное действие доступно лидеру команды'}>
+                                         <Grid container item xs={12} sm={6}
+                                               md={7}>
+                                             <PrimaryButton onClick={submit}
+                                                            disabled={isFetching || !canAccept}
+                                                            style={{flex: 1}}>
+                                                 Объединиться
+                                             </PrimaryButton>
+                                         </Grid>
+                                     </Tooltip>
+                                     <Box clone paddingLeft={2}>
                                          <Tooltip
                                              title={canAccept ? '' : 'Данное действие доступно лидеру команды'}>
-                                             <div>
-                                                 <PrimaryButton onClick={submit}
-                                                                disabled={isFetching || !canAccept}
-                                                                style={{flex: 1}}>
-                                                     Объединиться
-                                                 </PrimaryButton>
-                                             </div>
+                                             <Grid container item xs={12} sm={6}
+                                                   md={5}
+                                                   justify='center'>
+                                                 <InviteButton
+                                                     onClick={decline}
+                                                     disabled={isFetching || !canAccept}>
+                                                     Отклонить
+                                                 </InviteButton>
+                                             </Grid>
                                          </Tooltip>
-                                     </Grid>
-                                     <Box clone paddingLeft={2}>
-                                         <Grid container item xs={12} sm={6}
-                                               md={5}
-                                               justify='center'>
-                                             <Tooltip
-                                                 title={canAccept ? '' : 'Данное действие доступно лидеру команды'}>
-                                                 <div>
-                                                     <InviteButton
-                                                         onClick={decline}
-                                                         disabled={isFetching || !canAccept}>
-                                                         Отклонить
-                                                     </InviteButton>
-                                                 </div>
-                                             </Tooltip>
-                                         </Grid>
                                      </Box>
                                  </Grid>
                              </Box>}
@@ -126,7 +146,9 @@ export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
                     <Box paddingLeft={{xs: 0, sm: 2}}
                          marginTop={{xs: 1, md: 0}}>
                         <Grid item container>
-                            <NameTypography user={user}/>
+                            <Grid item>
+                                <NameTypography user={user}/>
+                            </Grid>
                         </Grid>
                     </Box>
                     <Box paddingLeft={{xs: 0, sm: 2}}>
@@ -135,7 +157,24 @@ export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
                 </Grid>
             </AvatarPlate>
         </Grid>
-        <Grid item container md={4} xs={12} sm={6}>
+        <Grid item container md={3} xs={12} sm={12}>
+            <Grid item container justify='flex-end'>
+
+                <Grid item>
+                    <Tooltip
+                        title={canAccept ? '' : 'Данное действие доступно лидеру команды'}>
+                        <div>
+                            <Box clone marginTop='-4px'>
+                                <IconButton size='small'
+                                            onClick={block}
+                                            disabled={isFetching || !canAccept}>
+                                    <BlockIcon/>
+                                </IconButton>
+                            </Box>
+                        </div>
+                    </Tooltip>
+                </Grid>
+            </Grid>
             <Grid item>
                 <Skills user={user}/>
             </Grid>
@@ -151,6 +190,7 @@ export const PersonInvitee: React.FC<{ user: User }> = ({user}) => {
                                 value={user.settings.gh}/>
                 </Grid>
             </Grid>
+            <Grid item container/>
         </Grid>
     </Grid>
 }

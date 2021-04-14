@@ -29,9 +29,20 @@ import {EventAbout} from '../event/about'
 const EventNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
 `
-const assurePrefix = (url: string) => url.match(/^.{3,5}\/\//) ? url : `https://${url}`
+const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+
+function validURL(str: string) {
+    return pattern.test(str);
+}
+const assurePrefix = (link: string) => (link.indexOf('://') === -1) ? 'https://' + link : link;
+
 const CaptionLink: (to: string) => React.FC<TypographyProps> = (to) => (props) => {
-    if(to) {
+    if(validURL(to)) {
     return <a target="_blank" href={assurePrefix(to)} style={{textDecoration: 'none'}}><CaptionText {...props}/></a>
     }
     return <CaptionText {...props}/>

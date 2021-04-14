@@ -97,7 +97,7 @@ export const WinnersSection: React.FC = () => {
                 setGroups(g)
             }
         })()
-    }, [event.id, event.isFinished])
+    }, [event.isFinished, event])
 
     return <Box clone marginTop={1}>
         <Grid item container>
