@@ -1,16 +1,15 @@
 import React, {useEffect} from 'react'
 import {
-    AppBar,
-    Box, Container,
+    Box,
     Grid, Tab, Tabs
 } from '@material-ui/core'
 import {useAppState} from '../tools/use-app-state'
-import {useHistory} from 'react-router-dom'
+import {useHistory, useLocation} from 'react-router-dom'
 import {TeamPage} from '../team/team-page'
 import {IncomingPage} from '../team/incoming-page'
 import {OutgoingPage} from '../team/outgoing-page'
 import {HistoryPage} from '../team/history-page'
-import {Plate} from '../common'
+
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -41,8 +40,35 @@ function TabPanel(props: TabPanelProps) {
 
 export const TeamApp: React.FC = () => {
 
-    const {cUser} = useAppState()
+    const {cUser, cEvent, settings} = useAppState()
     const history = useHistory()
+    const location = useLocation()
+
+    const [value, setValue] = React.useState(0)
+
+    useEffect(() => {
+        (async () => {
+            if (cEvent.notFound) {
+                history.push('/user')
+            }
+            if (cUser.notFound || cEvent.isFinished || settings.isHostMode) {
+                history.push('/event/' + cEvent.id)
+            }
+        })()
+        //eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cEvent.id, location, cEvent.notFound, cEvent.isParticipating, settings.isHostMode])
+
+    useEffect(() => {
+        if (location.hash === '#team') {
+            setValue(0)
+        } else if (location.hash === '#incoming') {
+            setValue(1)
+        } else if (location.hash === '#outgoing') {
+            setValue(2)
+        } else if (location.hash === '#blocked') {
+            setValue(3)
+        }
+    }, [location.hash])
 
     useEffect(() => {
         if (cUser.isNotAuthorized) {
@@ -50,10 +76,18 @@ export const TeamApp: React.FC = () => {
         }
     }, [cUser.isNotAuthorized])
 
-    const [value, setValue] = React.useState(0)
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue)
+        if (newValue === 0) {
+            history.replace('#team')
+        } else if (newValue === 1) {
+            history.replace('#incoming')
+        } else if (newValue === 2) {
+            history.replace('#outgoing')
+        } else if (newValue === 3) {
+            history.replace('#blocked')
+        }
     }
 
 
@@ -62,16 +96,16 @@ export const TeamApp: React.FC = () => {
             paddingLeft={{sm: '50px'}}
             marginLeft={{sm: '-50px'}}
             width={{
-                xs: 'calc(100vw - 36px)',
-                sm: 'calc( 100vw - 48px - 48px - 200px)',
-                md: 'calc( 800px - 48px - 48px)'
-            }
-            }
+                xs: 'calc(100vw - 48px)',
+                sm: 'calc( 100vw - 48px - 200px)',
+                md: 'calc( 800px - 48px - 48px)',
+                lg: '912px'
+            }}
             style={{
                 position: 'sticky',
                 top: 0,
                 zIndex: 3,
-                backgroundColor: '#F9F9F9',
+                backgroundColor: '#F9F9F9'
             }}>
             <Tabs variant="scrollable"
                   indicatorColor="primary" style={{
@@ -83,7 +117,7 @@ export const TeamApp: React.FC = () => {
                 <Tab label="Команда"/>
                 <Tab label="Входящие заявки"/>
                 <Tab label="Исходящие заявки"/>
-                <Tab label="История заявок"/>
+                <Tab label="Заблокированные заявки"/>
             </Tabs>
 
         </Box>

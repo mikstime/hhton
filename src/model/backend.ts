@@ -68,6 +68,7 @@ export type BackendHackathon = {
         name: string | null,
         place: number | null,
         amount: number | null,
+        total: number | null,
         winnerTeamIDs: number[] | null
     }[] | null
 }
@@ -78,7 +79,8 @@ type BackendTeam = {
     members: BackendUser[],
     name: string,
     id: number,
-    prize: Prize
+    prize: Prize,
+    leadid: number
 }
 
 type BackendSkills = {
@@ -194,15 +196,16 @@ const Convert = {
     },
     event: {
         toFrontend: (bHackathon: BackendHackathon) => {
-            // const currentDate = new Date()
             const orderedPrizes = bHackathon.prizeList?.sort((left, right) => {
                     return (left.place ?? 0) - (right.place ?? 0)
                 }
             ).map((p) => ({
                 id: p.id?.toString() ?? '',
                 name: p.name ?? null,
-                count: p.amount?.toString() ?? ''
+                total: p.total ?? '0',
+                count: p.amount ?? 0 > 0 ? p.amount?.toString() ?? '0' : '0'
             })) ?? [] as Prize[]
+
             return {
                 name: bHackathon.name ?? '',
                 id: bHackathon.id?.toString() ?? '-1',
@@ -251,6 +254,7 @@ const Convert = {
                     name: p.name ?? null,
                     place: i,
                     amount: Number(p.count) ?? null,
+                    total: Number(p.total) ?? null,
                     winnerTeamIDs: null
                 }))
             }
@@ -280,7 +284,8 @@ const Convert = {
                 members: bTeam.members?.map(u => (Convert.user.toFrontend(u))) ?? [],
                 name: bTeam.name,
                 id: bTeam.id.toString(),
-                prizes: [bTeam.prize] as Prize[]
+                prizes: [bTeam.prize] as Prize[],
+                teamLead: {id: bTeam.leadid.toString()}
             }
         }
     },

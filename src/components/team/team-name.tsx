@@ -6,6 +6,7 @@ import {ReactComponent as EditImage} from '../../assets/edit.svg'
 import {ReactComponent as SaveImage} from '../../assets/save.svg'
 import {modifyTeamName} from '../../model/api'
 import {useSnackbar} from 'notistack'
+import {useNotificationHandlers} from '../tools/notification-handlers'
 
 export const TeamName: React.FC = () => {
     const {cUser, cEvent} = useAppState()
@@ -13,10 +14,18 @@ export const TeamName: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [value, setValue] = useState('')
     const {enqueueSnackbar, closeSnackbar} = useSnackbar()
+    const nc = useNotificationHandlers()
     useEffect(() => {
         setValue(cUser.team.name)
         setIsEditing(false)
     }, [cUser.team.name])
+
+    if(!cUser.isTeamLead && cUser.team.name) {
+        return <SubTitle
+            style={{marginBottom: 16}}>
+            {value}
+        </SubTitle>
+    }
     if (cUser.team && cUser.team.name) {
         if (isEditing) {
             return <Grid container style={{marginBottom: 16}}>
@@ -24,7 +33,7 @@ export const TeamName: React.FC = () => {
                     <IconButton size='small' disabled={isLoading}
                                 onClick={async () => {
                                     setIsLoading(true)
-                                    const didSave = await modifyTeamName(cUser.team.id ?? '', cEvent.id, value)
+                                    const didSave = await modifyTeamName(cEvent.id, cUser.team.id ?? '', value)
                                     if (didSave) {
                                     } else {
                                         const k = enqueueSnackbar('Не удалось изменить название', {
@@ -36,6 +45,7 @@ export const TeamName: React.FC = () => {
                                     }
                                     setIsEditing(false)
                                     setIsLoading(false)
+                                    nc.update()
                                 }}>
                         <SaveImage/>
                     </IconButton>

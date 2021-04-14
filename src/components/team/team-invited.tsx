@@ -1,28 +1,29 @@
 import React, {useCallback, useState} from 'react'
 import {User} from '../tools/use-app-state/user'
-import {Box, Chip, Grid, IconButton} from '@material-ui/core'
+import {Box, Chip, Grid, IconButton, Tooltip} from '@material-ui/core'
 import {Link} from 'react-router-dom'
 import {AvatarPlate} from '../common'
 import {NameTypography} from '../common/typography'
-import {ReactComponent as ThumbsUpIcon} from '../../assets/thumbs_up.svg'
-import {ReactComponent as ThumbsDownIcon} from '../../assets/thumbs_down.svg'
+// import {ReactComponent as ThumbsUpIcon} from '../../assets/thumbs_up.svg'
+// import {ReactComponent as ThumbsDownIcon} from '../../assets/thumbs_down.svg'
 import {useAppState} from '../tools/use-app-state'
 import {useSnackbar} from 'notistack'
-import {acceptInvite, declineInvite} from '../../model/api'
+import {unInvite} from '../../model/api'
 import {useChipStyles} from './team-member'
 import {SocialLink} from '../app/user'
-import {ReactComponent as KickIcon} from '../../assets/kick.svg'
+import {ReactComponent as KickIcon} from '../../assets/team/kick.svg'
+import {useNotificationHandlers} from '../tools/notification-handlers'
 
 const useInviteActions = (user: User) => {
     const [isFetching, setIsFetching] = useState(false)
     const [fading, setFading] = useState(true)
     const {cEvent, cUser, invites} = useAppState()
-
+    const nc = useNotificationHandlers()
     const {enqueueSnackbar} = useSnackbar()
 
     const decline = useCallback(async () => {
         setIsFetching(true)
-        const didDecline = await declineInvite(cEvent.id, cUser.id, user.id)
+        const didDecline = await unInvite(cEvent.id, cUser.id, user.id)
         if (didDecline) {
             setIsFetching(false)
             setFading(false)
@@ -33,10 +34,11 @@ const useInviteActions = (user: User) => {
         } else {
             setIsFetching(false)
             enqueueSnackbar(`Не удалось отменить заявку`, {
-                variant: 'error',
+                variant: 'error'
             })
         }
-    }, [cUser.id, cEvent.id, user.id, invites, enqueueSnackbar])
+        nc.update()
+    }, [cUser.id, cEvent.id, user.id, invites, enqueueSnackbar, nc.update])
     return {
         isFetching,
         fading,
@@ -56,6 +58,8 @@ const Skills: React.FC<{ user: User }> = ({user}) => {
 
 export const TeamInvited: React.FC<{ user: User }> = ({user}) => {
     const {isFetching, decline} = useInviteActions(user)
+    const {cUser} = useAppState()
+    const canAccept = cUser.team.members.length <= 1 || cUser.isTeamLead
 
     return <Grid item container spacing={2}>
         <Grid item md={5} xs={9} sm={5}>
@@ -63,7 +67,7 @@ export const TeamInvited: React.FC<{ user: User }> = ({user}) => {
                   style={{textDecoration: 'none'}}>
                 <AvatarPlate padding={24} src={user.avatar} style={{
                     position: 'sticky',
-                    top: 24,
+                    top: 24
                 }}/>
             </Link>
         </Grid>
@@ -76,8 +80,10 @@ export const TeamInvited: React.FC<{ user: User }> = ({user}) => {
                 <Grid item>
                     <Skills user={user}/>
                 </Grid>
-                <Grid item container style={{marginTop: 24, marginBottom: 24}} wrap='nowrap'>
-                    <Grid item container direction='column' justify='center' spacing={2}>
+                <Grid item container style={{marginTop: 24, marginBottom: 24}}
+                      wrap='nowrap'>
+                    <Grid item container direction='column' justify='center'
+                          spacing={2}>
                         <SocialLink prefix='ВКонтакте: ' site='vk.com/'
                                     value={user.settings.vk}/>
                         <SocialLink prefix='Телеграм: ' site='t.me/'
@@ -94,12 +100,19 @@ export const TeamInvited: React.FC<{ user: User }> = ({user}) => {
                   direction='column'
                   justify='center' alignItems='center'>
                 <Grid item>
-                    <IconButton disabled={isFetching} onClick={decline}>
-                        <Box clone width={{xs: '24px', md: '48px'}}
-                             height={{xs: '24px', md: '48px'}}>
-                            <KickIcon/>
-                        </Box>
-                    </IconButton>
+                    <Tooltip
+                        title={canAccept ? '' : 'Данное действие доступно лидеру команды'}>
+                        <div>
+                            <IconButton disabled={isFetching || !canAccept}
+                                        onClick={decline}>
+                                <Box clone width={{xs: '24px', md: '48px'}}
+                                     height={{xs: '24px', md: '48px'}}>
+                                    <KickIcon/>
+                                </Box>
+                            </IconButton>
+                        </div>
+                    </Tooltip>
+
                 </Grid>
             </Grid>
         </Box>

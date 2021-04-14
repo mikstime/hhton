@@ -11,11 +11,11 @@ const useStyles = makeStyles({
         marginTop: 36
     },
     body1: {
-        fontWeight: 'bold',
+        fontWeight: 'bold'
     },
     body2: {
-        marginTop: 24,
-    },
+        marginTop: 24
+    }
 })
 export const Title: React.FC<TypographyProps> = (props) => {
     const classes = useStyles()
@@ -39,6 +39,12 @@ export const AdditionalText: React.FC<TypographyProps> = (props) => {
     return <Typography variant='body2'{...props}/>
 }
 
+export const LabelText: React.FC<TypographyProps> = (props) => {
+    return <Typography variant='body1'
+                       {...props}
+                       style={{fontSize: 13, ...(props.style || {})}}/>
+}
+
 export const SecondaryText: React.FC<TypographyProps> = (props) => {
     const classes = useStyles()
     return <Typography classes={classes} variant='body2'{...props}/>
@@ -47,8 +53,9 @@ export const CaptionText: React.FC<TypographyProps> = (props) => {
     return <Typography variant='caption' {...props}/>
 }
 
-export const NameTypography: React.FC<{user: User} & TypographyProps> = ({user, ...props}) => {
-    return <Typography {...props} style={{minHeight: 24,...(props.style || {})}}>
+export const NameTypography: React.FC<{ user: User } & TypographyProps> = ({user, ...props}) => {
+    return <Typography {...props}
+                       style={{minHeight: 24, ...(props.style || {})}}>
         {user.firstName} {user.lastName}
     </Typography>
 }

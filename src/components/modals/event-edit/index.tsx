@@ -57,7 +57,9 @@ export const useEventEdit = () => {
     const [site, setSite] = useState<string>('')
     const [prizes, setPrizes] = useState<Prize[]>([])
     const [groups, setGroups] = useState<Group[]>([])
+    const [originalWinners, setOriginalWinners] = useState<{}>({})
     const [deletedWinners, setDeletedWinners] = useState<{}>({})
+    const [addWinners, setAddWinners] = useState<{}>({})
     const [disabled, setDisabled] = useState(false)
     const [deletedPrizes, setDeletedPrizes] = useState([] as string[])
 
@@ -65,8 +67,20 @@ export const useEventEdit = () => {
         (async () => {
             if (event.isFinished) {
                 let teams = await getEventTeams(event.id)
+                let newOriginalWinners = {}
                 //@ts-ignore
                 const winners = (await getWinners(event.id)).sort((w, v) => w.prizes[0].place - v.prizes[0].place)
+                for (let w of winners) {
+                    if (!w.prizes) {
+                        continue
+                    }
+                    let newPrizesArray = []
+                    for (let p of w.prizes) {
+                        newPrizesArray.push(p.id ?? '')
+                    }
+                    // @ts-ignore
+                    newOriginalWinners[w.id] = newPrizesArray
+                }
                 teams = teams.map(t => {
                     const ind = winners.findIndex(v => v.id?.toString() === t.id?.toString())
                     if (~ind) {
@@ -80,7 +94,9 @@ export const useEventEdit = () => {
                     }
                     return t
                 })
+
                 const g = teamsToGroups(teams)
+                setOriginalWinners(newOriginalWinners)
                 setGroups(g)
             }
         })()
@@ -96,7 +112,9 @@ export const useEventEdit = () => {
         setSite(event.settings.site ?? '')
         setPrizes(event.prizes)
         setDeletedPrizes([])
+        setOriginalWinners(originalWinners)
         setDeletedWinners({})
+        setAddWinners({})
         setDisabled(false)
         // }
     }
@@ -109,7 +127,9 @@ export const useEventEdit = () => {
         setSite('')
         setPrizes([])
         setDeletedPrizes([])
+        setOriginalWinners({})
         setDeletedWinners({})
+        setAddWinners({})
         setDisabled(false)
     }
 
@@ -140,7 +160,6 @@ export const useEventEdit = () => {
     }, [setSite])
 
     const onPrizesChange = useCallback((p, d) => {
-        console.log(d, deletedPrizes)
         setDeletedPrizes(d)
         setPrizes(p)
     }, [setDeletedPrizes, setPrizes])
@@ -148,30 +167,60 @@ export const useEventEdit = () => {
     //     setPrizes(p)
     // }, [setPrizes])
 
-    const onGroupsChange = useCallback((g, dArray) => {
+    const onGroupsChange = useCallback((g, winnersToProcess) => {
         // TODO тут состояние сохраняется
+        console.log('winnersToProcess: ', winnersToProcess)
+        console.log('originalWinners: ', originalWinners)
         const newDeletedWinners = deletedWinners
-        for (let d of dArray) {
+        const newAddWinners = addWinners
+        for (let d of winnersToProcess) {
             // @ts-ignore
             let deletedWinnersArray = newDeletedWinners[d.wID]
-            if (deletedWinnersArray) {
-                if (d.upID !== '') {
+            // @ts-ignore
+            let addedWinnersArray = newAddWinners[d.wID]
+            // @ts-ignore
+            const originalWinnersArray = originalWinners[d.wID]
+            if (d.upID) {
+                if (deletedWinnersArray) {
                     deletedWinnersArray = deletedWinnersArray.filter((p: string) => p !== d.upID)
-                } else if (d.dpID !== '') {
-                    deletedWinnersArray.push(d.dpID)
                 }
-            } else {
-                if (d.dpID !== '') {
-                    deletedWinnersArray = [d.dpID]
+                if (originalWinnersArray && originalWinnersArray.includes(d.upID)) {
+                } else {
+                    if (addedWinnersArray) {
+                        addedWinnersArray.push(d.upID)
+                    } else {
+                        addedWinnersArray = [d.upID]
+                    }
+                }
+            } else if (d.dpID) {
+                if (originalWinnersArray && originalWinnersArray.includes(d.dpID)) {
+                    if (deletedWinnersArray) {
+                        deletedWinnersArray.push(d.dpID)
+                    } else {
+                        deletedWinnersArray = [d.dpID]
+                    }
+                }
+                if (addedWinnersArray) {
+                    addedWinnersArray = addedWinnersArray.filter((p: string) => p !== d.dpID)
                 }
             }
-            // @ts-ignore
-            newDeletedWinners[d.wID] = deletedWinnersArray
+
+            if (deletedWinnersArray) {
+                // @ts-ignore
+                newDeletedWinners[d.wID] = deletedWinnersArray
+            }
+            if (addedWinnersArray) {
+                // @ts-ignore
+                newAddWinners[d.wID] = addedWinnersArray
+            }
         }
-        console.log('Призы будут удалены: ', newDeletedWinners)
+
+        console.log('newAddWinners: ', newAddWinners)
+        console.log('newDeletedWinners: ', newDeletedWinners)
+        setAddWinners(newAddWinners)
         setDeletedWinners(newDeletedWinners)
         setGroups(g)
-    }, [deletedWinners, setDeletedWinners, setGroups])
+    }, [originalWinners, deletedWinners, setDeletedWinners, setGroups])
 
     return {
         general: {
@@ -267,6 +316,7 @@ export const useEventEdit = () => {
                 founderId: event.founderId,
                 prizes,
                 teams: teams,
+                addWinners: addWinners,
                 deletedWinners: deletedWinners,
                 deletedPrizes: deletedPrizes
             })

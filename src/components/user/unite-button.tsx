@@ -3,8 +3,7 @@ import {PrimaryButton, SecondaryButton} from '../common/buttons'
 import {useAppState} from '../tools/use-app-state'
 import {
     acceptInvite,
-    declineInvite,
-    invitePerson
+    invitePerson, unInvite
 } from '../../model/api'
 import {useSnackbar} from 'notistack'
 import {Link} from 'react-router-dom'
@@ -12,12 +11,13 @@ import {ButtonGroup, makeStyles, Tooltip} from '@material-ui/core'
 import {ReactComponent as CancelIcon} from '../../assets/cancel.svg'
 import {usePromptModal} from '../modals/prompt'
 import {useHistory} from 'react-router-dom'
+import {useNotificationHandlers} from '../tools/notification-handlers'
 
 const useUnite = () => {
     const {cEvent, user, cUser} = useAppState()
     const [actionId, setActionId] = useState<string | null>(null)
 
-
+    const nc = useNotificationHandlers()
     const {enqueueSnackbar} = useSnackbar()
 
 
@@ -36,6 +36,7 @@ const useUnite = () => {
         invitePerson(cEvent.id, cUser.id, user.id).then((wasInvited?: boolean) => {
             if (wasInvited) {
                 user.change({isInvited: true})
+                nc.update()
             } else {
                 enqueueSnackbar('Не удалось предложить объединиться', {
                     variant: 'error',
@@ -63,12 +64,16 @@ export const UniteButton: React.FC = () => {
 
     const classes = useStyles()
     const {onClick, isFetching} = useUnite()
-    const {cUser, cEvent, user, invites} = useAppState()
+    const {cUser, cEvent, user, invites, settings} = useAppState()
     const history = useHistory()
     const {enqueueSnackbar} = useSnackbar()
     const pModal = usePromptModal()
 
-    if (user.isNullUser || !user.team) {
+    if (cEvent.isNullEvent || cEvent.notFound) {
+        return null
+    }
+
+    if (user.isNullUser || !user.team || user.isLoading) {
         return <PrimaryButton disabled/>
     }
 
@@ -92,7 +97,7 @@ export const UniteButton: React.FC = () => {
             accept: 'Да',
             decline: 'Оставить заявку',
             onSubmit: async () => {
-                const didDecline = await declineInvite(cEvent.id, cUser.id, user.id)
+                const didDecline = await unInvite(cEvent.id, cUser.id, user.id)
                 if (didDecline) {
                     invites.i.set({
                         team: invites.i.team
@@ -131,7 +136,23 @@ export const UniteButton: React.FC = () => {
         }
     }
 
-    if (user.id === cUser.id || inMyTeam) {
+    if(!cEvent.isParticipating) {
+        return <Link to={`/event/${cEvent.id}`} style={{textDecoration: 'none'}}>
+            <SecondaryButton style={{width: '100%'}}>
+                К регистрации
+            </SecondaryButton>
+        </Link>
+    }
+
+    if(settings.isHostMode) {
+        return <PrimaryButton style={{width: '100%'}} onClick={() => {
+            settings.setIsHostMode(false)
+        }}>
+            Режим участника
+        </PrimaryButton>
+    }
+
+    if ((user.id === cUser.id || inMyTeam)) {
         return <Link to='/team' style={{textDecoration: 'none'}}>
             <SecondaryButton style={{width: '100%'}}>
                 Управление командой
@@ -156,6 +177,6 @@ export const UniteButton: React.FC = () => {
     }
 
     return <PrimaryButton onClick={onClick}>
-        {user.team ? 'Присоединиться' : 'Объединиться'}
+        {user.team.members.length > 0 ? 'Присоединиться' : 'Объединиться'}
     </PrimaryButton>
 }

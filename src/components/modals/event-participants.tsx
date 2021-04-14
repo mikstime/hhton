@@ -5,14 +5,15 @@ import {
     ModalProps
 } from '../common'
 import {
-    CircularProgress,
-    Grid,
-    Omit,
+    Chip,
+    CircularProgress, createStyles,
+    Grid, makeStyles,
+    Omit, Theme,
     Typography
 } from '@material-ui/core'
 import {PrimaryButton} from '../common/buttons'
-import {Team} from '../tools/use-app-state/user'
-import {getEventTeams} from '../../model/api'
+import {Team, User} from '../tools/use-app-state/user'
+import {getEventTeams, getEventUsers} from '../../model/api'
 import {useAppState} from '../tools/use-app-state'
 import {TeamItem} from '../user/team-description'
 
@@ -43,7 +44,7 @@ const EventParticipantsModalContext = React.createContext()
 const TeamSection: React.FC<{ team: Team, onClick?: MouseEventHandler }> = ({team, onClick}) => {
     const members = team.members?.map((m, i) => <TeamItem key={i}
                                                           onClick={onClick}
-                                                          user={m}/>) ?? 'Нет участников'
+                                                          user={m}/>) ?? 'Нет членов команды'
     return <Grid item container direction='column'>
         <Grid item>
             <Typography variant='body1'>{team.name}</Typography>
@@ -51,11 +52,79 @@ const TeamSection: React.FC<{ team: Team, onClick?: MouseEventHandler }> = ({tea
         {members}
     </Grid>
 }
+
+const UsersSection: React.FC<{ users: User[], onClick?: MouseEventHandler }> = ({users, onClick}) => {
+    const members = users.map((m, i) => <TeamItem key={i}
+                                                  onClick={onClick}
+                                                  user={m}/>) ?? null
+    return <Grid item container direction='column'>
+        {members}
+    </Grid>
+}
+
+const useChipStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            display: 'flex',
+            minHeight: 48,
+            marginLeft: 16,
+            flexWrap: 'wrap',
+            '& > *': {
+                margin: theme.spacing(1),
+                borderRadius: 8,
+                background: 'white',
+                boxShadow: theme.shadows[4],
+                color: theme.palette.primary.main,
+                cursor: 'pointer',
+                '&:hover': {
+                    background: 'white'
+                },
+                '&:active': {
+                    background: '#F7F8FA',
+                    boxShadow: 'none'
+                },
+                '&:focus': {
+                    background: 'white'
+                }
+            }
+        },
+        selected: {
+            background: '#F7F8FA',
+            boxShadow: 'none',
+            '&:hover': {
+                background: '#F7F8FA',
+                boxShadow: 'none'
+            },
+            '&:focus': {
+                background: '#F7F8FA',
+                boxShadow: 'none'
+            },
+            '&:active': {
+                background: '#F7F8FA',
+                boxShadow: 'none'
+            }
+        },
+        notSelected: {
+            opacity: 0.3,
+            '&:hover': {
+                background: 'white'
+            },
+            '&:active': {
+                background: '#F7F8FA'
+            }
+        }
+    })
+)
+
 export const EventParticipantsModal: React.FC<MProps> = ({children, ...props}) => {
 
     const [teams, setTeams] = useState<Team[]>([])
+    const [users, setUsers] = useState<User[]>([])
     const [isLoading, setIsLoading] = useState(false)
     const {cEvent} = useAppState()
+    const classes = useChipStyles()
+    const [showTeams, setShowTeams] = useState(false)
+
     useEffect(() => {
         (async () => {
             if (cEvent.id !== '-1') {
@@ -66,29 +135,72 @@ export const EventParticipantsModal: React.FC<MProps> = ({children, ...props}) =
                 setTeams(t)
             }
         })()
-    }, [cEvent.id])
+    }, [cEvent.id, cEvent.isParticipating])
+
+    useEffect(() => {
+        (async () => {
+            if (cEvent.id !== '-1') {
+                setUsers([])
+                setIsLoading(true)
+                const u = await getEventUsers(cEvent.id)
+                setIsLoading(false)
+                setUsers(u)
+            }
+        })()
+    }, [cEvent.id, cEvent.isParticipating])
+
     let r
     if (isLoading) {
         r = <Grid item container justify='center'>
             <CircularProgress color='primary' size='3rem'/></Grid>
-    } else if (teams.length > 0) {
-        r = teams.map((t, i) => <TeamSection onClick={props.close} team={t}
-                                             key={i}/>)
+    } else if (showTeams) {
+        if (teams.length > 0) {
+            r = teams.map((t, i) => <TeamSection onClick={props.close} team={t}
+                                                 key={i}/>)
+        } else {
+            r = <Grid item container justify='center'>
+                <AdditionalText>
+                    Команды отсутствуют
+                </AdditionalText>
+            </Grid>
+        }
     } else {
-        r = <Grid item container justify='center'>
-            <AdditionalText>
-                Участники отсутствуют
-            </AdditionalText>
-        </Grid>
+        if (users.length > 0) {
+            r = <UsersSection onClick={props.close} users={users}/>
+        } else {
+            r = <Grid item container justify='center'>
+                <AdditionalText>
+                    Участники отсутствуют
+                </AdditionalText>
+            </Grid>
+        }
     }
 
     return <Modal
         onClose={props.close}{...props}>
         <Grid container direction='column' spacing={4}>
-            <Grid item>
-                <Typography variant='h2' style={{fontSize: 22}}>
-                    Список участников
-                </Typography>
+            <Grid item container wrap='nowrap' alignItems='center'>
+                <Grid item>
+                    <Typography variant='h2' style={{fontSize: 22}}>
+                        Список
+                    </Typography>
+                </Grid>
+                <Grid item xs className={classes.root}>
+                    <Chip
+                        onClick={() => {
+                            setShowTeams(false)
+                        }}
+                        className={showTeams ? '' : classes.selected}
+                        label='участников'
+                    />
+                    <Chip
+                        onClick={() => {
+                            setShowTeams(true)
+                        }}
+                        className={showTeams ? classes.selected : ''}
+                        label='команд'
+                    />
+                </Grid>
             </Grid>
             <Grid item container direction='column' spacing={3}>
                 {r}

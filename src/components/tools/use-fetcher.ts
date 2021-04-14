@@ -22,22 +22,30 @@ export const useFetcher = () => {
 
     const appState = useAppState()
 
+    // useEffect(() => {
+    //     isFetchingUserId.current = '-1'
+    //     isFetchingCuserId.current = '-1'
+    // }, [nc.updates])
+
     useEffect(() => {
         (async () => {
             if (appState.user.id !== isFetchingUserId.current && appState.user.id !== '-1') {
                 isFetchingUserId.current = appState.user.id
-                appState.user.set(NULL_USER)
+                appState.user.set({...NULL_USER, isLoading: true})
 
                 const user = await fetchUser(appState.user.id)
 
                 if (user) {
                     if (isFetchingUserId.current === appState.user.id) {
-                        appState.user.set(user)
+                        appState.user.set({...user, isLoading: true})
                         const team = appState.cEvent.id !== '-1' ?
                             await getTeam(appState.cEvent.id, user.id) : user.team
 
                         if (isFetchingUserId.current === appState.user.id) {
-                            appState.user.change({team})
+                            appState.user.change({
+                                team, isLoading: false,
+                                isTeamLead: team.teamLead?.id === user.id
+                            })
                         }
                     }
                 } else {
@@ -72,19 +80,13 @@ export const useFetcher = () => {
         (async () => {
             if (appState.cUser.id !== isFetchingCuserId.current && appState.cUser.id !== '-1') {
                 isFetchingCuserId.current = appState.cUser.id
-                appState.cUser.set(NULL_USER)
+                appState.cUser.set({...NULL_USER, isLoading: true})
 
                 const user = await fetchUser(appState.cUser.id)
 
                 if (user) {
                     if (isFetchingCuserId.current === appState.cUser.id) {
-                        appState.cUser.set(user)
-                        const team = appState.cEvent.id !== '-1' ?
-                            await getTeam(appState.cEvent.id, user.id) : user.team
-
-                        if (isFetchingCuserId.current === appState.cUser.id) {
-                            appState.cUser.change({team})
-                        }
+                        appState.cUser.set({...user, isLoading: false})
                     }
                 } else {
                     if (isFetchingCuserId.current === appState.cUser.id) {
@@ -102,13 +104,14 @@ export const useFetcher = () => {
 
     useEffect(() => {
         (async () => {
-            if (appState.user.id !== '-1' && appState.cUser.id !== '-1' && appState.cEvent.id !== '-1') {
+            if (appState.user.id !== '-1' && appState.cUser.id !== '-1' && appState.cEvent.id !== '-1' && !appState.user.isNullUser) {
+                appState.user.change({isLoading: true})
                 const invited = await isInvited(appState.cEvent.id, appState.cUser.id, appState.user.id)
-                appState.user.change({isInvited: !!invited})
+                appState.user.change({isInvited: !!invited, isLoading: false})
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [appState.cUser.id, appState.user.id, appState.cEvent.id, nc.updates])
+    }, [appState.cUser.id, appState.user.id, appState.cEvent.id, nc.updates, appState.user.isNullUser])
 
     useEffect(() => {
         (async () => {
@@ -166,54 +169,5 @@ export const useFetcher = () => {
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [appState.cEvent.id, nc.updates])
 
-    useEffect(() => {
-        const u = appState.cUser
-        if (u.id !== '-1') {
-            const i = appState.invites.i
-            const personal = []
-            const team = []
-            const uTeam = []
-            for (let p of i.personal) {
-                if (p.id === u.id) {
-                    personal.push(u)
-                } else {
-                    personal.push(p)
-                }
-            }
-
-            for (let t of i.team) {
-                if (t.id === u.id) {
-                    team.push(u)
-                } else {
-                    team.push(t)
-                }
-            }
-
-            for (let t of u.team.members) {
-                if (t.id === u.id) {
-                    uTeam.push(u)
-                } else {
-                    uTeam.push(t)
-                }
-            }
-
-            i.set({team, personal})
-            u.change({
-                team: {
-                    name: u.team.name,
-                    members: uTeam
-                }
-            })
-            if (u.id === appState.cUser.id) {
-                appState.cUser.set({
-                    ...u, team: {
-                        name: u.team.name,
-                        members: uTeam
-                    }
-                })
-            }
-        }
-    }, [appState.user.firstName, appState.user.lastName, appState.user.bio,
-        appState.user.avatar, appState.user.skills])
     return null
 }

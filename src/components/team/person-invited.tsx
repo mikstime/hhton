@@ -1,27 +1,27 @@
 import React, {useCallback, useState} from 'react'
 import {User} from '../tools/use-app-state/user'
-import {Box, Chip, Grid} from '@material-ui/core'
+import {Box, Chip, Grid, Tooltip} from '@material-ui/core'
 import {AvatarPlate} from '../common'
-import {PrimaryButton} from '../common/buttons'
 import {InviteButton} from '../event/invite-button'
 import {NameTypography} from '../common/typography'
 import {TeamDescription} from '../user/team-description'
-import {acceptInvite, declineInvite} from '../../model/api'
+import {unInvite} from '../../model/api'
 import {useAppState} from '../tools/use-app-state'
 import {useSnackbar} from 'notistack'
 import {useChipStyles} from './team-member'
 import {SocialLink} from '../app/user'
+import {useNotificationHandlers} from '../tools/notification-handlers'
 
 const useInviteActions = (user: User) => {
     const [isFetching, setIsFetching] = useState(false)
     const [fading, setFading] = useState(true)
     const {cEvent, cUser, invites} = useAppState()
-
+    const nc = useNotificationHandlers()
     const {enqueueSnackbar} = useSnackbar()
 
     const decline = useCallback(async () => {
         setIsFetching(true)
-        const didDecline = await declineInvite(cEvent.id, cUser.id, user.id)
+        const didDecline = await unInvite(cEvent.id, cUser.id, user.id)
         if (didDecline) {
             setIsFetching(false)
             setFading(false)
@@ -35,7 +35,8 @@ const useInviteActions = (user: User) => {
                 variant: 'error'
             })
         }
-    }, [cUser.id, cEvent.id, user.id, invites, enqueueSnackbar])
+        nc.update()
+    }, [cUser.id, cEvent.id, user.id, invites, enqueueSnackbar, nc.update])
     return {
         isFetching,
         fading,
@@ -56,6 +57,8 @@ const Skills: React.FC<{ user: User }> = ({user}) => {
 export const PersonInvited: React.FC<{ user: User }> = ({user}) => {
 
     const {isFetching, decline} = useInviteActions(user)
+    const {cUser} = useAppState()
+    const canAccept = cUser.team.members.length <= 1 || cUser.isTeamLead
 
     return <Grid item container spacing={2}
                  style={{overflow: 'visible'}}>
@@ -67,12 +70,19 @@ export const PersonInvited: React.FC<{ user: User }> = ({user}) => {
                                      <Grid container item xs={12} sm={6} md={7}>
                                      </Grid>
                                      <Box clone paddingLeft={2}>
-                                         <Grid container item xs={12} sm={6} md={5}
+                                         <Grid container item xs={12} sm={6}
+                                               md={5}
                                                justify='center'>
-                                             <InviteButton onClick={decline}
-                                                           disabled={isFetching}>
-                                                 Отменить
-                                             </InviteButton>
+                                             <Tooltip
+                                                 title={canAccept ? '' : 'Данное действие доступно лидеру команды'}>
+                                                 <div>
+                                                     <InviteButton
+                                                         onClick={decline}
+                                                         disabled={isFetching || !canAccept}>
+                                                         Отменить
+                                                     </InviteButton>
+                                                 </div>
+                                             </Tooltip>
                                          </Grid>
                                      </Box>
                                  </Grid>
@@ -80,7 +90,8 @@ export const PersonInvited: React.FC<{ user: User }> = ({user}) => {
                          avatarProps={{wrap: 'nowrap', xs: 12, sm: 6, md: 7}}>
                 <Grid xs sm={6} md={5} item container
                       direction='column'>
-                    <Box paddingLeft={{xs: 0, sm: 2}} marginTop={{xs: 1, md: 0}}>
+                    <Box paddingLeft={{xs: 0, sm: 2}}
+                         marginTop={{xs: 1, md: 0}}>
                         <Grid item container>
                             <NameTypography user={user}/>
                         </Grid>
@@ -95,8 +106,10 @@ export const PersonInvited: React.FC<{ user: User }> = ({user}) => {
             <Grid item>
                 <Skills user={user}/>
             </Grid>
-            <Grid item container style={{marginTop: 24, marginBottom: 24}} wrap='nowrap'>
-                <Grid item container direction='column' justify='center' spacing={2}>
+            <Grid item container style={{marginTop: 24, marginBottom: 24}}
+                  wrap='nowrap'>
+                <Grid item container direction='column' justify='center'
+                      spacing={2}>
                     <SocialLink prefix='ВКонтакте: ' site='vk.com/'
                                 value={user.settings.vk}/>
                     <SocialLink prefix='Телеграм: ' site='t.me/'

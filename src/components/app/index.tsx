@@ -14,22 +14,21 @@ import {
 } from '@material-ui/core'
 import styled from 'styled-components'
 import {useNotifications} from '../tools/use-notifications'
-import {HostApp} from './host'
 import {CreateEventApp} from './create-event'
 import {AppNavigation} from '../navigation'
+import {NotificationSection} from '../common/notifications-section'
 
 
 const StyledContainer = styled(Container)`
   min-height: 100vh;
-  padding-top: 64px;
+  //padding-top: 64px;
   box-sizing: border-box;
 `
-const RootContainer: React.FC<ContainerProps> = (props) => {
-    return <Fragment>
-        <Box clone>
-            <StyledContainer maxWidth='md' {...props}/>
-        </Box>
-    </Fragment>
+const RootContainer: React.FC<ContainerProps> = ({children, ...props}) => {
+    return <StyledContainer maxWidth='md' {...props}>
+        <NotificationSection/>
+        {children}
+    </StyledContainer>
 }
 
 export const App: React.FC = () => {
@@ -89,11 +88,12 @@ export const App: React.FC = () => {
                 </RootContainer>
             </AppNavigation>
         </Route>
-        <Route path='/host'>
-            <HostApp/>
-        </Route>
         <Route>
-            <HomeApp/>
+            <AppNavigation>
+                <RootContainer>
+                    <HomeApp/>
+                </RootContainer>
+            </AppNavigation>
         </Route>
     </Switch>
 }

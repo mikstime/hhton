@@ -35,11 +35,26 @@ const TO_SHOW = 40
 export const TeamDescription: React.FC<{ noName?: boolean, user: User }> = ({user, noName}) => {
 
     const theme = useTheme()
-    const {cUser} = useAppState()
+    const {cUser, cEvent, settings} = useAppState()
 
     const filtered = user.team.members.filter(u => u.id !== user.id)
     const usersToShow = filtered.slice(0, TO_SHOW)
     const more = filtered.length - TO_SHOW > 0 ? filtered.length - TO_SHOW : 0
+
+    if(cEvent.id === '-1' || cEvent.notFound || cEvent.isFinished || settings.isHostMode || user.isLoading) {
+        return null
+    }
+
+    if(cUser.id === user.id && !cEvent.isParticipating) {
+        return <Grid item container direction='column'>
+            <AdditionalText style={{marginTop: 12}} align='center'>
+                Вы не участвуете в мероприятии <Link
+                style={{textDecoration: 'none'}}
+                to={`/event/${cEvent.id}`}>{cEvent.name}</Link>
+            </AdditionalText>
+        </Grid>
+    }
+
     if (!user.isNullUser && user.team) {
         if (user.team.members && user.team.members.length > 1) {
             return <Grid item container direction='column'>
@@ -49,8 +64,8 @@ export const TeamDescription: React.FC<{ noName?: boolean, user: User }> = ({use
                 }}>
                     В команде с
                 </MainText>
-                {usersToShow.map(u =>
-                    <TeamItem key={u.id} user={u}/>)}
+                {usersToShow.map((u, i) =>
+                    <TeamItem key={i} user={u}/>)}
                 {more > 0 &&             <AdditionalText style={{marginTop: 16}}>
                     ещё {more}
                 </AdditionalText>}

@@ -9,7 +9,7 @@ import {
 } from '../common'
 import {
     Avatar, Button, Chip,
-    Grid,
+    Grid, IconButton,
     InputBase,
     Omit,
     Slide,
@@ -125,10 +125,10 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
     }, [selectedJob, jobs])
 
     const showFeed = useCallback(() => {
-        const fjob = jobs[selectedJob]?.name || ''
-        const fskills = skills.filter((s, i) => selectedSkills[i]).map(s => s.name)
+        const fjob = encodeURIComponent(jobs[selectedJob]?.name || '')
+        const fskills = skills.filter((s, i) => selectedSkills[i]).map(s => encodeURIComponent(s.name))
         if (fskills.length) {
-            history.push(`/feed?job=${fjob}&skill=${fskills.join('&skill=')}`)
+            history.push(`/feed?job=${fjob}&skills=${fskills.join('&skills=')}`)
         } else if (fjob) {
             history.push(`/feed?job=${fjob}`)
         } else {
@@ -297,12 +297,12 @@ const SearchUser: React.FC<UseSearchModalType & MProps> = ({...props}) => {
                               <Typography variant='body1'>
                                 team-up.online/event/{cEvent.id}</Typography>
                               <FlexSpace/>
-                              <Button onClick={() => {
+                              <IconButton size='small' onClick={() => {
                                   const str = `https://team-up.online/event/${cEvent.id}`
                                   copyTextToClipboard(str)
                               }}>
                                 <CopyIcon/>
-                              </Button>
+                              </IconButton>
                             </Grid>
                           </GrayPlate>
                         </Grid>

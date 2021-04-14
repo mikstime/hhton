@@ -11,9 +11,9 @@ export const EventAbout: React.FC = () => {
 
     const {event} = useAppState()
     const {open} = useEventParticipantsModal()
-    if (!event.settings.start && !event.settings.finish && !event.settings.teamSize) {
-        return null
-    }
+    // if (!event.settings.start && !event.settings.finish && !event.settings.teamSize) {
+    //     return null
+    // }
     return <GrayishPlate padding={16} style={{marginTop: 16}}>
         <Box clone flexDirection={{xs: 'column', md: 'row'}}>
             <Grid container spacing={2}>

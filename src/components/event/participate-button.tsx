@@ -11,7 +11,7 @@ import {useEventEditModal} from '../modals/event-edit'
 import {HOST_DOMAIN, PREFIX} from '../../config/network'
 
 const useParticipate = () => {
-    const {event, cUser} = useAppState()
+    const {event, cEvent, cUser} = useAppState()
 
     const [actionId, setActionId] = useState<string | null>(null)
 
@@ -34,6 +34,7 @@ const useParticipate = () => {
         joinEvent(cUser.id, event.id).then((didJoin?: boolean) => {
             if (didJoin) {
                 event.change({isParticipating: true})
+                cEvent.change({isParticipating: true})
                 enqueueSnackbar(`Вы участвуете в мероприятии ${event.name}`, {
                     variant: 'success'
                 })
@@ -57,6 +58,7 @@ const useParticipate = () => {
                 const didLeave = await leaveEvent(cUser.id, event.id)
                 if (didLeave) {
                     event.change({isParticipating: false})
+                    cEvent.change({isParticipating: false})
                     pModal.close()
                     enqueueSnackbar(`Вы более не участвуете в мероприятии ${event.name}`)
 
@@ -76,15 +78,23 @@ const useParticipate = () => {
     }, [])
 
     const onFinishClick = useCallback(async () => {
-        const didFinish = await finishEvent(event.id)
-        if (didFinish) {
-            event.change({isFinished: true})
-            enqueueSnackbar('Мероприятие завершено', {variant: 'success'})
-        } else {
-            enqueueSnackbar('Не удалось завершить меропритяие', {
-                variant: 'error'
-            })
-        }
+        pModal.open({
+            message: 'Завершить мероприятие?',
+            accept: 'Завершить',
+            decline: 'Отмена',
+            onSubmit: async () => {
+                const didFinish = await finishEvent(event.id)
+                if (didFinish) {
+                    event.change({isFinished: true})
+                    enqueueSnackbar('Мероприятие завершено', {variant: 'success'})
+                } else {
+                    enqueueSnackbar('Не удалось завершить меропритяие', {
+                        variant: 'error'
+                    })
+                }
+                pModal.close()
+            }
+        })
     }, [event.id])
 
     return {
@@ -102,7 +112,7 @@ const useStyles = makeStyles({
     }
 })
 export const ParticipateButton: React.FC = () => {
-    const {event, cUser} = useAppState()
+    const {event, cUser, settings} = useAppState()
     const {isFetching, onClick, onLeaveClick, onFinishClick, onSetWinnersClick} = useParticipate()
     const classes = useStyles()
 
@@ -115,13 +125,21 @@ export const ParticipateButton: React.FC = () => {
         </SecondaryButton>
     }
 
-    if (event.founderId === cUser.id && !event.isFinished) {
+    if (event.founderId === cUser.id && !event.isFinished && settings.isHostMode) {
         return <PrimaryButton onClick={onFinishClick}>
             Завершить мероприятие
         </PrimaryButton>
     }
 
-    if (event.founderId === cUser.id && event.isFinished) {
+    if (event.founderId !== cUser.id && !event.isFinished && settings.isHostMode) {
+        return <PrimaryButton onClick={() => {
+            settings.setIsHostMode(false)
+        }}>
+            Режим участника
+        </PrimaryButton>
+    }
+
+    if (event.founderId === cUser.id && event.isFinished && settings.isHostMode) {
         return <PrimaryButton onClick={onSetWinnersClick}>
             Выбрать победителей
         </PrimaryButton>

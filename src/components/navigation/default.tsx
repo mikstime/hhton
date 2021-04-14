@@ -1,56 +1,74 @@
-import React, {Fragment, useState} from 'react'
-import {EventLink, MenuBase, MenuProps, NavLink} from './common'
+import React, {Fragment} from 'react'
+import {
+    EventLink,
+    HostModeToggler,
+    MenuBase,
+    MenuProps,
+    NavLink
+} from './common'
 import {useAppState} from '../tools/use-app-state'
-import {AdditionalText} from '../common'
-import {Box, Button} from '@material-ui/core'
-
+import {Badge, Box, Fade} from '@material-ui/core'
+import {ReactComponent as SearchIcon} from '../../assets/navigation/search.svg'
+import {ReactComponent as TeamIcon} from '../../assets/navigation/team.svg'
+import {ReactComponent as UserIcon} from '../../assets/navigation/user.svg'
+import {ReactComponent as CreateTeamIcon} from '../../assets/navigation/create_team.svg'
 
 export const DefaultMenu: React.FC<MenuProps> = ({onClick}) => {
-    const {cEvent} = useAppState()
-    const [isHost, setIsHost] = useState(false)
+    const {cEvent, settings, invites} = useAppState()
 
     const isActive = cEvent.isParticipating && !cEvent.isFinished
 
     let toRender
 
-    if (isHost) {
+    const teamIcon = (invites.i.team.length > 0
+        || invites.i.personal.length > 0 ) ?
+        <Badge variant='dot' color='primary'><TeamIcon/></Badge>
+        : <TeamIcon/>
+
+    if (settings.isHostMode) {
         toRender = <Fragment>
-            <NavLink to={`/event/create`} onClick={onClick}>
-                Создать мероприятие
-            </NavLink>
+            <Fade in>
+                <NavLink to={`/event/create`}
+                         icon={<CreateTeamIcon/>}
+                         onClick={onClick}>
+                    Новое мероприятие
+                </NavLink>
+            </Fade>
         </Fragment>
     } else {
         toRender = <Fragment>
             {isActive &&
-            <NavLink to={`/team`} onClick={onClick}>
-              Команда
-            </NavLink>
+            <Fade in>
+              <NavLink to={`/feed`}
+                       icon={<SearchIcon/>}
+                       onClick={onClick}>
+                Поиск участников
+              </NavLink>
+            </Fade>
             }
-            <NavLink to={`/user`} onClick={onClick}>
-                Моя анкета
-            </NavLink>
             {isActive &&
-            <NavLink to={`/feed`}
-                     onClick={onClick}>
-              Поиск участников
-            </NavLink>
+            <Fade in>
+              <NavLink to={`/team`}
+                       icon={teamIcon}
+                       onClick={onClick}>
+                Команда
+              </NavLink>
+            </Fade>
             }
+            <Fade in>
+                <NavLink to={`/user`}
+                         icon={<UserIcon/>}
+                         onClick={onClick}
+                >
+                    Моя анкета
+                </NavLink>
+            </Fade>
         </Fragment>
     }
-    return <MenuBase>
+    return <MenuBase onClick={onClick}>
         <EventLink onClick={onClick}/>
         {toRender}
-        {/*<Box clone position='absolute' bottom='24px' left='16px' right='16px'>*/}
         <Box height='100%'/>
-        <Button style={{
-            textTransform: 'none'
-        }} onClick={() => {
-            setIsHost(!isHost)
-        }}>
-            <AdditionalText color={isHost ? 'primary' : 'initial'}>
-                Режим организатора
-            </AdditionalText>
-        </Button>
-        {/*</Box>*/}
+        <HostModeToggler/>
     </MenuBase>
 }

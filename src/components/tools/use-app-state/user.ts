@@ -35,6 +35,9 @@ export type User = {
     notFound?: boolean,
     settings: UserSettings,
     isNotAuthorized?: boolean,
+    inHostMode?: boolean,
+    isTeamLead?: boolean,
+    isLoading?: boolean,
 }
 
 export type UserSettings = {
@@ -48,6 +51,7 @@ export type Prize = {
     name: string,
     id?: Id,
     count: string,
+    total: string,
     winners?: Team[]
 }
 
@@ -55,7 +59,12 @@ export type Team = {
     members: User[],
     name: string,
     id?: Id,
-    prizes?: Prize[]
+    prizes?: Prize[],
+    votes?: {
+        [userId: string]: number
+    },
+    myVote?: Id,
+    teamLead?: User,
 }
 
 
@@ -74,6 +83,9 @@ export type UserOptional = {
     isNullUser?: boolean
     settings?: UserSettings,
     isNotAuthorized?: boolean,
+    inHostMode?: boolean,
+    isTeamLead?: boolean,
+    isLoading?: boolean,
 }
 
 
