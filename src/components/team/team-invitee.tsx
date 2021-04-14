@@ -6,9 +6,10 @@ import {AvatarPlate} from '../common'
 import {NameTypography} from '../common/typography'
 import {ReactComponent as ThumbsUpIcon} from '../../assets/thumbs_up.svg'
 import {ReactComponent as ThumbsDownIcon} from '../../assets/thumbs_down.svg'
+import {ReactComponent as BlockIcon} from '../../assets/team/block.svg'
 import {useAppState} from '../tools/use-app-state'
 import {useSnackbar} from 'notistack'
-import {acceptInvite, declineInvite} from '../../model/api'
+import {acceptInvite, banInvite, declineInvite} from '../../model/api'
 import {useChipStyles} from './team-member'
 import {SocialLink} from '../app/user'
 import {useNotificationHandlers} from '../tools/notification-handlers'
@@ -20,6 +21,24 @@ const useInviteActions = (user: User) => {
     const {cEvent, cUser, invites} = useAppState()
     const nc = useNotificationHandlers()
     const {enqueueSnackbar} = useSnackbar()
+
+    const block = useCallback(async () => {
+        setIsFetching(true)
+        const didAccept = await banInvite(cEvent.id, cUser.id, user.id)
+        if (didAccept) {
+            setIsFetching(false)
+            setFading(false)
+            enqueueSnackbar(`Заявка заблокирована`, {
+                variant: 'error'
+            })
+        } else {
+            setIsFetching(false)
+            enqueueSnackbar(`Не удалось заблокировать заявку`, {
+                variant: 'error'
+            })
+        }
+        nc.update()
+    }, [cUser.id, cEvent.id, user.id, invites, enqueueSnackbar, nc.update])
 
     const submit = useCallback(async () => {
         setIsFetching(true)
@@ -64,7 +83,8 @@ const useInviteActions = (user: User) => {
         isFetching,
         fading,
         submit,
-        decline
+        decline,
+        block
     }
 }
 
@@ -80,7 +100,7 @@ const Skills: React.FC<{ user: User }> = ({user}) => {
 
 export const TeamInvitee: React.FC<{ user: User }> = ({user}) => {
     const {cUser} = useAppState()
-    const {isFetching, submit, decline} = useInviteActions(user)
+    const {isFetching, submit, decline, block} = useInviteActions(user)
 
     const canAccept = cUser.team.members.length <= 1 || cUser.isTeamLead
     return <Grid item container spacing={2}>
@@ -121,6 +141,18 @@ export const TeamInvitee: React.FC<{ user: User }> = ({user}) => {
             <Grid item xs={3} sm={2} md={2} container spacing={2}
                   direction='column'
                   justify='center' alignItems='center'>
+                <Grid item xs container justify='center'>
+                    <Tooltip
+                        title={canAccept ? '' : 'Данное действие доступно лидеру команды'}>
+                        <div>
+                            <IconButton size='small'
+                                        disabled={isFetching || !canAccept}
+                                        onClick={block}>
+                                <BlockIcon/>
+                            </IconButton>
+                        </div>
+                    </Tooltip>
+                </Grid>
                 <Grid item>
                     <Tooltip
                         title={canAccept ? '' : 'Данное действие доступно лидеру команды'}>
@@ -149,6 +181,7 @@ export const TeamInvitee: React.FC<{ user: User }> = ({user}) => {
                         </div>
                     </Tooltip>
                 </Grid>
+                <Grid item xs/>
             </Grid>
         </Box>
     </Grid>
