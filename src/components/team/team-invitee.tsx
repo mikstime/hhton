@@ -100,6 +100,7 @@ const Skills: React.FC<{ user: User }> = ({user}) => {
 
 export const TeamInvitee: React.FC<{ user: User }> = ({user}) => {
     const {cUser} = useAppState()
+
     const {isFetching, submit, decline, block} = useInviteActions(user)
 
     const canAccept = cUser.team.members.length <= 1 || cUser.isTeamLead
