@@ -223,7 +223,6 @@ export const useEventEdit = () => {
                 newAddWinners[d.wID] = addedWinnersArray
             }
         }
-
         // console.log('newAddWinners: ', newAddWinners)
         // console.log('newDeletedWinners: ', newDeletedWinners)
         setAddWinners(newAddWinners)
