@@ -186,9 +186,9 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
             user.hackathons.length > 0 &&
             <Grid item container direction='column'> <Grid item>
               <Title>
-                Победы в хакатонах
+                Победы в хакатонах&nbsp;
                 <span
-                  style={{color: '#818C99'}}>{cUser.hackathons.length}</span>
+                  style={{color: '#818C99'}}>{user.hackathons.length}</span>
               </Title>
             </Grid>
               <Grid item>
