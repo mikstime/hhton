@@ -48,10 +48,10 @@ export const Modal: React.FC<ModalProps> = ({children, canGoBack, cantClose, gri
                     <Hidden xsDown>
                         <Grid item xs/>
                     </Hidden>
-                    <Box clone paddingTop='100px'>
+                    <Box clone paddingTop={{sm: '100px'}} order={{xs: 2, sm: 1}}>
                         <Grid style={{
                             position: 'sticky',
-                            height: 52, width: 52, top: 0
+                            height: 52, width: 52, top: 0,
                         }} item>
                             {canGoBack &&
                             <IconButton onClick={back}>
@@ -60,14 +60,21 @@ export const Modal: React.FC<ModalProps> = ({children, canGoBack, cantClose, gri
                             }
                         </Grid>
                     </Box>
-                    <Grid item xs={12} sm={9} md={7} lg={6}>
-                        <Box height={{xs: 0, sm: 100}}/>
-                        <Plate elevation={4} padding={32}>
-                            {children}
-                        </Plate>
-                        <Box height={{xs: 0, sm: 100}}/>
-                    </Grid>
-                    <Box clone paddingBottom={{xs: '100px', sm: '0'}} paddingTop={{xs: '0', sm: '100px'}}>
+                    <Box clone order={{xs: 3, sm: 2}} paddingBottom={'100px'}>
+                        <Grid item xs={12} sm={9} md={7} lg={6} container
+                              direction='column'
+                              style={{zIndex: 3}}>
+                            <Box height={{xs: 0, sm: 100}}/>
+                            <Plate elevation={4} padding={32}>
+                                {children}
+                            </Plate>
+                            <Box height={{xs: 0, sm: 100}}/>
+                        </Grid>
+                    </Box>
+                    <Box clone paddingBottom={{xs: '0', sm: '0'}}
+                         paddingTop={{xs: '0', sm: '100px'}}
+                         order={{xs: 1, sm: 3}}
+                    >
                         <Grid style={{
                             height: 52, position: 'sticky',
                             width: 52, top: 0
