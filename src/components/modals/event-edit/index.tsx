@@ -17,8 +17,13 @@ import {EventPrizes} from './prizes'
 import {Additional} from './additional'
 import {Prize, Team} from '../../tools/use-app-state/user'
 import {Group, teamsToGroups} from './select-team-popover'
-import {getEventTeams, getWinners, modifyEvent} from '../../../model/api'
-import {useAppState} from '../../tools/use-app-state'
+import {
+    fetchEvent,
+    getEventTeams,
+    getWinners,
+    modifyEvent
+} from '../../../model/api'
+import {NULL_HACKATHON, useAppState} from '../../tools/use-app-state'
 import {
     HackathonOptional,
     HackathonSettings
@@ -330,10 +335,6 @@ export const useEventEdit = () => {
                 deletedPrizes: deletedPrizes
             })
             setDisabled(false)
-            event.change({
-                ...diff,
-                prizes
-            })//@TODO winners
             // const update = await modifyUser(diff as UserOptional & { id: string })
             // setDisabled(false)
             // user.change(diff)
@@ -355,7 +356,7 @@ const EventEditModalContext = React.createContext()
 
 export const EventEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({children, onSubmitClick, ...props}) => {
     const [disabled, setDisabled] = useState(false)
-
+    const {event, cEvent} = useAppState()
     const {enqueueSnackbar} = useSnackbar()
     const edit = useEventEdit()
     useEffect(() => {
@@ -404,9 +405,24 @@ export const EventEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = (
                 <Grid item>
                     <SecondaryButton disabled={disabled} onClick={async (e) => {
                         const didSave = await edit.onSubmit()
-                        if (didSave) {
-                            props.close?.(e)
+                        const newEvent = await fetchEvent(event.id)
+                        if (newEvent) {
+                                event.set(newEvent)
+                                cEvent.set(newEvent)
                         } else {
+                                event.set({
+                                    ...NULL_HACKATHON,
+                                    id: event.id,
+                                    notFound: true
+                                })
+                                cEvent.set({
+                                    ...NULL_HACKATHON,
+                                    id: event.id,
+                                    notFound: true
+                                })
+                        }
+                        props.close?.(e)
+                        if (!didSave) {
                             enqueueSnackbar('Не удалось обновить данные', {variant: 'error'})
                         }
                     }}>
