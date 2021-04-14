@@ -101,7 +101,7 @@ export const CreateEventApp: React.FC = () => {
 
     useEffect(() => {
         if (!settings.isHostMode) {
-            history.push('/user')
+            // history.push('/user')
         }
     }, [settings.isHostMode])
 

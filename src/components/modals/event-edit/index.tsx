@@ -49,6 +49,7 @@ const _useEventEditModal = () => {
 export const useEventEdit = () => {
     const {event} = useAppState()
 
+    const [description, setDescription] = useState<string>('')
     const [start, setStart] = useState<Date | null>(null)
     const [finish, setFinish] = useState<Date | null>(null)
     const [teamSize, setTeamSize] = useState<string>('')
@@ -104,6 +105,7 @@ export const useEventEdit = () => {
 
     const reset = () => {
         // if (event.id !== '-1') {
+        setDescription(event.description)
         setStart(event.settings.start ?? null)
         setFinish(event.settings.finish ?? null)
         setTeamSize(event.settings.teamSize?.toString() ?? '')
@@ -119,6 +121,7 @@ export const useEventEdit = () => {
         // }
     }
     const nullReset = () => {
+        setDescription('')
         setStart(null)
         setFinish( null)
         setTeamSize('')
@@ -134,6 +137,10 @@ export const useEventEdit = () => {
     }
 
     useEffect(reset, [event.id, event.name, event.prizes])
+
+    const onDescriptionChange = useCallback((e) => {
+        setDescription(e.target.value)
+    }, [setUsersLimit])
 
     const onStartChange = useCallback((d: Date) => {
         setStart(d)
@@ -163,14 +170,11 @@ export const useEventEdit = () => {
         setDeletedPrizes(d)
         setPrizes(p)
     }, [setDeletedPrizes, setPrizes])
-    // const onPrizesChange = useCallback((p) => {
-    //     setPrizes(p)
-    // }, [setPrizes])
 
     const onGroupsChange = useCallback((g, winnersToProcess) => {
         // TODO тут состояние сохраняется
-        console.log('winnersToProcess: ', winnersToProcess)
-        console.log('originalWinners: ', originalWinners)
+        // console.log('winnersToProcess: ', winnersToProcess)
+        // console.log('originalWinners: ', originalWinners)
         const newDeletedWinners = deletedWinners
         const newAddWinners = addWinners
         for (let d of winnersToProcess) {
@@ -215,8 +219,8 @@ export const useEventEdit = () => {
             }
         }
 
-        console.log('newAddWinners: ', newAddWinners)
-        console.log('newDeletedWinners: ', newDeletedWinners)
+        // console.log('newAddWinners: ', newAddWinners)
+        // console.log('newDeletedWinners: ', newDeletedWinners)
         setAddWinners(newAddWinners)
         setDeletedWinners(newDeletedWinners)
         setGroups(g)
@@ -224,6 +228,11 @@ export const useEventEdit = () => {
 
     return {
         general: {
+            description: {
+                value: description,
+                onChange: onDescriptionChange,
+                disabled
+            },
             start: {
                 value: start,
                 onChange: onStartChange,
@@ -271,7 +280,7 @@ export const useEventEdit = () => {
         },
         getSubmit: () => {
             const diff = storeDiff(event, {
-                place
+                place, description
             })
             diff.settings = {
                 start,
@@ -295,7 +304,7 @@ export const useEventEdit = () => {
         },
         onSubmit: async () => {
             const diff = storeDiff(event, {
-                place
+                place, description
             })
             diff.settings = {
                 start,

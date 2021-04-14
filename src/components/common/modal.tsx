@@ -87,7 +87,9 @@ export const Modal: React.FC<ModalProps> = ({children, canGoBack, cantClose, gri
                         </Grid>
                     </Box>
                     <Hidden xsDown>
-                        <Grid item xs/>
+                        <Box clone order={4}>
+                            <Grid item xs/>
+                        </Box>
                     </Hidden>
                 </Grid>
             </div>
