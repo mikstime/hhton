@@ -39,7 +39,7 @@ const WinnersField: React.FC<{ label: string, inputProps?: ButtonProps, onSelect
             if (r.current)
                 onSelect?.(r.current)
         }}>
-            <Button disabled={location.pathname.includes('create') ||  event.isFinished} ref={r} {...rest} style={{
+            <Button disabled={location.pathname.includes('create') ||  !event.isFinished} ref={r} {...rest} style={{
                 background: 'white',
                 borderRadius: 8,
                 paddingLeft: 12,
