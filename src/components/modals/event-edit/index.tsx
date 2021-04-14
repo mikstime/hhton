@@ -106,7 +106,7 @@ export const useEventEdit = () => {
                 setGroups(g)
             }
         })()
-    }, [event.id, event.isFinished])
+    }, [event.id, event.isFinished, event])
 
     const reset = () => {
         // if (event.id !== '-1') {
@@ -141,7 +141,7 @@ export const useEventEdit = () => {
         setDisabled(false)
     }
 
-    useEffect(reset, [event.id, event.name, event.prizes])
+    useEffect(reset, [event])
 
     const onDescriptionChange = useCallback((e) => {
         setDescription(e.target.value)
