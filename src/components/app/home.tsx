@@ -57,7 +57,10 @@ const EventItem: React.FC<{ event: Hackathon }> = ({event}) => {
                             <Grid xs item container direction='column'>
                                 <Typography>{event.name}</Typography>
                                 <AdditionalText
-                                    style={{wordBreak: 'break-all'}}>{event.description.slice(0, 100)}</AdditionalText>
+                                    style={{wordBreak: 'break-all'}}>
+                                    {event.description.length > 100 ?
+                                        event.description.slice(0, 97) + '...' : event.description}
+                                </AdditionalText>
                             </Grid>
                         </Box>
                         <Hidden smDown>
@@ -203,7 +206,8 @@ const ImagesWide: React.FC = () => {
                 вкладке <b>команда</b> можно управлять входящими и исходящими
                 заявками</Typography>],
         [imageThreeW, 'Голосование за лидера',
-            <Typography align='center' variant='body2'><b>Лидер команды</b> может
+            <Typography align='center' variant='body2'><b>Лидер
+                команды</b> может
                 управлять заявками и командой</Typography>]
     ])
 
