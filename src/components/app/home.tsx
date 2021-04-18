@@ -137,7 +137,7 @@ const Images: React.FC = () => {
                 вкладке <b>команда</b> можно управлять входящими и исходящими
                 заявками</Typography>],
         [imageThree, 'Голосование за лидера',
-            <Typography align='center' variant='body2'>Лидер команды может
+            <Typography align='center' variant='body2'><b>Лидер команды</b> может
                 управлять заявками и командой</Typography>]
     ])
 
