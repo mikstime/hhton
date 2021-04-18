@@ -216,7 +216,7 @@ const ImagesWide: React.FC = () => {
 
     const {cUser} = useAppState()
 
-    return <Grid item container direction='column'>
+    return <Grid item container direction='column' wrap='nowrap'>
         <Grid item container alignItems='center' wrap='nowrap'>
             <Grid item>
                 <IconButton disabled={index <= 0}
@@ -298,6 +298,7 @@ const SignupSection: React.FC<GridProps> = (props) => {
         <Grid item
               container
               direction='column'
+              wrap='nowrap'
               {...props}>
             <Grid item container justify='center'>
                 <Hidden smDown>

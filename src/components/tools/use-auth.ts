@@ -29,7 +29,7 @@ export const useAuth = () => {
                 // cEvent.change({id: eventId})
             }
             // @ts-ignore
-            cUser.change({id: userId, isNotAuthorized: userId === '-1'})
+            cUser.change({id: userId, isLoading: true, isNotAuthorized: userId === '-1'})
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
