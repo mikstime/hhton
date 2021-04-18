@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core'
 import {PrimaryButton} from '../common/buttons'
 import {HOST_DOMAIN, PREFIX} from '../../config/network'
-import {AdditionalText, GrayPlate, Plate} from '../common'
+import {AdditionalText, GrayishPlate, GrayPlate, Plate} from '../common'
 import Image from 'material-ui-image'
 import {ReactComponent as BackIcon} from '../../assets/home/back.svg'
 import {ReactComponent as ForwardIcon} from '../../assets/home/forward.svg'
@@ -35,46 +35,45 @@ const Root = styled.div`
 
 const EventItem: React.FC<{ event: Hackathon }> = ({event}) => {
 
-    return <Box clone paddingTop={1}><Grid item container>
-        <Grid item style={{width: 64}}>
-            <Link to={`/event/${event.id}`}>
-                <Image src={event.logo} style={{
-                    width: 64,
-                    paddingTop: 64,
-                    borderRadius: 4
-                }} imageStyle={{
-                    width: 64,
-                    height: 64,
-                    objectFit: 'cover',
-                    borderRadius: 4
-                }}/>
+    return <Box clone paddingTop={1}>
+        <Grid item xs>
+            <Link to={`/event/${event.id}`}
+                  style={{textDecoration: 'none', width: '100%'}}>
+                <GrayishPlate padding={8}>
+                    <Grid item container xs>
+                        <Grid item style={{width: 48}}>
+                            <Image src={event.logo} style={{
+                                width: 48,
+                                paddingTop: 48,
+                                borderRadius: 4
+                            }} imageStyle={{
+                                width: 48,
+                                height: 48,
+                                objectFit: 'cover',
+                                borderRadius: 4
+                            }}/>
+                        </Grid>
+                        <Box clone paddingLeft={1}>
+                            <Grid xs item container direction='column'>
+                                <Typography>{event.name}</Typography>
+                                <AdditionalText
+                                    style={{wordBreak: 'break-all'}}>{event.description.slice(0, 100)}</AdditionalText>
+                            </Grid>
+                        </Box>
+                        <Hidden smDown>
+                            <Box clone display='flex' alignItems='center'>
+                                <Grid item>
+                                    <Typography style={{width: 100}}
+                                                align='center'>
+                                        {event.settings.start ? format(event.settings.start, 'dd/MM/yyyy') : '–'}
+                                    </Typography>
+                                </Grid>
+                            </Box>
+                        </Hidden>
+                    </Grid>
+                </GrayishPlate>
             </Link>
         </Grid>
-        <Box clone paddingLeft={2}>
-            <Grid xs item container direction='column'>
-                <Link to={`/event/${event.id}`}
-                      style={{textDecoration: 'none'}}>
-                    <Typography>{event.name}</Typography>
-                </Link>
-                <Link to={`/event/${event.id}`}
-                      style={{textDecoration: 'none'}}>
-                    <AdditionalText>{event.description}</AdditionalText>
-                </Link>
-            </Grid>
-        </Box>
-        <Hidden smDown>
-            <Box clone display='flex' alignItems='center'>
-                <Grid item>
-                    <Link to={`/event/${event.id}`}
-                          style={{textDecoration: 'none'}}>
-                        <Typography style={{width: 100}} align='center'>
-                            {event.settings.start ? format(event.settings.start, 'dd/MM/yyyy') : '–'}
-                        </Typography>
-                    </Link>
-                </Grid>
-            </Box>
-        </Hidden>
-    </Grid>
     </Box>
 }
 const EventsList: React.FC<GridProps> = (props) => {
@@ -91,31 +90,35 @@ const EventsList: React.FC<GridProps> = (props) => {
             key={i}
             event={e}/>) :
         <Box>
-            <GrayPlate>
-                <AdditionalText>
-                    Нет доступных мероприятий
-                </AdditionalText>
-            </GrayPlate>
+            <AdditionalText>
+                Нет доступных мероприятий
+            </AdditionalText>
         </Box>
 
-    return <Grid item container direction='column' {...props}>
-        <Box clone paddingBottom={1}>
-            <Grid item container wrap='nowrap' alignItems='center'>
-                <Grid xs item>
-                    <Typography style={{fontSize: '1.25rem'}}>
-                        Доступные мероприятия
-                    </Typography>
-                </Grid>
-                <Hidden smDown>
-                    <Grid item style={{width: 100}}>
-                        <AdditionalText align='center'>
-                            {events.length > 0 ? 'Дата начала' : ''}
-                        </AdditionalText>
+    return <Grid item container {...props}>
+        <Plate padding={16} elevation={4}>
+            <Grid container direction='column'>
+                <Box clone>
+                    <Grid item container wrap='nowrap' alignItems='center'>
+                        <Grid xs item>
+                            <Typography>
+                                Доступные мероприятия
+                            </Typography>
+                        </Grid>
+                        <Hidden smDown>
+                            <Grid item style={{width: 100}}>
+                                <Typography variant='body1'
+                                            color='textSecondary'
+                                            align='center'>
+                                    {events.length > 0 ? 'Дата начала' : ''}
+                                </Typography>
+                            </Grid>
+                        </Hidden>
                     </Grid>
-                </Hidden>
+                </Box>
+                {eventsRender}
             </Grid>
-        </Box>
-        {eventsRender}
+        </Plate>
     </Grid>
 }
 
@@ -126,11 +129,11 @@ const Images: React.FC = () => {
             <Typography align='center' variant='body2'>Находите членов команды и
                 объединяйтесь с другими командами во
                 вкладке <b>Поиск участников</b></Typography>],
-        [imageTwo, 'Объединяйтесь в команды',
+        [imageTwo, 'Объединение в команды',
             <Typography align='center' variant='body2'>Во
                 вкладке <b>команда</b> можно управлять входящими и исходящими
                 заявками</Typography>],
-        [imageThree, 'Голосуйте за лидера команды',
+        [imageThree, 'Голосование за лидера',
             <Typography align='center' variant='body2'>Лидер команды может
                 управлять заявками и командой</Typography>]
     ])
@@ -138,7 +141,8 @@ const Images: React.FC = () => {
     const [index, setIndex] = useState(0)
     const theme = useTheme()
 
-    return <Grid item xs={12} sm={6} md={12} container direction='column'>
+    return <Grid item xs={12} sm={6} md={12} container
+                 direction='column'>
         <Grid item container alignItems='center' wrap='nowrap'>
             <Grid item>
                 <IconButton disabled={index <= 0}
@@ -149,21 +153,23 @@ const Images: React.FC = () => {
                     <BackIcon/>
                 </IconButton>
             </Grid>
-            <Image style={{
-                borderRadius: '50%',
-                width: '100%',
-                overflow: 'hidden',
-                paddingTop: 'calc( 100% - 96px)',
-                backgroundColor: 'transparent',
-                shadow: theme.shadows[4]
-            }}
-                   imageStyle={{
-                       borderRadius: '50%',
-                       width: '100%',
-                       height: '100%',
-                       transform: 'scale(1.9)'
-                   }}
-                   src={images.current[index][0] as string}/>
+            <Image
+                onDragStart={e => e.preventDefault()}
+                style={{
+                    borderRadius: '50%',
+                    width: '100%',
+                    overflow: 'hidden',
+                    paddingTop: 'calc( 100% - 96px)',
+                    backgroundColor: 'transparent',
+                    shadow: theme.shadows[4]
+                }}
+                imageStyle={{
+                    borderRadius: '50%',
+                    width: '100%',
+                    height: '100%',
+                    transform: 'scale(1.9)'
+                }}
+                src={images.current[index][0] as string}/>
             <Grid item>
                 <IconButton disabled={index >= images.current.length - 1}
                             style={{opacity: index >= images.current.length - 1 ? 0.3 : 1}}
@@ -176,7 +182,8 @@ const Images: React.FC = () => {
         </Grid>
         <Grid item container xs direction='column'>
             <Grid item>
-                <Typography align='center' style={{fontSize: '1.25em'}}>
+                <Typography align='center'
+                            style={{fontSize: '1.25em', marginTop: '8px'}}>
                     {images.current[index][1]}
                 </Typography>
                 {images.current[index][2]}
@@ -191,17 +198,19 @@ const ImagesWide: React.FC = () => {
             <Typography align='center' variant='body2'>Находите членов команды и
                 объединяйтесь с другими командами во
                 вкладке <b>Поиск участников</b></Typography>],
-        [imageTwoW, 'Объединяйтесь в команды',
+        [imageTwoW, 'Объединение в команды',
             <Typography align='center' variant='body2'>Во
                 вкладке <b>команда</b> можно управлять входящими и исходящими
                 заявками</Typography>],
-        [imageThreeW, 'Голосуйте за лидера команды',
-            <Typography align='center' variant='body2'>Лидер команды может
+        [imageThreeW, 'Голосование за лидера',
+            <Typography align='center' variant='body2'><b>Лидер команды</b> может
                 управлять заявками и командой</Typography>]
     ])
 
     const [index, setIndex] = useState(0)
     const theme = useTheme()
+
+    const {cUser} = useAppState()
 
     return <Grid item container direction='column'>
         <Grid item container alignItems='center' wrap='nowrap'>
@@ -216,28 +225,33 @@ const ImagesWide: React.FC = () => {
                 </IconButton>
             </Grid>
             <Grid item container xs>
-                <Image style={{
-                    width: 'calc(100% + 60px)',
-                    marginLeft: '-30px',
-                    marginRight: '-30px',
-                    overflow: 'hidden',
-                    paddingTop: 'max(200px, calc( (100% - 60px) / 2))',
-                    backgroundColor: 'transparent',
-                    shadow: theme.shadows[4],
-                }}
-                       imageStyle={{
-                           width: '100%',
-                           height: '100%',
-                           transform: 'scale(1.9)',
-                           objectFit: 'cover',
-                           borderRadius: 10
-                       }}
-                       src={images.current[index][0] as string}/>
+                <Image
+                    onDragStart={e => e.preventDefault()}
+                    style={{
+                        width: 'calc(100% + 60px)',
+                        marginLeft: '-30px',
+                        marginRight: '-30px',
+                        overflow: 'hidden',
+                        paddingTop: 'max(200px, calc( (100% - 60px) / 2))',
+                        backgroundColor: 'transparent',
+                        shadow: theme.shadows[4]
+                    }}
+                    imageStyle={{
+                        width: '100%',
+                        height: '100%',
+                        transform: 'scale(1.9)',
+                        objectFit: 'cover',
+                        borderRadius: 10
+                    }}
+                    src={images.current[index][0] as string}/>
             </Grid>
             <Grid item>
                 <IconButton disabled={index >= images.current.length - 1}
                             size='small'
-                            style={{opacity: index >= images.current.length - 1 ? 0.3 : 1, zIndex: 2}}
+                            style={{
+                                opacity: index >= images.current.length - 1 ? 0.3 : 1,
+                                zIndex: 2
+                            }}
                             onClick={() => {
                                 setIndex(index + 1)
                             }}>
@@ -249,7 +263,7 @@ const ImagesWide: React.FC = () => {
             <Grid item>
                 <Typography align='center' style={{
                     fontSize: '1.25em',
-                    padding: '0 24px 0 24px'
+                    padding: '8px 24px 0 24px'
                 }}>
                     {images.current[index][1]}
                 </Typography>
@@ -258,6 +272,18 @@ const ImagesWide: React.FC = () => {
                 </Box>
             </Grid>
         </Grid>
+        {cUser.id === '-1' && !cUser.isLoading &&
+        <a
+          href={`${HOST_DOMAIN}${PREFIX}/redirect?backTo=user`}
+          style={{
+              textDecoration: 'none', marginTop: 16,
+              padding: '0px 16px 0 16px', width: '100%', boxSizing: 'border-box'
+          }}>
+          <PrimaryButton style={{width: '100%'}}>
+            Войти через ВКонтакте
+          </PrimaryButton>
+        </a>
+        }
     </Grid>
 }
 const SignupSection: React.FC<GridProps> = (props) => {
@@ -278,8 +304,11 @@ const SignupSection: React.FC<GridProps> = (props) => {
             <Box clone position='sticky' top='70px'>
               <a
                 href={`${HOST_DOMAIN}${PREFIX}/redirect?backTo=user`}
-                style={{textDecoration: 'none', marginTop: 16}}>
-                <PrimaryButton>
+                style={{
+                    textDecoration: 'none', marginTop: 16,
+                    width: '100%', boxSizing: 'border-box'
+                }}>
+                <PrimaryButton style={{width: '100%'}}>
                   Войти через ВКонтакте
                 </PrimaryButton>
               </a>
@@ -291,16 +320,17 @@ const SignupSection: React.FC<GridProps> = (props) => {
 export const HomeApp: React.FC = () => {
     // const theme = useTheme()
     return <Grid container direction='column' wrap='nowrap'>
-        <Grid item>
-            <Typography style={{fontSize: '3rem'}}>
+        <Grid item style={{paddingBottom: 16}}>
+            <Typography style={{fontSize: '3rem', lineHeight: 1}}>
                 <b>Найди лучшую команду</b>
             </Typography>
-            <Typography style={{fontSize: '1.25rem'}}>
-                А мы поможем тебе в этом. <i>Начни с выбора
-                мероприятия.</i>
+            <Typography style={{fontSize: '1.35rem', marginTop: '8px'}}>
+                А мы поможем тебе в этом. Начни с выбора
+                мероприятия.
             </Typography>
             <Hidden mdUp>
-                <Box clone marginTop='16px' padding='0px 0px 16px 0px' borderRadius='10px' overflow='hidden'>
+                <Box clone marginTop='16px' padding='0px 0px 16px 0px'
+                     borderRadius='10px' overflow='hidden'>
                     <Plate elevation={4}>
                         <ImagesWide/>
                     </Plate>
@@ -308,15 +338,23 @@ export const HomeApp: React.FC = () => {
             </Hidden>
         </Grid>
         <Box clone flexDirection={{xs: 'column', md: 'row'}}>
-            <Grid item container>
-                <Box clone paddingTop={3}>
-                    <EventsList xs md={8}/>
-                </Box>
-                <Box clone paddingTop={{xs: 3, md: 2}} order={{
-                    xs: 1, sm: 2
-                }}>
-                    <SignupSection xs md={4}/>
-                </Box>
+            <Grid item container spacing={2}>
+                <Grid item container xs md={7} direction='column'>
+                    <EventsList/>
+                    <Box flex={1}/>
+                </Grid>
+                <Hidden smDown>
+                    <Box clone paddingTop={{xs: 3, md: 0}} order={{
+                        xs: 1, sm: 2
+                    }}>
+                        <Grid item container md={5} direction='column'>
+                            <GrayPlate>
+                                <SignupSection/>
+                            </GrayPlate>
+                            <Box flex={1}/>
+                        </Grid>
+                    </Box>
+                </Hidden>
             </Grid>
         </Box>
         <div style={{height: 100}}/>
