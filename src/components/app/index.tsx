@@ -21,7 +21,7 @@ import {NotificationSection} from '../common/notifications-section'
 
 const StyledContainer = styled(Container)`
   min-height: 100vh;
-  //padding-top: 64px;
+  padding-top: 16px;
   box-sizing: border-box;
 `
 const RootContainer: React.FC<ContainerProps> = ({children, ...props}) => {

@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react'
 import {
+    Badge,
     Box,
     Grid, Tab, Tabs
 } from '@material-ui/core'
@@ -40,7 +41,7 @@ function TabPanel(props: TabPanelProps) {
 
 export const TeamApp: React.FC = () => {
 
-    const {cUser, cEvent, settings} = useAppState()
+    const {cUser, cEvent, settings, invites} = useAppState()
     const history = useHistory()
     const location = useLocation()
 
@@ -115,7 +116,11 @@ export const TeamApp: React.FC = () => {
                   aria-label="team-page tabs"
             >
                 <Tab label="Команда"/>
-                <Tab label="Входящие заявки"/>
+                <Tab label={
+                    <Badge
+                        color='primary'
+                        badgeContent={invites.i.personal.length + invites.i.team.length}
+                        variant='dot'>Входящие заявки</Badge>}/>
                 <Tab label="Исходящие заявки"/>
                 <Tab label="Заблокированные заявки"/>
             </Tabs>
