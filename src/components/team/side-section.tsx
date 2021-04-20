@@ -6,7 +6,7 @@ import {
     Grid, Hidden,
     IconButton, IconButtonProps,
     Tooltip,
-    Typography
+    Typography, TypographyProps
 } from '@material-ui/core'
 import {useAppState} from '../tools/use-app-state'
 import {format} from 'date-fns'
@@ -73,7 +73,7 @@ export const EventDetails: React.FC<PlateProps> = ({children, ...props}) => {
     </GrayPlate>
 }
 
-export const LeadDetails: React.FC = () => {
+export const LeadDetails: React.FC<TypographyProps> = (props) => {
     const {cUser} = useAppState()
 
     if (!cUser.team.teamLead) {
@@ -90,7 +90,7 @@ export const LeadDetails: React.FC = () => {
     return <Tooltip
         title={toolTipMessage}>
         <div>
-            <Typography>
+            <Typography {...props}>
                 <b>{leaderName}</b> &mdash; Лидер команды
             </Typography>
         </div>
@@ -151,12 +151,15 @@ const MobileSide: React.FC = () => {
     // @ts-ignore
     return <Grid item container direction='column' wrap='nowrap'>
         <Box clone height='48px' style={{zIndex: 2}} padding='16px'>
-            <Grid item container alignItems='center'>
-                <LeadDetails/>
-                <Box flex={1}/>
+            <Grid item container alignItems='center' wrap='nowrap'>
+                <Grid item xs zeroMinWidth>
+                <LeadDetails noWrap/>
+                </Grid>
+                <Grid item>
                 <OpenButton size='small' isOpen={isOpen} onClick={() => {
                     setIsOpen(!isOpen)
                 }}/>
+                </Grid>
             </Grid>
         </Box>
         <Box clone marginTop={isOpen ? '' : '-48px'} minHeight='24px'
@@ -167,7 +170,7 @@ const MobileSide: React.FC = () => {
                         <Grid item container>
                             <GrayPlate>
                                 <AdditionalText>
-                                Скоро здесь будет кое-что
+                                    Скоро здесь будет кое-что
                                 </AdditionalText>
                             </GrayPlate>
                         </Grid>
@@ -186,8 +189,9 @@ export const SideSection: React.FC = () => {
         <Hidden xsDown>
             <Box clone minHeight='40px' paddingTop='10px'>
                 <Grid item container alignItems='center'>
-                    <LeadDetails/>
-                    <Box flex={1}/>
+                    <Grid item xs>
+                        <LeadDetails/>
+                    </Grid>
                     <LeaveButton/>
                 </Grid>
             </Box>
