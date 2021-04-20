@@ -1,8 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react'
-import styled from 'styled-components'
 import {
     Box,
-    Container,
     Grid,
     GridProps, Hidden, IconButton,
     Typography, useTheme
@@ -28,11 +26,6 @@ import {format} from 'date-fns'
 import {useAppState} from '../tools/use-app-state'
 import {Link} from 'react-router-dom'
 
-const Root = styled.div`
-  width: 100%;
-  height: 100%;
-`
-
 const EventItem: React.FC<{ event: Hackathon }> = ({event}) => {
 
     return <Box clone paddingTop={1}>
@@ -57,7 +50,7 @@ const EventItem: React.FC<{ event: Hackathon }> = ({event}) => {
                             <Grid xs item container direction='column'>
                                 <Typography>{event.name}</Typography>
                                 <AdditionalText
-                                    style={{wordWrap: 'break-word', wordBreak: 'break-word', hyphens: 'auto'}}>
+                                    style={{wordBreak: 'break-all'}}>
                                     {event.description.length > 100 ?
                                         event.description.slice(0, 97) + '...' : event.description}
                                 </AdditionalText>
@@ -159,6 +152,9 @@ const Images: React.FC = () => {
             <Image
                 onDragStart={e => e.preventDefault()}
                 style={{
+                    backgroundImage: `url("${images.current[index][0]}")`,
+                    backgroundSize: '175%',
+                    backgroundPosition: 'center',
                     borderRadius: '50%',
                     width: '100%',
                     overflow: 'hidden',
@@ -166,7 +162,9 @@ const Images: React.FC = () => {
                     backgroundColor: 'transparent',
                     shadow: theme.shadows[4]
                 }}
+                disableTransition
                 imageStyle={{
+                    opacity: 0,
                     borderRadius: '50%',
                     width: '100%',
                     height: '100%',
@@ -230,8 +228,12 @@ const ImagesWide: React.FC = () => {
             </Grid>
             <Grid item container xs>
                 <Image
+                    disableTransition
                     onDragStart={e => e.preventDefault()}
                     style={{
+                        backgroundImage: `url("${images.current[index][0]}")`,
+                        backgroundSize: 'auto 182%',
+                        backgroundPosition: 'center',
                         width: 'calc(100% + 60px)',
                         marginLeft: '-30px',
                         marginRight: '-30px',
@@ -241,6 +243,7 @@ const ImagesWide: React.FC = () => {
                         shadow: theme.shadows[4]
                     }}
                     imageStyle={{
+                        opacity: 0,
                         width: '100%',
                         height: '100%',
                         transform: 'scale(1.9)',
