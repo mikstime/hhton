@@ -1,8 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react'
-import styled from 'styled-components'
 import {
     Box,
-    Container,
     Grid,
     GridProps, Hidden, IconButton,
     Typography, useTheme
@@ -27,11 +25,6 @@ import {getTopEvents} from '../../model/api'
 import {format} from 'date-fns'
 import {useAppState} from '../tools/use-app-state'
 import {Link} from 'react-router-dom'
-
-const Root = styled.div`
-  width: 100%;
-  height: 100%;
-`
 
 const EventItem: React.FC<{ event: Hackathon }> = ({event}) => {
 
@@ -159,6 +152,9 @@ const Images: React.FC = () => {
             <Image
                 onDragStart={e => e.preventDefault()}
                 style={{
+                    backgroundImage: `url("${images.current[index][0]}")`,
+                    backgroundSize: '190%',
+                    backgroundPosition: 'center',
                     borderRadius: '50%',
                     width: '100%',
                     overflow: 'hidden',
@@ -166,7 +162,9 @@ const Images: React.FC = () => {
                     backgroundColor: 'transparent',
                     shadow: theme.shadows[4]
                 }}
+                disableTransition
                 imageStyle={{
+                    opacity: 0,
                     borderRadius: '50%',
                     width: '100%',
                     height: '100%',
@@ -230,8 +228,12 @@ const ImagesWide: React.FC = () => {
             </Grid>
             <Grid item container xs>
                 <Image
+                    disableTransition
                     onDragStart={e => e.preventDefault()}
                     style={{
+                        backgroundImage: `url("${images.current[index][0]}")`,
+                        backgroundSize: '190%',
+                        backgroundPosition: 'center',
                         width: 'calc(100% + 60px)',
                         marginLeft: '-30px',
                         marginRight: '-30px',
@@ -241,6 +243,7 @@ const ImagesWide: React.FC = () => {
                         shadow: theme.shadows[4]
                     }}
                     imageStyle={{
+                        opacity: 0,
                         width: '100%',
                         height: '100%',
                         transform: 'scale(1.9)',
@@ -276,7 +279,7 @@ const ImagesWide: React.FC = () => {
                 </Box>
             </Grid>
         </Grid>
-        {cUser.id === '-1' && !cUser.isLoading &&
+        {cUser.isNotAuthorized &&
         <a
           href={`${HOST_DOMAIN}${PREFIX}/redirect?backTo=user`}
           style={{
@@ -305,7 +308,7 @@ const SignupSection: React.FC<GridProps> = (props) => {
                     <Images/>
                 </Hidden>
             </Grid>
-            {cUser.id === '-1' && !cUser.isLoading &&
+            {cUser.isNotAuthorized &&
             <Box clone position='sticky' top='70px'>
               <a
                 href={`${HOST_DOMAIN}${PREFIX}/redirect?backTo=user`}

@@ -167,6 +167,7 @@ export const fetchEvent = async (id: Id) => {
  * @param eventId
  */
 export const isParticipating = async (eventId: string, userId: string) => {
+    // return true
     if (!mockImplemented) {
         const event = await fetch(`${HOST_DOMAIN}${PREFIX}/user/${userId}/events`, {
             credentials: 'include'
@@ -439,13 +440,13 @@ export const getTeamById = async (teamId: string) => {
  * @param userId - id пользователя, чью команду запрашиваем
  */
 export const getTeam = async (eventId: string, userId: string) => {
-    // await sleep(300)
-    // return {
-    //     members: TEST_USERS.slice(0, 1),
-    //     name: 'Команда мечты',
-    //     teamLead: getTestUser('1'),
-    //     id: '1'
-    // } as Team
+/*    await sleep(300)
+    return {
+        members: TEST_USERS.slice(0, 2),
+        name: 'Команда мечты',
+        teamLead: getTestUser('2'),
+        id: '1'
+    } as Team*/
     if (!mockImplemented) {
         const team = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${userId}/team`, {
             credentials: 'include'
@@ -614,6 +615,7 @@ export const teamInvitedPending = async (eventId: string, teamId: string) => {
  * @param teamId - id активного пользователя
  */
 export const teamInvited = async (eventId: string, teamId: string, declined: boolean) => {
+    // return TEST_USERS.slice(0,2)
     if (!mockImplemented && teamId) {
         return getTeamInvitesFromUrl(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invited/teams?declined=${declined}`)
     } else {
@@ -628,6 +630,7 @@ export const teamInvited = async (eventId: string, teamId: string, declined: boo
  * @param userId - id активного пользователя
  */
 export const teamInvites = async (eventId: string, userId: string) => {
+    // return TEST_USERS.slice(0,2)
     if (!mockImplemented && userId) {
         return getTeamInvitesFromUrl(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/teams`)
     } else {
@@ -690,6 +693,7 @@ export const personalInvitedPending = async (eventId: string, userId: string) =>
  * @param userId - id активного пользователя
  */
 export const personalInvited = async (eventId: string, userId: string, declined: boolean) => {
+    // return TEST_USERS.slice(0,2)
     if (!mockImplemented && userId) {
         return getPersonalInvitesFromUrl(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invited/users?declined=${declined}`)
     } else {
@@ -704,6 +708,7 @@ export const personalInvited = async (eventId: string, userId: string, declined:
  * @param userId - id активного пользователя
  */
 export const personalInvites = async (eventId: string, userId: string) => {
+    // return TEST_USERS.slice(0,2)
     if (!mockImplemented) {
         return getPersonalInvitesFromUrl(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/users`)
     } else {
@@ -1275,9 +1280,10 @@ export const kickTeamMember = async (eventId: Id, teamId: Id, userId: Id) => {
             body: JSON.stringify({uid: Number(userId)})
         })
 
-    if (res.ok) {
-        return true
-    } else {
-        return false
-    }
+    return res.ok;
+}
+
+export const logOut = async () => {
+    const res = await fetch(`${HOST_DOMAIN}${PREFIX}/unauth`)
+    return res.ok;
 }
