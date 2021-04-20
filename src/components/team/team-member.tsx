@@ -193,21 +193,21 @@ export const TeamMember: React.FC<{ user: User }> = ({user}) => {
                   direction='column'
                   justify='center' alignItems='center'>
                 <Grid item>
-                    {user.id !== cUser.id &&
-                    <Tooltip title='Член команды с наибольшим числом голосов становится лидером команды'>
-                      <IconButton disabled={isFetching} onClick={() => {
-                          onVote()
-                      }}>
-                        <Box clone width={{xs: '24px', md: '48px'}}
-                             height={{xs: '24px', md: '48px'}}>
-                          <VoteIcon active={didVote}/>
-                        </Box>
-                      </IconButton>
-                    </Tooltip>
-                    }
-                    {team.members.length > 0 &&
-                    <AdditionalText
-                      align='center'>{team.votes?.[user.id] || 0}/{team.members.length}</AdditionalText>}
+                    {/*{user.id !== cUser.id &&*/}
+                    {/*<Tooltip title='Член команды с наибольшим числом голосов становится лидером команды'>*/}
+                    {/*  <IconButton disabled={isFetching} onClick={() => {*/}
+                    {/*      onVote()*/}
+                    {/*  }}>*/}
+                    {/*    <Box clone width={{xs: '24px', md: '48px'}}*/}
+                    {/*         height={{xs: '24px', md: '48px'}}>*/}
+                    {/*      <VoteIcon active={didVote}/>*/}
+                    {/*    </Box>*/}
+                    {/*  </IconButton>*/}
+                    {/*</Tooltip>*/}
+                    {/*}*/}
+                    {/*{team.members.length > 0 &&*/}
+                    {/*<AdditionalText*/}
+                    {/*  align='center'>{team.votes?.[user.id] || 0}/{team.members.length}</AdditionalText>}*/}
                 </Grid>
                 {user.id !== cUser.id &&
                 <Grid item>
