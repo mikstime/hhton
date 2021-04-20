@@ -57,7 +57,7 @@ const EventItem: React.FC<{ event: Hackathon }> = ({event}) => {
                             <Grid xs item container direction='column'>
                                 <Typography>{event.name}</Typography>
                                 <AdditionalText
-                                    style={{wordBreak: 'break-all'}}>
+                                    style={{wordWrap: 'break-word', wordBreak: 'break-word', hyphens: 'auto'}}>
                                     {event.description.length > 100 ?
                                         event.description.slice(0, 97) + '...' : event.description}
                                 </AdditionalText>

@@ -75,12 +75,8 @@ const LeaveButton: React.FC = () => {
 export const TeamPage: React.FC = () => {
 
     const {cUser, cEvent} = useAppState()
-    return <Grid container direction='column'>
-        <Grid item container alignItems='baseline'>
-            <TeamName/>
-            <Box flex={1}/>
-            <LeaderSection/>
-        </Grid>
+    return <Grid container direction='column' wrap='nowrap'>
+        <TeamName/>
         <GrayPlate style={{marginBottom: 16}}>
             <AdditionalText>
                 Это ваша команда на мероприятии&nbsp;
@@ -109,12 +105,12 @@ export const TeamPage: React.FC = () => {
             })
             }
         </Grid>
-        <Box height='150px' width='100%'/>
-        {
-            cUser.team.id && <Grid item>
-              <LeaveButton/>
-            </Grid>
-        }
+        {/*<Box height='150px' width='100%'/>*/}
+        {/*{*/}
+        {/*    cUser.team.id && <Grid item>*/}
+        {/*      <LeaveButton/>*/}
+        {/*    </Grid>*/}
+        {/*}*/}
         <Box height='32px' width='100%'/>
     </Grid>
 }

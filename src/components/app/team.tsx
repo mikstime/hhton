@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react'
 import {
+    Badge,
     Box,
     Grid, Tab, Tabs
 } from '@material-ui/core'
@@ -9,6 +10,7 @@ import {TeamPage} from '../team/team-page'
 import {IncomingPage} from '../team/incoming-page'
 import {OutgoingPage} from '../team/outgoing-page'
 import {HistoryPage} from '../team/history-page'
+import {SideSection} from '../team/side-section'
 
 
 interface TabPanelProps {
@@ -40,7 +42,7 @@ function TabPanel(props: TabPanelProps) {
 
 export const TeamApp: React.FC = () => {
 
-    const {cUser, cEvent, settings} = useAppState()
+    const {cUser, cEvent, settings, invites} = useAppState()
     const history = useHistory()
     const location = useLocation()
 
@@ -56,17 +58,17 @@ export const TeamApp: React.FC = () => {
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cEvent.id, location, cEvent.notFound, cEvent.isParticipating, settings.isHostMode])
+    }, [cEvent.id, cEvent.notFound, cEvent.isParticipating, settings.isHostMode])
 
     useEffect(() => {
-        if (location.hash === '#team') {
-            setValue(0)
-        } else if (location.hash === '#incoming') {
+        if (location.hash === '#incoming') {
             setValue(1)
         } else if (location.hash === '#outgoing') {
             setValue(2)
         } else if (location.hash === '#blocked') {
             setValue(3)
+        } else {
+            setValue(0)
         }
     }, [location.hash])
 
@@ -90,8 +92,7 @@ export const TeamApp: React.FC = () => {
         }
     }
 
-
-    return <Grid container direction='column'>
+    return <Grid container>
         <Box
             paddingLeft={{sm: '50px'}}
             marginLeft={{sm: '-50px'}}
@@ -114,24 +115,52 @@ export const TeamApp: React.FC = () => {
                   textColor="primary" value={value} onChange={handleChange}
                   aria-label="team-page tabs"
             >
-                <Tab label="Команда"/>
-                <Tab label="Входящие заявки"/>
-                <Tab label="Исходящие заявки"/>
+
+                <Tab label='Команда'/>
+                <Tab label={
+                    <Badge
+                        color='primary'
+                        badgeContent={invites.i.personal.length + invites.i.team.length}
+                        variant='dot'>Входящие заявки</Badge>}/>
+                <Tab label={
+                    <Badge
+                        color='primary'
+                        badgeContent={invites.o.personal.length + invites.o.team.length}
+                        variant='dot'>Исходящие заявки</Badge>}/>
                 <Tab label="Заблокированные заявки"/>
             </Tabs>
 
         </Box>
-        <TabPanel value={value} index={0}>
-            <TeamPage/>
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-            <IncomingPage/>
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-            <OutgoingPage/>
-        </TabPanel>
-        <TabPanel value={value} index={3}>
-            <HistoryPage/>
-        </TabPanel>
+        <Box clone flexDirection={{xs: 'column-reverse', sm: 'row'}}>
+            <Grid item container spacing={2}>
+                <Grid item container xs={12} sm={7}>
+                    <TabPanel value={value} index={0}>
+                        <TeamPage/>
+                    </TabPanel>
+                    <TabPanel value={value} index={1}>
+                        <IncomingPage/>
+                    </TabPanel>
+                    <TabPanel value={value} index={2}>
+                        <OutgoingPage/>
+                    </TabPanel>
+                    <TabPanel value={value} index={3}>
+                        <HistoryPage/>
+                    </TabPanel>
+                </Grid>
+                <Grid item container xs={12} sm={5} direction='column'
+                      wrap='nowrap'>
+                    <Box clone style={{
+                        position: 'sticky',
+                        top: 64,
+                        zIndex: 2
+                    }}>
+                        <Grid item>
+                            <SideSection/>
+                        </Grid>
+                    </Box>
+                    <Box flex={1}/>
+                </Grid>
+            </Grid>
+        </Box>
     </Grid>
 }

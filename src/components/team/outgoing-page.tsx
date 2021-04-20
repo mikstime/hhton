@@ -8,12 +8,15 @@ import {useAppState} from '../tools/use-app-state'
 import {Link} from 'react-router-dom'
 import {PersonInvited} from './person-invited'
 import {TeamInvited} from './team-invited'
+import {TeamName} from './team-name'
 
 export const OutgoingPage: React.FC = () => {
 
     const {invites} = useAppState()
 
     return <Grid container direction='column'>
+        <TeamName/>
+        <Divider light flexItem style={{height: 1}}/>
         <SubTitle style={{marginBottom: 24}}>Предложения людям</SubTitle>
         <Grid container spacing={3} direction='column'>
             {invites.o.personal.map((u, i) => (
