@@ -45,27 +45,27 @@ export const PersonDeclined: React.FC<{ user: User }> = ({user}) => {
     const canAccept = cUser.team.members.length <= 1 || cUser.isTeamLead
 
     return <Grid item container spacing={2}>
-        <Grid item container md={8} xs={12} sm={12} style={{
+        <Grid item container xs={12} style={{
             overflow: 'visible',
             opacity: 0.7, pointerEvents: 'none'
         }}>
             <AvatarPlate direction='row' src={user.avatar}
-                         avatarProps={{wrap: 'nowrap', xs: 12, sm: 6, md: 7}}>
-                <Grid xs sm={6} md={5} item container
+                         avatarProps={{wrap: 'nowrap', xs: 12}}>
+                <Grid xs item container
                       direction='column'>
-                    <Box paddingLeft={{xs: 0, sm: 2}}
-                         marginTop={{xs: 1, md: 0}}>
+                    <Box paddingLeft={{xs: 0}}
+                         marginTop={{xs: 1}}>
                         <Grid item container>
                             <NameTypography user={user}/>
                         </Grid>
                     </Box>
-                    <Box paddingLeft={{xs: 0, sm: 2}}>
+                    <Box paddingLeft={{xs: 0}}>
                         <TeamDescription noName user={user}/>
                     </Box>
                 </Grid>
             </AvatarPlate>
         </Grid>
-        <Grid item container md={3} xs={12} sm={12}>
+        <Grid item container xs={12}>
             <Grid item container justify='flex-end'>
                 <Grid item>
                     <Tooltip

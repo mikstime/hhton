@@ -1,10 +1,10 @@
 import React, {Fragment, useCallback, useState} from 'react'
-import {AdditionalText, GrayPlate, Plate} from '../common'
+import {AdditionalText, GrayishPlate, GrayPlate, Plate} from '../common'
 import {
-    Box, ButtonProps,
-    CircularProgress, Collapse,
-    Grid, Hidden,
-    IconButton, IconButtonProps,
+    Box, Button, ButtonProps,
+    CircularProgress, Collapse, createStyles,
+    Grid, GridProps, Hidden,
+    IconButton, IconButtonProps, makeStyles, Popper, Theme,
     Tooltip,
     Typography, TypographyProps
 } from '@material-ui/core'
@@ -17,8 +17,12 @@ import {ReactComponent as ExpandIcon} from '../../assets/team/expand.svg'
 import {ReactComponent as CollapseIcon} from '../../assets/team/collapse.svg'
 import {useSnackbar} from 'notistack'
 import {useNotificationHandlers} from '../tools/notification-handlers'
-import {leaveTeam} from '../../model/api'
+import {leaveTeam, unVoteFor, voteFor} from '../../model/api'
 import {usePromptModal} from '../modals/prompt'
+import {User} from '../tools/use-app-state/user'
+import Image from 'material-ui-image/lib/components/Image/Image'
+import {ReactComponent as VoteActiveIcon} from '../../assets/team/vote_active.svg'
+import {ReactComponent as VoteIconBase} from '../../assets/team/vote.svg'
 
 const SideItem: React.FC<{ title: string, value: string }> = ({title, value}) => (
     <Box clone flexDirection={{xs: 'column', md: 'row'}}>
@@ -149,7 +153,7 @@ const MobileSide: React.FC = () => {
     const {cUser} = useAppState()
     const [isOpen, setIsOpen] = useState(false)
 
-    if(!cUser.team.members.length) {
+    if (!cUser.team.members.length) {
         return null
     }
     // @ts-ignore
@@ -157,12 +161,12 @@ const MobileSide: React.FC = () => {
         <Box clone height='48px' style={{zIndex: 2}} padding='16px'>
             <Grid item container alignItems='center' wrap='nowrap'>
                 <Grid item xs zeroMinWidth>
-                <LeadDetails noWrap/>
+                    <LeadDetails noWrap/>
                 </Grid>
                 <Grid item>
-                <OpenButton size='small' isOpen={isOpen} onClick={() => {
-                    setIsOpen(!isOpen)
-                }}/>
+                    <OpenButton size='small' isOpen={isOpen} onClick={() => {
+                        setIsOpen(!isOpen)
+                    }}/>
                 </Grid>
             </Grid>
         </Box>
@@ -188,19 +192,192 @@ const MobileSide: React.FC = () => {
         </Box>
     </Grid>
 }
+
+const useVotingStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        button: {
+            width: 24,
+            height: 24,
+            padding: 0,
+            fontSize: '13px',
+            borderRadius: '50%',
+            background: '#F0F2F5',
+            border: '1px solid #EDEDED'
+        }
+    })
+)
+
+const VotingDesktop: React.FC<PlateProps> = (props) => {
+    return <Plate padding={16} elevation={4} {...props}>
+        <Grid container direction='column' wrap='nowrap'>
+            <VotingHeader/>
+            <Voting/>
+        </Grid>
+    </Plate>
+}
+const VotingHeader: React.FC = () => {
+    const classes = useVotingStyles()
+    const [isOpen, setIsOpen] = useState(false)
+    return <Fragment>
+        <Grid item container>
+            <Grid item xs>
+                <Typography variant='h2'>
+                    Голосование за лидера
+                </Typography>
+            </Grid>
+            <Grid item>
+                <IconButton size='small'
+                            onClick={(event: React.MouseEvent<HTMLElement>) => {
+                                setIsOpen(!isOpen)
+                            }}
+                            className={classes.button}>
+                    ?
+                </IconButton>
+            </Grid>
+        </Grid>
+        <Collapse in={isOpen}>
+            <Box clone paddingTop={1}>
+                <Grid item container>
+                    <GrayPlate padding={8}>
+                        <Typography variant='body2'>
+                            Лидер команды может принимать решение о приеме и
+                            отклонении заявок, а также исключать членов
+                            команды.<br/>
+                            Член команды с наибольшим числом голосов становится лидером команды.
+                        </Typography>
+                    </GrayPlate>
+                </Grid>
+            </Box>
+        </Collapse>
+    </Fragment>
+}
+
+const VoteIcon: React.FC<{ active: boolean }> = ({active, ...props}) => {
+    return active ? <VoteActiveIcon {...props}/> : <VoteIconBase {...props}/>
+}
+
+const VotingItem: React.FC<{ user: User }> = ({user}) => {
+
+    const {cUser, cEvent} = useAppState()
+    const team = cUser.team
+    const didVote = team.myVote === user.id
+    const {enqueueSnackbar} = useSnackbar()
+    const nc = useNotificationHandlers()
+    const pModal = usePromptModal()
+    const [isKicking, setIsKicking] = useState(false)
+    const [isVoting, setIsVoting] = useState(false)
+    const isFetching = isKicking || isVoting
+
+    const onVote = useCallback(async () => {
+        setIsVoting(true)
+        if (cUser.team.myVote !== user.id && cUser.team.myVote !== '-1' && cUser.team.myVote) {
+            // const didUnVote = await unVoteFor(cUser.team.myVote, cEvent.id, cUser.team.id ?? '-1')
+            const didVote = await voteFor(user.id, cEvent.id, cUser.team.id ?? '-1')
+            if (didVote) {
+                //nop
+            } else {
+                enqueueSnackbar('Не удалось проголосовать', {
+                    variant: 'error'
+                })
+            }
+        } else if (cUser.team.myVote === user.id) {
+            const didUnVote = await unVoteFor(user.id, cEvent.id, cUser.team.id ?? '-1')
+            if (didUnVote) {
+                //nop
+            } else {
+                enqueueSnackbar('Не удалось забрать голос', {
+                    variant: 'error'
+                })
+            }
+        } else {
+            const didVote = await voteFor(user.id, cEvent.id, cUser.team.id ?? '-1')
+            if (didVote) {
+                //nop
+            } else {
+                enqueueSnackbar('Не удалось проголосовать', {
+                    variant: 'error'
+                })
+            }
+        }
+        setIsVoting(false)
+        nc.update()
+    }, [enqueueSnackbar, cEvent.id, cUser.team.id, user.id, nc.update, cUser.team.myVote])
+
+    return <Box clone paddingTop={1}>
+        <Grid item container xs>
+            <Link to={`user/${user.id}`} style={{textDecoration: 'none'}}>
+                <Grid item style={{width: 48}}>
+                    <Image src={user.avatar} style={{
+                        width: 48,
+                        paddingTop: 48,
+                        borderRadius: 4
+                    }} imageStyle={{
+                        width: 48,
+                        height: 48,
+                        objectFit: 'cover',
+                        borderRadius: 4
+                    }}/>
+                </Grid>
+            </Link>
+            <Box clone paddingLeft={1}>
+                <Grid xs item container direction='column'>
+                    <Typography>{user.firstName} {user.lastName}</Typography>
+                    <AdditionalText
+                        style={{
+                            wordWrap: 'break-word',
+                            wordBreak: 'break-word',
+                            hyphens: 'auto'
+                        }}>
+                        Голосование
+                    </AdditionalText>
+                </Grid>
+            </Box>
+            <Grid item>
+                {user.id !== cUser.id &&
+                <IconButton disabled={isFetching} onClick={() => {
+                    onVote()
+                }}>
+                  <Box clone width={{xs: '24px', md: '48px'}}
+                       height={{xs: '24px', md: '48px'}}>
+                    <VoteIcon active={didVote}/>
+                  </Box>
+                </IconButton>
+                }
+            </Grid>
+        </Grid>
+    </Box>
+}
+const Voting: React.FC = () => {
+
+    const {cUser} = useAppState()
+    const members = cUser.team.members
+
+    const toRender = members.map((m, i) => {
+        return <VotingItem user={m} key={i}/>
+    })
+    return <Fragment>
+        {toRender}
+    </Fragment>
+}
 export const SideSection: React.FC = () => {
     return <Fragment>
         <Hidden xsDown>
-            <Box clone minHeight='40px' paddingTop='10px'>
-                <Grid item container alignItems='center'>
-                    <Grid item xs>
-                        <LeadDetails/>
+            <Box style={{overflowY: 'auto', maxHeight: 'calc(100vh - 100px)'}}>
+                <Box clone minHeight='40px' paddingTop='10px'>
+                    <Grid item container alignItems='center'>
+                        <Grid item xs>
+                            <LeadDetails/>
+                        </Grid>
+                        <LeaveButton/>
                     </Grid>
-                    <LeaveButton/>
-                </Grid>
+                </Box>
+                <Box paddingTop={1}/>
+                <Grid item><EventDetails>
+                    <Box clone margin='16px -16px -16px -16px'>
+                        <VotingDesktop/>
+                    </Box>
+                </EventDetails></Grid>
             </Box>
-            <Box paddingTop={1}/>
-            <Grid item><EventDetails/></Grid>
         </Hidden>
         <Hidden smUp>
             <MobileSide/>

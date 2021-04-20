@@ -40,12 +40,12 @@ export const AvatarPlate: React.FC<{
     avatarProps?: GridProps,
     afterChildren?: React.ReactElement
 } & PlateProps> = ({src, children, editable, onEdit, direction = 'column', afterChildren, avatarProps = {}, ...rest}) => {
-    return <Plate elevation={4} padding={24} {...rest}>
+    return <Plate elevation={4} padding={direction === 'row' ? 12 : 24} {...rest}>
         <Root>
             <Grid container direction={direction}
                   style={{flex: 1, ...(avatarProps.style || {})}}>
                 {direction === 'row' ?
-                    <AvatarGrid xs={12} sm={7} item src={src}
+                    <AvatarGrid xs={12} item src={src}
                                 editable={editable} onEdit={onEdit}
                                 container {...avatarProps}/>
                     :

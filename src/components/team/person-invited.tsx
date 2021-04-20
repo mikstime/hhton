@@ -62,16 +62,15 @@ export const PersonInvited: React.FC<{ user: User }> = ({user}) => {
 
     return <Grid item container spacing={2}
                  style={{overflow: 'visible'}}>
-        <Grid item container md={8} xs={12} sm={12}>
+        <Grid item container xs={12}>
             <AvatarPlate direction='row' src={user.avatar}
                          afterChildren={
                              <Box clone paddingTop={2} flex='1'>
                                  <Grid container item xs={12}>
-                                     <Grid container item xs={12} sm={6} md={7}>
+                                     <Grid container item xs={12}>
                                      </Grid>
                                      <Box clone paddingLeft={2}>
-                                         <Grid container item xs={12} sm={6}
-                                               md={5}
+                                         <Grid container item xs={12}
                                                justify='center'>
                                              <Tooltip
                                                  title={canAccept ? '' : 'Данное действие доступно лидеру команды'}>
@@ -87,22 +86,22 @@ export const PersonInvited: React.FC<{ user: User }> = ({user}) => {
                                      </Box>
                                  </Grid>
                              </Box>}
-                         avatarProps={{wrap: 'nowrap', xs: 12, sm: 6, md: 7}}>
+                         avatarProps={{wrap: 'nowrap', xs: 12}}>
                 <Grid xs sm={6} md={5} item container
                       direction='column'>
-                    <Box paddingLeft={{xs: 0, sm: 2}}
-                         marginTop={{xs: 1, md: 0}}>
+                    <Box paddingLeft={{xs: 0}}
+                         marginTop={{xs: 1}}>
                         <Grid item container>
                             <NameTypography user={user}/>
                         </Grid>
                     </Box>
-                    <Box paddingLeft={{xs: 0, sm: 2}}>
+                    <Box paddingLeft={{xs: 0}}>
                         <TeamDescription noName user={user}/>
                     </Box>
                 </Grid>
             </AvatarPlate>
         </Grid>
-        <Grid item container md={4} xs={12} sm={6}>
+        <Grid item container xs={12}>
             <Grid item>
                 <Skills user={user}/>
             </Grid>
