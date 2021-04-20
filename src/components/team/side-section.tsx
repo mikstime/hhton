@@ -146,8 +146,12 @@ const OpenButton: React.FC<{ isOpen?: boolean } & IconButtonProps> = ({isOpen, .
     </IconButton>
 }
 const MobileSide: React.FC = () => {
+    const {cUser} = useAppState()
     const [isOpen, setIsOpen] = useState(false)
 
+    if(!cUser.team.members.length) {
+        return null
+    }
     // @ts-ignore
     return <Grid item container direction='column' wrap='nowrap'>
         <Box clone height='48px' style={{zIndex: 2}} padding='16px'>
@@ -162,7 +166,7 @@ const MobileSide: React.FC = () => {
                 </Grid>
             </Grid>
         </Box>
-        <Box clone marginTop={isOpen ? '' : '-48px'} minHeight='24px'
+        <Box clone marginTop={isOpen ? '' : '-48px'} minHeight='16px'
              style={{transition: '.5s'}}>
             <Plate padding={16}>
                 <Collapse in={isOpen}>
