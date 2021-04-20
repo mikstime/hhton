@@ -122,12 +122,8 @@ export const TeamApp: React.FC = () => {
                         color='primary'
                         badgeContent={invites.i.personal.length + invites.i.team.length}
                         variant='dot'>Входящие заявки</Badge>}/>
-                <Tab label={
-                    <Badge
-                        color='primary'
-                        badgeContent={invites.o.personal.length + invites.o.team.length}
-                        variant='dot'>Исходящие заявки</Badge>}/>
-                <Tab label="Заблокированные заявки"/>
+                <Tab label='Исходящие заявки'/>
+                <Tab label='Заблокированные заявки'/>
             </Tabs>
 
         </Box>
@@ -154,7 +150,7 @@ export const TeamApp: React.FC = () => {
                         top: 64,
                         zIndex: 2
                     }}>
-                        <Grid item>
+                        <Grid item container>
                             <SideSection/>
                         </Grid>
                     </Box>
