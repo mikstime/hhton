@@ -276,7 +276,7 @@ const ImagesWide: React.FC = () => {
                 </Box>
             </Grid>
         </Grid>
-        {cUser.id === '-1' && !cUser.isLoading &&
+        {cUser.isNotAuthorized &&
         <a
           href={`${HOST_DOMAIN}${PREFIX}/redirect?backTo=user`}
           style={{
@@ -305,7 +305,7 @@ const SignupSection: React.FC<GridProps> = (props) => {
                     <Images/>
                 </Hidden>
             </Grid>
-            {cUser.id === '-1' && !cUser.isLoading &&
+            {cUser.isNotAuthorized &&
             <Box clone position='sticky' top='70px'>
               <a
                 href={`${HOST_DOMAIN}${PREFIX}/redirect?backTo=user`}
