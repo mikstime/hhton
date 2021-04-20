@@ -127,8 +127,8 @@ export const TeamApp: React.FC = () => {
             </Tabs>
 
         </Box>
-        <Box clone flexDirection={{xs: 'column-reverse', sm: 'row'}}>
-            <Grid item container spacing={2}>
+        <Box clone flexDirection={{xs: 'column-reverse', sm: 'row !important'}}>
+            <Grid item container spacing={2} direction='column-reverse'>
                 <Grid item container xs={12} sm={7}>
                     <TabPanel value={value} index={0}>
                         <TeamPage/>
@@ -150,7 +150,7 @@ export const TeamApp: React.FC = () => {
                         top: 64,
                         zIndex: 2
                     }}>
-                        <Grid item container>
+                        <Grid item container direction='column'>
                             <SideSection/>
                         </Grid>
                     </Box>
