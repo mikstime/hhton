@@ -153,7 +153,7 @@ const Images: React.FC = () => {
                 onDragStart={e => e.preventDefault()}
                 style={{
                     backgroundImage: `url("${images.current[index][0]}")`,
-                    backgroundSize: '190%',
+                    backgroundSize: '175%',
                     backgroundPosition: 'center',
                     borderRadius: '50%',
                     width: '100%',
@@ -232,7 +232,7 @@ const ImagesWide: React.FC = () => {
                     onDragStart={e => e.preventDefault()}
                     style={{
                         backgroundImage: `url("${images.current[index][0]}")`,
-                        backgroundSize: '190%',
+                        backgroundSize: 'auto 182%',
                         backgroundPosition: 'center',
                         width: 'calc(100% + 60px)',
                         marginLeft: '-30px',

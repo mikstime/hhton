@@ -1,4 +1,1 @@
-<svg id="Сгруппировать_244" data-name="Сгруппировать 244" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-  <rect id="Прямоугольник_117" data-name="Прямоугольник 117" width="24" height="24" fill="none"/>
-  <path id="Icon_ionic-ios-arrow-back" data-name="Icon ionic-ios-arrow-back" d="M13.789,12,7.831,6.047A1.125,1.125,0,1,1,9.425,4.458l6.75,6.745a1.123,1.123,0,0,1,.033,1.552L9.429,19.547a1.125,1.125,0,1,1-1.594-1.589Z" transform="translate(-0.503 -0.129)"/>
-</svg>
+<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m0 0h24v24h-24z" fill="none"/><path d="m13.789 12-5.958-5.953a1.125 1.125 0 1 1 1.594-1.589l6.75 6.745a1.123 1.123 0 0 1 .033 1.552l-6.779 6.792a1.125 1.125 0 1 1 -1.594-1.589z" transform="translate(-.503 -.129)"/></svg>
