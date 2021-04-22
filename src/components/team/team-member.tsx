@@ -114,10 +114,10 @@ export const TeamMember: React.FC<{ user: User } & GridProps> = ({user, ...props
     }, [pModal.open, onKick])
 
     return <Grid item xs container {...props}><PersonPlate user={user} topElements={
-        <IconButton disabled={isFetching}
+        cUser.id === user.id ? <React.Fragment/> : <IconButton disabled={isFetching}
                     size='small'
                     onClick={onKickClick}>
-            <KickIcon active={false}/>
+             <KickIcon active={false}/>
         </IconButton>}/>
     </Grid>
 }
