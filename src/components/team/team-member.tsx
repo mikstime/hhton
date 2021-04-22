@@ -21,6 +21,7 @@ import {kickTeamMember, unVoteFor, voteFor} from '../../model/api'
 import {useSnackbar} from 'notistack'
 import {useNotificationHandlers} from '../tools/notification-handlers'
 import {usePromptModal} from '../modals/prompt'
+import {PersonPlate} from './person-plate'
 
 
 const KickIcon: React.FC<{ active: boolean }> = ({active, ...props}) => {
@@ -153,85 +154,104 @@ export const TeamMember: React.FC<{ user: User }> = ({user}) => {
         nc.update()
     }, [enqueueSnackbar, cEvent.id, cUser.team.id, user.id, nc.update, cUser.team.myVote])
 
-    return <Grid item container spacing={2}>
-        <Grid item md={5} xs={9} sm={5}>
-            <Link to={`/user/${user.id}`}
-                  style={{textDecoration: 'none'}}>
-                <AvatarPlate padding={24} src={user.avatar} style={{
-                    position: 'sticky',
-                    top: 88
-                }}/>
-            </Link>
-        </Grid>
-        <Box clone order={{xs: 3, sm: 2, md: 2}}>
-            <Grid item xs sm={5} md={5} container spacing={2}
-                  direction='column'>
-                <Grid item container>
-                    <NameTypography user={user}/>&nbsp;
-                    {(user.isTeamLead || team?.teamLead?.id === user.id) &&
-                    <AdditionalText>Лидер</AdditionalText>}
-                </Grid>
-                <Grid item>
-                    <Skills user={user}/>
-                </Grid>
-                <Grid item container style={{marginTop: 24, marginBottom: 24}}
-                      wrap='nowrap'>
-                    <Grid item container direction='column' justify='center'
-                          spacing={2}>
-                        <SocialLink prefix='ВКонтакте: ' site='vk.com/'
-                                    value={user.settings.vk}/>
-                        <SocialLink prefix='Телеграм: ' site='t.me/'
-                                    value={user.settings.tg}/>
-                        <SocialLink prefix='Github: ' site='github.com/'
-                                    value={user.settings.gh}/>
-                    </Grid>
-                </Grid>
-            </Grid>
-        </Box>
-        <Box clone order={{xs: 2, sm: 3, md: 3}}>
-            <Grid item xs={3} sm={2} md={2} container spacing={2}
-                  direction='column'
-                  justify='center' alignItems='center'>
-                <Grid item>
-                    {/*{user.id !== cUser.id &&*/}
-                    {/*<Tooltip title='Член команды с наибольшим числом голосов становится лидером команды'>*/}
-                    {/*  <IconButton disabled={isFetching} onClick={() => {*/}
-                    {/*      onVote()*/}
-                    {/*  }}>*/}
-                    {/*    <Box clone width={{xs: '24px', md: '48px'}}*/}
-                    {/*         height={{xs: '24px', md: '48px'}}>*/}
-                    {/*      <VoteIcon active={didVote}/>*/}
-                    {/*    </Box>*/}
-                    {/*  </IconButton>*/}
-                    {/*</Tooltip>*/}
-                    {/*}*/}
-                    {/*{team.members.length > 0 &&*/}
-                    {/*<AdditionalText*/}
-                    {/*  align='center'>{team.votes?.[user.id] || 0}/{team.members.length}</AdditionalText>}*/}
-                </Grid>
-                {user.id !== cUser.id &&
-                <Grid item>
-                  <IconButton disabled={isFetching}
-                              size='small' style={{margin: 'auto'}}
-                              onClick={() => {
-                                  pModal.open({
-                                      onSubmit: () => {
-                                          onKick()
-                                          pModal.close()
-                                      },
-                                      message: `Исключить пользователя из команды?`,
-                                      accept: 'Исключить',
-                                      decline: 'Оставить'
-                                  })
-                              }}>
-                      {cUser.isTeamLead &&
-                      <Box clone width={{xs: '24px'}}
-                           height={{xs: '24px'}}><KickIcon
-                        active={false}/></Box>}
-                  </IconButton>
-                </Grid>
-                }
-            </Grid>
-        </Box>
+    const onKickClick = useCallback(() => {
+        pModal.open({
+            onSubmit: () => {
+                onKick()
+                pModal.close()
+            },
+            message: `Исключить пользователя из команды?`,
+            accept: 'Исключить',
+            decline: 'Оставить'
+        })
+    }, [pModal.open, onKick])
+
+    return <Grid item xs container><PersonPlate user={user} topElements={
+        <IconButton disabled={isFetching}
+                    size='small'
+                    onClick={onKickClick}>
+            <KickIcon active={false}/>
+        </IconButton>}/>
     </Grid>
+    // return <Grid item container spacing={2}>
+    //     <Grid item md={5} xs={9} sm={5}>
+    //         <Link to={`/user/${user.id}`}
+    //               style={{textDecoration: 'none'}}>
+    //             <AvatarPlate padding={24} src={user.avatar} style={{
+    //                 position: 'sticky',
+    //                 top: 88
+    //             }}/>
+    //         </Link>
+    //     </Grid>
+    //     <Box clone order={{xs: 3, sm: 2, md: 2}}>
+    //         <Grid item xs sm={5} md={5} container spacing={2}
+    //               direction='column'>
+    //             <Grid item container>
+    //                 <NameTypography user={user}/>&nbsp;
+    //                 {(user.isTeamLead || team?.teamLead?.id === user.id) &&
+    //                 <AdditionalText>Лидер</AdditionalText>}
+    //             </Grid>
+    //             <Grid item>
+    //                 <Skills user={user}/>
+    //             </Grid>
+    //             <Grid item container style={{marginTop: 24, marginBottom: 24}}
+    //                   wrap='nowrap'>
+    //                 <Grid item container direction='column' justify='center'
+    //                       spacing={2}>
+    //                     <SocialLink prefix='ВКонтакте: ' site='vk.com/'
+    //                                 value={user.settings.vk}/>
+    //                     <SocialLink prefix='Телеграм: ' site='t.me/'
+    //                                 value={user.settings.tg}/>
+    //                     <SocialLink prefix='Github: ' site='github.com/'
+    //                                 value={user.settings.gh}/>
+    //                 </Grid>
+    //             </Grid>
+    //         </Grid>
+    //     </Box>
+    //     <Box clone order={{xs: 2, sm: 3, md: 3}}>
+    //         <Grid item xs={3} sm={2} md={2} container spacing={2}
+    //               direction='column'
+    //               justify='center' alignItems='center'>
+    //             <Grid item>
+    //                 {/*{user.id !== cUser.id &&*/}
+    //                 {/*<Tooltip title='Член команды с наибольшим числом голосов становится лидером команды'>*/}
+    //                 {/*  <IconButton disabled={isFetching} onClick={() => {*/}
+    //                 {/*      onVote()*/}
+    //                 {/*  }}>*/}
+    //                 {/*    <Box clone width={{xs: '24px', md: '48px'}}*/}
+    //                 {/*         height={{xs: '24px', md: '48px'}}>*/}
+    //                 {/*      <VoteIcon active={didVote}/>*/}
+    //                 {/*    </Box>*/}
+    //                 {/*  </IconButton>*/}
+    //                 {/*</Tooltip>*/}
+    //                 {/*}*/}
+    //                 {/*{team.members.length > 0 &&*/}
+    //                 {/*<AdditionalText*/}
+    //                 {/*  align='center'>{team.votes?.[user.id] || 0}/{team.members.length}</AdditionalText>}*/}
+    //             </Grid>
+    //             {user.id !== cUser.id &&
+    //             <Grid item>
+    //               <IconButton disabled={isFetching}
+    //                           size='small' style={{margin: 'auto'}}
+    //                           onClick={() => {
+    //                               pModal.open({
+    //                                   onSubmit: () => {
+    //                                       onKick()
+    //                                       pModal.close()
+    //                                   },
+    //                                   message: `Исключить пользователя из команды?`,
+    //                                   accept: 'Исключить',
+    //                                   decline: 'Оставить'
+    //                               })
+    //                           }}>
+    //                   {cUser.isTeamLead &&
+    //                   <Box clone width={{xs: '24px'}}
+    //                        height={{xs: '24px'}}><KickIcon
+    //                     active={false}/></Box>}
+    //               </IconButton>
+    //             </Grid>
+    //             }
+    //         </Grid>
+    //     </Box>
+    // </Grid>
 }

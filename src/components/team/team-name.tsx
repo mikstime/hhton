@@ -85,7 +85,7 @@ export const TeamName: React.FC<GridProps> = ({children, ...props}) => {
         <Grid item container
               alignItems='center' {...props}>
             {cUser.team.name && cUser.isTeamLead && <Box clone paddingRight={1}><Grid item>
-              <IconButton disabled={isLoading}
+              <IconButton disabled={isLoading} size='small'
                           onClick={isEditing ? onSubmit : () => {
                               setIsEditing(true)
                           }}>
