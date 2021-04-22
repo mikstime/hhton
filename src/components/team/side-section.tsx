@@ -302,7 +302,8 @@ const useVotingItemStyles = makeStyles((theme: Theme) => createStyles({
             position: 'absolute',
             backgroundImage: `url("${leaderIcon}")`,
             backgroundSize: '80%',
-            backgroundPosition: 'center'
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
         }
     },
     rootD: {
@@ -351,11 +352,12 @@ const VotingItem: React.FC<{ user: User }> = ({user}) => {
                     <Image src={user.avatar} style={{
                         width: 48,
                         paddingTop: 48,
-                        borderRadius: 4
+                        borderRadius: 4,
                     }} imageStyle={{
                         width: 48,
                         height: 48,
-                        borderRadius: 4
+                        objectFit: 'cover',
+                        borderRadius: 4,
                     }}/>
                 </Grid>
             </Link>
