@@ -85,9 +85,11 @@ export const LeadDetails: React.FC<TypographyProps> = (props) => {
     if (!cUser.team.teamLead) {
         return null
     }
-
+    const fName = cUser.team.teamLead.firstName.length > 17 ?
+        cUser.team.teamLead.firstName.slice(0, 14) + '...'
+        : cUser.team.teamLead.firstName
     const leaderName = cUser.team.teamLead.id === cUser.id ? 'Вы' :
-        `${cUser.team.teamLead.firstName} ${cUser.team.teamLead.lastName}`
+        `${fName ?? ''} ${cUser.team.teamLead.lastName[0] ? cUser.team.teamLead.lastName[0] + '.' : ''}`
 
     const toolTipMessage = cUser.team.teamLead.id === cUser.id ?
         'Теперь Вы можете принимать решение о приеме и отклонении заявок, а также исключать членов команды' :
@@ -97,7 +99,8 @@ export const LeadDetails: React.FC<TypographyProps> = (props) => {
         title={toolTipMessage}>
         <div>
             <Typography {...props}>
-                <b>{leaderName}</b> &mdash; Лидер команды
+                <b>{leaderName.length > 20 ? leaderName.slice(0, 17) + '...' : leaderName}</b> &mdash; Лидер
+                команды
             </Typography>
         </div>
     </Tooltip>
@@ -231,7 +234,7 @@ const VotingHeader: React.FC = () => {
                             style={{
                                 transition: '.3s',
                                 backgroundColor: '#F5F5F5',
-                                marginBottom: isOpen ? '-40px' : '',
+                                marginBottom: isOpen ? '-40px' : ''
                             }}
                 >
                     {isOpen ? <CloseIcon/> : '?'}
@@ -294,16 +297,17 @@ const useVotingItemStyles = makeStyles((theme: Theme) => createStyles({
         position: 'relative',
         '&:after': {
             content: `''`,
-            top: -11.5,
-            right: -11.5,
+            top: -12,
+            right: -12,
             zIndex: 2,
             width: 24,
             height: 24,
             position: 'absolute',
             backgroundImage: `url("${leaderIcon}")`,
+            transform: 'rotate(45deg)',
             backgroundSize: '80%',
             backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
+            backgroundRepeat: 'no-repeat'
         }
     },
     rootD: {
@@ -352,26 +356,31 @@ const VotingItem: React.FC<{ user: User }> = ({user}) => {
                     <Image src={user.avatar} style={{
                         width: 48,
                         paddingTop: 48,
-                        borderRadius: 4,
+                        borderRadius: 4
                     }} imageStyle={{
                         width: 48,
                         height: 48,
                         objectFit: 'cover',
-                        borderRadius: 4,
+                        borderRadius: 4
                     }}/>
                 </Grid>
             </Link>
             <Box clone paddingLeft={1}>
-                <Grid xs item container direction='column'>
-                    <Typography>{user.firstName} {user.lastName}</Typography>
-                    <AdditionalText
-                        style={{
-                            wordWrap: 'break-word',
-                            wordBreak: 'break-word',
-                            hyphens: 'auto'
-                        }}>
-                        {getVotingText(team.votes?.[user.id] ?? 0, didVote)}
-                    </AdditionalText>
+                <Grid xs item container direction='column' wrap='nowrap'>
+                    <Grid item xs zeroMinWidth style={{maxWidth: 150}}>
+                        <Typography
+                            noWrap>{user.firstName} {user.lastName}</Typography>
+                    </Grid>
+                    <Grid item xs>
+                        <AdditionalText
+                            style={{
+                                wordWrap: 'break-word',
+                                wordBreak: 'break-word',
+                                hyphens: 'auto'
+                            }}>
+                            {getVotingText(team.votes?.[user.id] ?? 0, didVote)}
+                        </AdditionalText>
+                    </Grid>
                 </Grid>
             </Box>
             <Grid item container style={{width: 30}} alignItems='center'>
@@ -401,7 +410,7 @@ const Voting: React.FC = () => {
 export const SideSection: React.FC = () => {
     const {cUser} = useAppState()
     return <Fragment>
-        <Hidden xsDown>
+        <Hidden smDown>
             <Box style={{overflowY: 'auto', maxHeight: 'calc(100vh - 100px)'}}>
                 <Box clone minHeight='40px' paddingTop='10px'>
                     <Grid item container alignItems='center'>
@@ -413,13 +422,14 @@ export const SideSection: React.FC = () => {
                 </Box>
                 <Box paddingTop={1}/>
                 <Grid item><EventDetails>
-                    {cUser.team.members.length > 0 && <Box clone margin='16px -16px -16px -16px'>
-                        <VotingDesktop/>
+                    {cUser.team.members.length > 0 &&
+                    <Box clone margin='16px -16px -16px -16px'>
+                      <VotingDesktop/>
                     </Box>}
                 </EventDetails></Grid>
             </Box>
         </Hidden>
-        <Hidden smUp>
+        <Hidden mdUp>
             <MobileSide/>
         </Hidden>
     </Fragment>
