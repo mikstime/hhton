@@ -14,8 +14,6 @@ export const HistoryPage: React.FC = () => {
     const {invites} = useAppState()
 
     return <Grid container direction='column'>
-        <TeamName/>
-        <Divider light flexItem style={{height: 1}}/>
         <SubTitle style={{marginBottom: 24}}>Заблокированные индивидуальные заявки</SubTitle>
         <Grid container spacing={3} direction='column'>
             {invites.h.personal.map((u, i) => (

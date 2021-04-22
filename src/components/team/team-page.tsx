@@ -76,7 +76,6 @@ export const TeamPage: React.FC = () => {
 
     const {cUser, cEvent} = useAppState()
     return <Grid container direction='column' wrap='nowrap'>
-        <TeamName/>
         <GrayPlate style={{marginBottom: 16}}>
             <AdditionalText>
                 Это ваша команда на мероприятии&nbsp;

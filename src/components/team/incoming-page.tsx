@@ -15,8 +15,6 @@ export const IncomingPage: React.FC = () => {
     const {invites} = useAppState()
 
     return <Grid container direction='column'>
-        <TeamName/>
-        <Divider light flexItem style={{height: 1}}/>
         <SubTitle style={{marginBottom: 24}}>Хотят в
             команду</SubTitle>
         <Grid container spacing={3} direction='column'>

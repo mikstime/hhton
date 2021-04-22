@@ -412,7 +412,7 @@ export const SideSection: React.FC = () => {
     return <Fragment>
         <Hidden smDown>
             <Box style={{overflowY: 'auto', maxHeight: 'calc(100vh - 100px)'}}>
-                <Box clone minHeight='40px' paddingTop='10px'>
+                <Box clone minHeight='30px'>
                     <Grid item container alignItems='center'>
                         <Grid item xs>
                             <LeadDetails/>

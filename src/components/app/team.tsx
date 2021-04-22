@@ -11,6 +11,7 @@ import {IncomingPage} from '../team/incoming-page'
 import {OutgoingPage} from '../team/outgoing-page'
 import {HistoryPage} from '../team/history-page'
 import {SideSection} from '../team/side-section'
+import {TeamName} from '../team/team-name'
 
 
 interface TabPanelProps {
@@ -93,6 +94,7 @@ export const TeamApp: React.FC = () => {
     }
 
     return <Grid container>
+        <TeamName/>
         <Box
             paddingLeft={{sm: '50px'}}
             marginLeft={{sm: '-50px'}}
@@ -125,7 +127,6 @@ export const TeamApp: React.FC = () => {
                 <Tab label='Исходящие заявки'/>
                 <Tab label='Заблокированные заявки'/>
             </Tabs>
-
         </Box>
         <Box clone flexDirection={{xs: 'column-reverse', md: 'row !important'}}>
             <Grid item container spacing={2} direction='column-reverse' wrap='nowrap'>
