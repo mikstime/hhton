@@ -20,7 +20,9 @@ import {useJobs} from '../tools/useJobs'
 
 type Props = {
     user: User,
-    topElements: JSX.Element,
+    topElements?: JSX.Element,
+    rightElements?: JSX.Element,
+    bottomElements?: JSX.Element,
 }
 
 type Job = {
@@ -39,7 +41,7 @@ const SkillsItem: React.FC<{ job: Job }> = ({job}) => {
     const classes = useSkillsStyles()
 
     const skills = job.tags.map((t, i) => <Chip className={classes.chip} key={i}
-                                           label={t.name}/>)
+                                                label={t.name}/>)
     return <Grid item container wrap='nowrap'>
         <Box clone width='100px'>
             <Grid item>
@@ -62,12 +64,15 @@ const Skills: React.FC<{ user: User, open: boolean, onToggle: Function } & Plate
     const getJobName = useJobs()
     const jobs = useMemo(() => {
         const x = user.skills.tags.reduce((a, s) => {
-            if(s.jobId) {
+            if (s.jobId) {
                 return {...a, [s.jobId]: [...(a[s.jobId] || []), s]}
             }
-            return  a
-        }, {} as {[key: string]: UserSkill[]})
-        return Object.entries(x).map(([k, v]) => ({name: getJobName(k), tags: v}))
+            return a
+        }, {} as { [key: string]: UserSkill[] })
+        return Object.entries(x).map(([k, v]) => ({
+            name: getJobName(k),
+            tags: v
+        }))
     }, [user.skills.tags])
 
     return <Fragment>
@@ -82,11 +87,11 @@ const Skills: React.FC<{ user: User, open: boolean, onToggle: Function } & Plate
                         </Grid>
                         <Box clone width='30px' height='30px'>
                             <Grid item>
-                                { jobs.length > 0 &&
-                                    <IconButton size='small'
-                                                onClick={() => onToggle()}>
-                                        <ExpandIcon/>
-                                    </IconButton>
+                                {jobs.length > 0 &&
+                                <IconButton size='small'
+                                            onClick={() => onToggle()}>
+                                  <ExpandIcon/>
+                                </IconButton>
                                 }
                             </Grid>
                         </Box>
@@ -118,7 +123,18 @@ const Skills: React.FC<{ user: User, open: boolean, onToggle: Function } & Plate
         </Collapse>
     </Fragment>
 }
-export const PersonPlate: React.FC<Props & PlateProps> = ({user, topElements, children, ...props}) => {
+const useStyles = makeStyles((t: Theme) => createStyles({
+    root: {
+        '-ms-overflow-style': 'none',  /* Internet Explorer 10+ */
+        'scrollbar-width': 'none',  /* Firefox */
+        '&::-webkit-scrollbar': {
+            display: 'none'  /* Safari and Chrome */
+        }
+    }
+}))
+export const PersonPlate: React.FC<Props & PlateProps> = ({user, topElements, rightElements, bottomElements, ...props}) => {
+
+    const classes = useStyles()
     const [avatarSize, setAvatarSize] = useState(98)
     const [open, setOpen] = useState(false)
     const onToggle = useCallback(() => {
@@ -129,8 +145,10 @@ export const PersonPlate: React.FC<Props & PlateProps> = ({user, topElements, ch
         }
         setOpen(!open)
     }, [setOpen, open])
+
+    const hasRight = !!rightElements
     return <Plate padding={16} {...props}>
-        <Grid container wrap='nowrap'>
+        <Grid container wrap='nowrap' style={{position: 'relative'}}>
             <Box clone width='0px' height={0}>
                 <Grid item>
                     <Link to={`user/${user.id}`}
@@ -149,42 +167,49 @@ export const PersonPlate: React.FC<Props & PlateProps> = ({user, topElements, ch
                     </Link>
                 </Grid>
             </Box>
-            <Grid item container xs direction='column' wrap='nowrap'>
-                <Box clone
-                     style={{transition: 'padding-left .3s'}}
-                     paddingLeft={`${avatarSize + 12}px`}>
-                    <Grid item container xs wrap='nowrap'>
-                        <Grid item zeroMinWidth>
+            <Box paddingRight={hasRight ? '32px' : ''} clone>
+                <Grid item container xs direction='column' wrap='nowrap'>
+                    <Box clone
+                         height='30px'
+                         style={{transition: 'padding-left .3s'}}
+                         paddingLeft={`${avatarSize + 12}px`}>
+                        <Grid item container xs wrap='nowrap'>
+                            <Grid item zeroMinWidth>
+                                <Box clone minWidth='100px'
+                                     maxWidth={{xs: `calc(100vw - 48px - ${avatarSize}px - 32px)`}}>
+                                    <Typography variant='h2' noWrap>
+                                        {user.firstName} {user.lastName}
+                                    </Typography>
+                                </Box>
+                            </Grid>
+                            <Box flex={1}/>
+                            {topElements}
+                        </Grid>
+                    </Box>
+                    <Box clone
+                         style={{transition: 'padding-left .3s'}}
+                         paddingLeft={`${avatarSize + 12}px`}>
+                        <Grid item container xs>
                             <Box clone minWidth='100px'
-                                 maxWidth={{xs: `calc(100vw - 48px - ${avatarSize}px - 32px)`}}>
-                                <Typography variant='h2' noWrap>
-                                    {user.firstName} {user.lastName}
-                                </Typography>
+                                 height='30px'
+                                 maxWidth={{xs: `calc(100vw - 48px - ${avatarSize + 12}px - 32px)`}}>
+                                <AdditionalText noWrap>
+                                    <Hidden
+                                        only='xs'>ВКонтакте:&nbsp;</Hidden><a
+                                    style={{textDecoration: 'none'}}
+                                    href={`https://vk.com/${user.settings.vk}`}>
+                                    vk.com/{user.settings.vk}
+                                </a>
+                                </AdditionalText>
                             </Box>
                         </Grid>
-                        <Box flex={1}/>
-                        {topElements}
-                    </Grid>
-                </Box>
-                <Box clone
-                     style={{transition: 'padding-left .3s'}}
-                     paddingLeft={`${avatarSize + 12}px`}>
-                    <Grid item container xs>
-                        <Box clone minWidth='100px'
-                             height='30px'
-                             maxWidth={{xs: `calc(100vw - 48px - ${avatarSize + 12}px - 32px)`}}>
-                            <AdditionalText noWrap>
-                                <Hidden only='xs'>ВКонтакте:&nbsp;</Hidden><a
-                                style={{textDecoration: 'none'}}
-                                href={`https://vk.com/${user.settings.vk}`}>
-                                vk.com/{user.settings.vk}
-                            </a>
-                            </AdditionalText>
-                        </Box>
-                    </Grid>
-                </Box>
-                <Skills user={user} onToggle={onToggle} open={open}/>
-            </Grid>
+                    </Box>
+                    <Skills user={user} onToggle={onToggle} open={open}/>
+                    {bottomElements}
+                </Grid>
+            </Box>
+            <Box className={classes.root} right={0} top={0} bottom={0} style={{overflowY: 'auto'}}
+                 position='absolute'>{rightElements}</Box>
         </Grid>
     </Plate>
 }

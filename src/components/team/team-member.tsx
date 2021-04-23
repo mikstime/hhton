@@ -1,28 +1,20 @@
 import React, {useCallback, useState} from 'react'
 import {User} from '../tools/use-app-state/user'
 import {
-    Chip,
     createStyles,
     Grid, GridProps,
     IconButton,
     makeStyles,
     Theme
 } from '@material-ui/core'
-import {ReactComponent as KickActiveIcon} from '../../assets/team/kick_active.svg'
-import {ReactComponent as KickIconBase} from '../../assets/team/kick.svg'
-import {ReactComponent as VoteActiveIcon} from '../../assets/team/vote_active.svg'
-import {ReactComponent as VoteIconBase} from '../../assets/team/vote.svg'
+import {KickIcon} from '../common/icons'
 import {useAppState} from '../tools/use-app-state'
-import {kickTeamMember, unVoteFor, voteFor} from '../../model/api'
+import {kickTeamMember} from '../../model/api'
 import {useSnackbar} from 'notistack'
 import {useNotificationHandlers} from '../tools/notification-handlers'
 import {usePromptModal} from '../modals/prompt'
 import {PersonPlate} from './person-plate'
 
-
-const KickIcon: React.FC<{ active: boolean }> = ({active, ...props}) => {
-    return active ? <KickActiveIcon {...props}/> : <KickIconBase {...props}/>
-}
 
 export const useChipStyles = makeStyles((theme: Theme) =>
     createStyles({

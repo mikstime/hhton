@@ -83,7 +83,7 @@ export const TeamApp: React.FC = () => {
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue)
         if (newValue === 0) {
-            history.replace('#team')
+            history.replace('#')
         } else if (newValue === 1) {
             history.replace('#incoming')
         } else if (newValue === 2) {

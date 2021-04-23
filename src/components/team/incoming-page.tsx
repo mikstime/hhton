@@ -1,30 +1,23 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {
-    Box, Divider,
-    Grid,
+    Box, Grid
 } from '@material-ui/core'
 import {AdditionalText, GrayPlate, SubTitle} from '../common'
 import {useAppState} from '../tools/use-app-state'
-import {TeamInvitee} from './team-invitee'
 import {PersonInvitee} from './person-invitee'
 import {Link} from 'react-router-dom'
-import {TeamName} from './team-name'
+import {IncomingPersonalInvite, IncomingTeamInvite} from './invite-plates'
 
 export const IncomingPage: React.FC = () => {
 
     const {invites} = useAppState()
 
     return <Grid container direction='column'>
-        <SubTitle style={{marginBottom: 24}}>Хотят в
-            команду</SubTitle>
-        <Grid container spacing={3} direction='column'>
-            {invites.i.personal.map((u, i) => (
-                <Fragment key={i}>
-                    <TeamInvitee user={u}/>
-                    <Divider light flexItem style={{height: 1}}/>
-                </Fragment>
-            ))
-            }
+        <SubTitle>Заявки от пользователей</SubTitle>
+        <Grid container direction='column' wrap='nowrap'>
+            {invites.i.personal.map((u, i) => <Box clone paddingTop='8px'
+                                                   key={i}>
+                <IncomingPersonalInvite user={u}/></Box>)}
         </Grid>
         {!invites.i.personal.length && <GrayPlate style={{marginTop: 16}}>
           <AdditionalText>
@@ -35,12 +28,11 @@ export const IncomingPage: React.FC = () => {
           </AdditionalText>
         </GrayPlate>
         }
-        <SubTitle style={{marginBottom: 24, marginTop: 36}}>Желают
-            объединиться</SubTitle>
+        <SubTitle style={{marginBottom: 24, marginTop: 8}}>Заявки от команд</SubTitle>
         {invites.i.team.length > 0 && <Grid spacing={2} container item>
             {
                 invites.i.team.map((u) => (
-                    <PersonInvitee key={u.id} user={u}/>
+                    <IncomingTeamInvite key={u.id} user={u}/>
                 ))
             }
         </Grid>
