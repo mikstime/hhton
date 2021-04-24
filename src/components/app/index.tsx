@@ -10,7 +10,6 @@ import {useAuth} from '../tools/use-auth'
 import {useInvitesFetcher} from '../tools/use-invites-fetcher'
 import {
     Container, ContainerProps,
-    Box
 } from '@material-ui/core'
 import styled from 'styled-components'
 import {useNotifications} from '../tools/use-notifications'

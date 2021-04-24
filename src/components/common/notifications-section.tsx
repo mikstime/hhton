@@ -20,7 +20,6 @@ import Image from 'material-ui-image'
 import {useAppState} from '../tools/use-app-state'
 import {
     Message,
-    NC,
     useNotificationHandlers
 } from '../tools/notification-handlers'
 import {fetchEvent, getNotificationsHistory} from '../../model/api'
@@ -29,17 +28,16 @@ import {Hackathon} from '../tools/use-app-state/hackathon'
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         paper: {
-            marginTop: -7,
             shadow: theme.shadows[4],
             maxWidth: '90vw',
             [theme.breakpoints.only('lg')]: {
                 maxWidth: '912px'
             },
             [theme.breakpoints.only('md')]: {
-                maxWidth: 'calc( 800px - 48px - 48px)'
+                maxWidth: 'calc( 800px - 48px - 48px)',
             },
             [theme.breakpoints.only('sm')]: {
-                maxWidth: 'calc( 100vw - 48px - 200px)'
+                maxWidth: 'calc( 100vw - 48px - 200px)',
             },
             [theme.breakpoints.only('xs')]: {
                 maxWidth: 'calc(100vw - 48px)'
@@ -66,8 +64,7 @@ const NotificationsPopover: React.FC<Omit<PopoverProps, 'children'> & { notifica
 
     const render = notifications.slice(1).map((n: Message, i) => {
         return <Grid key={i} container wrap='nowrap'
-                     alignItems='center'
-                     style={{padding: '0 8px 8px 8px'}}>
+                     style={{padding: '4px 8px 8px 8px'}}>
             <Grid item onClick={(e) => {
                 nc.navigation[n.status] ? nc.navigation[n.status](n) : nc.navigation.default(n)
                 props.onClose?.(e, 'backdropClick')
@@ -81,7 +78,7 @@ const NotificationsPopover: React.FC<Omit<PopoverProps, 'children'> & { notifica
                 nc.navigation[n.status] ? nc.navigation[n.status](n) : nc.navigation.default(n)
                 props.onClose?.(e, 'backdropClick')
             }} style={{cursor: 'pointer'}}>
-                <AdditionalText noWrap
+                <AdditionalText
                                 style={{
                                     marginLeft: 12
                                 }}>{n.message}</AdditionalText>
@@ -101,16 +98,18 @@ const NotificationsPopover: React.FC<Omit<PopoverProps, 'children'> & { notifica
         {...props}
     >
         <Grid container direction='column'>
-            <Grid item container alignItems='center' justify='flex-end'
+            <Grid item container justify='flex-end'
                   wrap='nowrap'
-                  style={{padding: 8}}>
-                <NotificationIcon/>
+                  style={{padding: '12px 8px 8px 8px'}}>
+                <Grid item>
+                <NotificationIcon style={{width: '24px', height: '24px'}}/>
+                </Grid>
                 <Grid item zeroMinWidth
                       onClick={(e) => {
                           nc.navigation[notifications[0].status] ? nc.navigation[notifications[0].status](notifications[0]) : nc.navigation.default(notifications[0])
                           props.onClose?.(e, 'backdropClick')
-                      }} style={{cursor: 'pointer'}}>
-                    <AdditionalText noWrap
+                      }} style={{cursor: 'pointer', minHeight: 30}}>
+                    <AdditionalText
                                     style={{marginLeft: 12}}>{notifications[0].message}</AdditionalText>
                 </Grid>
                 <Box flex={1}/>
@@ -123,7 +122,13 @@ const NotificationsPopover: React.FC<Omit<PopoverProps, 'children'> & { notifica
                     </Grid>
                 </Box>
             </Grid>
-            {render}
+            {render.length > 0 ? render : <Box clone paddingRight='42px' paddingBottom={1} paddingLeft='44px'>
+                <Grid item container>
+                <AdditionalText>
+                    Больше уведомлений нет
+                </AdditionalText>
+            </Grid>
+            </Box>}
         </Grid>
     </Popover>
 }

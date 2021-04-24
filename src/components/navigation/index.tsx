@@ -12,7 +12,6 @@ import {DefaultMenu} from './default'
 import {LoadingMenu} from './loading'
 import {UnAuthMenu} from './unauth'
 import {
-    NotificationSection,
     NotificationSectionSmall
 } from '../common/notifications-section'
 import {ReactComponent as MenuIcon} from '../../assets/navigation/menu.svg'
@@ -30,8 +29,6 @@ const useStyles = makeStyles((theme: Theme) =>
             }
         },
         appBar: {
-            // width: `calc(100% - ${drawerWidth}px)`,
-            // width: `calc((100vw - 912px - ${drawerWidth}px) / 2 - 24px)`,
             backgroundColor: '#F9F9F9',
             marginLeft: drawerWidth,
         },
@@ -41,7 +38,6 @@ const useStyles = makeStyles((theme: Theme) =>
                 display: 'none'
             }
         },
-        // necessary for content to be below app bar
         toolbar: theme.mixins.toolbar,
         drawerPaper: {
             padding: `8px 0 24px 24px`,
@@ -59,7 +55,6 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         drawerPaper2: {
             width: drawerWidth,
-            // padding: theme.spacing(3),
             height: 'calc(100vh - 24px)',
             padding: `8px 24px 24px 24px`,
         },
@@ -88,7 +83,6 @@ export const AppNavigation: React.FC<GridProps> = ({children}) => {
 
     if (cEvent.founderId === cUser.id && cEvent.founderId !== '-1') {
         drawer = <DefaultMenu onClick={onLinkClick}/>
-        // drawer = <OwnerMenu onClick={onLinkClick}/>
     } else if (cUser.id === '-1') {
         drawer = <UnAuthMenu onClick={onLinkClick}/>
     } else if (cUser.id !== '-1' && cEvent.id !== '-1') {
@@ -113,17 +107,7 @@ export const AppNavigation: React.FC<GridProps> = ({children}) => {
                 </Toolbar>
             </AppBar>
         </Hidden>
-        {/*<Hidden smDown implementation="js">*/}
-        {/*    <AppBar position="fixed" className={classes.appBar} elevation={0}>*/}
-        {/*        <Toolbar>*/}
-        {/*                <Box paddingLeft='200px' width='100%'>*/}
-        {/*                    <NotificationsSection/>*/}
-        {/*                </Box>*/}
-        {/*        </Toolbar>*/}
-        {/*    </AppBar>*/}
-        {/*</Hidden>*/}
         <nav className={classes.drawer} aria-label="navigation mobile">
-            {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
             <Hidden smUp implementation="js">
                 <Drawer className={classes.drawer}
                         container={container}
@@ -135,7 +119,7 @@ export const AppNavigation: React.FC<GridProps> = ({children}) => {
                             paper: classes.drawerPaper2
                         }}
                         ModalProps={{
-                            keepMounted: true // Better open performance on mobile.
+                            keepMounted: true
                         }}
                 >
                     {drawer}

@@ -83,6 +83,14 @@ export const UniteButton: React.FC = () => {
         </PrimaryButton>
     }
 
+    if(settings.isHostMode) {
+        return <PrimaryButton style={{width: '100%'}} onClick={() => {
+            settings.setIsHostMode(false)
+        }}>
+            Режим участника
+        </PrimaryButton>
+    }
+
     if (user.isInvited) {
         return <PrimaryButton disabled>
             Заявка отправлена
@@ -142,14 +150,6 @@ export const UniteButton: React.FC = () => {
                 К регистрации
             </SecondaryButton>
         </Link>
-    }
-
-    if(settings.isHostMode) {
-        return <PrimaryButton style={{width: '100%'}} onClick={() => {
-            settings.setIsHostMode(false)
-        }}>
-            Режим участника
-        </PrimaryButton>
     }
 
     if ((user.id === cUser.id || inMyTeam)) {
