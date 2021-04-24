@@ -1,15 +1,23 @@
 import React, {useCallback, useEffect, useState} from 'react'
 import {PersonPlate} from './person-plate'
 import {Id, Team, User} from '../tools/use-app-state/user'
-import {Grid, GridProps, IconButton, Tooltip, Box} from '@material-ui/core'
+import {
+    Grid,
+    GridProps,
+    IconButton,
+    Tooltip,
+    Box,
+    makeStyles, Theme, createStyles, ButtonGroup
+} from '@material-ui/core'
 import {useAppState} from '../tools/use-app-state'
 import {useNotificationHandlers} from '../tools/notification-handlers'
 import {useSnackbar} from 'notistack'
 import {acceptInvite, banInvite, declineInvite} from '../../model/api'
-import {PrimaryButton} from '../common/buttons'
+import {PrimaryButton, SecondaryButton} from '../common/buttons'
 import {BlockIcon, KickIcon} from '../common/icons'
 import {usePromptModal} from '../modals/prompt'
 import Image from 'material-ui-image'
+import {ReactComponent as CancelIcon} from '../../assets/cancel.svg'
 
 const useInviteActions = (user: User) => {
     const [isFetching, setIsFetching] = useState(false)
@@ -77,6 +85,8 @@ const useInviteActions = (user: User) => {
 
 export const IncomingPersonalInvite: React.FC<{ user: User } & GridProps> = ({user, ...props}) => {
 
+    const classes = useButtonStyles()
+
     const {cUser} = useAppState()
 
     const {isFetching, submit, decline, block} = useInviteActions(user)
@@ -94,20 +104,27 @@ export const IncomingPersonalInvite: React.FC<{ user: User } & GridProps> = ({us
                                     onClick={block}>
                             <BlockIcon active={false}/>
                         </IconButton>
-                        <IconButton disabled={isFetching}
-                                    size='small'
-                                    onClick={decline}>
-                            <KickIcon active={true}/>
-                        </IconButton>
                     </React.Fragment>}
             bottomElements={!canAccept ? <React.Fragment/> :
                 <Grid item container>
                     <Box flex={1}/>
-                    <Box clone maxHeight='36px' marginTop='12px'>
-                        <PrimaryButton onClick={submit}
-                                       disabled={isFetching}>
-                            Объединиться
-                        </PrimaryButton>
+                    <Box clone maxHeight='36px' marginTop='12px' width='100%'>
+                        <ButtonGroup variant="contained" color="primary">
+                            <PrimaryButton
+                                disabled={isFetching}
+                                style={{flex: 1, height: 36}}
+                                onClick={submit}>
+                                Объединиться
+                            </PrimaryButton>
+                            <PrimaryButton
+                                classes={classes}
+                                disabled={isFetching}
+                                style={{height: 36}}
+                                startIcon={<CancelIcon/>}
+                                onClick={decline}>
+
+                            </PrimaryButton>
+                        </ButtonGroup>
                     </Box>
                 </Grid>}
             user={user}/>
@@ -117,7 +134,8 @@ export const IncomingPersonalInvite: React.FC<{ user: User } & GridProps> = ({us
 const MemberPicker: React.FC<{
     team: Team, current: User, onSelect: (u: User) => void
 }> = ({team, current, onSelect}) => {
-    const users = [...team.members, ...team.members, ...team.members, ...team.members, ...team.members].map((m, i) =>
+    // [...team.members, ...team.members, ...team.members, ...team.members, ...team.members]
+    const users = team.members.map((m, i) =>
         <Box key={i} clone paddingBottom={1}>
             <Grid item>
                 <Box clone width={24} height={24}
@@ -125,6 +143,7 @@ const MemberPicker: React.FC<{
                          onSelect(m)
                      }}
                      style={{
+                         cursor: 'pointer',
                          borderRadius: 4,
                          border: current.id === m.id ? '1px solid #6D7885' : ''
                      }}>
@@ -136,10 +155,11 @@ const MemberPicker: React.FC<{
                                    borderRadius: 3,
                                    background: 'transparent'
                                }}
-                               width={current.id === m.id ? 20 : 24} imageStyle={{
-                            objectFit: 'cover',
-                            borderRadius: current.id === m.id ? 3 : 4
-                        }}/>
+                               width={current.id === m.id ? 20 : 24}
+                               imageStyle={{
+                                   objectFit: 'cover',
+                                   borderRadius: current.id === m.id ? 3 : 4
+                               }}/>
                     </Grid>
                 </Box>
             </Grid>
@@ -152,7 +172,16 @@ const MemberPicker: React.FC<{
         </Grid>
     </Box>
 }
+
+const useButtonStyles = makeStyles({
+    startIcon: {
+        margin: 0
+    }
+})
+
 export const IncomingTeamInvite: React.FC<{ user: User } & GridProps> = ({user, ...props}) => {
+
+    const classes = useButtonStyles()
 
     const [selected, setSelected] = useState<User>(user)
 
@@ -171,25 +200,33 @@ export const IncomingTeamInvite: React.FC<{ user: User } & GridProps> = ({user, 
             topElements={
                 !canAccept ? <React.Fragment/> :
                     <React.Fragment>
-                        <IconButton disabled={isFetching}
-                                    size='small'
-                                    onClick={block}>
-                            <BlockIcon active={false}/>
-                        </IconButton>
-                        <IconButton disabled={isFetching}
-                                    size='small'
-                                    onClick={decline}>
-                            <KickIcon active={true}/>
-                        </IconButton>
+                        <Box clone marginTop='-8px' marginBottom='8px'>
+                            <IconButton disabled={isFetching}
+                                        size='small'
+                                        onClick={block}>
+                                <BlockIcon active={false}/>
+                            </IconButton>
+                        </Box>
                     </React.Fragment>}
             bottomElements={!canAccept ? <React.Fragment/> :
                 <Grid item container>
-                    <Box flex={1}/>
-                    <Box clone maxHeight='36px' marginTop='12px'>
-                        <PrimaryButton onClick={submit}
-                                       disabled={isFetching}>
-                            Объединиться
-                        </PrimaryButton>
+                    <Box clone maxHeight='36px' marginTop='12px' width='100%'>
+                        <ButtonGroup variant="contained" color="primary">
+                            <PrimaryButton
+                                disabled={isFetching}
+                                style={{flex: 1, height: 36}}
+                                onClick={submit}>
+                                Объединиться
+                            </PrimaryButton>
+                            <PrimaryButton
+                                classes={classes}
+                                disabled={isFetching}
+                                style={{height: 36}}
+                                startIcon={<CancelIcon/>}
+                                onClick={decline}>
+
+                            </PrimaryButton>
+                        </ButtonGroup>
                     </Box>
                 </Grid>}
             rightElements={<MemberPicker team={cUser.team}

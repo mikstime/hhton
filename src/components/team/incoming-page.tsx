@@ -28,7 +28,7 @@ export const IncomingPage: React.FC = () => {
           </AdditionalText>
         </GrayPlate>
         }
-        <SubTitle style={{marginBottom: 24, marginTop: 8}}>Заявки от команд</SubTitle>
+        <SubTitle style={{marginBottom: 8, marginTop: 16}}>Заявки от команд</SubTitle>
         {invites.i.team.length > 0 && <Grid spacing={2} container item>
             {
                 invites.i.team.map((u) => (
