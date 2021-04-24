@@ -9,9 +9,11 @@ import {ReactComponent as CancelIcon} from '../../assets/cancel.svg'
 import {usePromptModal} from '../modals/prompt'
 import {useEventEditModal} from '../modals/event-edit'
 import {HOST_DOMAIN, PREFIX} from '../../config/network'
+import {useNotificationHandlers} from '../tools/notification-handlers'
 
 const useParticipate = () => {
     const {event, cEvent, cUser} = useAppState()
+    const nc = useNotificationHandlers()
 
     const [actionId, setActionId] = useState<string | null>(null)
 
@@ -45,6 +47,7 @@ const useParticipate = () => {
                 })
             }
             setActionId(null)
+            nc.update()
         })
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [actionId])
@@ -68,10 +71,11 @@ const useParticipate = () => {
                     })
                     pModal.close()
                 }
+                nc.update()
             }
         })
 
-    }, [enqueueSnackbar, pModal, cUser.id, event])
+    }, [enqueueSnackbar, pModal, cUser.id, event, nc.update])
 
     const onSetWinnersClick = useCallback((e) => {
         eModal.open(e)
@@ -159,7 +163,7 @@ export const ParticipateButton: React.FC = () => {
                       flex: '1 1 0%',
                       display: 'flex'
                   }}><SecondaryButton style={{flex: 1}}>
-            Регистрация
+            Войти через ВКонтакте
         </SecondaryButton>
         </a>
     }
