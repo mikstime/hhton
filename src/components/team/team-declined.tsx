@@ -9,7 +9,7 @@ import {SocialLink} from '../app/user'
 import {useAppState} from '../tools/use-app-state'
 import {useNotificationHandlers} from '../tools/notification-handlers'
 import {useSnackbar} from 'notistack'
-import {unInvite} from '../../model/api'
+import {declineInvite} from '../../model/api'
 import {ReactComponent as UnBlockIcon} from '../../assets/team/unblock.svg'
 
 const Skills: React.FC<{ user: User }> = ({user}) => {
@@ -29,7 +29,7 @@ export const TeamDeclined: React.FC<{ user: User }> = ({user}) => {
 
     const unblock = useCallback(async () => {
         setIsFetching(true)
-        const didUnBan = await unInvite(cEvent.id, cUser.id, user.id)
+        const didUnBan = await declineInvite(cEvent.id, cUser.id, user.id)
         if (didUnBan) {
             setIsFetching(false)
         } else {
