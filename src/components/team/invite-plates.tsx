@@ -30,8 +30,8 @@ const useInviteActions = (user: User) => {
         pModal.open({
             onSubmit: async () => {
                 setIsFetching(true)
-                const didAccept = await banInvite(cEvent.id, cUser.id, user.id)
-                if (didAccept) {
+                const didBan = await banInvite(cEvent.id, cUser.id, user.id)
+                if (didBan) {
                     enqueueSnackbar(`Заявка заблокирована`, {
                         variant: 'error'
                     })
@@ -63,17 +63,25 @@ const useInviteActions = (user: User) => {
     }, [cUser.id, cEvent.id, user.id, invites, enqueueSnackbar, nc.update])
 
     const decline = useCallback(async () => {
-        setIsFetching(true)
-        const didDecline = await declineInvite(cEvent.id, cUser.id, user.id)
-        if (didDecline) {
-            enqueueSnackbar(`Заявка отклонена`, {})
-        } else {
-            enqueueSnackbar(`Не удалось отклонить заявку`, {
-                variant: 'error'
-            })
-        }
-        setIsFetching(false)
-        nc.update()
+        pModal.open({
+            onSubmit: async () => {
+                setIsFetching(true)
+                const didDecline = await declineInvite(cEvent.id, cUser.id, user.id)
+                if (didDecline) {
+                    enqueueSnackbar(`Заявка отклонена`, {})
+                } else {
+                    enqueueSnackbar(`Не удалось отклонить заявку`, {
+                        variant: 'error'
+                    })
+                }
+                setIsFetching(false)
+                nc.update()
+                pModal.close()
+            },
+            message: 'Отклонить данную заявку?',
+            accept: 'Отклонить',
+            decline: 'Отмена'
+        })
     }, [cUser.id, cEvent.id, user.id, invites, enqueueSnackbar, nc.update])
     return {
         isFetching,
@@ -95,7 +103,6 @@ export const IncomingPersonalInvite: React.FC<{ user: User } & GridProps> = ({us
 
     return <Grid item xs container {...props}>
         <PersonPlate
-            {...props}
             topElements={
                 !canAccept ? <React.Fragment/> :
                     <React.Fragment>
@@ -134,7 +141,6 @@ export const IncomingPersonalInvite: React.FC<{ user: User } & GridProps> = ({us
 const MemberPicker: React.FC<{
     team: Team, current: User, onSelect: (u: User) => void
 }> = ({team, current, onSelect}) => {
-    // [...team.members, ...team.members, ...team.members, ...team.members, ...team.members]
     const users = team.members.map((m, i) =>
         <Box key={i} clone paddingBottom={1}>
             <Grid item>
