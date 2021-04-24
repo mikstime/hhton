@@ -12,9 +12,9 @@ export const IncomingPage: React.FC = () => {
 
     const {invites} = useAppState()
 
-    return <Grid container direction='column'>
+    return <Grid container direction='column' wrap='nowrap'>
         <SubTitle>Заявки от пользователей</SubTitle>
-        <Grid container direction='column' wrap='nowrap'>
+        <Grid container item xs direction='column' wrap='nowrap'>
             {invites.i.personal.map((u, i) => <Box clone paddingTop='8px'
                                                    key={i}>
                 <IncomingPersonalInvite user={u}/></Box>)}
@@ -28,11 +28,15 @@ export const IncomingPage: React.FC = () => {
           </AdditionalText>
         </GrayPlate>
         }
-        <SubTitle style={{marginBottom: 8, marginTop: 16}}>Заявки от команд</SubTitle>
-        {invites.i.team.length > 0 && <Grid spacing={2} container item>
+        <SubTitle style={{marginBottom: 8, marginTop: 16}}>Заявки от
+            команд</SubTitle>
+        {invites.i.team.length > 0 &&
+        <Grid container item xs direction='column' wrap='nowrap'>
             {
-                invites.i.team.map((u) => (
-                    <IncomingTeamInvite key={u.id} user={u}/>
+                invites.i.team.map((u, i) => (<Box clone paddingTop='8px'
+                                                   key={i}>
+                    <IncomingTeamInvite user={u}/>
+                    </Box>
                 ))
             }
         </Grid>
@@ -42,6 +46,6 @@ export const IncomingPage: React.FC = () => {
             Сейчас нет команд, которые бы хотели объединиться.
           </AdditionalText>
         </GrayPlate>}
-        <Box height='150px' width='100%'/>
+        <Box height='32px' width='100%'/>
     </Grid>
 }
