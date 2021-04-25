@@ -14,7 +14,7 @@ import {
     Typography,
     Collapse,
     Chip, Hidden, makeStyles, createStyles, Theme,
-    Box,
+    Box
 } from '@material-ui/core'
 import Image from 'material-ui-image'
 import {Link} from 'react-router-dom'
@@ -248,10 +248,13 @@ export const PersonPlate: React.FC<Props & PlateProps> = ({user, topElements, ri
                                 <Box clone minWidth='100px'
                                      height='30px'
                                      maxWidth={{xs: `calc(100vw - 48px - ${avatarSize}px - 32px)`}}>
-                                    <Box clone fontSize={{xs: '16px !important', sm: '19px !important'}}>
-                                    <Typography variant='h2' noWrap>
-                                        {user.firstName} {user.lastName}
-                                    </Typography>
+                                    <Box clone fontSize={{
+                                        xs: '16px !important',
+                                        sm: '19px !important'
+                                    }}>
+                                        <Typography variant='h2' noWrap>
+                                            {user.firstName} {user.lastName}
+                                        </Typography>
                                     </Box>
                                 </Box>
                             </Grid>
@@ -267,12 +270,11 @@ export const PersonPlate: React.FC<Props & PlateProps> = ({user, topElements, ri
                                  height='30px'
                                  maxWidth={{xs: `calc(100vw - 48px - ${avatarSize + 12}px - 32px)`}}>
                                 <AdditionalText noWrap>
-                                    <Hidden
-                                        only='xs'>ВКонтакте:&nbsp;</Hidden><a
-                                    style={{textDecoration: 'none'}}
-                                    href={`https://vk.com/${user.settings.vk}`}>
-                                    vk.com/{user.settings.vk}
-                                </a>
+                                    {user.settings.vk && <a
+                                        style={{textDecoration: 'none'}}
+                                        href={`https://vk.com/${user.settings.vk}`}>
+                                        vk.com/{user.settings.vk}
+                                    </a>}
                                 </AdditionalText>
                             </Box>
                         </Grid>
