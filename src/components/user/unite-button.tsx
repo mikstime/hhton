@@ -107,22 +107,15 @@ export const UniteButton: React.FC = () => {
             decline: 'Оставить заявку',
             onSubmit: async () => {
                 const didDecline = await unInvite(cEvent.id, cUser.id, user.id)
+                nc.update()
                 if (didDecline) {
-                    invites.i.set({
-                        team: invites.i.team
-                            .filter(t => !t.team.members
-                                .find(tt => user.id.toString() === tt.id)),
-                        personal: invites.i.personal.filter(t => t.id.toString() !== user.id)
-                    })
-                    pModal.close()
                     enqueueSnackbar(`Вы отклонили заявку`)
-
                 } else {
                     enqueueSnackbar(`Не удалось отклонить заявку`, {
                         variant: 'error'
                     })
-                    pModal.close()
                 }
+                pModal.close()
             }
         })
     }
