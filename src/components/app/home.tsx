@@ -365,6 +365,6 @@ export const HomeApp: React.FC = () => {
                 </Hidden>
             </Grid>
         </Box>
-        <div style={{height: 100}}/>
+        <div style={{height: 32}}/>
     </Grid>
 }

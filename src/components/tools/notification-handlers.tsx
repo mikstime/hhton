@@ -19,7 +19,7 @@ const keys = [
     'NewTeamNotification',
     'NewMembersNotification',
     'NewInviteNotification',
-    'NewDenyNotification',
+    // 'NewDenyNotification',
     'NewTeamLeadNotification',
     'NewVoteNotification'
 ]
@@ -75,14 +75,14 @@ export const _useNotificationHandlers: () => {
             history.push('/team#incoming')
         },
         NewDenyNotification: (m: Message) => {
-            settings.setIsHostMode(false)
-            cEvent.change({id: m.type})
-            history.push('/team#team')
+            // settings.setIsHostMode(false)
+            // cEvent.change({id: m.type})
+            // history.push('/team#team')
         },
         NewTeamLeadNotification: (m: Message) => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
-            history.push('/team#team')
+            history.push('/team')
         },
         NewVoteNotification: () => {},
         default: (m: Message) => {
@@ -101,6 +101,9 @@ export const _useNotificationHandlers: () => {
             setUpdates(updates + 1)
         },
         ...handles,
+        NewDenyNotification: (m: Message) => {
+            setUpdates(updates + 1)
+        },
         default: (m: Message) => {
             setUpdates(updates + 1)
             if (m.message) {
