@@ -271,6 +271,7 @@ export const PersonPlate: React.FC<Props & PlateProps> = ({user, topElements, ri
                                  maxWidth={{xs: `calc(100vw - 48px - ${avatarSize + 12}px - 32px)`}}>
                                 <AdditionalText noWrap>
                                     {user.settings.vk && <a
+                                        target='_blank'
                                         style={{textDecoration: 'none'}}
                                         href={`https://vk.com/${user.settings.vk}`}>
                                         vk.com/{user.settings.vk}
