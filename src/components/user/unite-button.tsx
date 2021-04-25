@@ -2,8 +2,8 @@ import React, {useCallback, useEffect, useState} from 'react'
 import {PrimaryButton, SecondaryButton} from '../common/buttons'
 import {useAppState} from '../tools/use-app-state'
 import {
-    acceptInvite,
-    invitePerson, unInvite
+    acceptInvite, declineInvite,
+    invitePerson
 } from '../../model/api'
 import {useSnackbar} from 'notistack'
 import {Link} from 'react-router-dom'
@@ -106,7 +106,7 @@ export const UniteButton: React.FC = () => {
             accept: 'Да',
             decline: 'Оставить заявку',
             onSubmit: async () => {
-                const didDecline = await unInvite(cEvent.id, cUser.id, user.id)
+                const didDecline = await declineInvite(cEvent.id, cUser.id, user.id)
                 nc.update()
                 if (didDecline) {
                     enqueueSnackbar(`Вы отклонили заявку`)
