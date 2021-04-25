@@ -40,7 +40,7 @@ export const useInvitesFetcher = () => {
                         },
                         isTeamLead: userTeam.teamLead?.id === cUser.id
                     })
-                } else if(userTeam.members.find(u => u.id === user.id)) {
+                } else if(user.team.members.find(u => u.id === cUser.id)) {
                     user.change({
                         team: {
                             ...userTeam,
