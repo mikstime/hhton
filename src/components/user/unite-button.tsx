@@ -62,6 +62,7 @@ const useStyles = makeStyles({
 
 export const UniteButton: React.FC = () => {
 
+    const nc = useNotificationHandlers()
     const classes = useStyles()
     const {onClick, isFetching} = useUnite()
     const {cUser, cEvent, user, invites, settings} = useAppState()
@@ -128,13 +129,8 @@ export const UniteButton: React.FC = () => {
 
     const onUniteClick = async () => {
         const didAccept = await acceptInvite(cEvent.id, cUser.id, user.id)
+        nc.update()
         if(didAccept) {
-            invites.i.set({
-                team: invites.i.team
-                    .filter(t => !t.team.members
-                        .find(tt => user.id.toString() === tt.id)),
-                personal: invites.i.personal.filter(t => t.id.toString() !== user.id)
-            })
             history.push('/team')
             enqueueSnackbar(`Вы объединились`)
         } else {
