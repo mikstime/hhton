@@ -13,7 +13,7 @@ export const OutgoingPage: React.FC = () => {
     const {invites} = useAppState()
 
     return <Grid container direction='column'>
-        <SubTitle style={{marginBottom: 24}}>Предложения людям</SubTitle>
+        <SubTitle>Предложения людям</SubTitle>
         <Grid container direction='column' wrap='nowrap'>
             {invites.o.personal.map((u, i) => (
                 <Box clone paddingTop={1} key={i}>
@@ -31,7 +31,7 @@ export const OutgoingPage: React.FC = () => {
           </AdditionalText>
         </GrayPlate>
         }
-        <SubTitle style={{marginBottom: 24, marginTop: 36}}>Предложения
+        <SubTitle style={{marginBottom: 8, marginTop: 16}}>Предложения
             командам</SubTitle>
         <Grid container direction='column' wrap='nowrap'>
             {invites.o.team.length > 0 &&

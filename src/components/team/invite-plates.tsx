@@ -358,7 +358,7 @@ export const BlockedTeamInvite: React.FC<{ user: User } & GridProps> = ({user, .
     }, [setSelected, user.team.members, user])
 
     const {cUser} = useAppState()
-    const {isFetching, cancel} = useInviteActions(user)
+    const {isFetching, unblock} = useInviteActions(user)
 
     const canAccept = cUser.team.members.length <= 1 || cUser.isTeamLead
 
@@ -370,7 +370,7 @@ export const BlockedTeamInvite: React.FC<{ user: User } & GridProps> = ({user, .
                         <Box clone marginTop='-8px' marginBottom='8px'>
                             <IconButton disabled={isFetching}
                                         size='small'
-                                        onClick={cancel}>
+                                        onClick={unblock}>
                                 <UnBlockIcon/>
                             </IconButton>
                         </Box>

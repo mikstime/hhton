@@ -11,7 +11,7 @@ export const BlockedPage: React.FC = () => {
     const {invites} = useAppState()
 
     return <Grid container direction='column'>
-        <SubTitle style={{marginBottom: 24}}>Заблокированные индивидуальные
+        <SubTitle>Заблокированные индивидуальные
             заявки</SubTitle>
         <Grid container direction='column' wrap='nowrap'>
             {invites.h.personal.map((u, i) => (
@@ -27,7 +27,7 @@ export const BlockedPage: React.FC = () => {
           </AdditionalText>
         </GrayPlate>
         }
-        <SubTitle style={{marginBottom: 24, marginTop: 36}}>
+        <SubTitle style={{marginBottom: 8, marginTop: 16}}>
             Заблокированные командные заявки
         </SubTitle>
         <Grid container direction='column' wrap='nowrap'>
