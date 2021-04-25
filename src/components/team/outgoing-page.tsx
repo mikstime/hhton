@@ -1,14 +1,12 @@
 import React, {Fragment} from 'react'
 import {
     Box, Divider,
-    Grid,
+    Grid
 } from '@material-ui/core'
 import {AdditionalText, GrayPlate, SubTitle} from '../common'
 import {useAppState} from '../tools/use-app-state'
 import {Link} from 'react-router-dom'
-import {PersonInvited} from './person-invited'
-import {TeamInvited} from './team-invited'
-import {TeamName} from './team-name'
+import {OutgoingPersonalInvite, OutgoingTeamInvite} from './invite-plates'
 
 export const OutgoingPage: React.FC = () => {
 
@@ -16,12 +14,11 @@ export const OutgoingPage: React.FC = () => {
 
     return <Grid container direction='column'>
         <SubTitle style={{marginBottom: 24}}>Предложения людям</SubTitle>
-        <Grid container spacing={3} direction='column'>
+        <Grid container direction='column' wrap='nowrap'>
             {invites.o.personal.map((u, i) => (
-                <Fragment key={i}>
-                    <TeamInvited user={u}/>
-                    <Divider light flexItem style={{height: 1}}/>
-                </Fragment>
+                <Box clone paddingTop={1} key={i}>
+                    <OutgoingPersonalInvite user={u}/>
+                </Box>
             ))
             }
         </Grid>
@@ -36,14 +33,15 @@ export const OutgoingPage: React.FC = () => {
         }
         <SubTitle style={{marginBottom: 24, marginTop: 36}}>Предложения
             командам</SubTitle>
-        {invites.o.team.length > 0 && <Grid spacing={2} container item>
-            {
-                invites.o.team.map((u) => (
-                    <PersonInvited key={u.id} user={u}/>
-                ))
+        <Grid container direction='column' wrap='nowrap'>
+            {invites.o.team.length > 0 &&
+            invites.o.team.map((u) => (
+                <Box key={u.id} clone paddingTop={1}>
+                <OutgoingTeamInvite user={u}/>
+                </Box>
+            ))
             }
         </Grid>
-        }
         {!invites.o.team.length && <GrayPlate>
           <AdditionalText>
             Вы не предложили объединение ни одной из команд

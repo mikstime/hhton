@@ -4,7 +4,6 @@ import {
 } from '@material-ui/core'
 import {AdditionalText, GrayPlate, SubTitle} from '../common'
 import {useAppState} from '../tools/use-app-state'
-import {PersonInvitee} from './person-invitee'
 import {Link} from 'react-router-dom'
 import {IncomingPersonalInvite, IncomingTeamInvite} from './invite-plates'
 

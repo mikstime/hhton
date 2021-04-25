@@ -9,7 +9,7 @@ import {useHistory, useLocation} from 'react-router-dom'
 import {TeamPage} from '../team/team-page'
 import {IncomingPage} from '../team/incoming-page'
 import {OutgoingPage} from '../team/outgoing-page'
-import {HistoryPage} from '../team/history-page'
+import {BlockedPage} from '../team/blocked-page'
 import {SideSection} from '../team/side-section'
 import {TeamName} from '../team/team-name'
 
@@ -142,7 +142,7 @@ export const TeamApp: React.FC = () => {
                         <OutgoingPage/>
                     </TabPanel>
                     <TabPanel value={value} index={3}>
-                        <HistoryPage/>
+                        <BlockedPage/>
                     </TabPanel>
                 </Grid>
                 <Grid item container xs={12} md={5} direction='column'

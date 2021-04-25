@@ -1,27 +1,27 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useCallback, useState} from 'react'
 import {PersonPlate} from './person-plate'
-import {Id, Team, User} from '../tools/use-app-state/user'
+import {Team, User} from '../tools/use-app-state/user'
 import {
     Grid,
     GridProps,
     IconButton,
-    Tooltip,
     Box,
-    makeStyles, Theme, createStyles, ButtonGroup
+    makeStyles, ButtonGroup
 } from '@material-ui/core'
 import {useAppState} from '../tools/use-app-state'
 import {useNotificationHandlers} from '../tools/notification-handlers'
 import {useSnackbar} from 'notistack'
-import {acceptInvite, banInvite, declineInvite} from '../../model/api'
+import {acceptInvite, banInvite, declineInvite, unInvite} from '../../model/api'
 import {PrimaryButton, SecondaryButton} from '../common/buttons'
 import {BlockIcon, KickIcon} from '../common/icons'
 import {usePromptModal} from '../modals/prompt'
 import Image from 'material-ui-image'
 import {ReactComponent as CancelIcon} from '../../assets/cancel.svg'
+import {ReactComponent as UnBlockIcon} from '../../assets/team/unblock.svg'
 
 const useInviteActions = (user: User) => {
     const [isFetching, setIsFetching] = useState(false)
-    const {cEvent, cUser, invites} = useAppState()
+    const {cEvent, cUser} = useAppState()
     const nc = useNotificationHandlers()
     const {enqueueSnackbar} = useSnackbar()
     const pModal = usePromptModal()
@@ -48,7 +48,7 @@ const useInviteActions = (user: User) => {
             accept: 'Заблокировать',
             decline: 'Отмена'
         })
-    }, [cUser.id, cEvent.id, user.id, invites, enqueueSnackbar, nc.update])
+    }, [cUser.id, cEvent.id, user.id, enqueueSnackbar, nc.update])
 
     const submit = useCallback(async () => {
         setIsFetching(true)
@@ -60,7 +60,7 @@ const useInviteActions = (user: User) => {
         }
         setIsFetching(false)
         nc.update()
-    }, [cUser.id, cEvent.id, user.id, invites, enqueueSnackbar, nc.update])
+    }, [cUser.id, cEvent.id, user.id, enqueueSnackbar, nc.update])
 
     const decline = useCallback(async () => {
         pModal.open({
@@ -82,12 +82,41 @@ const useInviteActions = (user: User) => {
             accept: 'Отклонить',
             decline: 'Отмена'
         })
-    }, [cUser.id, cEvent.id, user.id, invites, enqueueSnackbar, nc.update])
+    }, [cUser.id, cEvent.id, user.id, enqueueSnackbar, nc.update])
+
+    const cancel = useCallback(async () => {
+        setIsFetching(true)
+        const didDecline = await unInvite(cEvent.id, cUser.id, user.id)
+        if (didDecline) {
+            enqueueSnackbar(`Заявка отменена`, {})
+        } else {
+            enqueueSnackbar(`Не удалось отменить заявку`, {
+                variant: 'error'
+            })
+        }
+        setIsFetching(false)
+        nc.update()
+    }, [cUser.id, cEvent.id, user.id, enqueueSnackbar, nc.update])
+
+    const unblock = useCallback(async () => {
+        setIsFetching(true)
+        const didUnBan = await declineInvite(cEvent.id, cUser.id, user.id)
+        if (!didUnBan) {
+            enqueueSnackbar(`Не удалось разблокировать заявку`, {
+                variant: 'error'
+            })
+        }
+        setIsFetching(false)
+        nc.update()
+    }, [cUser.id, cEvent.id, user.id, enqueueSnackbar, nc.update])
+
     return {
         isFetching,
         submit,
         decline,
-        block
+        block,
+        cancel,
+        unblock
     }
 }
 
@@ -202,7 +231,6 @@ export const IncomingTeamInvite: React.FC<{ user: User } & GridProps> = ({user, 
 
     return <Grid item xs container {...props}>
         <PersonPlate
-            {...props}
             topElements={
                 !canAccept ? <React.Fragment/> :
                     <React.Fragment>
@@ -235,6 +263,118 @@ export const IncomingTeamInvite: React.FC<{ user: User } & GridProps> = ({user, 
                         </ButtonGroup>
                     </Box>
                 </Grid>}
+            rightElements={<MemberPicker team={cUser.team}
+                                         current={selected}
+                                         onSelect={onSelect}/>}
+            user={selected}/>
+    </Grid>
+}
+
+export const OutgoingPersonalInvite: React.FC<{ user: User } & GridProps> = ({user, ...props}) => {
+
+    const {cUser} = useAppState()
+
+    const {isFetching, cancel} = useInviteActions(user)
+
+    const canAccept = cUser.team.members.length <= 1 || cUser.isTeamLead
+
+    return <Grid item xs container {...props}>
+        <PersonPlate
+            topElements={
+                !canAccept ? <React.Fragment/> :
+                    <React.Fragment>
+                        <IconButton disabled={isFetching}
+                                    size='small'
+                                    onClick={cancel}>
+                            <KickIcon active={true}/>
+                        </IconButton>
+                    </React.Fragment>}
+            user={user}/>
+    </Grid>
+}
+
+export const OutgoingTeamInvite: React.FC<{ user: User } & GridProps> = ({user, ...props}) => {
+
+    const [selected, setSelected] = useState<User>(user)
+
+    const onSelect = useCallback((u: User) => {
+        setSelected(u)
+    }, [setSelected, user.team.members, user])
+
+    const {cUser} = useAppState()
+    const {isFetching, cancel} = useInviteActions(user)
+
+    const canAccept = cUser.team.members.length <= 1 || cUser.isTeamLead
+
+    return <Grid item xs container {...props}>
+        <PersonPlate
+            topElements={
+                !canAccept ? <React.Fragment/> :
+                    <React.Fragment>
+                        <Box clone marginTop='-8px' marginBottom='8px'>
+                            <IconButton disabled={isFetching}
+                                        size='small'
+                                        onClick={cancel}>
+                                <KickIcon active={true}/>
+                            </IconButton>
+                        </Box>
+                    </React.Fragment>}
+            rightElements={<MemberPicker team={cUser.team}
+                                         current={selected}
+                                         onSelect={onSelect}/>}
+            user={selected}/>
+    </Grid>
+}
+
+export const BlockedPersonalInvite: React.FC<{ user: User } & GridProps> = ({user, ...props}) => {
+
+    const {cUser} = useAppState()
+
+    const {isFetching, unblock} = useInviteActions(user)
+
+    const canAccept = cUser.team.members.length <= 1 || cUser.isTeamLead
+
+    return <Grid item xs container {...props}>
+        <PersonPlate
+            topElements={
+                !canAccept ? <React.Fragment/> :
+                    <React.Fragment>
+                        <IconButton disabled={isFetching}
+                                    size='small'
+                                    onClick={unblock}>
+                            <UnBlockIcon/>
+                        </IconButton>
+                    </React.Fragment>}
+            user={user}/>
+    </Grid>
+}
+
+export const BlockedTeamInvite: React.FC<{ user: User } & GridProps> = ({user, ...props}) => {
+
+    const [selected, setSelected] = useState<User>(user)
+
+    const onSelect = useCallback((u: User) => {
+        setSelected(u)
+    }, [setSelected, user.team.members, user])
+
+    const {cUser} = useAppState()
+    const {isFetching, cancel} = useInviteActions(user)
+
+    const canAccept = cUser.team.members.length <= 1 || cUser.isTeamLead
+
+    return <Grid item xs container {...props}>
+        <PersonPlate
+            topElements={
+                !canAccept ? <React.Fragment/> :
+                    <React.Fragment>
+                        <Box clone marginTop='-8px' marginBottom='8px'>
+                            <IconButton disabled={isFetching}
+                                        size='small'
+                                        onClick={cancel}>
+                                <UnBlockIcon/>
+                            </IconButton>
+                        </Box>
+                    </React.Fragment>}
             rightElements={<MemberPicker team={cUser.team}
                                          current={selected}
                                          onSelect={onSelect}/>}

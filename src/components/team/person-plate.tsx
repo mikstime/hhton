@@ -14,11 +14,10 @@ import {
     Typography,
     Box,
     Collapse,
-    Chip, Tooltip, Hidden, makeStyles, createStyles, Theme, Grow, Zoom
+    Chip, Hidden, makeStyles, createStyles, Theme,
 } from '@material-ui/core'
 import Image from 'material-ui-image'
 import {Link} from 'react-router-dom'
-import {NameTypography} from '../common/typography'
 import {PlateProps} from '../common/plate'
 import {ReactComponent as ExpandIcon} from '../../assets/team/expand.svg'
 import {ReactComponent as CollapseIcon} from '../../assets/team/collapse.svg'
