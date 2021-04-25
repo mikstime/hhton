@@ -1,4 +1,4 @@
-import React, {Fragment, useCallback, useState} from 'react'
+import React, {Fragment, useCallback, useEffect, useState} from 'react'
 import {AdditionalText, GrayPlate, Plate} from '../common'
 import {
     Box,
@@ -156,7 +156,11 @@ const OpenButton: React.FC<{ isOpen?: boolean } & IconButtonProps> = ({isOpen, .
 }
 const MobileSide: React.FC = () => {
     const {cUser} = useAppState()
-    const [isOpen, setIsOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(localStorage.getItem('team-lead-section-opened') !== 'closed')
+
+    useEffect(() => {
+        localStorage.setItem('team-lead-section-opened', isOpen ? 'open' : 'closed')
+    }, [isOpen])
 
     if (!cUser.team.members.length) {
         return null
