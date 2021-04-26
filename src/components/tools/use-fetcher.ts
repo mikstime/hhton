@@ -1,4 +1,4 @@
-import {useEffect, useRef} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {useAppState} from './use-app-state'
 import {
     fetchEvent,
@@ -102,12 +102,17 @@ export const useFetcher = () => {
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [appState.cUser.id, nc.updates])
 
+    const [inviteId, setInviteId] = useState('')
     useEffect(() => {
         (async () => {
             if (appState.user.id !== '-1' && appState.cUser.id !== '-1' && appState.cEvent.id !== '-1' && !appState.user.isNullUser) {
-                appState.user.change({isLoading: true})
-                const invited = await isInvited(appState.cEvent.id, appState.cUser.id, appState.user.id)
-                appState.user.change({isInvited: !!invited, isLoading: false})
+                const invId = appState.user.id+ appState.cUser.id + appState.cEvent.id + nc.updates
+                if(invId !== inviteId) {
+                    setInviteId(invId)
+                    appState.user.change({isLoading: true})
+                    const invited = await isInvited(appState.cEvent.id, appState.cUser.id, appState.user.id)
+                    appState.user.change({isInvited: !!invited, isLoading: false})
+                }
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
