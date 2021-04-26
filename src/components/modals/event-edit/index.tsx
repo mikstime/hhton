@@ -113,7 +113,7 @@ export const useEventEdit = () => {
         setDescription(event.description)
         setStart(event.settings.start ?? null)
         setFinish(event.settings.finish ?? null)
-        setTeamSize(event.settings.teamSize?.toString() ?? '')
+        setTeamSize(event.settings.teamSize !== 0 ? event.settings.teamSize?.toString() ?? '' : '')
         setUsersLimit(event.settings.usersLimit?.toString() ?? '')
         setPlace(event.place)
         setSite(event.settings.site ?? '')
