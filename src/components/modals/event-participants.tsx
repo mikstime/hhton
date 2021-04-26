@@ -127,27 +127,31 @@ export const EventParticipantsModal: React.FC<MProps> = ({children, ...props}) =
 
     useEffect(() => {
         (async () => {
+            if(!props.open || !showTeams) return
+
             if (cEvent.id !== '-1') {
-                setTeams([])
+                // setTeams([])
                 setIsLoading(true)
                 const t = await getEventTeams(cEvent.id)
                 setIsLoading(false)
                 setTeams(t)
             }
         })()
-    }, [cEvent.id, cEvent.isParticipating])
+    }, [props.open, showTeams])
 
     useEffect(() => {
         (async () => {
+            if(!props.open || showTeams) return
+
             if (cEvent.id !== '-1') {
-                setUsers([])
+                // setUsers([])
                 setIsLoading(true)
                 const u = await getEventUsers(cEvent.id)
                 setIsLoading(false)
                 setUsers(u)
             }
         })()
-    }, [cEvent.id, cEvent.isParticipating])
+    }, [props.open])
 
     let r
     if (isLoading) {
