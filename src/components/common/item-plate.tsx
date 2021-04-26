@@ -28,14 +28,14 @@ export const ItemPlate: React.FC<ItemPlateProps> = (
     {children, text, frontIcon, textPlate = AdditionalText, postIcon, ...rest}
 ) => {
     const TextPlate = textPlate
-    return <PaddedPlate {...rest}>
+    return <PaddedPlate {...rest} lang='ru'>
         <Grid container wrap='nowrap' alignItems='center'>
             {frontIcon && text &&
             <Grid item style={{alignSelf: 'flex-start'}}>
               <SvgIcon style={{marginRight: 12}} component={frontIcon}/>
             </Grid>}
             <Grid item zeroMinWidth style={{minHeight: '24px'}}>
-                <TextPlate style={{whiteSpace: 'pre-wrap', wordBreak: 'break-all'}} noWrap>{text}</TextPlate>
+                <TextPlate style={{whiteSpace: 'pre-wrap', hyphens: 'auto'}} noWrap>{text}</TextPlate>
             </Grid>
             {postIcon && <Grid item><IconButton component={postIcon}/></Grid>}
         </Grid>

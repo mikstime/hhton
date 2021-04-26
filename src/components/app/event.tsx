@@ -171,8 +171,8 @@ export const EventApp: React.FC = () => {
                             }
                         </Title>
                     </Grid>
-                    <Grid item>
-                        <SecondaryText>
+                    <Grid item lang='ru'>
+                        <SecondaryText style={{hyphens: 'auto'}}>
                             {event.description || ''}
                         </SecondaryText>
                     </Grid>
