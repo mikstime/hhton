@@ -134,7 +134,7 @@ export const EventParticipantsModal: React.FC<MProps> = ({children, ...props}) =
                 setIsLoading(true)
                 const t = await getEventTeams(cEvent.id)
                 setIsLoading(false)
-                setTeams(t)
+                setTeams(t.filter(t => t.members.length > 0))
             }
         })()
     }, [props.open, showTeams])
