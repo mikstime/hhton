@@ -12,6 +12,7 @@ import {AdditionalText} from './typography'
 import {ReactComponent as JobIcon} from '../../assets/job.svg'
 import {ReactComponent as BioIcon} from '../../assets/bio.svg'
 import {ReactComponent as InfoIcon} from '../../assets/info.svg'
+import {ReactComponent as InfoGrayIcon} from '../../assets/info_gray.svg'
 
 type ItemPlateProps = {
     text: string,
@@ -50,6 +51,7 @@ export const BioPlate: React.FC<ItemPlateProps> = (props) => {
     return <ItemPlate frontIcon={BioIcon} {...props}/>
 }
 
-export const InfoPlate: React.FC<ItemPlateProps> = (props) => {
-    return <ItemPlate frontIcon={InfoIcon} {...props}/>
+export const InfoPlate: React.FC<{gray?: boolean} & ItemPlateProps> = ({gray, ...props}) => {
+
+    return <ItemPlate frontIcon={gray ? InfoGrayIcon: InfoIcon} {...props}/>
 }

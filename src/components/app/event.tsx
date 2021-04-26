@@ -6,6 +6,7 @@ import {
     Typography, TypographyProps
 } from '@material-ui/core'
 import {
+    AdditionalText,
     AvatarPlate,
     Title
 } from '../common'
@@ -29,21 +30,26 @@ import {EventAbout} from '../event/about'
 const EventNameGrid = styled(Grid)`
   padding: 12px 0 0 12px !important;
 `
-const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+const pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+    '(\\#[-a-z\\d_]*)?$', 'i') // fragment locator
 
 function validURL(str: string) {
-    return pattern.test(str);
+    return pattern.test(str)
 }
-const assurePrefix = (link: string) => (link.indexOf('://') === -1) ? 'https://' + link : link;
+
+const assurePrefix = (link: string) => (link.indexOf('://') === -1) ? 'https://' + link : link
 
 const CaptionLink: (to: string) => React.FC<TypographyProps> = (to) => (props) => {
-    if(validURL(to)) {
-    return <a target="_blank" href={assurePrefix(to)} style={{textDecoration: 'none'}}><CaptionText {...props}/></a>
+    if (validURL(to)) {
+        return <a target="_blank" href={assurePrefix(to)}
+                  style={{textDecoration: 'none'}}><CaptionText {...props}/></a>
+    }
+    if (!to) {
+        return <AdditionalText {...props}/>
     }
     return <CaptionText {...props}/>
 }
@@ -153,7 +159,9 @@ export const EventApp: React.FC = () => {
                                   text={!event.isNullEvent ? `Место проведения: ${event.place || 'не указано'}` : ''}/>
                     </Grid>
                     <Grid item container style={{zIndex: 2}}>
-                        <InfoPlate textPlate={CaptionLink(event.settings.site ?? '')} elevation={4}
+                        <InfoPlate gray
+                                   textPlate={CaptionLink(event.settings.site ?? '')}
+                                   elevation={4}
                                    text={!event.isNullEvent ? `${event.settings.site || 'Сайт мероприятия не указан'}` : ''}/>
                     </Grid>
                 </Grid>
