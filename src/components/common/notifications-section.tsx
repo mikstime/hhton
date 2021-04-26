@@ -138,9 +138,12 @@ export const NotificationSection: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false)
     const {cUser} = useAppState()
     const ref = useRef<HTMLElement | null>(null) as MutableRefObject<HTMLDivElement | null>
+
+    const [lastId, setLastId] = useState('')
     useEffect(() => {
         (async () => {
-            if (cUser.id !== '-1') {
+            if (cUser.id !== '-1' && cUser.id + nc.updates !== lastId) {
+                setLastId(cUser.id + nc.updates)
                 // setIsFetching(true)
                 const notifications = await getNotificationsHistory(cUser.id)
                 setNotifications(notifications)
