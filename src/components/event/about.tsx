@@ -49,7 +49,7 @@ export const EventAbout: React.FC = () => {
                 <Box clone marginBottom={2} marginTop={1}>
                     <Plate padding={8} elevation={4}>
                         <Grid container alignItems='center'>
-                            <Typography variant='body1'>
+                            <Typography variant='body1' style={{wordBreak: 'break-all'}}>
                                 team-up.online/event/{event.id}{secret ? `?secret=${secret}` : ''}
                             </Typography>
                             <FlexSpace/>
