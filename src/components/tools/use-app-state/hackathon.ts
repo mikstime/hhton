@@ -18,6 +18,7 @@ export type Hackathon = {
     isNullEvent?: boolean,
     notFound?: boolean,
     isParticipating?: boolean,
+    isPrivate?: boolean,
 }
 
 
@@ -37,6 +38,7 @@ export type HackathonOptional = {
     isNullEvent?: boolean,
     notFound?: boolean,
     isParticipating?: boolean,
+    isPrivate?: boolean,
 }
 
 export type HackathonSettings = {

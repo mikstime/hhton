@@ -215,12 +215,24 @@ export const invitePerson = async (eventId: string, inviterId: string, inviteeId
     }
 }
 
+
+/**
+ *
+ * @param eventId
+ */
+export const getEventSecret = async (eventId: string) => {
+    await sleep(300)
+    return 'PASSWORD'
+}
+
+
 /**
  * Записаться на мероприятие. Возвращает true в случае успеха
  * @param userId
  * @param eventId
+ * @param secret
  */
-export const joinEvent = async (userId: string, eventId: string) => {
+export const joinEvent = async (userId: string, eventId: string, secret?: string) => {
     if (!mockImplemented) {
         const join = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/join`,
             {
@@ -440,13 +452,13 @@ export const getTeamById = async (teamId: string) => {
  * @param userId - id пользователя, чью команду запрашиваем
  */
 export const getTeam = async (eventId: string, userId: string) => {
-/*    await sleep(300)
-    return {
-        members: TEST_USERS.slice(0, 2),
-        name: 'Команда мечты',
-        teamLead: getTestUser('2'),
-        id: '1'
-    } as Team*/
+    // await sleep(300)
+    // return {
+    //     members: TEST_USERS.slice(0, 2),
+    //     name: 'Команда мечты',
+    //     teamLead: getTestUser('1'),
+    //     id: '1'
+    // } as Team
     if (!mockImplemented) {
         const team = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/user/${userId}/team`, {
             credentials: 'include'
@@ -488,6 +500,11 @@ export const getTeam = async (eventId: string, userId: string) => {
 }
 
 export const getTeamVotes = async (teamID: string, userId: string) => {
+    // return {
+    //     1: 4,
+    //     2: 10,
+    //     1001: 23,
+    // }
     if (!mockImplemented) {
         const voteRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/team/${teamID}/votes`, {
             credentials: 'include'
@@ -615,7 +632,7 @@ export const teamInvitedPending = async (eventId: string, teamId: string) => {
  * @param teamId - id активного пользователя
  */
 export const teamInvited = async (eventId: string, teamId: string, declined: boolean) => {
-    // return TEST_USERS.slice(0,2)
+    // return TEST_USERS.slice(0, 2)
     if (!mockImplemented && teamId) {
         return getTeamInvitesFromUrl(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invited/teams?declined=${declined}`)
     } else {
@@ -630,7 +647,7 @@ export const teamInvited = async (eventId: string, teamId: string, declined: boo
  * @param userId - id активного пользователя
  */
 export const teamInvites = async (eventId: string, userId: string) => {
-    // return TEST_USERS.slice(0,2)
+    // return TEST_USERS.slice(0, 2)
     if (!mockImplemented && userId) {
         return getTeamInvitesFromUrl(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/teams`)
     } else {
@@ -693,7 +710,7 @@ export const personalInvitedPending = async (eventId: string, userId: string) =>
  * @param userId - id активного пользователя
  */
 export const personalInvited = async (eventId: string, userId: string, declined: boolean) => {
-    // return TEST_USERS.slice(0,2)
+    // return TEST_USERS.slice(0, 2)
     if (!mockImplemented && userId) {
         return getPersonalInvitesFromUrl(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invited/users?declined=${declined}`)
     } else {
@@ -708,7 +725,7 @@ export const personalInvited = async (eventId: string, userId: string, declined:
  * @param userId - id активного пользователя
  */
 export const personalInvites = async (eventId: string, userId: string) => {
-    // return TEST_USERS.slice(0,2)
+    // return TEST_USERS.slice(0, 2)
     if (!mockImplemented) {
         return getPersonalInvitesFromUrl(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/invitation/users`)
     } else {
@@ -980,22 +997,21 @@ export const createEvent = async (data: {
     diff: HackathonOptional & { id: Id },
     teams: Team[],
     founderId: Id,
-    prizes: Prize[]
+    prizes: Prize[],
+    isPrivate: boolean,
 }) => {
     if (!mockImplemented) {
         data.diff.founderId = data.founderId
         let payload = Convert.eventOptional.toBackend(data.diff, data.prizes)
-        const fetches = [
-            await fetch(`${HOST_DOMAIN}${PREFIX}/event`, {
-                method: 'POST',
-                credentials: 'include',
-                body: JSON.stringify(payload)
-            })
-        ]
-        const eventRequest = await Promise.all(fetches)
 
-        if (eventRequest[0].ok) {
-            const json = await eventRequest[0].json()
+        const eventRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event`, {
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify(payload)
+        })
+
+        if (eventRequest.ok) {
+            const json = await eventRequest.json()
 
             return json.id?.toString() ?? '-1'
         } else {
@@ -1240,6 +1256,11 @@ export const getTopEvents = async () => {
 
 
 export const getNotificationsHistory = async (userID: string) => {
+    // return [...new Array(1)].map(_ => ({
+    //     type: '6',
+    //     status: 'NewTeamNotification',
+    //     message: 'Привет, это длинный текст, который стоит красиво отобразить, чтобы было удобно пользователю.'
+    // })) as Message[]
     const res = await fetch(
         `${HOST_DOMAIN}${PREFIX}/notification/${userID}/last`,
         {credentials: 'include'})
@@ -1280,10 +1301,10 @@ export const kickTeamMember = async (eventId: Id, teamId: Id, userId: Id) => {
             body: JSON.stringify({uid: Number(userId)})
         })
 
-    return res.ok;
+    return res.ok
 }
 
 export const logOut = async () => {
     const res = await fetch(`${HOST_DOMAIN}${PREFIX}/unauth`)
-    return res.ok;
+    return res.ok
 }

@@ -1,20 +1,69 @@
-import React from 'react'
-import {AdditionalText, GrayishPlate} from '../common'
-import {Box, CardActionArea, Grid, Typography} from '@material-ui/core'
+import React, {useEffect, useState} from 'react'
+import {
+    AdditionalText,
+    FlexSpace,
+    GrayishPlate,
+    GrayPlate,
+    Plate
+} from '../common'
+import {
+    Box,
+    CardActionArea,
+    Grid,
+    IconButton,
+    Typography
+} from '@material-ui/core'
 import {format} from 'date-fns'
 import {useAppState} from '../tools/use-app-state'
 import {InfoPlate} from '../common/item-plate'
 import {CaptionText} from '../common/typography'
 import {useEventParticipantsModal} from '../modals/event-participants'
+import {getEventSecret} from '../../model/api'
+import {copyTextToClipboard} from '../../utils'
+import {ReactComponent as CopyIcon} from '../../assets/copy.svg'
 
 export const EventAbout: React.FC = () => {
 
-    const {event} = useAppState()
+    const {event, cUser} = useAppState()
     const {open} = useEventParticipantsModal()
+
+    const [secret, setSecret] = useState('')
+
+    useEffect(() => {
+        (async () => {
+            if (event.founderId === cUser.id) {
+                const s = await getEventSecret(event.id)
+                setSecret(s)
+            }
+        })()
+    }, [event.id, event.founderId, cUser.id])
     // if (!event.settings.start && !event.settings.finish && !event.settings.teamSize) {
     //     return null
     // }
     return <GrayishPlate padding={16} style={{marginTop: 16}}>
+        {event.founderId === cUser.id &&
+            <Grid container direction='column'>
+                <AdditionalText>
+                    Ссылка на мероприятие:
+                </AdditionalText>
+                <Box clone marginBottom={2} marginTop={1}>
+                    <Plate padding={8} elevation={4}>
+                        <Grid container alignItems='center'>
+                            <Typography variant='body1'>
+                                team-up.online/event/{event.id}{secret ? `?secret=${secret}` : ''}
+                            </Typography>
+                            <FlexSpace/>
+                            <IconButton size='small' onClick={() => {
+                                const str = `https://team-up.online/event/${event.id}${secret ? `?secret=${secret}` : ''}`
+                                copyTextToClipboard(str)
+                            }}>
+                                <CopyIcon/>
+                            </IconButton>
+                        </Grid>
+                    </Plate>
+                </Box>
+            </Grid>
+        }
         <Box clone flexDirection={{xs: 'column', md: 'row'}}>
             <Grid container spacing={2}>
                 <Grid item container xs spacing={2}>

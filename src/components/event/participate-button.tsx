@@ -10,13 +10,21 @@ import {usePromptModal} from '../modals/prompt'
 import {useEventEditModal} from '../modals/event-edit'
 import {HOST_DOMAIN, PREFIX} from '../../config/network'
 import {useNotificationHandlers} from '../tools/notification-handlers'
+import {useLocation} from 'react-router-dom'
+import {useJoinModal} from '../modals/join-modal'
+
+function useQuery() {
+    return new URLSearchParams(useLocation().search)
+}
 
 const useParticipate = () => {
     const {event, cEvent, cUser} = useAppState()
     const nc = useNotificationHandlers()
-
+    const jModal = useJoinModal()
     const [actionId, setActionId] = useState<string | null>(null)
 
+    //@ts-ignore
+    let query = useQuery()
     const {enqueueSnackbar} = useSnackbar()
 
     const sModal = useSearchModal()
@@ -32,23 +40,42 @@ const useParticipate = () => {
 
     useEffect(() => {
         if (actionId === null) return
+        if (event.isPrivate) {
+            const secret = query.get('secret') || ''
+            joinEvent(cUser.id, event.id, secret).then((didJoin?: boolean) => {
+                if (didJoin) {
+                    event.change({isParticipating: true})
+                    cEvent.change({isParticipating: true})
+                    enqueueSnackbar(`Вы участвуете в мероприятии ${event.name}`, {
+                        variant: 'success'
+                    })
+                    sModal.actions.open()
+                    setActionId(null)
+                    nc.update()
+                } else {
+                    jModal.open()
+                    setActionId(null)
+                }
+            })
 
-        joinEvent(cUser.id, event.id).then((didJoin?: boolean) => {
-            if (didJoin) {
-                event.change({isParticipating: true})
-                cEvent.change({isParticipating: true})
-                enqueueSnackbar(`Вы участвуете в мероприятии ${event.name}`, {
-                    variant: 'success'
-                })
-                sModal.actions.open()
-            } else {
-                enqueueSnackbar('Не удалось присоединиться к мероприятию', {
-                    variant: 'error'
-                })
-            }
-            setActionId(null)
-            nc.update()
-        })
+        } else {
+            joinEvent(cUser.id, event.id).then((didJoin?: boolean) => {
+                if (didJoin) {
+                    event.change({isParticipating: true})
+                    cEvent.change({isParticipating: true})
+                    enqueueSnackbar(`Вы участвуете в мероприятии ${event.name}`, {
+                        variant: 'success'
+                    })
+                    sModal.actions.open()
+                } else {
+                    enqueueSnackbar('Не удалось присоединиться к мероприятию', {
+                        variant: 'error'
+                    })
+                }
+                setActionId(null)
+                nc.update()
+            })
+        }
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [actionId])
 

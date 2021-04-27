@@ -5,17 +5,20 @@ import {SearchModalProvider} from './search'
 import {UserEditModalProvider} from './user-edit'
 import {EventEditModalProvider} from './event-edit'
 import {EventParticipantsModalProvider} from './event-participants'
+import {JoinModalProvider} from './join-modal'
 
 export const ModalsProvider: React.FC = ({children}) => {
     return <PromptModalProvider>
         <SearchModalProvider>
-            <UserEditModalProvider>
-                <EventEditModalProvider>
-                    <EventParticipantsModalProvider>
-                        {children}
-                    </EventParticipantsModalProvider>
-                </EventEditModalProvider>
-            </UserEditModalProvider>
+            <JoinModalProvider>
+                <UserEditModalProvider>
+                    <EventEditModalProvider>
+                        <EventParticipantsModalProvider>
+                            {children}
+                        </EventParticipantsModalProvider>
+                    </EventEditModalProvider>
+                </UserEditModalProvider>
+            </JoinModalProvider>
         </SearchModalProvider>
     </PromptModalProvider>
 }
