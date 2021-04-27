@@ -196,7 +196,7 @@ export const ParticipateButton: React.FC = () => {
         </SecondaryButton>
     }
     if (cUser.isNotAuthorized) {
-        const pageUrl = window.location.pathname.replace('/', '')
+        const pageUrl = encodeURIComponent(window.location.pathname.replace('/', '') + window.location.search)
         return <a href={`${HOST_DOMAIN}${PREFIX}/redirect?backTo=${pageUrl}`}
                   style={{
                       textDecoration: 'none',
