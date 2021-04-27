@@ -107,12 +107,15 @@ export const useFetcher = () => {
     useEffect(() => {
         (async () => {
             if (appState.user.id !== '-1' && appState.cUser.id !== '-1' && appState.cEvent.id !== '-1' && !appState.user.isNullUser) {
+                const userId = appState.user.id
                 const invId = appState.user.id+ appState.cUser.id + appState.cEvent.id + nc.updates
                 if(invId !== inviteId) {
                     setInviteId(invId)
                     appState.user.change({isLoading: true})
                     const invited = await isInvited(appState.cEvent.id, appState.cUser.id, appState.user.id)
-                    appState.user.change({isInvited: !!invited, isLoading: false})
+                    if(appState.user.id === userId) {
+                        appState.user.change({isInvited: !!invited, isLoading: false})
+                    }
                 }
             }
         })()
