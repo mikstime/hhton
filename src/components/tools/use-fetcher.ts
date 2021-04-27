@@ -1,4 +1,4 @@
-import {useEffect, useRef} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {useAppState} from './use-app-state'
 import {
     fetchEvent,
@@ -29,19 +29,20 @@ export const useFetcher = () => {
 
     useEffect(() => {
         (async () => {
-            if (appState.user.id !== isFetchingUserId.current && appState.user.id !== '-1') {
-                isFetchingUserId.current = appState.user.id
+            const id = appState.user.id + appState.cEvent.id
+            if (id !== isFetchingUserId.current && appState.user.id !== '-1') {
+                isFetchingUserId.current = id
                 appState.user.set({...NULL_USER, isLoading: true})
 
                 const user = await fetchUser(appState.user.id)
 
                 if (user) {
-                    if (isFetchingUserId.current === appState.user.id) {
+                    if (isFetchingUserId.current === id) {
                         appState.user.set({...user, isLoading: true})
                         const team = appState.cEvent.id !== '-1' ?
                             await getTeam(appState.cEvent.id, user.id) : user.team
 
-                        if (isFetchingUserId.current === appState.user.id) {
+                        if (isFetchingUserId.current === id) {
                             appState.user.change({
                                 team, isLoading: false,
                                 isTeamLead: team.teamLead?.id === user.id
@@ -49,7 +50,7 @@ export const useFetcher = () => {
                         }
                     }
                 } else {
-                    if (isFetchingUserId.current === appState.user.id) {
+                    if (isFetchingUserId.current === id) {
                         appState.user.set({
                             ...NULL_USER,
                             id: appState.user.id,
@@ -102,12 +103,20 @@ export const useFetcher = () => {
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [appState.cUser.id, nc.updates])
 
+    // const [inviteId, setInviteId] = useState('')
     useEffect(() => {
         (async () => {
             if (appState.user.id !== '-1' && appState.cUser.id !== '-1' && appState.cEvent.id !== '-1' && !appState.user.isNullUser) {
-                appState.user.change({isLoading: true})
-                const invited = await isInvited(appState.cEvent.id, appState.cUser.id, appState.user.id)
-                appState.user.change({isInvited: !!invited, isLoading: false})
+                // const userId = appState.user.id
+                // const invId = appState.user.id+ appState.cUser.id + appState.cEvent.id + nc.updates
+                // if(invId !== inviteId) {
+                //     setInviteId(invId)
+                    appState.user.change({isLoading: true})
+                    const invited = await isInvited(appState.cEvent.id, appState.cUser.id, appState.user.id)
+                    // if(appState.user.id === userId) {
+                        appState.user.change({isInvited: !!invited, isLoading: false})
+                    // }
+                // }
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps

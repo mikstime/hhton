@@ -47,10 +47,12 @@ const EventItem: React.FC<{ event: Hackathon }> = ({event}) => {
                             }}/>
                         </Grid>
                         <Box clone paddingLeft={1}>
-                            <Grid xs item container direction='column'>
+                            <Grid xs item container direction='column' lang='ru'>
                                 <Typography>{event.name}</Typography>
                                 <AdditionalText
-                                    style={{wordBreak: 'break-all'}}>
+                                    style={{//wordBreak: 'break-all',
+                                        hyphens: 'auto'
+                                    }}>
                                     {event.description.length > 100 ?
                                         event.description.slice(0, 97) + '...' : event.description}
                                 </AdditionalText>
@@ -365,6 +367,6 @@ export const HomeApp: React.FC = () => {
                 </Hidden>
             </Grid>
         </Box>
-        <div style={{height: 100}}/>
+        <div style={{height: 32}}/>
     </Grid>
 }

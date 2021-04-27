@@ -3,18 +3,33 @@ import {PrimaryButton, SecondaryButton} from '../common/buttons'
 import {useAppState} from '../tools/use-app-state'
 import {useSearchModal} from '../modals/search'
 import {useSnackbar} from 'notistack'
-import {finishEvent, joinEvent, leaveEvent} from '../../model/api'
+import {
+    finishEvent,
+    getEventSecret,
+    joinEvent,
+    leaveEvent
+} from '../../model/api'
 import {ButtonGroup, makeStyles} from '@material-ui/core'
 import {ReactComponent as CancelIcon} from '../../assets/cancel.svg'
 import {usePromptModal} from '../modals/prompt'
 import {useEventEditModal} from '../modals/event-edit'
 import {HOST_DOMAIN, PREFIX} from '../../config/network'
+import {useNotificationHandlers} from '../tools/notification-handlers'
+import {useLocation} from 'react-router-dom'
+import {useJoinModal} from '../modals/join-modal'
+
+function useQuery() {
+    return new URLSearchParams(useLocation().search)
+}
 
 const useParticipate = () => {
     const {event, cEvent, cUser} = useAppState()
-
+    const nc = useNotificationHandlers()
+    const jModal = useJoinModal()
     const [actionId, setActionId] = useState<string | null>(null)
 
+    //@ts-ignore
+    let query = useQuery()
     const {enqueueSnackbar} = useSnackbar()
 
     const sModal = useSearchModal()
@@ -30,22 +45,51 @@ const useParticipate = () => {
 
     useEffect(() => {
         if (actionId === null) return
-
-        joinEvent(cUser.id, event.id).then((didJoin?: boolean) => {
-            if (didJoin) {
-                event.change({isParticipating: true})
-                cEvent.change({isParticipating: true})
-                enqueueSnackbar(`Вы участвуете в мероприятии ${event.name}`, {
-                    variant: 'success'
-                })
-                sModal.actions.open()
-            } else {
-                enqueueSnackbar('Не удалось присоединиться к мероприятию', {
-                    variant: 'error'
+        if (event.isPrivate) {
+            const participate = (secret: string) => {
+                joinEvent(cUser.id, event.id, secret).then((didJoin?: boolean) => {
+                    if (didJoin) {
+                        event.change({isParticipating: true})
+                        cEvent.change({isParticipating: true})
+                        enqueueSnackbar(`Вы участвуете в мероприятии ${event.name}`, {
+                            variant: 'success'
+                        })
+                        sModal.actions.open()
+                        setActionId(null)
+                        nc.update()
+                    } else {
+                        jModal.open()
+                        setActionId(null)
+                    }
                 })
             }
-            setActionId(null)
-        })
+            const secret = query.get('secret') || ''
+            if(!secret) {
+                getEventSecret(event.id).then(secret => {
+                    participate(secret)
+                })
+            } else {
+                participate(secret)
+            }
+
+        } else {
+            joinEvent(cUser.id, event.id).then((didJoin?: boolean) => {
+                if (didJoin) {
+                    event.change({isParticipating: true})
+                    cEvent.change({isParticipating: true})
+                    enqueueSnackbar(`Вы участвуете в мероприятии ${event.name}`, {
+                        variant: 'success'
+                    })
+                    sModal.actions.open()
+                } else {
+                    enqueueSnackbar('Не удалось присоединиться к мероприятию', {
+                        variant: 'error'
+                    })
+                }
+                setActionId(null)
+                nc.update()
+            })
+        }
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [actionId])
 
@@ -68,10 +112,11 @@ const useParticipate = () => {
                     })
                     pModal.close()
                 }
+                nc.update()
             }
         })
 
-    }, [enqueueSnackbar, pModal, cUser.id, event])
+    }, [enqueueSnackbar, pModal, cUser.id, event, nc.update])
 
     const onSetWinnersClick = useCallback((e) => {
         eModal.open(e)
@@ -151,7 +196,7 @@ export const ParticipateButton: React.FC = () => {
         </SecondaryButton>
     }
     if (cUser.isNotAuthorized) {
-        const pageUrl = window.location.pathname.replace('/', '')
+        const pageUrl = encodeURIComponent(window.location.pathname.replace('/', '') + window.location.search)
         return <a href={`${HOST_DOMAIN}${PREFIX}/redirect?backTo=${pageUrl}`}
                   style={{
                       textDecoration: 'none',
@@ -159,7 +204,7 @@ export const ParticipateButton: React.FC = () => {
                       flex: '1 1 0%',
                       display: 'flex'
                   }}><SecondaryButton style={{flex: 1}}>
-            Регистрация
+            Войти через ВКонтакте
         </SecondaryButton>
         </a>
     }

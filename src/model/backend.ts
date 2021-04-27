@@ -56,6 +56,8 @@ export type BackendHackathon = {
     dateEnd: string | null,
     state: string | null,
     place: string | null,
+    isPrivate: boolean | null,
+    isVerified: boolean | null,
     feed: {
         id: number | null,
         users: User[] | null,
@@ -224,7 +226,9 @@ const Convert = {
                     teamSize: bHackathon.teamSize,
                     usersLimit: 0, //@TODO usersLimit
                     site: bHackathon.site
-                }
+                },
+                isPrivate: bHackathon.isPrivate,
+                isVerified: bHackathon.isVerified,
             }
         },
         toBackend: (bUser: Hackathon) => {
@@ -256,7 +260,9 @@ const Convert = {
                     amount: Number(p.count) ?? null,
                     total: Number(p.total) ?? null,
                     winnerTeamIDs: null
-                }))
+                })),
+                isPrivate: fEvent.isPrivate,
+                isVerified: fEvent.isVerified,
             }
         }
     },

@@ -1,77 +1,102 @@
-import React, {useEffect, useState} from 'react'
-import {SubTitle} from '../common'
+import React, {useCallback, useEffect, useState} from 'react'
 import {useAppState} from '../tools/use-app-state'
-import {Grid, IconButton, TextField} from '@material-ui/core'
-import {ReactComponent as EditImage} from '../../assets/edit.svg'
-import {ReactComponent as SaveImage} from '../../assets/save.svg'
+import {
+    Box,
+    Grid,
+    GridProps,
+    IconButton,
+    TextField,
+    Typography
+} from '@material-ui/core'
+import {ReactComponent as EditImage} from '../../assets/team/edit_name.svg'
+import {ReactComponent as SaveImage} from '../../assets/team/save_name.svg'
 import {modifyTeamName} from '../../model/api'
 import {useSnackbar} from 'notistack'
 import {useNotificationHandlers} from '../tools/notification-handlers'
 
-export const TeamName: React.FC = () => {
+export const TeamName: React.FC<GridProps> = ({children, ...props}) => {
     const {cUser, cEvent} = useAppState()
     const [isEditing, setIsEditing] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [value, setValue] = useState('')
     const {enqueueSnackbar, closeSnackbar} = useSnackbar()
     const nc = useNotificationHandlers()
+
     useEffect(() => {
-        setValue(cUser.team.name)
+        if (cUser.team.name) {
+            setValue(cUser.team.name)
+        } else {
+            setValue('Ваша команда')
+        }
         setIsEditing(false)
     }, [cUser.team.name])
 
-    if(!cUser.isTeamLead && cUser.team.name) {
-        return <SubTitle
-            style={{marginBottom: 16}}>
-            {value}
-        </SubTitle>
-    }
-    if (cUser.team && cUser.team.name) {
-        if (isEditing) {
-            return <Grid container style={{marginBottom: 16}}>
-                <Grid item>
-                    <IconButton size='small' disabled={isLoading}
-                                onClick={async () => {
-                                    setIsLoading(true)
-                                    const didSave = await modifyTeamName(cEvent.id, cUser.team.id ?? '', value)
-                                    if (didSave) {
-                                    } else {
-                                        const k = enqueueSnackbar('Не удалось изменить название', {
-                                            variant: 'error',
-                                            onClick: () => {
-                                                closeSnackbar(k)
-                                            }
-                                        })
-                                    }
-                                    setIsEditing(false)
-                                    setIsLoading(false)
-                                    nc.update()
-                                }}>
-                        <SaveImage/>
-                    </IconButton>
-                </Grid>
-                <Grid xs item>
-                    <TextField
-                        fullWidth value={value} style={{
-                        fontSize: 19,
-                        fontWeight: 300,
-                        fontFamily: '\'Frutiger\', sans-serif'
-                    }} onChange={(e) => {
-                        setValue(e.target.value)
-                    }}/>
-                </Grid>
-            </Grid>
+    const onSubmit = useCallback(async () => {
+        if(isLoading) return
+
+        setIsLoading(true)
+        const didSave = await modifyTeamName(cEvent.id, cUser.team.id ?? '', value)
+        if (didSave) {
         } else {
-            return <SubTitle
-                style={{marginBottom: 16}}>
-                <IconButton size='small' onClick={() => {
-                    setIsEditing(true)
-                }}>
-                    <EditImage/>
-                </IconButton>
-                {value}
-            </SubTitle>
+            const k = enqueueSnackbar('Не удалось изменить название', {
+                variant: 'error',
+                onClick: () => {
+                    closeSnackbar(k)
+                }
+            })
+            setValue(cUser.team.name)
         }
-    }
-    return <SubTitle style={{marginBottom: 16}}>Ваша комнада</SubTitle>
+        setIsEditing(false)
+        setIsLoading(false)
+        nc.update()
+    }, [setIsLoading, cEvent.id, cUser.team.id,
+        value, setIsEditing, setValue, nc.update])
+
+    const teamName = !isEditing ?
+        <Typography variant='h1' onClick={() => {
+            if(cUser.team.name && cUser.isTeamLead) {
+                setIsEditing(true)
+            }
+        }}>
+            {value}
+        </Typography> :
+        <TextField
+            fullWidth
+            value={value}
+            autoFocus
+            onBlur={onSubmit}
+            inputProps={{
+                style: {
+                    fontSize: 28,
+                    padding: 0,
+                    fontWeight: 300,
+                    fontFamily: '\'Frutiger\', sans-serif',
+                    lineHeight: 1.167,
+                    letterSpacing: '-0.01562em',
+                    marginTop: '-1px'
+                }
+            }}
+            onChange={(e) => {
+                setValue(e.target.value)
+            }}/>
+
+
+    return <Box minHeight='48px' clone>
+        <Grid item container
+              alignItems='center' {...props}>
+            {cUser.team.name && cUser.isTeamLead && <Box clone paddingRight={1}><Grid item>
+              <IconButton disabled={isLoading} size='small'
+                          onClick={isEditing ? onSubmit : () => {
+                              setIsEditing(true)
+                          }}>
+                  {isEditing ? <SaveImage/> : <EditImage/>}
+              </IconButton>
+            </Grid>
+            </Box>}
+            <Grid xs item>
+                {teamName}
+            </Grid>
+            {children}
+        </Grid>
+    </Box>
 }

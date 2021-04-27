@@ -38,7 +38,6 @@ export const useAuth = () => {
             } else {
                 // cEvent.change({id: eventId})
             }
-            // @ts-ignore
             cUser.change({
                 id: userId,
                 isLoading: true,//@ts-ignore

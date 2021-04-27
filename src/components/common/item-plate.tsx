@@ -12,6 +12,7 @@ import {AdditionalText} from './typography'
 import {ReactComponent as JobIcon} from '../../assets/job.svg'
 import {ReactComponent as BioIcon} from '../../assets/bio.svg'
 import {ReactComponent as InfoIcon} from '../../assets/info.svg'
+import {ReactComponent as InfoGrayIcon} from '../../assets/info_gray.svg'
 
 type ItemPlateProps = {
     text: string,
@@ -28,14 +29,14 @@ export const ItemPlate: React.FC<ItemPlateProps> = (
     {children, text, frontIcon, textPlate = AdditionalText, postIcon, ...rest}
 ) => {
     const TextPlate = textPlate
-    return <PaddedPlate {...rest}>
+    return <PaddedPlate {...rest} lang='ru'>
         <Grid container wrap='nowrap' alignItems='center'>
             {frontIcon && text &&
             <Grid item style={{alignSelf: 'flex-start'}}>
               <SvgIcon style={{marginRight: 12}} component={frontIcon}/>
             </Grid>}
             <Grid item zeroMinWidth style={{minHeight: '24px'}}>
-                <TextPlate style={{whiteSpace: 'pre-wrap', wordBreak: 'break-all'}} noWrap>{text}</TextPlate>
+                <TextPlate style={{whiteSpace: 'pre-wrap', hyphens: 'auto'}} noWrap>{text}</TextPlate>
             </Grid>
             {postIcon && <Grid item><IconButton component={postIcon}/></Grid>}
         </Grid>
@@ -50,6 +51,7 @@ export const BioPlate: React.FC<ItemPlateProps> = (props) => {
     return <ItemPlate frontIcon={BioIcon} {...props}/>
 }
 
-export const InfoPlate: React.FC<ItemPlateProps> = (props) => {
-    return <ItemPlate frontIcon={InfoIcon} {...props}/>
+export const InfoPlate: React.FC<{gray?: boolean} & ItemPlateProps> = ({gray, ...props}) => {
+
+    return <ItemPlate frontIcon={gray ? InfoGrayIcon: InfoIcon} {...props}/>
 }

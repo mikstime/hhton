@@ -27,6 +27,7 @@ import {useSnackbar} from 'notistack'
 import {UserEvents} from '../user/events'
 import {useHistory, useLocation} from 'react-router-dom'
 import {FillPrompt} from '../user/fill-prompt'
+import {ChosenSkills, Skills} from '../common/display-skills'
 
 const UserNameGrid = styled(Grid)`
   padding: 12px 0 8px 12px !important;
@@ -34,10 +35,10 @@ const UserNameGrid = styled(Grid)`
 
 export const SocialLink: React.FC<{ prefix?: string, site?: string, value: string }> = ({prefix = '', site = '', value}) => {
     const theme = useTheme()
-    if (!value) return null
+    if (!value.trim()) return null
     return <Grid item>
-        <Box clone textAlign={{md: 'center'}}>
-            <AdditionalText style={{marginLeft: 4}}>{prefix}
+        <Box clone paddingLeft={2}>
+            <AdditionalText>{prefix}
                 <a target='_blank' style={{
                     textDecoration: 'none',
                     color: theme.palette.primary.main
@@ -73,7 +74,7 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
             user.change({id: userId})
         } else {
             if (cUser.id !== '-1' && !location.pathname.startsWith('/feed')) {
-                user.change({id: cUser.id})
+                user.set(cUser)
             }
         }
         //eslint-disable-next-line react-hooks/exhaustive-deps
@@ -127,61 +128,29 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                         </Box>
                     </UserNameGrid>
                 </Hidden>
-                {(user.isNullUser || user.jobName.length > 0)
-                && <Grid item> <JobPlate
-                  text={user.jobName ? `Место работы: ${user.jobName}` : ''}/>
+                <Grid item> <JobPlate
+                    text={(!user.isNullUser && !user.isLoading) ? `Место работы: ${user.jobName.trim() || 'не известно'}` : ''}/>
                 </Grid>
-                }
-                {(user.isNullUser || user.skills.description.length > 0)
-                &&
-                <Grid item><BioPlate text={user.skills.description}/> </Grid>}
-
-                {(user.isNullUser || user.skills.tags.length > 0)
-                && <Grid item container>
-                  <Grid item container>
-                    <GrayishPlate>
-                      <Grid container spacing={1}
-                            style={{minHeight: 32}}>
-                          {user.skills.tags.map((e, i) => <Grid
-                              key={i} item>
-                              <BoldText>{e.name}</BoldText>
-                          </Grid>)}
-                      </Grid>
-                    </GrayishPlate>
-                  </Grid>
-                </Grid>
-                }
-                <FillPrompt/>
-                <FlexSpace/>
-                <Grid item container style={{marginTop: 24, marginBottom: 24}}
-                      wrap='nowrap'>
-                    <Grid item container direction='column' justify='center'
-                          spacing={2}>
-                        <SocialLink prefix='ВКонтакте: ' site='vk.com/'
-                                    value={user.settings.vk}/>
-                        <SocialLink prefix='Телеграм: ' site='t.me/'
-                                    value={user.settings.tg}/>
-                        <SocialLink prefix='Github: ' site='github.com/'
-                                    value={user.settings.gh}/>
+                <Grid item><BioPlate
+                    text={(!user.isNullUser && !user.isLoading) ? `${user.bio.trim() || 'Пользователь не рассказал о себе'}` : ''}
+                /> </Grid>
+                <Grid item container>
+                    <Grid item container>
+                        <Box clone padding='14px 16px 14px 16px'>
+                        <ChosenSkills user={user}/>
+                        </Box>
                     </Grid>
                 </Grid>
+                <FillPrompt/>
+                <SocialLink prefix='ВКонтакте: ' site='vk.com/'
+                            value={user.settings.vk}/>
+                <SocialLink prefix='Телеграм: ' site='t.me/'
+                            value={user.settings.tg}/>
+                <SocialLink prefix='Github: ' site='github.com/'
+                            value={user.settings.gh}/>
                 <FlexSpace/>
             </Grid>
         </Grid>
-        {
-            user.bio && <Grid item container direction='column'>
-              <Grid item>
-                <Title>
-                  О себе
-                </Title>
-              </Grid>
-              <Grid item>
-                <SecondaryText>
-                    {user.bio}
-                </SecondaryText>
-              </Grid>
-            </Grid>
-        }
         {
             user.hackathons.length > 0 &&
             <Grid item container direction='column'> <Grid item>

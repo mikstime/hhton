@@ -1,20 +1,18 @@
 import React, {useEffect, useState} from 'react'
 import {
-    AdditionalText, Plate, Title
+    AdditionalText, Plate
 } from '../common'
 import {
-    Box,
+    Box, Checkbox,
     createStyles,
     Grid,
     makeStyles,
     Step,
-    StepConnector,
     StepContent, StepIconProps,
     StepLabel,
     Stepper,
     Theme,
-    Typography,
-    withStyles
+    Typography, TypographyProps
 } from '@material-ui/core'
 import clsx from 'clsx'
 import {PrimaryButton, SecondaryButton} from '../common/buttons'
@@ -24,9 +22,8 @@ import {Additional} from '../modals/event-edit/additional'
 import {useSnackbar} from 'notistack'
 import {useEventEdit} from '../modals/event-edit'
 import {WhiteField} from '../modals/user-edit'
-import {Slide} from '@material-ui/core'
 import {createEvent} from '../../model/api'
-import {NULL_HACKATHON, useAppState} from '../tools/use-app-state'
+import {useAppState} from '../tools/use-app-state'
 import {useHistory} from 'react-router-dom'
 import {Check} from '@material-ui/icons'
 
@@ -82,9 +79,29 @@ function QontoStepIcon(props: StepIconProps) {
     )
 }
 
+export const ErrorText: React.FC<{ error?: boolean } & TypographyProps> = ({error, ...rest}) => {
+    if (error) {
+        return <Typography variant='caption' {...rest}/>
+    }
+    return null
+}
 export const CreateEventApp: React.FC = () => {
-    const [disabled] = useState(false)
+    const [disabled, setDisabled] = useState(false)
+    const [submitted, setSubmitted] = useState(false)
+    const [isPrivate, setIsPrivate] = useState(false)
     const [name, setName] = useState('')
+    const [nameError, setNameError] = useState(false)
+
+    useEffect(() => {
+        if (name.trim().length < 5) {
+            setDisabled(true)
+            setNameError(true)
+        } else {
+            setDisabled(false)
+            setSubmitted(false)
+            setNameError(false)
+        }
+    }, [name])
     const {enqueueSnackbar} = useSnackbar()
     const [step, setStep] = useState(1)
 
@@ -117,7 +134,7 @@ export const CreateEventApp: React.FC = () => {
                 может быть
                 изменено.
             </AdditionalText>
-            <Box clone marginTop={{xs: 0, sm: '16px'}}>
+            <Box clone marginTop={{xs: 0, sm: '16px'}} marginBottom='8px'>
                 <Plate elevation={4} padding={8}>
                     <WhiteField label='Название мероприятия' inputProps={{
                         placeholder: 'Мой хакатон',
@@ -128,6 +145,28 @@ export const CreateEventApp: React.FC = () => {
                     }}/>
                 </Plate>
             </Box>
+            <ErrorText error={(step > 1 || submitted) && nameError}>
+                Название не может быть короче 5 символов
+            </ErrorText>
+            <AdditionalText style={{marginTop: 16, marginBottom: 16}}>
+                {!isPrivate ? 'Доступ к приватному мероприятию можно получить только по специальной ссылке или имея пароль.\n' +
+                    '                Пароль может получить организатор после создания мероприятия.' :
+                    'Публичное мероприятие может попасть на главную страницу, доступ к нему не ограничен.'
+                }
+            </AdditionalText>
+            <Grid container alignItems='center'>
+                <Box clone paddingRight={1}>
+                    <Grid item>
+                        <Typography variant='body1'>Приватное</Typography>
+                    </Grid>
+                </Box>
+                <Grid item>
+                    <Checkbox color='primary' value={isPrivate}
+                              onChange={(e) => {
+                                  setIsPrivate(e.target.checked)
+                              }}/>
+                </Grid>
+            </Grid>
         </StepContent>
     </Step>
 
@@ -155,7 +194,8 @@ export const CreateEventApp: React.FC = () => {
         </StepLabel>
         <StepContent>
             <AdditionalText style={{marginTop: 16}}>
-                До завершения мероприятия возможно определить призовые места
+                До завершения мероприятия возможно определить призовые места.
+                После завершения на странице мероприятия выбирают победителей.
             </AdditionalText>
             <EventPrizes {...edit.prizes}/>
         </StepContent>
@@ -175,32 +215,38 @@ export const CreateEventApp: React.FC = () => {
                 {stepThree}
             </Stepper>
             <Grid container direction='row' justify='flex-end'>
-                <Box clone marginTop='16px !important' paddingRight={{xs: 1, sm: 3}}>
-                <Grid item>
-                    {step > 2 ? <SecondaryButton
-                            disabled={disabled}
-                            onClick={async () => {
-                                const val = edit.getSubmit()
-                                val.diff.name = name
-                                const id = await createEvent(val)
-                                if (id) {
-                                    event.change({id})
-                                    cEvent.change({id})
-                                    history.push(`/event/${id}`)
+                <Box clone marginTop='16px !important'
+                     paddingRight={{xs: 1, sm: 3}}>
+                    <Grid item>
+                        {step > 2 ? <SecondaryButton
+                                disabled={disabled}
+                                onClick={async () => {
+                                    const val = edit.getSubmit()
+                                    val.diff.name = name
+                                    const newVal = {...val, isPrivate}
+                                    const id = await createEvent(newVal)
+                                    if (id) {
+                                        event.change({id})
+                                        cEvent.change({id})
+                                        history.push(`/event/${id}`)
+                                    } else {
+                                        enqueueSnackbar('Не удалось создать событие', {
+                                            variant: 'error'
+                                        })
+                                    }
+                                }}>
+                                Создать
+                            </SecondaryButton> :
+                            <PrimaryButton disabled={submitted} onClick={() => {
+                                if (step === 1 && nameError) {
+                                    setSubmitted(true)
                                 } else {
-                                    enqueueSnackbar('Не удалось создать событие', {
-                                        variant: 'error'
-                                    })
+                                    setStep(step + 1)
                                 }
                             }}>
-                            Создать
-                        </SecondaryButton> :
-                        <PrimaryButton disabled={disabled} onClick={() => {
-                            setStep(step + 1)
-                        }}>
-                            Далее
-                        </PrimaryButton>}
-                </Grid>
+                                Далее
+                            </PrimaryButton>}
+                    </Grid>
                 </Box>
             </Grid>
             <Box height='100px'/>

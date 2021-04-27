@@ -9,7 +9,9 @@ import {useHistory, useLocation} from 'react-router-dom'
 import {TeamPage} from '../team/team-page'
 import {IncomingPage} from '../team/incoming-page'
 import {OutgoingPage} from '../team/outgoing-page'
-import {HistoryPage} from '../team/history-page'
+import {BlockedPage} from '../team/blocked-page'
+import {SideSection} from '../team/side-section'
+import {TeamName} from '../team/team-name'
 
 
 interface TabPanelProps {
@@ -23,6 +25,7 @@ function TabPanel(props: TabPanelProps) {
 
     return (
         <div
+            style={{width: '100%'}}
             role="tabpanel"
             hidden={value !== index}
             id={`simple-tabpanel-${index}`}
@@ -57,17 +60,17 @@ export const TeamApp: React.FC = () => {
             }
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cEvent.id, location, cEvent.notFound, cEvent.isParticipating, settings.isHostMode])
+    }, [cEvent.id, cEvent.notFound, cEvent.isParticipating, settings.isHostMode])
 
     useEffect(() => {
-        if (location.hash === '#team') {
-            setValue(0)
-        } else if (location.hash === '#incoming') {
+        if (location.hash === '#incoming') {
             setValue(1)
         } else if (location.hash === '#outgoing') {
             setValue(2)
         } else if (location.hash === '#blocked') {
             setValue(3)
+        } else {
+            setValue(0)
         }
     }, [location.hash])
 
@@ -81,7 +84,7 @@ export const TeamApp: React.FC = () => {
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue)
         if (newValue === 0) {
-            history.replace('#team')
+            history.replace('#')
         } else if (newValue === 1) {
             history.replace('#incoming')
         } else if (newValue === 2) {
@@ -91,8 +94,8 @@ export const TeamApp: React.FC = () => {
         }
     }
 
-
-    return <Grid container direction='column'>
+    return <Grid container>
+        <TeamName/>
         <Box
             paddingLeft={{sm: '50px'}}
             marginLeft={{sm: '-50px'}}
@@ -115,28 +118,47 @@ export const TeamApp: React.FC = () => {
                   textColor="primary" value={value} onChange={handleChange}
                   aria-label="team-page tabs"
             >
-                <Tab label="Команда"/>
+
+                <Tab label='Команда'/>
                 <Tab label={
                     <Badge
                         color='primary'
                         badgeContent={invites.i.personal.length + invites.i.team.length}
                         variant='dot'>Входящие заявки</Badge>}/>
-                <Tab label="Исходящие заявки"/>
-                <Tab label="Заблокированные заявки"/>
+                <Tab label='Исходящие заявки'/>
+                <Tab label='Заблокированные заявки'/>
             </Tabs>
-
         </Box>
-        <TabPanel value={value} index={0}>
-            <TeamPage/>
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-            <IncomingPage/>
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-            <OutgoingPage/>
-        </TabPanel>
-        <TabPanel value={value} index={3}>
-            <HistoryPage/>
-        </TabPanel>
+        <Box clone flexDirection={{xs: 'column-reverse', md: 'row !important'}}>
+            <Grid item container spacing={2} direction='column-reverse' wrap='nowrap'>
+                <Grid item container xs={12} md={7}>
+                    <TabPanel value={value} index={0}>
+                        <TeamPage/>
+                    </TabPanel>
+                    <TabPanel value={value} index={1}>
+                        <IncomingPage/>
+                    </TabPanel>
+                    <TabPanel value={value} index={2}>
+                        <OutgoingPage/>
+                    </TabPanel>
+                    <TabPanel value={value} index={3}>
+                        <BlockedPage/>
+                    </TabPanel>
+                </Grid>
+                <Grid item container xs={12} md={5} direction='column'
+                      wrap='nowrap'>
+                    <Box clone style={{
+                        position: 'sticky',
+                        top: 64,
+                        zIndex: 2
+                    }}>
+                        <Grid item container direction='column'>
+                            <SideSection/>
+                        </Grid>
+                    </Box>
+                    <Box flex={1}/>
+                </Grid>
+            </Grid>
+        </Box>
     </Grid>
 }

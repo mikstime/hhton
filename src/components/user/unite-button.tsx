@@ -2,8 +2,8 @@ import React, {useCallback, useEffect, useState} from 'react'
 import {PrimaryButton, SecondaryButton} from '../common/buttons'
 import {useAppState} from '../tools/use-app-state'
 import {
-    acceptInvite,
-    invitePerson, unInvite
+    acceptInvite, declineInvite,
+    invitePerson
 } from '../../model/api'
 import {useSnackbar} from 'notistack'
 import {Link} from 'react-router-dom'
@@ -62,6 +62,7 @@ const useStyles = makeStyles({
 
 export const UniteButton: React.FC = () => {
 
+    const nc = useNotificationHandlers()
     const classes = useStyles()
     const {onClick, isFetching} = useUnite()
     const {cUser, cEvent, user, invites, settings} = useAppState()
@@ -83,6 +84,14 @@ export const UniteButton: React.FC = () => {
         </PrimaryButton>
     }
 
+    if(settings.isHostMode) {
+        return <PrimaryButton style={{width: '100%'}} onClick={() => {
+            settings.setIsHostMode(false)
+        }}>
+            Режим участника
+        </PrimaryButton>
+    }
+
     if (user.isInvited) {
         return <PrimaryButton disabled>
             Заявка отправлена
@@ -97,36 +106,24 @@ export const UniteButton: React.FC = () => {
             accept: 'Да',
             decline: 'Оставить заявку',
             onSubmit: async () => {
-                const didDecline = await unInvite(cEvent.id, cUser.id, user.id)
+                const didDecline = await declineInvite(cEvent.id, cUser.id, user.id)
+                nc.update()
                 if (didDecline) {
-                    invites.i.set({
-                        team: invites.i.team
-                            .filter(t => !t.team.members
-                                .find(tt => user.id.toString() === tt.id)),
-                        personal: invites.i.personal.filter(t => t.id.toString() !== user.id)
-                    })
-                    pModal.close()
                     enqueueSnackbar(`Вы отклонили заявку`)
-
                 } else {
                     enqueueSnackbar(`Не удалось отклонить заявку`, {
                         variant: 'error'
                     })
-                    pModal.close()
                 }
+                pModal.close()
             }
         })
     }
 
     const onUniteClick = async () => {
         const didAccept = await acceptInvite(cEvent.id, cUser.id, user.id)
+        nc.update()
         if(didAccept) {
-            invites.i.set({
-                team: invites.i.team
-                    .filter(t => !t.team.members
-                        .find(tt => user.id.toString() === tt.id)),
-                personal: invites.i.personal.filter(t => t.id.toString() !== user.id)
-            })
             history.push('/team')
             enqueueSnackbar(`Вы объединились`)
         } else {
@@ -142,14 +139,6 @@ export const UniteButton: React.FC = () => {
                 К регистрации
             </SecondaryButton>
         </Link>
-    }
-
-    if(settings.isHostMode) {
-        return <PrimaryButton style={{width: '100%'}} onClick={() => {
-            settings.setIsHostMode(false)
-        }}>
-            Режим участника
-        </PrimaryButton>
     }
 
     if ((user.id === cUser.id || inMyTeam)) {

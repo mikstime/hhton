@@ -18,6 +18,8 @@ export type Hackathon = {
     isNullEvent?: boolean,
     notFound?: boolean,
     isParticipating?: boolean,
+    isPrivate: boolean,
+    isVerified: boolean,
 }
 
 
@@ -37,6 +39,8 @@ export type HackathonOptional = {
     isNullEvent?: boolean,
     notFound?: boolean,
     isParticipating?: boolean,
+    isPrivate?: boolean,
+    isVerified?: boolean,
 }
 
 export type HackathonSettings = {
@@ -64,6 +68,8 @@ export const NULL_HACKATHON = {
     prizes: [],
     settings: {},
     isNullEvent: true,
+    isPrivate: false,
+    isVerified: false,
 }
 
 

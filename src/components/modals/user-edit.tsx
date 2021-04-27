@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {
     AdditionalText,
     FlexSpace,
@@ -54,7 +54,11 @@ export const storeDiff = (o1: { [key: string]: any }, o2: { [key: string]: any }
     return toReturn
 }
 const MultilineGrayField: React.FC<{ label: string, inputProps?: InputBaseProps } & GridProps> = ({label, inputProps = {}, ...rest}) => {
-    return <Grid item xs container alignItems='baseline' {...rest}>
+    const fieldRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null)
+    const onClick = useCallback(() => {
+        fieldRef.current?.focus()
+    }, [fieldRef.current])
+    return <Grid onClick={onClick} item xs container alignItems='baseline' {...rest}>
         <Box clone width={{sm: '100px'}} paddingRight={2}>
             <Grid xs={12} sm='auto' item>
                 <Box clone textAlign={{sm: 'right'}}>
@@ -66,6 +70,7 @@ const MultilineGrayField: React.FC<{ label: string, inputProps?: InputBaseProps 
         </Box>
         <Grid xs={12} sm item>
             <InputBase
+                inputRef={fieldRef}
                 multiline
                 rowsMin={3}
                 rows={3}
@@ -84,7 +89,12 @@ const MultilineGrayField: React.FC<{ label: string, inputProps?: InputBaseProps 
 
 
 const GrayField: React.FC<{ label: string, inputProps?: InputBaseProps }> = ({label, inputProps = {}}) => {
-    return <Grid item xs container alignItems='baseline'>
+    const fieldRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null)
+    const onClick = useCallback(() => {
+        fieldRef.current?.focus()
+    }, [fieldRef.current])
+
+    return <Grid onClick={onClick} item xs container alignItems='baseline'>
         <Grid xs={12} md='auto' item style={{marginRight: 16}}>
             <Box clone textAlign={{md: 'right'}}>
                 <Typography variant='body2' style={{color: '#6F7985'}}>
@@ -93,7 +103,7 @@ const GrayField: React.FC<{ label: string, inputProps?: InputBaseProps }> = ({la
             </Box>
         </Grid>
         <Grid xs={12} sm item>
-            <InputBase {...inputProps} style={{
+            <InputBase inputRef={fieldRef} {...inputProps} style={{
                 background: 'white',
                 borderRadius: 8,
                 paddingLeft: 12,
@@ -107,7 +117,13 @@ const GrayField: React.FC<{ label: string, inputProps?: InputBaseProps }> = ({la
 }
 
 export const WhiteField: React.FC<{ label: string, prefix?: string, inputProps?: InputBaseProps }> = ({label, prefix, inputProps = {}}) => {
-    return <Grid item xs container alignItems='baseline'
+
+    const fieldRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null)
+    const onClick = useCallback(() => {
+        fieldRef.current?.focus()
+    }, [fieldRef.current])
+
+    return <Grid onClick={onClick} item xs container alignItems='baseline'
                  style={{minHeight: 32}}>
         <Grid item sm={6} container>
             <Hidden xsDown>
@@ -122,20 +138,22 @@ export const WhiteField: React.FC<{ label: string, prefix?: string, inputProps?:
         </Grid>
         <Grid item xs sm>
             <Box clone marginLeft={{xs: '20px', sm: '0'}}>
-            <InputBase fullWidth {...inputProps} style={{
-                // paddingLeft: 12,
-                paddingRight: 12,
-                display: 'block',
-                height: 32,
-                ...(inputProps.style || {})
-            }}/>
+                <InputBase inputRef={fieldRef} fullWidth {...inputProps}
+                           style={{
+                               // paddingLeft: 12,
+                               paddingRight: 12,
+                               display: 'block',
+                               height: 32,
+                               ...(inputProps.style || {})
+                           }}/>
             </Box>
         </Grid>
     </Grid>
 }
 
 export const WhiteFieldLabel: React.FC<{ label: string }> = ({label}) => {
-    return <Hidden smUp><Typography variant='body2' style={{color: '#6F7985', marginTop: 16}}>
+    return <Hidden smUp><Typography variant='body2'
+                                    style={{color: '#6F7985', marginTop: 16}}>
         {label}
     </Typography>
     </Hidden>
@@ -170,7 +188,7 @@ const Skills: React.FC<{
                     selectSkills({
                         ...selectedSkills,
                         [jobs[selectedJob].name]: aSkills.map((sk) => {
-                            return !!value.find(s => s.id === sk.id);
+                            return !!value.find(s => s.id === sk.id)
 
                         })
                     })
@@ -205,7 +223,8 @@ const Skills: React.FC<{
 
         <div className={classes.root}>
             {
-                jobs.map((j, i) => <Zoom key={j.name} in><Chip disabled={disabled}
+                jobs.map((j, i) => <Zoom key={j.name} in><Chip
+                    disabled={disabled}
                     onClick={
                         () => {
                             if (selectedJob === i) {
@@ -235,15 +254,15 @@ const Skills: React.FC<{
             {
                 skills[jobs[selectedJob]?.name]?.map((j, i) => (
                     <Zoom key={j.id} in><Chip disabled={disabled}
-                        onClick={
-                            () => {
-                                const selected = {...selectedSkills}
-                                selected[jobs[selectedJob]?.name][i] = !selected[jobs[selectedJob]?.name][i]
-                                selectSkills(selected)
-                            }
-                        }
-                        className={selectedSkills[jobs[selectedJob]?.name]?.[i] ? classes.selected : ''}
-                        label={j.name}
+                                              onClick={
+                                                  () => {
+                                                      const selected = {...selectedSkills}
+                                                      selected[jobs[selectedJob]?.name][i] = !selected[jobs[selectedJob]?.name][i]
+                                                      selectSkills(selected)
+                                                  }
+                                              }
+                                              className={selectedSkills[jobs[selectedJob]?.name]?.[i] ? classes.selected : ''}
+                                              label={j.name}
                     /></Zoom>))
             }
         </div>
@@ -271,14 +290,14 @@ const useUserEdit = () => {
     const nc = useNotificationHandlers()
     const reset = () => {
         if (cUser.id !== '-1') {
-            setFirstName(cUser.firstName)
-            setLastName(cUser.lastName)
-            setJob(cUser.jobName)
-            setVk(cUser.settings.vk)
-            setTg(cUser.settings.tg)
-            setGh(cUser.settings.gh)
-            setBio(cUser.bio)
-            setSDesc(cUser.skills.description)
+            setFirstName(cUser.firstName.trim())
+            setLastName(cUser.lastName.trim())
+            setJob(cUser.jobName.trim())
+            setVk(cUser.settings.vk.trim())
+            setTg(cUser.settings.tg.trim())
+            setGh(cUser.settings.gh.trim())
+            setBio(cUser.bio.trim())
+            setSDesc(cUser.skills.description.trim())
             setSkills(cUser.skills.tags)
             setDisabled(false)
         }
@@ -334,10 +353,10 @@ const useUserEdit = () => {
         disabled,
         onSubmit: async () => {
             const diff = storeDiff(cUser, {
-                firstName,
-                lastName,
-                jobName: job,
-                bio
+                firstName: firstName.trim(),
+                lastName: lastName.trim(),
+                jobName: job.trim(),
+                bio: bio.trim()
             })
             setDisabled(true)
             diff.skills = {
@@ -345,7 +364,7 @@ const useUserEdit = () => {
                 description: sDesc
             }
             diff.settings = {
-                vk, tg, gh
+                vk: vk.trim(), tg: tg.trim(), gh: gh.trim()
             }
             diff.id = cUser.id
             const update = await modifyUser(diff as UserOptional & { id: string })
@@ -417,7 +436,10 @@ export const UserEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({
                 <Plate elevation={4} padding={8}>
                     <WhiteField prefix='vk.com/' label='ВКонтакте' inputProps={{
                         placeholder: 'teamuponline',
-                        ...fields.vk
+                        ...fields.vk,
+                        style: {
+                            color: '#3E74DB'
+                        }
                     }}/>
                 </Plate>
             </Box>
@@ -449,13 +471,8 @@ export const UserEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({
             <GrayPlate style={{marginTop: 16}}>
                 <Grid direction='column' container spacing={4}>
                     <MultilineGrayField label='О себе' inputProps={{
-                        placeholder: 'В свободное от работы время я бегаю',
+                        placeholder: 'Например, в свободное от работы время я бегаю',
                         ...fields.bio
-                    }}/>
-                    <MultilineGrayField style={{paddingTop: 0}}
-                                        label='О навыках' inputProps={{
-                        placeholder: 'Первый свой полифилл я написал в 11 лет',
-                        ...fields.sDesc
                     }}/>
                 </Grid>
             </GrayPlate>

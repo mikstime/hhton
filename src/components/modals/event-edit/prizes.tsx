@@ -96,7 +96,7 @@ const PrizeItem: React.FC<{
             onChange={onNameChange}
             {...inputProps}
             disabled={!isEditing || (!location.pathname.includes('create') &&  event.isFinished)}
-            placeholder='Приз'
+            placeholder='Введите название'
             style={{
                 paddingRight: 12,
                 display: 'block',
