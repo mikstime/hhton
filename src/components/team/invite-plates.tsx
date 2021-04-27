@@ -363,7 +363,7 @@ export const BlockedTeamInvite: React.FC<{ user: User } & GridProps> = ({user, .
     const canAccept = cUser.team.members.length <= 1 || cUser.isTeamLead
 
     return <Grid item xs container {...props}>
-        <PersonPlate
+        <PersonPlate key={user.id}
             topElements={
                 !canAccept ? <React.Fragment/> :
                     <React.Fragment>
