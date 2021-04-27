@@ -87,6 +87,12 @@ export const PersonPlate: React.FC<Props & PlateProps> = ({user, topElements, ri
     const [scrollTop, setScrollTop] = useState(false)
     const [scrollBottom, setScrollBottom] = useState(false)
 
+    useEffect(() => {
+        if(user.skills.tags.length === 0) {
+            setOpen(false)
+        }
+    },[user.skills.tags.length])
+
     const onScroll = useCallback((e) => {
         if (e.target.firstElementChild) {
             const el = e.target
