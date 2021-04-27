@@ -31,7 +31,7 @@ export const EventAbout: React.FC = () => {
 
     useEffect(() => {
         (async () => {
-            if (event.founderId === cUser.id) {
+            if (event.founderId === cUser.id && cUser.id !== '-1') {
                 const s = await getEventSecret(event.id)
                 setSecret(s)
             }
