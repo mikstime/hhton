@@ -155,7 +155,9 @@ export const fetchEvent = async (id: Id) => {
             participants: new Array(270).map(() => NULL_USER),
             prizes: [],
             settings: {},
-            isParticipating: false
+            isParticipating: false,
+            isPrivate: false,
+            isVerified: false
         }
     }
 }
@@ -220,9 +222,23 @@ export const invitePerson = async (eventId: string, inviterId: string, inviteeId
  *
  * @param eventId
  */
-export const getEventSecret = async (eventId: string) => {
-    await sleep(300)
-    return 'PASSWORD'
+export const getEventSecret = async (eventId: string) => {    const res = await fetch(
+    `${HOST_DOMAIN}${PREFIX}/event/${eventId}/link`,
+    {
+        method: 'GET',
+        credentials: 'include',
+    })
+
+    if (res.ok) {
+        const json = await res.json()
+        if (json) {
+            return json.secret
+        } else {
+            return ""
+        }
+    } else {
+        return ""
+    }
 }
 
 
@@ -234,7 +250,7 @@ export const getEventSecret = async (eventId: string) => {
  */
 export const joinEvent = async (userId: string, eventId: string, secret?: string) => {
     if (!mockImplemented) {
-        const join = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/join`,
+        const join = await fetch(`${HOST_DOMAIN}${PREFIX}/event/${eventId}/join?secret=${secret ?? ""}`,
             {
                 method: 'POST',
                 credentials: 'include',
@@ -1002,6 +1018,7 @@ export const createEvent = async (data: {
 }) => {
     if (!mockImplemented) {
         data.diff.founderId = data.founderId
+        data.diff.isPrivate = data.isPrivate
         let payload = Convert.eventOptional.toBackend(data.diff, data.prizes)
 
         const eventRequest = await fetch(`${HOST_DOMAIN}${PREFIX}/event`, {
