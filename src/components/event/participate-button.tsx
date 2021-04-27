@@ -3,7 +3,12 @@ import {PrimaryButton, SecondaryButton} from '../common/buttons'
 import {useAppState} from '../tools/use-app-state'
 import {useSearchModal} from '../modals/search'
 import {useSnackbar} from 'notistack'
-import {finishEvent, joinEvent, leaveEvent} from '../../model/api'
+import {
+    finishEvent,
+    getEventSecret,
+    joinEvent,
+    leaveEvent
+} from '../../model/api'
 import {ButtonGroup, makeStyles} from '@material-ui/core'
 import {ReactComponent as CancelIcon} from '../../assets/cancel.svg'
 import {usePromptModal} from '../modals/prompt'
@@ -41,22 +46,31 @@ const useParticipate = () => {
     useEffect(() => {
         if (actionId === null) return
         if (event.isPrivate) {
+            const participate = (secret: string) => {
+                joinEvent(cUser.id, event.id, secret).then((didJoin?: boolean) => {
+                    if (didJoin) {
+                        event.change({isParticipating: true})
+                        cEvent.change({isParticipating: true})
+                        enqueueSnackbar(`Вы участвуете в мероприятии ${event.name}`, {
+                            variant: 'success'
+                        })
+                        sModal.actions.open()
+                        setActionId(null)
+                        nc.update()
+                    } else {
+                        jModal.open()
+                        setActionId(null)
+                    }
+                })
+            }
             const secret = query.get('secret') || ''
-            joinEvent(cUser.id, event.id, secret).then((didJoin?: boolean) => {
-                if (didJoin) {
-                    event.change({isParticipating: true})
-                    cEvent.change({isParticipating: true})
-                    enqueueSnackbar(`Вы участвуете в мероприятии ${event.name}`, {
-                        variant: 'success'
-                    })
-                    sModal.actions.open()
-                    setActionId(null)
-                    nc.update()
-                } else {
-                    jModal.open()
-                    setActionId(null)
-                }
-            })
+            if(!secret) {
+                getEventSecret(event.id).then(secret => {
+                    participate(secret)
+                })
+            } else {
+                participate(secret)
+            }
 
         } else {
             joinEvent(cUser.id, event.id).then((didJoin?: boolean) => {
