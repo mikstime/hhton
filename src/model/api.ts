@@ -232,7 +232,7 @@ export const getEventSecret = async (eventId: string) => {    const res = await 
     if (res.ok) {
         const json = await res.json()
         if (json) {
-            return json.secret
+            return json.Secret
         } else {
             return ""
         }
