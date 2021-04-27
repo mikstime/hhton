@@ -27,6 +27,7 @@ import {useSnackbar} from 'notistack'
 import {UserEvents} from '../user/events'
 import {useHistory, useLocation} from 'react-router-dom'
 import {FillPrompt} from '../user/fill-prompt'
+import {ChosenSkills, Skills} from '../common/display-skills'
 
 const UserNameGrid = styled(Grid)`
   padding: 12px 0 8px 12px !important;
@@ -135,19 +136,22 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                 /> </Grid>
                 <Grid item container>
                     <Grid item container>
-                        <GrayishPlate>
-                            <Grid container spacing={1}
-                                  style={{minHeight: 32}}>
-                                {(user.skills.tags.map((e, i) => <Grid
-                                    key={i} item>
-                                    <BoldText>{e.name}</BoldText>
-                                </Grid>))}
-                                {(!user.isNullUser && !user.isLoading &&
-                                    user.skills.tags.length === 0
-                                    && <Grid item><BoldText>Навыки
-                                    не указаны</BoldText></Grid>)}
-                            </Grid>
-                        </GrayishPlate>
+                        <Box clone padding='14px 16px 14px 16px'>
+                        <ChosenSkills user={user}/>
+                        </Box>
+                        {/*<GrayishPlate>*/}
+                        {/*    <Grid container spacing={1}*/}
+                        {/*          style={{minHeight: 32}}>*/}
+                        {/*        {(user.skills.tags.map((e, i) => <Grid*/}
+                        {/*            key={i} item>*/}
+                        {/*            <BoldText>{e.name}</BoldText>*/}
+                        {/*        </Grid>))}*/}
+                        {/*        {(!user.isNullUser && !user.isLoading &&*/}
+                        {/*            user.skills.tags.length === 0*/}
+                        {/*            && <Grid item><BoldText>Навыки*/}
+                        {/*            не указаны</BoldText></Grid>)}*/}
+                        {/*    </Grid>*/}
+                        {/*</GrayishPlate>*/}
                     </Grid>
                 </Grid>
                 <FillPrompt/>
