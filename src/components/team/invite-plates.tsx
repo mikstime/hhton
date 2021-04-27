@@ -230,7 +230,7 @@ export const IncomingTeamInvite: React.FC<{ user: User } & GridProps> = ({user, 
     const canAccept = cUser.team.members.length <= 1 || cUser.isTeamLead
 
     return <Grid item xs container {...props}>
-        <PersonPlate
+        <PersonPlate key={selected.id}
             topElements={
                 !canAccept ? <React.Fragment/> :
                     <React.Fragment>
@@ -307,7 +307,7 @@ export const OutgoingTeamInvite: React.FC<{ user: User } & GridProps> = ({user, 
     const canAccept = cUser.team.members.length <= 1 || cUser.isTeamLead
 
     return <Grid item xs container {...props}>
-        <PersonPlate
+        <PersonPlate key={selected.id}
             topElements={
                 !canAccept ? <React.Fragment/> :
                     <React.Fragment>
@@ -363,7 +363,7 @@ export const BlockedTeamInvite: React.FC<{ user: User } & GridProps> = ({user, .
     const canAccept = cUser.team.members.length <= 1 || cUser.isTeamLead
 
     return <Grid item xs container {...props}>
-        <PersonPlate key={user.id}
+        <PersonPlate key={selected.id}
             topElements={
                 !canAccept ? <React.Fragment/> :
                     <React.Fragment>
