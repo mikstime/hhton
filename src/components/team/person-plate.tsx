@@ -90,6 +90,7 @@ export const PersonPlate: React.FC<Props & PlateProps> = ({user, topElements, ri
     useEffect(() => {
         if(user.skills.tags.length === 0) {
             setOpen(false)
+            setAvatarSize(98)
         }
     },[user.skills.tags.length])
 
