@@ -400,10 +400,10 @@ export const getFeed = async (eventId: string, query: string, sinceId?: string) 
             const json = await feedRequest.json()
             let result = [] as string[]
 
-            if (!json.users)
-                return []
+            if (!json.users) return []
+
             json.users.forEach((v: { id: Id }) => {
-                result.push(v.id)
+                result.push(v.id.toString())
             })
             return result
         } else {
