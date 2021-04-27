@@ -74,7 +74,7 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
             user.change({id: userId})
         } else {
             if (cUser.id !== '-1' && !location.pathname.startsWith('/feed')) {
-                user.change({id: cUser.id})
+                user.set(cUser)
             }
         }
         //eslint-disable-next-line react-hooks/exhaustive-deps
@@ -139,19 +139,6 @@ export const UserApp: React.FC<GridProps> = ({...rest}) => {
                         <Box clone padding='14px 16px 14px 16px'>
                         <ChosenSkills user={user}/>
                         </Box>
-                        {/*<GrayishPlate>*/}
-                        {/*    <Grid container spacing={1}*/}
-                        {/*          style={{minHeight: 32}}>*/}
-                        {/*        {(user.skills.tags.map((e, i) => <Grid*/}
-                        {/*            key={i} item>*/}
-                        {/*            <BoldText>{e.name}</BoldText>*/}
-                        {/*        </Grid>))}*/}
-                        {/*        {(!user.isNullUser && !user.isLoading &&*/}
-                        {/*            user.skills.tags.length === 0*/}
-                        {/*            && <Grid item><BoldText>Навыки*/}
-                        {/*            не указаны</BoldText></Grid>)}*/}
-                        {/*    </Grid>*/}
-                        {/*</GrayishPlate>*/}
                     </Grid>
                 </Grid>
                 <FillPrompt/>

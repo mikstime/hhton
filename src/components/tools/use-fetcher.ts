@@ -29,19 +29,20 @@ export const useFetcher = () => {
 
     useEffect(() => {
         (async () => {
-            if (appState.user.id !== isFetchingUserId.current && appState.user.id !== '-1') {
-                isFetchingUserId.current = appState.user.id
+            const id = appState.user.id + appState.cEvent.id
+            if (id !== isFetchingUserId.current && appState.user.id !== '-1') {
+                isFetchingUserId.current = id
                 appState.user.set({...NULL_USER, isLoading: true})
 
                 const user = await fetchUser(appState.user.id)
 
                 if (user) {
-                    if (isFetchingUserId.current === appState.user.id) {
+                    if (isFetchingUserId.current === id) {
                         appState.user.set({...user, isLoading: true})
                         const team = appState.cEvent.id !== '-1' ?
                             await getTeam(appState.cEvent.id, user.id) : user.team
 
-                        if (isFetchingUserId.current === appState.user.id) {
+                        if (isFetchingUserId.current === id) {
                             appState.user.change({
                                 team, isLoading: false,
                                 isTeamLead: team.teamLead?.id === user.id
@@ -49,7 +50,7 @@ export const useFetcher = () => {
                         }
                     }
                 } else {
-                    if (isFetchingUserId.current === appState.user.id) {
+                    if (isFetchingUserId.current === id) {
                         appState.user.set({
                             ...NULL_USER,
                             id: appState.user.id,
