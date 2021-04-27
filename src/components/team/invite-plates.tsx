@@ -263,7 +263,7 @@ export const IncomingTeamInvite: React.FC<{ user: User } & GridProps> = ({user, 
                         </ButtonGroup>
                     </Box>
                 </Grid>}
-            rightElements={<MemberPicker team={cUser.team}
+            rightElements={<MemberPicker team={user.team}
                                          current={selected}
                                          onSelect={onSelect}/>}
             user={selected}/>
@@ -319,7 +319,7 @@ export const OutgoingTeamInvite: React.FC<{ user: User } & GridProps> = ({user, 
                             </IconButton>
                         </Box>
                     </React.Fragment>}
-            rightElements={<MemberPicker team={cUser.team}
+            rightElements={<MemberPicker team={user.team}
                                          current={selected}
                                          onSelect={onSelect}/>}
             user={selected}/>
@@ -375,7 +375,7 @@ export const BlockedTeamInvite: React.FC<{ user: User } & GridProps> = ({user, .
                             </IconButton>
                         </Box>
                     </React.Fragment>}
-            rightElements={<MemberPicker team={cUser.team}
+            rightElements={<MemberPicker team={user.team}
                                          current={selected}
                                          onSelect={onSelect}/>}
             user={selected}/>
