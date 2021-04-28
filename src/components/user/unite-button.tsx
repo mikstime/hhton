@@ -153,13 +153,13 @@ export const UniteButton: React.FC = () => {
         || !!invites.i.personal.find(t => t.id.toString() === user.id)
 
     const canAccept = cUser.team.members.length <= 1 || cUser.isTeamLead
-    if(didInviteMe && canAccept) {
+    if(didInviteMe) {
         return <ButtonGroup variant="contained" color="primary">
-            <PrimaryButton style={{flex: 1}} onClick={onUniteClick}>
+            <PrimaryButton disabled={!canAccept} style={{flex: 1}} onClick={onUniteClick}>
                 Принять
             </PrimaryButton>
             <Tooltip title="Отклонить" aria-label="decline">
-            <PrimaryButton classes={classes} startIcon={<CancelIcon/>}
+            <PrimaryButton disabled={!canAccept} classes={classes} startIcon={<CancelIcon/>}
                              onClick={onDeclineClick}>
             </PrimaryButton>
             </Tooltip>
