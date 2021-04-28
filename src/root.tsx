@@ -36,9 +36,14 @@ const Main: React.FC = () => {
                         variantWarning: classes.warning,
                         variantInfo: classes.info
                     }}
-                    content={(key, message) => (
-                        <SnackMessage id={key} message={message}/>
-                    )}>
+                    content={(key, message: string) => {
+                        try {
+                            const parsed = JSON.parse(message)
+                            return <SnackMessage id={key} message={parsed.message} to={parsed.to}/>
+                        } catch (e) {
+                            return <SnackMessage id={key} message={message}/>
+                        }
+                    }}>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}
                                              locale={ruLocale}>
                         <AppStateProvider>
