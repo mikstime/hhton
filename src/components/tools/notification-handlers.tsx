@@ -19,7 +19,7 @@ const keys = [
     'NewTeamNotification',
     'NewMembersNotification',
     'NewInviteNotification',
-    'NewDenyNotification',
+    // 'NewDenyNotification',
     'NewTeamLeadNotification',
     'NewVoteNotification'
 ]
@@ -30,12 +30,11 @@ const useGenerateHandles = (action: () => void, keys: string[], nav: { [key: str
         a[k] = (m: Message) => {
             action()
             if(m.message) {
-                const key = enqueueSnackbar(m.message, {
-                    onClick: () => {
-                        closeSnackbar(key)
-                        nav[k](m)
-                    }
-                })
+                const to = nav[k](m)
+                enqueueSnackbar(JSON.stringify({
+                    message: m.message,
+                    to,
+                }))
             } else {
                 nav[k](m)
             }
@@ -62,33 +61,38 @@ export const _useNotificationHandlers: () => {
         NewTeamNotification: (m: Message) => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
-            history.push('/team#team')
+            return '/team#team'
+            // history.push('/team#team')
         },
         NewMembersNotification: (m: Message) => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
-            history.push('/team#team')
+            return '/team#team'
+            // history.push('/team#team')
         },
         NewInviteNotification: (m: Message) => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
-            history.push('/team#incoming')
+            return '/team#incoming'
+            // history.push('/team#incoming')
         },
         NewDenyNotification: (m: Message) => {
-            settings.setIsHostMode(false)
-            cEvent.change({id: m.type})
-            history.push('/team#team')
+            // settings.setIsHostMode(false)
+            // cEvent.change({id: m.type})
+            // history.push('/team#team')
         },
         NewTeamLeadNotification: (m: Message) => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
-            history.push('/team#team')
+            return '/team'
+            // history.push('/team')
         },
         NewVoteNotification: () => {},
         default: (m: Message) => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
-            history.push('/event/' + m.type)
+            // history.push('/event/' + m.type)
+            return '/event/' + m.type
         }
     }
     const handles = useGenerateHandles(
@@ -101,14 +105,13 @@ export const _useNotificationHandlers: () => {
             setUpdates(updates + 1)
         },
         ...handles,
+        NewDenyNotification: (m: Message) => {
+            setUpdates(updates + 1)
+        },
         default: (m: Message) => {
             setUpdates(updates + 1)
             if (m.message) {
-                const key = enqueueSnackbar(m.message, {
-                    onClick: () => {
-                        closeSnackbar(key)
-                    }
-                })
+                enqueueSnackbar(JSON.stringify(m.message))
             }
         },
         updates,
