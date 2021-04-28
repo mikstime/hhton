@@ -152,7 +152,8 @@ export const UniteButton: React.FC = () => {
     const didInviteMe = !!invites.i.team.find(t => t.team.members.find(tt => user.id.toString() === tt.id))
         || !!invites.i.personal.find(t => t.id.toString() === user.id)
 
-    if(didInviteMe) {
+    const canAccept = cUser.team.members.length <= 1 || cUser.isTeamLead
+    if(didInviteMe && canAccept) {
         return <ButtonGroup variant="contained" color="primary">
             <PrimaryButton style={{flex: 1}} onClick={onUniteClick}>
                 Принять
