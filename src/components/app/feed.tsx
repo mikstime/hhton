@@ -243,7 +243,7 @@ export const FeedApp: React.FC = () => {
         }
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [users, current])
-    console.log(users, isFetching)
+
     return <Fragment>
         <Slide key={key} in direction={direction}>
             <div>
