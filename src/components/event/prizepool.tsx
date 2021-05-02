@@ -13,13 +13,13 @@ export const PrizePool: React.FC<{ prizes: Prize[] }> = ({prizes}) => {
                 listStyleType: 'circle',
                 marginTop: 16,
             }}>
-                {i + 1}. {p.name} - {p.total}шт.
+                {i + 1} место: {p.name} {Number(p.total) > 1 ? `${p.name ? '–' : ''} x${p.total}` : ''}
             </Typography>
         </Grid>
     ))
     if(toRender.length > 0) {
         return <Grid item container direction='column'
-                     style={{marginTop: 24}}>
+                     style={{marginTop: 8}}>
             {toRender}
         </Grid>
     }
@@ -27,7 +27,7 @@ export const PrizePool: React.FC<{ prizes: Prize[] }> = ({prizes}) => {
         return null
     }
     return <Grid container direction='column'
-                 style={{marginTop: 24}}>
+                 style={{marginTop: 8}}>
         <AdditionalText>
             Мероприятие не имеет призового фонда.
         </AdditionalText>

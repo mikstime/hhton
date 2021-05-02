@@ -64,7 +64,7 @@ export const PromptModal: React.FC<{
             <Grid container direction='row' justify='flex-end'
                   style={{marginTop: 16}} spacing={1}>
                 <Grid item>
-                    <Button style={{color: '#818C99'}} disabled={disabled} onClick={() => {
+                    <Button style={{color: '#222222'}} disabled={disabled} onClick={() => {
                         setDisabled(true)
                     }}>
                         {accept}
