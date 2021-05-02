@@ -47,14 +47,13 @@ const useGenerateHandles = (action: () => void, keys: string[], nav: { [key: str
 export const _useNotificationHandlers: () => {
     [key in NC]: (m: Message) => void
 } & {
-    navigation: { [key in (NC | 'default')]: (m: Message) => void }
+    navigation: { [key in (NC | 'default')]: (m: Message) => string|void }
     default: (m: Message) => void,
     updates: number,
     update: () => void
 } = () => {
     const [updates, setUpdates] = useState(0)
-    const {enqueueSnackbar, closeSnackbar} = useSnackbar()
-    const history = useHistory()
+    const {enqueueSnackbar} = useSnackbar()
     const {settings, cEvent} = useAppState()
 
     const navigation = {
@@ -62,36 +61,28 @@ export const _useNotificationHandlers: () => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
             return '/team#team'
-            // history.push('/team#team')
         },
         NewMembersNotification: (m: Message) => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
             return '/team#team'
-            // history.push('/team#team')
         },
         NewInviteNotification: (m: Message) => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
             return '/team#incoming'
-            // history.push('/team#incoming')
         },
         NewDenyNotification: (m: Message) => {
-            // settings.setIsHostMode(false)
-            // cEvent.change({id: m.type})
-            // history.push('/team#team')
         },
         NewTeamLeadNotification: (m: Message) => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
             return '/team'
-            // history.push('/team')
         },
         NewVoteNotification: () => {},
         default: (m: Message) => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
-            // history.push('/event/' + m.type)
             return '/event/' + m.type
         }
     }
