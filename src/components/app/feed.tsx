@@ -151,6 +151,7 @@ export const FeedApp: React.FC = () => {
 
     const location = useLocation()
     const [lastLocation, setLastLocation] = useState(location.search)
+    const [lastEvent, setLastEvent] = useState('-1')
     const {current, setCurrent, users, setUsers} = useFeed()
 
     const [isFetching, setIsFetching] = useState(true)
@@ -162,7 +163,6 @@ export const FeedApp: React.FC = () => {
 
     useEffect(() => {
         (async () => {
-            setIsFetching(true)
             if (cEvent.notFound) {
                 history.push('/user')
             }
@@ -170,16 +170,18 @@ export const FeedApp: React.FC = () => {
                 history.push('/event/' + cEvent.id)
             }
             if (cEvent.id !== '-1') {
+                setIsFetching(true)
                 const newUsers = await getFeed(cEvent.id, location.search)
-                if (location.search !== lastLocation) {
+                setIsFetching(false)
+                if (location.search !== lastLocation || lastEvent !== cEvent.id) {
                     setLastLocation(location.search)
                     setCurrent(0)
                     setUsers([...newUsers])
                 } else {
-                    setUsers([...users, ...newUsers])
+                    setUsers([...newUsers])
                 }
+                setLastEvent(cEvent.id)
             }
-            setIsFetching(false)
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cEvent.id, location, cEvent.notFound, cEvent.isParticipating, settings.isHostMode])
@@ -195,13 +197,14 @@ export const FeedApp: React.FC = () => {
             }
             let newCurrent = current
             if (newCurrent >= users.length) {
-                setIsFetching(true)
-                const newUsers = await getFeed(cEvent.id, location.search, users[current])
-                if (newUsers.length) {
-                    // setUsers([...users, ...newUsers])
-                    setUsers([...newUsers])
-                    newCurrent = -1
-                }
+                // setIsFetching(true)
+                // setUsers([])
+                // const newUsers = await getFeed(cEvent.id, location.search, users[current])
+                // if (newUsers.length) {
+                // setUsers([...users, ...newUsers])
+                setUsers([...users])
+                newCurrent = -1
+                // }
                 setIsFetching(false)
             }
             setCurrent(newCurrent + 1)
@@ -240,11 +243,12 @@ export const FeedApp: React.FC = () => {
         }
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [users, current])
-
+    console.log(users, isFetching)
     return <Fragment>
         <Slide key={key} in direction={direction}>
             <div>
-                {current >= users.length && !isFetching ?
+
+                {users.length === 0 && isFetching ? null : current >= users.length && !isFetching ?
                     <EndMessage isFetching={isFetching}/> :
                     <UserApp/>
                 }
