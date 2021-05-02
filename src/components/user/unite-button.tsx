@@ -136,7 +136,7 @@ export const UniteButton: React.FC = () => {
     if(!cEvent.isParticipating) {
         return <Link to={`/event/${cEvent.id}`} style={{textDecoration: 'none'}}>
             <SecondaryButton style={{width: '100%'}}>
-                К регистрации
+                К мероприятию
             </SecondaryButton>
         </Link>
     }
