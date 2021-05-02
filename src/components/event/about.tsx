@@ -40,27 +40,49 @@ export const EventAbout: React.FC = () => {
 
     return <GrayishPlate padding={16} style={{marginTop: 16}}>
         {event.founderId === cUser.id && cUser.id !== '-1' &&
-            <Grid container direction='column'>
-                <AdditionalText>
-                    Ссылка на мероприятие:
-                </AdditionalText>
-                <Box clone marginBottom={2} marginTop={1}>
-                    <Plate padding={8} elevation={4}>
-                        <Grid container alignItems='center'>
-                            <Typography variant='body1' style={{wordBreak: 'break-all'}}>
-                                team-up.online/event/{event.id}{secret ? `?secret=${secret}` : ''}
-                            </Typography>
-                            <FlexSpace/>
-                            <IconButton size='small' onClick={() => {
-                                const str = `https://team-up.online/event/${event.id}${secret ? `?secret=${secret}` : ''}`
-                                copyTextToClipboard(str)
-                            }}>
-                                <CopyIcon/>
-                            </IconButton>
-                        </Grid>
-                    </Plate>
-                </Box>
-            </Grid>
+        <Grid container direction='column'>
+          <AdditionalText>
+            Ссылка на мероприятие:
+          </AdditionalText>
+          <Box clone marginBottom={2} marginTop={1}>
+            <Plate padding={8} elevation={4}>
+              <Grid container alignItems='center'>
+                <Typography variant='body1' style={{wordBreak: 'break-all'}}>
+                  team-up.online/event/{event.id}{secret ? `?secret=${secret}` : ''}
+                </Typography>
+                <FlexSpace/>
+                <IconButton size='small' onClick={() => {
+                    const str = `https://team-up.online/event/${event.id}${secret ? `?secret=${secret}` : ''}`
+                    copyTextToClipboard(str)
+                }}>
+                  <CopyIcon/>
+                </IconButton>
+              </Grid>
+            </Plate>
+          </Box>
+            {secret && <React.Fragment>
+              <AdditionalText>
+                Пароль:
+              </AdditionalText>
+              <Box clone marginBottom={2} marginTop={1}>
+                <Plate padding={8} elevation={4}>
+                  <Grid container alignItems='center'>
+                    <Typography variant='body1'
+                                style={{wordBreak: 'break-all'}}>
+                        {secret ? `?secret=${secret}` : ''}
+                    </Typography>
+                    <FlexSpace/>
+                    <IconButton size='small' onClick={() => {
+                        copyTextToClipboard(secret)
+                    }}>
+                      <CopyIcon/>
+                    </IconButton>
+                  </Grid>
+                </Plate>
+              </Box>
+            </React.Fragment>
+            }
+        </Grid>
         }
         <Box clone flexDirection={{xs: 'column', md: 'row'}}>
             <Grid container spacing={2}>
