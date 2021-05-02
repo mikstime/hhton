@@ -32,18 +32,18 @@ export const useChipStyles = makeStyles((theme: Theme) =>
             }
         },
         selected: {
-            background: '#F7F8FA',
+            background: '#F0F2F5',
             boxShadow: 'none',
             '&:hover': {
-                background: '#F7F8FA',
+                background: '#F0F2F5',
                 boxShadow: 'none'
             },
             '&:focus': {
-                background: '#F7F8FA',
+                background: '#F0F2F5',
                 boxShadow: 'none'
             },
             '&:active': {
-                background: '#F7F8FA',
+                background: '#F0F2F5',
                 boxShadow: 'none'
             }
         },
@@ -55,6 +55,9 @@ export const useChipStyles = makeStyles((theme: Theme) =>
             '&:active': {
                 background: '#F7F8FA'
             }
+        },
+        contains: {
+            color: '#222222'
         }
     })
 )

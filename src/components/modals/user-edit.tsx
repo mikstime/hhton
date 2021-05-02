@@ -19,9 +19,10 @@ import {
 import {SecondaryButton} from '../common/buttons'
 import {useChipStyles} from '../common/skill-chip'
 import {getJobs, getSkills, modifyUser} from '../../model/api'
-import {UserOptional, UserSkill} from '../tools/use-app-state/user'
+import {NULL_USER, UserOptional, UserSkill} from '../tools/use-app-state/user'
 import {useAppState} from '../tools/use-app-state'
 import {useNotificationHandlers} from '../tools/notification-handlers'
+import {ChosenSkills} from '../common/display-skills'
 
 const _useUserEditModal = () => {
     const [isOpen, setIsOpen] = useState(false)
@@ -58,7 +59,8 @@ const MultilineGrayField: React.FC<{ label: string, inputProps?: InputBaseProps 
     const onClick = useCallback(() => {
         fieldRef.current?.focus()
     }, [fieldRef.current])
-    return <Grid onClick={onClick} item xs container alignItems='baseline' {...rest}>
+    return <Grid onClick={onClick} item xs container
+                 alignItems='baseline' {...rest}>
         <Box clone width={{sm: '100px'}} paddingRight={2}>
             <Grid xs={12} sm='auto' item>
                 <Box clone textAlign={{sm: 'right'}}>
@@ -219,7 +221,7 @@ const Skills: React.FC<{
         <Typography variant='h1' style={{
             marginTop: 0,
             fontSize: 19
-        }}>Специализация</Typography>
+        }}>Доступные категории</Typography>
 
         <div className={classes.root}>
             {
@@ -234,10 +236,11 @@ const Skills: React.FC<{
                             }
                         }
                     }
-                    className={selectedJob >= 0 ?
+                    className={
+                        selectedJob >= 0 ?
                         selectedJob === i ?
-                            classes.selected : selectedSkills[jobs[i]?.name]?.includes(true) || value.find(x => x.jobId === j.id.toString()) ? '' : classes.notSelected :
-                        selectedSkills[jobs[i]?.name]?.includes(true) || value.find(v => v.jobId === jobs[i].id.toString()) ? classes.selected : ''
+                            classes.selected : selectedSkills[jobs[i]?.name]?.includes(true) || value.find(x => x.jobId === j.id.toString()) ? classes.contains : '' :
+                        selectedSkills[jobs[i]?.name]?.includes(true) || value.find(v => v.jobId === jobs[i].id.toString()) ? classes.contains : ''
                     }
                     label={j.name}
                 /></Zoom>)
@@ -248,7 +251,7 @@ const Skills: React.FC<{
                 <Typography variant='h1' style={{
                     marginTop: 0,
                     fontSize: 19
-                }}>Навыки</Typography> : null
+                }}>Доступные навыки</Typography> : null
         }
         <div className={classes.root}>
             {
@@ -298,7 +301,7 @@ const useUserEdit = () => {
             setGh(cUser.settings.gh.trim())
             setBio(cUser.bio.trim())
             setSDesc(cUser.skills.description.trim())
-            setSkills(cUser.skills.tags)
+            setSkills(cUser.skills.tags.sort((t1, t2) => Number(t1.id) - Number(t2.id)))
             setDisabled(false)
         }
     }
@@ -476,13 +479,23 @@ export const UserEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({
                     }}/>
                 </Grid>
             </GrayPlate>
-            <Typography variant='h2' style={{fontSize: 22, marginTop: 24}}>
-                Ваши навыки
-            </Typography>
-            <AdditionalText style={{marginTop: 16, marginBottom: 16}}>
-                Выберите один или несколько навыков в интересующих Вас
-                профессиях
-            </AdditionalText>
+            <Typography variant='h1' style={{
+                marginTop: 24,
+                fontSize: 19
+            }}>Выбранные навыки</Typography>
+            {fields.skills.value.length > 0 ? <Box clone marginTop={2} marginBottom={2}><ChosenSkills user={{
+                    ...NULL_USER,
+                skills: {
+                        description: '',
+                        tags: fields.skills.value,
+                },
+            }
+                }/></Box> :
+                <AdditionalText style={{marginTop: 16, marginBottom: 16}}>
+                    Выберите один или несколько навыков в интересующих Вас
+                    профессиях
+                </AdditionalText>
+            }
             <Skills {...fields.skills}/>
             <Grid container direction='row' justify='flex-end'
                   style={{marginTop: 0}} spacing={1}>
