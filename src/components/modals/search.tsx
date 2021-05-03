@@ -4,33 +4,35 @@ import {
     MainText,
     Modal,
     ModalProps,
-    Plate,
-    Title
+    Plate
 } from '../common'
 import {
-    Avatar, Button, Chip,
+    Avatar,
     Grid, IconButton,
     InputBase,
     Omit,
     Slide,
-    Typography, Zoom
+    Typography
 } from '@material-ui/core'
 import {SearchButton} from '../event/search-button'
 import {InviteButton} from '../event/invite-button'
-import {findUsers, getJobs, getSkills} from '../../model/api'
-import {User, UserSkill} from '../tools/use-app-state/user'
+import {findUsers} from '../../model/api'
+import {Id, NULL_USER, User, UserSkill} from '../tools/use-app-state/user'
 import {Link} from 'react-router-dom'
 import {PrimaryButton} from '../common/buttons'
-import {useHistory} from 'react-router-dom'
-import {useChipStyles} from '../common/skill-chip'
+import {useHistory, useLocation} from 'react-router-dom'
 import {useAppState} from '../tools/use-app-state'
 import {ReactComponent as CopyIcon} from '../../assets/copy.svg'
 import {copyTextToClipboard} from '../../utils'
+import {ChosenSkills} from '../common/display-skills'
+import {Skills} from './user-edit'
+import {useJobs} from '../tools/useJobs'
 
 const _useSearchModal = () => {
     const [isOpen, setIsOpen] = useState(false)
     const [current, setCurrent] = useState<'start' | 'smart' | 'user'>('start')
     const [props, setProps] = useState<{ canGoBack?: boolean }>({})
+    const history = useHistory()
     const open = useCallback((x?: {
         current: 'start' | 'smart' | 'user',
         props: { canGoBack?: boolean }
@@ -45,11 +47,14 @@ const _useSearchModal = () => {
     }, [setIsOpen])
 
     const onSmartClick = useCallback(() => {
-        setCurrent('smart')
+        // setCurrent('smart')
+        history.push('/feed')
+        close()
     }, [setCurrent])
 
     const onUserClick = useCallback(() => {
-        setCurrent('user')
+        // setCurrent('user')
+        close()
     }, [setCurrent])
 
     const back = useCallback(() => {
@@ -93,99 +98,102 @@ export const SearchModal: React.FC<UseSearchModalType & MProps> = (props) => {
 
 
 const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, close}, ...props}) => {
-
-    const classes = useChipStyles()
-
-    const [jobs, setJobs] = useState<{ name: string, id: number }[]>([])
-    const [selectedJob, selectJob] = useState(-1)
-
-    const [skills, setSkills] = useState<UserSkill[]>([])
-    const [selectedSkills, selectSkills] = useState<boolean[]>([])
-
     const history = useHistory()
+    const location = useLocation()
+    const [skills, setSkills] = useState<UserSkill[]>([])
+    const [currentJob, setCurrentJob] = useState(-1)
+    const {getJobName, getJobId} = useJobs()
 
+    const onJobSelect = useCallback((j: number) => {
+        setCurrentJob(j)
+    }, [setCurrentJob])
+    const onChange = useCallback((s: UserSkill[]) => {
+        setSkills(s)
+    }, [setSkills])
+//job=3D designer&skills=ZBrush
     useEffect(() => {
-        (async () => {
-            const jobs = await getJobs()
-            setJobs(jobs)
-        })()
-        //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+        let lastJobId
+        const parsed = decodeURIComponent(location.search.slice(1))
+            .split('&job=').reduce((a, p) => {
+                const split = p.split('&')
+                const jName = split[0].replace('job=', '')
+                const jId = getJobId(jName)
+                lastJobId = jId
+                const skills = jId === '-1' ? [] : split
+                    .splice(1)
+                    .map((s) => ({
+                        jobId: jId,
+                        name: s.replace('skills=', '')
+                    } as UserSkill))
 
-    useEffect(() => {
-        (async () => {
+                return [...a, ...skills]
+            }, [] as UserSkill[])
+        if (parsed.length === 0) {
+            setCurrentJob(Number(lastJobId) || -1)
             setSkills([])
-            selectSkills([])
-            if (~selectedJob) {
-                const skills = await getSkills(jobs[selectedJob].name)
-                setSkills(skills)
-                selectSkills(skills.map(() => false))
-            }
-        })()
-    }, [selectedJob, jobs])
+        } else {
+            setCurrentJob(-1)
+            setSkills(parsed)
+        }
+    }, [location.search, props.state.isOpen, props.open])
 
     const showFeed = useCallback(() => {
-        const fjob = encodeURIComponent(jobs[selectedJob]?.name || '')
-        const fskills = skills.filter((s, i) => selectedSkills[i]).map(s => encodeURIComponent(s.name))
-        if (fskills.length) {
-            history.push(`/feed?job=${fjob}&skills=${fskills.join('&skills=')}`)
-        } else if (fjob) {
-            history.push(`/feed?job=${fjob}`)
+        if (skills.length === 0) {
+            if (currentJob !== -1) {
+                history.push(`/feed?job=${getJobName(currentJob)}`)
+            } else {
+                history.push('/feed')
+            }
         } else {
-            history.push(`/feed`)
+            const skillsByJobs = skills.reduce((a, s) => {
+                if (!a[s.jobId ?? '-1']) {
+                    a[s.jobId ?? '-1'] = []
+                }
+                a[s.jobId ?? '-1'].push(s)
+                return a
+
+            }, {} as { [key: string]: UserSkill[] })
+
+            let res = '/feed?'
+            for (let [key, value] of Object.entries(skillsByJobs)) {
+                res += `job=${getJobName(key)}&skills=${value.map(v => v.name).join('&skills=')}&`
+            }
+            history.push(res.slice(0, -1))
         }
         close()
 
-    }, [selectedJob, close, history, jobs, selectedSkills, skills])
+    }, [close, history, skills, currentJob, getJobName])
 
     return <Modal back={back} canGoBack
                   onClose={props.close}{...props}>
         <Slide direction="right" in>
             <Grid container direction='column'>
-                <Title style={{marginTop: 0}}>Я ищу</Title>
-
-                <div className={classes.root}>
-                    {
-                        jobs.map((j, i) => <Zoom key={j.name} in><Chip
-                            onClick={
-                                () => {
-                                    if (selectedJob === i) {
-                                        selectJob(-1)
-                                    } else {
-                                        selectJob(i)
-                                    }
-                                }
-                            }
-                            className={selectedJob >= 0 ? selectedJob === i ? classes.selected : classes.notSelected : ''}
-                            label={j.name}
-                        /></Zoom>)
-                    }
-                </div>
-                {
-                    ~selectedJob ?
-                        <Title style={{marginTop: 0}}>С навыками</Title> : null
+                <Typography variant='h2' style={{fontSize: 19}}>
+                    {skills.length > 0 ? 'Я ищу' : 'Параметры поиска'}
+                </Typography>
+                {skills.length ?
+                    <ChosenSkills user={{
+                        ...NULL_USER,
+                        skills: {
+                            description: '',
+                            tags: skills
+                        }
+                    }}
+                                  style={{marginTop: 16, marginBottom: 16}}
+                    /> :
+                    <AdditionalText style={{marginTop: 16, marginBottom: 16}}>
+                        Выберите один или несколько навыков в интересующих Вас
+                        профессиях
+                    </AdditionalText>
                 }
-                <div className={classes.root}>
-                    {
-                        skills.map((j, i) => <Zoom key={j.id} in><Chip
-                            onClick={
-                                () => {
-                                    const selected = [...selectedSkills]
-                                    selected[i] = !selected[i]
-                                    selectSkills(selected)
-                                }
-                            }
-                            className={selectedSkills[i] ? classes.selected : ''}
-                            label={j.name}
-                        /></Zoom>)
-                    }
-                </div>
-                {
-                    <Grid item container justify='flex-end'>
-                        <PrimaryButton
-                            onClick={showFeed}>{selectedJob >= 0 ? 'Показать' : 'Показать всех'}</PrimaryButton>
-                    </Grid>
-                }
+                <Skills currentJob={currentJob} disabled={false}
+                        onChange={onChange} value={skills}
+                        onJobSelect={onJobSelect}/>
+                <Grid item container justify='flex-end'>
+                    <PrimaryButton
+                        onClick={showFeed}>{skills.length > 0 ?
+                        'Показать выбранные' : currentJob !== -1 ? `Показать ${getJobName(currentJob)}` : 'Показать всех'}</PrimaryButton>
+                </Grid>
             </Grid>
         </Slide>
     </Modal>
@@ -287,7 +295,7 @@ const SearchUser: React.FC<UseSearchModalType & MProps> = ({...props}) => {
                         <Grid container justify='center'
                               style={{
                                   marginTop: 12,
-                                  opacity: isLoading ? '0' : '1',
+                                  opacity: isLoading ? '0' : '1'
                               }}><AdditionalText>
                           Никого не нашлось, но вы можете пригласить человека,
                           отправив ему ссылку на мероприятие:

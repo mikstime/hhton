@@ -161,15 +161,17 @@ export const WhiteFieldLabel: React.FC<{ label: string }> = ({label}) => {
     </Hidden>
 }
 
-const Skills: React.FC<{
+export const Skills: React.FC<{
     disabled: boolean,
     onChange: (skills: UserSkill[]) => void,
+    onJobSelect?: (jobId: number) => void,
+    currentJob?: number,
     value: UserSkill[]
-}> = ({disabled, onChange, value}) => {
+}> = ({disabled, currentJob, onJobSelect, onChange, value}) => {
 
     const classes = useChipStyles()
     const [jobs, setJobs] = useState<{ name: string, id: number }[]>([])
-    const [selectedJob, selectJob] = useState(-1)
+    const [selectedJob, selectJob] = useState(currentJob === undefined ? -1 : currentJob)
 
     const [skills, setSkills] = useState<{ [key: string]: UserSkill[] }>({})
     const [selectedSkills, selectSkills] = useState<{ [key: string]: boolean[] }>({})
@@ -181,6 +183,12 @@ const Skills: React.FC<{
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    useEffect(() => {
+        if(currentJob !== undefined) {
+            selectJob(jobs.findIndex(j => j.id === Number(currentJob)))
+        }
+    }, [currentJob, jobs.length])
     useEffect(() => {
         (async () => {
             if (jobs[selectedJob]) {
@@ -190,7 +198,7 @@ const Skills: React.FC<{
                     selectSkills({
                         ...selectedSkills,
                         [jobs[selectedJob].name]: aSkills.map((sk) => {
-                            return !!value.find(s => s.id === sk.id)
+                            return !!value.find(s => s.id === sk.id || s.name === sk.name)
 
                         })
                     })
@@ -226,21 +234,24 @@ const Skills: React.FC<{
         <div className={classes.root}>
             {
                 jobs.map((j, i) => <Zoom key={j.name} in><Chip
+                    clickable={!disabled}
                     disabled={disabled}
                     onClick={
                         () => {
                             if (selectedJob === i) {
                                 selectJob(-1)
+                                onJobSelect?.(-1)
                             } else {
                                 selectJob(i)
+                                onJobSelect?.(jobs[i].id)
                             }
                         }
                     }
                     className={
                         selectedJob >= 0 ?
                         selectedJob === i ?
-                            classes.selected : selectedSkills[jobs[i]?.name]?.includes(true) || value.find(x => x.jobId === j.id.toString()) ? classes.contains : '' :
-                        selectedSkills[jobs[i]?.name]?.includes(true) || value.find(v => v.jobId === jobs[i].id.toString()) ? classes.contains : ''
+                            classes.selected : selectedSkills[jobs[i]?.name]?.includes(true) || value.find(x => x.jobId === j.id.toString()) ? classes.contains : classes.default :
+                        selectedSkills[jobs[i]?.name]?.includes(true) || value.find(v => v.jobId === jobs[i].id.toString()) ? classes.contains : classes.default
                     }
                     label={j.name}
                 /></Zoom>)
@@ -256,6 +267,7 @@ const Skills: React.FC<{
             {
                 skills[jobs[selectedJob]?.name]?.map((j, i) => (
                     <Zoom key={j.id} in><Chip disabled={disabled}
+                                              clickable={!disabled}
                                               onClick={
                                                   () => {
                                                       const selected = {...selectedSkills}
@@ -263,7 +275,7 @@ const Skills: React.FC<{
                                                       selectSkills(selected)
                                                   }
                                               }
-                                              className={selectedSkills[jobs[selectedJob]?.name]?.[i] ? classes.selected : ''}
+                                              className={selectedSkills[jobs[selectedJob]?.name]?.[i] ? classes.selected : classes.default}
                                               label={j.name}
                     /></Zoom>))
             }
