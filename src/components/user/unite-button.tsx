@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {Fragment, useCallback, useEffect, useState} from 'react'
 import {PrimaryButton, SecondaryButton} from '../common/buttons'
 import {useAppState} from '../tools/use-app-state'
 import {
@@ -7,11 +7,12 @@ import {
 } from '../../model/api'
 import {useSnackbar} from 'notistack'
 import {Link} from 'react-router-dom'
-import {ButtonGroup, makeStyles, Tooltip} from '@material-ui/core'
+import {Box, ButtonGroup, makeStyles} from '@material-ui/core'
 import {ReactComponent as CancelIcon} from '../../assets/cancel.svg'
 import {usePromptModal} from '../modals/prompt'
 import {useHistory} from 'react-router-dom'
 import {useNotificationHandlers} from '../tools/notification-handlers'
+import {AdditionalText, GrayPlate} from '../common'
 
 const useUnite = () => {
     const {cEvent, user, cUser} = useAppState()
@@ -84,7 +85,7 @@ export const UniteButton: React.FC = () => {
         </PrimaryButton>
     }
 
-    if(settings.isHostMode) {
+    if (settings.isHostMode) {
         return <PrimaryButton style={{width: '100%'}} onClick={() => {
             settings.setIsHostMode(false)
         }}>
@@ -123,7 +124,7 @@ export const UniteButton: React.FC = () => {
     const onUniteClick = async () => {
         const didAccept = await acceptInvite(cEvent.id, cUser.id, user.id)
         nc.update()
-        if(didAccept) {
+        if (didAccept) {
             history.push('/team')
             enqueueSnackbar(`Вы объединились`)
         } else {
@@ -133,8 +134,9 @@ export const UniteButton: React.FC = () => {
         }
     }
 
-    if(!cEvent.isParticipating) {
-        return <Link to={`/event/${cEvent.id}`} style={{textDecoration: 'none'}}>
+    if (!cEvent.isParticipating) {
+        return <Link to={`/event/${cEvent.id}`}
+                     style={{textDecoration: 'none'}}>
             <SecondaryButton style={{width: '100%'}}>
                 К мероприятию
             </SecondaryButton>
@@ -153,21 +155,31 @@ export const UniteButton: React.FC = () => {
         || !!invites.i.personal.find(t => t.id.toString() === user.id)
 
     const canAccept = cUser.team.members.length <= 1 || cUser.isTeamLead
-    if(didInviteMe) {
-        return <ButtonGroup variant="contained" color="primary">
-            <PrimaryButton disabled={!canAccept} style={{flex: 1}} onClick={onUniteClick}>
-                Принять
-            </PrimaryButton>
-            <Tooltip title="Отклонить" aria-label="decline">
-            <PrimaryButton disabled={!canAccept} classes={classes} startIcon={<CancelIcon/>}
-                             onClick={onDeclineClick}>
-            </PrimaryButton>
-            </Tooltip>
-        </ButtonGroup>
+    if (didInviteMe) {
+        return <Fragment>
+            <ButtonGroup variant="contained" color="primary">
+                <PrimaryButton disabled={!canAccept} style={{flex: 1}}
+                               onClick={onUniteClick}>
+                    Принять
+                </PrimaryButton>
+                <PrimaryButton disabled={!canAccept} classes={classes}
+                               startIcon={<CancelIcon/>}
+                               onClick={onDeclineClick}>
+                </PrimaryButton>
+            </ButtonGroup>
+            {!canAccept &&
+                <Box clone borderRadius='8px' marginTop={1}>
+                    <GrayPlate padding={8}>
+                        <AdditionalText>
+                            Только лидер команды может управлять заявками
+                        </AdditionalText>
+                    </GrayPlate>
+                </Box>
+            }
+        </Fragment>
     }
 
     return <PrimaryButton onClick={onClick}>
-        {/*{user.team.members.length > 0 ? 'Присоединиться' : 'Объединиться'}*/}
         Объединиться
     </PrimaryButton>
 }
