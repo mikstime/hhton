@@ -146,7 +146,8 @@ export const UniteButton: React.FC = () => {
     if ((user.id === cUser.id || inMyTeam)) {
         return <Link to='/team' style={{textDecoration: 'none'}}>
             <SecondaryButton style={{width: '100%'}}>
-                {(cUser.isTeamLead || cUser.team.members.length <= 1) ? 'Управление командой' : 'К команде'}
+                {cEvent.isFinished ? 'К мероприятию' :
+                    (cUser.isTeamLead || cUser.team.members.length <= 1) ? 'Управление командой' : 'К команде'}
             </SecondaryButton>
         </Link>
     }

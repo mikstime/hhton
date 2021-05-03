@@ -5,7 +5,7 @@ import {useAppState} from './use-app-state'
 
 export type Message = {
     type: string,
-    status: NC,
+    status: NC|'EventWinners',
     message: string,
 }
 export type NC = 'NewTeamNotification'
@@ -45,14 +45,15 @@ const useGenerateHandles = (action: () => void, keys: string[], nav: { [key: str
 }
 
 export const _useNotificationHandlers: () => {
-    [key in NC]: (m: Message) => void
+    [key in (NC | 'default' | 'EventWinners')]: (m: Message) => void
 } & {
-    navigation: { [key in (NC | 'default')]: (m: Message) => string|void }
-    default: (m: Message) => void,
+    navigation: { [key in (NC | 'default' | 'EventWinners')]: (m: Message) => string|void }
     updates: number,
+    eUpdates: number,
     update: () => void
 } = () => {
     const [updates, setUpdates] = useState(0)
+    const [eUpdates, setEUpdates] = useState(0)
     const {enqueueSnackbar} = useSnackbar()
     const {settings, cEvent} = useAppState()
 
@@ -80,11 +81,16 @@ export const _useNotificationHandlers: () => {
             return '/team'
         },
         NewVoteNotification: () => {},
+        EventWinners: (m: Message) => {
+            settings.setIsHostMode(false)
+            cEvent.change({id: m.type})
+            return '/event/' + m.type
+        },
         default: (m: Message) => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
             return '/event/' + m.type
-        }
+        },
     }
     const handles = useGenerateHandles(
         () => {
@@ -105,7 +111,12 @@ export const _useNotificationHandlers: () => {
                 enqueueSnackbar(JSON.stringify(m.message))
             }
         },
+        EventWinners: (m: Message) => {
+            setUpdates(updates + 1)
+            setEUpdates(eUpdates + 1)
+        },
         updates,
+        eUpdates,
         navigation
     }
 }

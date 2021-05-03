@@ -1,6 +1,7 @@
 import {useEffect} from 'react'
 import {useAppState} from './use-app-state'
 import {
+    fetchEvent, fetchUser,
     getTeam, getVotes, personalInvitedDeclined, personalInvitedPending,
     personalInvites, teamInvitedDeclined, teamInvitedPending,
     teamInvites
@@ -10,13 +11,14 @@ import {useNotificationHandlers} from './notification-handlers'
 
 export const useInvitesFetcher = () => {
 
-    const {user, cUser, cEvent, invites} = useAppState()
+    const {user, cUser, cEvent, invites, event} = useAppState()
     const nc = useNotificationHandlers()
     //incoming
     useEffect(() => {
         (async () => {
             if (cEvent.id !== '-1' && cUser.id !== '-1') {
-                const [team, personal, userTeam] = await Promise.all([
+                const [newUser, team, personal, userTeam] = await Promise.all([
+                    fetchUser(cUser.id),
                     teamInvites(cEvent.id, cUser.id),
                     personalInvites(cEvent.id, cUser.id),
                     getTeam(cEvent.id, cUser.id)
@@ -26,6 +28,7 @@ export const useInvitesFetcher = () => {
                     votes = await getVotes(userTeam.id, cUser.id)
                 }
                 cUser.change({
+                    ...newUser,
                     team: {
                         ...userTeam,
                         ...votes
@@ -34,6 +37,7 @@ export const useInvitesFetcher = () => {
                 })
                 if(user.id === cUser.id) {
                     user.change({
+                        ...newUser,
                         team: {
                             ...userTeam,
                             ...votes
@@ -84,5 +88,18 @@ export const useInvitesFetcher = () => {
         })()
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cUser.id, cEvent.id, nc.updates])
+
+    useEffect(() => {
+        (async () => {
+            const newEvent = await fetchEvent(cEvent.id)
+            if(newEvent) {
+                cEvent.change(newEvent)
+                if (event.id === newEvent.id) {
+                    event.change(newEvent)
+                }
+            }
+        })()
+        //eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [nc.eUpdates])
     return null
 }
