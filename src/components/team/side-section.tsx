@@ -1,10 +1,10 @@
 import React, {Fragment, useCallback, useEffect, useState} from 'react'
 import {AdditionalText, GrayPlate, Plate} from '../common'
 import {
-    Box,
+    Box, Button,
     CircularProgress, Collapse, createStyles,
     Grid, Hidden,
-    IconButton, IconButtonProps, makeStyles, Popper, Theme,
+    IconButton, IconButtonProps, makeStyles, Theme,
     Tooltip,
     Typography, TypographyProps
 } from '@material-ui/core'
@@ -389,11 +389,16 @@ const VotingItem: React.FC<{ user: User }> = ({user}) => {
             </Box>
             <Grid item container style={{width: 30}} alignItems='center'>
                 {user.id !== cUser.id &&
-                <IconButton size='small' disabled={isFetching} onClick={() => {
+                <Button variant='contained' size='small' style={{
+                    width: 30,
+                    minWidth: 30,
+                    height: 30,
+                    padding: 0
+                }} disabled={isFetching} onClick={() => {
                     onVote()
                 }}>
                   <VoteIcon active={didVote}/>
-                </IconButton>
+                </Button>
                 }
             </Grid>
         </Grid>
