@@ -389,7 +389,7 @@ const VotingItem: React.FC<{ user: User }> = ({user}) => {
             </Box>
             <Grid item container style={{width: 30}} alignItems='center'>
                 {user.id !== cUser.id &&
-                <Button variant='contained' size='small' style={{
+                <Button variant='outlined' size='small' style={{
                     width: 30,
                     minWidth: 30,
                     height: 30,
