@@ -16,13 +16,14 @@ import {useNotifications} from '../tools/use-notifications'
 import {CreateEventApp} from './create-event'
 import {AppNavigation} from '../navigation'
 import {NotificationSection} from '../common/notifications-section'
-
+import {FeedBackApp} from './feedback'
 
 const StyledContainer = styled(Container)`
   min-height: 100vh;
   padding-top: 16px;
   box-sizing: border-box;
 `
+
 const RootContainer: React.FC<ContainerProps> = ({children, ...props}) => {
     return <StyledContainer maxWidth='md' {...props}>
         <NotificationSection/>
@@ -84,6 +85,13 @@ export const App: React.FC = () => {
             <AppNavigation>
                 <RootContainer>
                     <FeedApp/>
+                </RootContainer>
+            </AppNavigation>
+        </Route>
+        <Route path='/feedback'>
+            <AppNavigation>
+                <RootContainer>
+                    <FeedBackApp/>
                 </RootContainer>
             </AppNavigation>
         </Route>
