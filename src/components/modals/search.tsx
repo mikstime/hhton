@@ -140,7 +140,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
     const showFeed = useCallback(() => {
         if (skills.length === 0) {
             if (currentJob !== -1) {
-                history.push(`/feed?job=${getJobName(currentJob)}`)
+                history.push(`/feed?job=${encodeURIComponent(getJobName(currentJob))}`)
             } else {
                 history.push('/feed')
             }
@@ -158,7 +158,7 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
             for (let [key, value] of Object.entries(skillsByJobs)) {
                 res += `job=${getJobName(key)}&skills=${value.map(v => v.name).join('&skills=')}&`
             }
-            history.push(res.slice(0, -1))
+            history.push(encodeURIComponent(res.slice(0, -1)))
         }
         close()
 
