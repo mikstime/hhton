@@ -5,7 +5,7 @@ import {useAppState} from './use-app-state'
 
 export type Message = {
     type: string,
-    status: NC|'EventWinners',
+    status: NC,
     message: string,
 }
 export type NC = 'NewTeamNotification'
@@ -14,6 +14,7 @@ export type NC = 'NewTeamNotification'
     | 'NewDenyNotification'
     | 'NewTeamLeadNotification'
     | 'NewVoteNotification'
+    | 'EventWinners'
 
 const keys = [
     'NewTeamNotification',
@@ -21,7 +22,7 @@ const keys = [
     'NewInviteNotification',
     // 'NewDenyNotification',
     'NewTeamLeadNotification',
-    'NewVoteNotification'
+    'NewVoteNotification',
 ]
 
 const useGenerateHandles = (action: () => void, keys: string[], nav: { [key: string]: (m: Message) => void }) => {
@@ -92,16 +93,25 @@ export const _useNotificationHandlers: () => {
             return '/event/' + m.type
         },
     }
+
     const handles = useGenerateHandles(
         () => {
             setUpdates(updates + 1)
         }, keys, navigation
+    ) as { [key in NC]: (m: Message) => void }
+
+    const eventHandles = useGenerateHandles(
+        () => {
+            setUpdates(updates + 1)
+            setEUpdates(eUpdates + 1)
+        }, ['EventWinners'], navigation
     ) as { [key in NC]: (m: Message) => void }
     return {
         update: () => {
             setUpdates(updates + 1)
         },
         ...handles,
+        ...eventHandles,
         NewDenyNotification: (m: Message) => {
             setUpdates(updates + 1)
         },
@@ -110,10 +120,6 @@ export const _useNotificationHandlers: () => {
             if (m.message) {
                 enqueueSnackbar(JSON.stringify(m.message))
             }
-        },
-        EventWinners: (m: Message) => {
-            setUpdates(updates + 1)
-            setEUpdates(eUpdates + 1)
         },
         updates,
         eUpdates,
