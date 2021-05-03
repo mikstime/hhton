@@ -248,9 +248,8 @@ const Skills: React.FC<{
         </div>
         {
             ~selectedJob ?
-                <Typography variant='h1' style={{
+                <Typography variant='h2' style={{
                     marginTop: 0,
-                    fontSize: 19
                 }}>Доступные навыки</Typography> : null
         }
         <div className={classes.root}>
@@ -479,9 +478,9 @@ export const UserEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = ({
                     }}/>
                 </Grid>
             </GrayPlate>
-            <Typography variant='h1' style={{
+            <Typography variant='h2' style={{
+                fontSize: 22,
                 marginTop: 24,
-                fontSize: 19
             }}>Выбранные навыки</Typography>
             {fields.skills.value.length > 0 ? <Box clone marginTop={2} marginBottom={2}><ChosenSkills user={{
                     ...NULL_USER,
