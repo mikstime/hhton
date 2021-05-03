@@ -56,13 +56,14 @@ export const PromptModal: React.FC<{
         }
     }, [props.open])
     return <Modal gridProps={{item: true, md: 10, sm: 10, xs: 12}}
+                  padding={24}
                   onClose={props.close}{...props}>
         <Grid container direction='column'>
-            <Typography align='center'>
+            <Typography>
                 {message}
             </Typography>
-            <Grid container direction='row' justify='flex-end'
-                  style={{marginTop: 16}} spacing={1}>
+            <Grid item container direction='row' justify='flex-end'
+                  style={{marginTop: 16, height: 40}} spacing={1}>
                 <Grid item>
                     <Button style={{color: '#222222'}} disabled={disabled} onClick={() => {
                         setDisabled(true)
