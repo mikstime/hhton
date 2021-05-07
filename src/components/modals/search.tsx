@@ -156,9 +156,9 @@ const SearchSmart: React.FC<UseSearchModalType & MProps> = ({actions: {back, clo
 
             let res = '/feed?'
             for (let [key, value] of Object.entries(skillsByJobs)) {
-                res += `job=${getJobName(key)}&skills=${value.map(v => v.name).join('&skills=')}&`
+                res += `job=${encodeURIComponent(getJobName(key))}&skills=${value.map(v => encodeURIComponent(v.name)).join('&skills=')}&`
             }
-            history.push(encodeURIComponent(res.slice(0, -1)))
+            history.push(res.slice(0, -1))
         }
         close()
 
