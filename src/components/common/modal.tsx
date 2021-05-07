@@ -17,6 +17,7 @@ export interface ModalProps extends ModalBaseProps {
     gridProps?: GridProps,
     canGoBack?: boolean,
     cantClose?: boolean,
+    padding?: number | string,
 }
 
 const useStyles = makeStyles({
@@ -33,7 +34,7 @@ const useStyles = makeStyles({
     }
 })
 
-export const Modal: React.FC<ModalProps> = ({children, canGoBack, cantClose, gridProps = {}, close, back, ...props}) => {
+export const Modal: React.FC<ModalProps> = ({children, canGoBack, cantClose, gridProps = {}, padding, close, back, ...props}) => {
     const classes = useStyles()
     return <ModalBase {...props}>
         <Grow in={props.open}>
@@ -63,9 +64,9 @@ export const Modal: React.FC<ModalProps> = ({children, canGoBack, cantClose, gri
                     <Box clone order={{xs: 3, sm: 2}} paddingBottom={'100px'}>
                         <Grid item xs={12} sm={9} md={7} lg={6} container
                               direction='column'
-                              style={{zIndex: 3}}>
+                              style={{zIndex: 3, maxWidth: 800}}>
                             <Box height={{xs: 0, sm: 100}}/>
-                            <Plate elevation={4} padding={32}>
+                            <Plate elevation={4} padding={padding || 32}>
                                 {children}
                             </Plate>
                             <Box height={{xs: 0, sm: 100}}/>

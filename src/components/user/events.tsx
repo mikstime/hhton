@@ -52,12 +52,12 @@ export const UserEvents: React.FC = () => {
             const e = await Promise.all(user.hackathons.map(ev => fetchEvent(ev.id)))
             if (e) {
                 const es = e.map((ex, i) => ({
-                    id: ex!.id,
-                    img: ex!.background,
-                    name: ex!.name,
+                    id: ex?.id ?? '-1',
+                    img: ex?.background ?? '',
+                    name: ex?.name ?? '',
                     //@ts-ignore
                     place: user.hackathons[i].userPlace + 1
-                }))
+                })).filter(e => e.id !== '-1')
                 setEvents(es)
             }
         })()

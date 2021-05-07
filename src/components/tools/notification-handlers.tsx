@@ -14,6 +14,7 @@ export type NC = 'NewTeamNotification'
     | 'NewDenyNotification'
     | 'NewTeamLeadNotification'
     | 'NewVoteNotification'
+    | 'EventWinners'
 
 const keys = [
     'NewTeamNotification',
@@ -21,7 +22,7 @@ const keys = [
     'NewInviteNotification',
     // 'NewDenyNotification',
     'NewTeamLeadNotification',
-    'NewVoteNotification'
+    'NewVoteNotification',
 ]
 
 const useGenerateHandles = (action: () => void, keys: string[], nav: { [key: string]: (m: Message) => void }) => {
@@ -45,16 +46,16 @@ const useGenerateHandles = (action: () => void, keys: string[], nav: { [key: str
 }
 
 export const _useNotificationHandlers: () => {
-    [key in NC]: (m: Message) => void
+    [key in (NC | 'default' | 'EventWinners')]: (m: Message) => void
 } & {
-    navigation: { [key in (NC | 'default')]: (m: Message) => void }
-    default: (m: Message) => void,
+    navigation: { [key in (NC | 'default' | 'EventWinners')]: (m: Message) => string|void }
     updates: number,
+    eUpdates: number,
     update: () => void
 } = () => {
     const [updates, setUpdates] = useState(0)
-    const {enqueueSnackbar, closeSnackbar} = useSnackbar()
-    const history = useHistory()
+    const [eUpdates, setEUpdates] = useState(0)
+    const {enqueueSnackbar} = useSnackbar()
     const {settings, cEvent} = useAppState()
 
     const navigation = {
@@ -62,49 +63,55 @@ export const _useNotificationHandlers: () => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
             return '/team#team'
-            // history.push('/team#team')
         },
         NewMembersNotification: (m: Message) => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
             return '/team#team'
-            // history.push('/team#team')
         },
         NewInviteNotification: (m: Message) => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
             return '/team#incoming'
-            // history.push('/team#incoming')
         },
         NewDenyNotification: (m: Message) => {
-            // settings.setIsHostMode(false)
-            // cEvent.change({id: m.type})
-            // history.push('/team#team')
         },
         NewTeamLeadNotification: (m: Message) => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
             return '/team'
-            // history.push('/team')
         },
         NewVoteNotification: () => {},
+        EventWinners: (m: Message) => {
+            settings.setIsHostMode(false)
+            cEvent.change({id: m.type})
+            return '/event/' + m.type
+        },
         default: (m: Message) => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
-            // history.push('/event/' + m.type)
             return '/event/' + m.type
-        }
+        },
     }
+
     const handles = useGenerateHandles(
         () => {
             setUpdates(updates + 1)
         }, keys, navigation
+    ) as { [key in NC]: (m: Message) => void }
+
+    const eventHandles = useGenerateHandles(
+        () => {
+            setUpdates(updates + 1)
+            setEUpdates(eUpdates + 1)
+        }, ['EventWinners'], navigation
     ) as { [key in NC]: (m: Message) => void }
     return {
         update: () => {
             setUpdates(updates + 1)
         },
         ...handles,
+        ...eventHandles,
         NewDenyNotification: (m: Message) => {
             setUpdates(updates + 1)
         },
@@ -115,6 +122,7 @@ export const _useNotificationHandlers: () => {
             }
         },
         updates,
+        eUpdates,
         navigation
     }
 }

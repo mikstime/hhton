@@ -1,10 +1,10 @@
-import React, {Fragment, useCallback, useEffect, useState} from 'react'
+import React, {Fragment, useCallback, useEffect, useMemo, useState} from 'react'
 import {AdditionalText, GrayPlate, Plate} from '../common'
 import {
-    Box,
+    Box, Button,
     CircularProgress, Collapse, createStyles,
     Grid, Hidden,
-    IconButton, IconButtonProps, makeStyles, Popper, Theme,
+    IconButton, IconButtonProps, makeStyles, Theme,
     Tooltip,
     Typography, TypographyProps
 } from '@material-ui/core'
@@ -389,11 +389,16 @@ const VotingItem: React.FC<{ user: User }> = ({user}) => {
             </Box>
             <Grid item container style={{width: 30}} alignItems='center'>
                 {user.id !== cUser.id &&
-                <IconButton size='small' disabled={isFetching} onClick={() => {
+                <Button variant='outlined' size='small' style={{
+                    width: 30,
+                    minWidth: 30,
+                    height: 30,
+                    padding: 0
+                }} disabled={isFetching} onClick={() => {
                     onVote()
                 }}>
                   <VoteIcon active={didVote}/>
-                </IconButton>
+                </Button>
                 }
             </Grid>
         </Grid>
@@ -404,9 +409,10 @@ const Voting: React.FC = () => {
     const {cUser} = useAppState()
     const members = cUser.team.members
 
-    const toRender = members.map((m, i) => {
+    const toRender = useMemo( () => members.sort((m1, m2) => Number(m1.id) - Number(m2.id)).map((m, i) => {
         return <VotingItem user={m} key={i}/>
-    })
+    }), [members])
+
     return <Fragment>
         {toRender}
     </Fragment>

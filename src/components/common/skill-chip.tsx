@@ -15,7 +15,7 @@ export const useChipStyles = makeStyles((theme: Theme) =>
             '& > *': {
                 margin: theme.spacing(1),
                 borderRadius: 8,
-                background: 'white',
+                // background: 'white',
                 boxShadow: theme.shadows[4],
                 color: theme.palette.primary.main,
                 cursor: 'pointer',
@@ -28,24 +28,33 @@ export const useChipStyles = makeStyles((theme: Theme) =>
                 },
                 '&:focus': {
                     background: 'white'
-                }
+                },
             }
         },
+        default: {
+            background: 'white',
+            // '&:focus-within': {
+            //     background: 'rgba(0,0,0,.1)'
+            // }
+        },
         selected: {
-            background: '#F7F8FA',
+            background: '#F0F2F5',
             boxShadow: 'none',
             '&:hover': {
-                background: '#F7F8FA',
+                background: '#F0F2F5',
                 boxShadow: 'none'
             },
             '&:focus': {
-                background: '#F7F8FA',
+                background: '#F0F2F5',
                 boxShadow: 'none'
             },
             '&:active': {
-                background: '#F7F8FA',
+                background: '#F0F2F5',
                 boxShadow: 'none'
-            }
+            },
+            // '&:focus-within': {
+            //     background: '#dee7f5'
+            // }
         },
         notSelected: {
             opacity: 0.3,
@@ -55,6 +64,13 @@ export const useChipStyles = makeStyles((theme: Theme) =>
             '&:active': {
                 background: '#F7F8FA'
             }
+        },
+        contains: {
+            background: 'white',
+            color: '#222222',
+            // '&:focus-within': {
+            //     background: 'rgba(0,0,0,.1)'
+            // }
         }
     })
 )

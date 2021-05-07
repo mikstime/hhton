@@ -149,15 +149,16 @@ export const CreateEventApp: React.FC = () => {
                 Название не может быть короче 5 символов
             </ErrorText>
             <AdditionalText style={{marginTop: 16, marginBottom: 16}}>
-                {!isPrivate ? 'Доступ к приватному мероприятию можно получить только по специальной ссылке или имея пароль.\n' +
-                    '                Пароль может получить организатор после создания мероприятия.' :
+                {!isPrivate ? 'Информация о мероприятии все ещё будет публична, однако поучаствовать можно будет только по специальной ссылке или имея пароль.\n' +
+                    'Пароль может получить организатор после создания мероприятия.' :
                     'Публичное мероприятие может попасть на главную страницу, доступ к нему не ограничен.'
                 }
             </AdditionalText>
             <Grid container alignItems='center'>
                 <Box clone paddingRight={1}>
                     <Grid item>
-                        <Typography variant='body1'>Приватное</Typography>
+                        <Typography variant='body1'>Участие по
+                            паролю</Typography>
                     </Grid>
                 </Box>
                 <Grid item>

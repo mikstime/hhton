@@ -97,6 +97,7 @@ const PrizeItem: React.FC<{
             {...inputProps}
             disabled={!isEditing || (!location.pathname.includes('create') &&  event.isFinished)}
             placeholder='Введите название'
+            autoFocus
             style={{
                 paddingRight: 12,
                 display: 'block',

@@ -17,7 +17,7 @@ import {HOST_DOMAIN, PREFIX} from '../../config/network'
 import {useNotificationHandlers} from '../tools/notification-handlers'
 import {useLocation} from 'react-router-dom'
 import {useJoinModal} from '../modals/join-modal'
-
+import {useHistory} from 'react-router-dom'
 function useQuery() {
     return new URLSearchParams(useLocation().search)
 }
@@ -27,7 +27,7 @@ const useParticipate = () => {
     const nc = useNotificationHandlers()
     const jModal = useJoinModal()
     const [actionId, setActionId] = useState<string | null>(null)
-
+    const history = useHistory()
     //@ts-ignore
     let query = useQuery()
     const {enqueueSnackbar} = useSnackbar()
@@ -39,7 +39,7 @@ const useParticipate = () => {
         if (!event.isParticipating) {
             setActionId(event.id + cUser.id)
         } else {
-            sModal.actions.open()
+            history.push('/feed')
         }
     }, [sModal.actions, event.id, cUser.id, event.isParticipating, setActionId])
 
@@ -212,7 +212,7 @@ export const ParticipateButton: React.FC = () => {
     if (event.isParticipating) {
         return <ButtonGroup variant="contained" color="secondary">
             <SecondaryButton style={{flex: 1}} onClick={onClick}>
-                Найти команду
+                К поиску участников
             </SecondaryButton>
             <SecondaryButton classes={classes} startIcon={<CancelIcon/>}
                              onClick={onLeaveClick}>

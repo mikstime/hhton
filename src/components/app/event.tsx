@@ -46,7 +46,7 @@ const assurePrefix = (link: string) => (link.indexOf('://') === -1) ? 'https://'
 const CaptionLink: (to: string) => React.FC<TypographyProps> = (to) => (props) => {
     if (validURL(to)) {
         return <a target="_blank" href={assurePrefix(to)}
-                  style={{textDecoration: 'none'}}><CaptionText {...props}/></a>
+                  style={{textDecoration: 'none', wordBreak: 'break-all'}}><CaptionText {...props}/></a>
     }
     if (!to) {
         return <AdditionalText {...props}/>

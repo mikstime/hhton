@@ -52,7 +52,7 @@ export const SkillsItem: React.FC<{ job: Job }> = ({job}) => {
 
 export const Skills: React.FC<{ user: User, open?: boolean, onToggle?: Function } & PlateProps> = ({user, onToggle, open, ...rest}) => {
     const expanded = open
-    const getJobName = useJobs()
+    const {getJobName} = useJobs()
     const jobs = useMemo(() => {
         const x = user.skills.tags.reduce((a, s) => {
             if (s.jobId) {
@@ -119,7 +119,7 @@ export const Skills: React.FC<{ user: User, open?: boolean, onToggle?: Function 
 }
 
 export const ChosenSkills: React.FC<{ user: User } & PlateProps> = ({user, ...rest}) => {
-    const getJobName = useJobs()
+    const {getJobName} = useJobs()
     const jobs = useMemo(() => {
         const x = user.skills.tags.reduce((a, s) => {
             if (s.jobId) {

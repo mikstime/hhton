@@ -24,7 +24,7 @@ import {
 } from '../tools/notification-handlers'
 import {fetchEvent, getNotificationsHistory} from '../../model/api'
 import {Hackathon} from '../tools/use-app-state/hackathon'
-
+import {useHistory} from 'react-router-dom'
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         paper: {
@@ -51,6 +51,8 @@ const NotificationsPopover: React.FC<Omit<PopoverProps, 'children'> & { notifica
     const classes = useStyles()
     const [logos, setLogos] = useState<string[]>([])
     const nc = useNotificationHandlers()
+    const history = useHistory()
+
     useEffect(() => {
         (async () => {
             if (props.open) {
@@ -75,7 +77,10 @@ const NotificationsPopover: React.FC<Omit<PopoverProps, 'children'> & { notifica
                        imageStyle={{borderRadius: 4}} src={logos[i] || ''}/>
             </Grid>
             <Grid item xs zeroMinWidth onClick={(e) => {
-                nc.navigation[n.status] ? nc.navigation[n.status](n) : nc.navigation.default(n)
+                const link = nc.navigation[n.status] ? nc.navigation[n.status](n) : nc.navigation.default(n)
+                if(link) {
+                    history.push(link || '/event/' + notifications[0].type)
+                }
                 props.onClose?.(e, 'backdropClick')
             }} style={{cursor: 'pointer'}}>
                 <AdditionalText
@@ -106,7 +111,10 @@ const NotificationsPopover: React.FC<Omit<PopoverProps, 'children'> & { notifica
                 </Grid>
                 <Grid item zeroMinWidth
                       onClick={(e) => {
-                          nc.navigation[notifications[0].status] ? nc.navigation[notifications[0].status](notifications[0]) : nc.navigation.default(notifications[0])
+                          const link = nc.navigation[notifications[0].status] ? nc.navigation[notifications[0].status](notifications[0]) : nc.navigation.default(notifications[0])
+                          if(link) {
+                              history.push(link || '/event/' + notifications[0].type)
+                          }
                           props.onClose?.(e, 'backdropClick')
                       }} style={{cursor: 'pointer', minHeight: 30}}>
                     <AdditionalText
@@ -138,6 +146,8 @@ export const NotificationSection: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false)
     const {cUser} = useAppState()
     const ref = useRef<HTMLElement | null>(null) as MutableRefObject<HTMLDivElement | null>
+
+    const history = useHistory()
 
     const [lastId, setLastId] = useState('')
     useEffect(() => {
@@ -189,7 +199,10 @@ export const NotificationSection: React.FC = () => {
                                         <Grid item zeroMinWidth
                                               style={{cursor: 'pointer'}}
                                               onClick={(e) => {
-                                                  nc.navigation[notifications[0].status] ? nc.navigation[notifications[0].status](notifications[0]) : nc.navigation.default(notifications[0])
+                                                  const link = nc.navigation[notifications[0].status] ? nc.navigation[notifications[0].status](notifications[0]) : nc.navigation.default(notifications[0])
+                                                  if(link) {
+                                                      history.push(link || '/event/' + notifications[0].type)
+                                                  }
                                               }}>
                                             <AdditionalText
                                                 noWrap

@@ -76,6 +76,11 @@ export const TeamName: React.FC<GridProps> = ({children, ...props}) => {
                     marginTop: '-1px'
                 }
             }}
+            onKeyPress={e => {
+                if(e.key === 'Enter') {
+                    onSubmit()
+                }
+            }}
             onChange={(e) => {
                 setValue(e.target.value)
             }}/>

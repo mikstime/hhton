@@ -5,6 +5,7 @@ import {updateEventBackground, updateEventLogo, updateUserAvatar} from "../../mo
 let pic: File;
 const picChanged = new EventEmitter();
 const picSelector = document.createElement('input');
+picSelector.setAttribute('accept', 'image/jpeg, image/png')
 picSelector.setAttribute('type', 'file');
 picSelector.addEventListener("change", async function handleFile() {
     const fileList = this.files
