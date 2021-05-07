@@ -156,6 +156,7 @@ export const UniteButton: React.FC = () => {
         || !!invites.i.personal.find(t => t.id.toString() === user.id)
 
     const canAccept = cUser.team.members.length <= 1 || cUser.isTeamLead
+
     if (didInviteMe) {
         return <Fragment>
             <ButtonGroup variant="contained" color="primary">
