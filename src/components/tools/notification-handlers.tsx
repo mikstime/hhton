@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
 import {useSnackbar} from 'notistack'
-import {useHistory} from 'react-router-dom'
 import {useAppState} from './use-app-state'
 
 export type Message = {
@@ -15,6 +14,7 @@ export type NC = 'NewTeamNotification'
     | 'NewTeamLeadNotification'
     | 'NewVoteNotification'
     | 'EventWinners'
+    |'EventFinished'
 
 const keys = [
     'NewTeamNotification',
@@ -26,7 +26,7 @@ const keys = [
 ]
 
 const useGenerateHandles = (action: () => void, keys: string[], nav: { [key: string]: (m: Message) => void }) => {
-    const {enqueueSnackbar, closeSnackbar} = useSnackbar()
+    const {enqueueSnackbar} = useSnackbar()
     return keys.reduce((a, k) => {
         a[k] = (m: Message) => {
             action()
@@ -35,7 +35,9 @@ const useGenerateHandles = (action: () => void, keys: string[], nav: { [key: str
                 enqueueSnackbar(JSON.stringify({
                     message: m.message,
                     to,
-                }))
+                }), {
+                    preventDuplicate: true,
+                })
             } else {
                 nav[k](m)
             }
@@ -87,6 +89,12 @@ export const _useNotificationHandlers: () => {
             cEvent.change({id: m.type})
             return '/event/' + m.type
         },
+        EventFinished: (m: Message) => {
+            settings.setIsHostMode(false)
+            cEvent.change({id: m.type})
+            return '/event/' + m.type
+        },
+
         default: (m: Message) => {
             settings.setIsHostMode(false)
             cEvent.change({id: m.type})
@@ -104,7 +112,7 @@ export const _useNotificationHandlers: () => {
         () => {
             setUpdates(updates + 1)
             setEUpdates(eUpdates + 1)
-        }, ['EventWinners'], navigation
+        }, ['EventWinners', 'EventFinished'], navigation
     ) as { [key in NC]: (m: Message) => void }
     return {
         update: () => {
