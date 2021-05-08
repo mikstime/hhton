@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) =>
             display: 'flex',
             marginTop: 24,
             flexWrap: 'wrap',
-            justifyContent: 'space-around',
+            justifyContent: 'flex-start',
             overflow: 'hidden'
         },
         gridList: {
@@ -67,7 +67,7 @@ export const UserEvents: React.FC = () => {
         <GridListTile classes={{
             tile: classes.tile
         }} key={i}>
-            <img src={tile.img} alt={tile.name}/>
+            <img style={{objectFit: 'cover', width: '100%', height: '100%'}} src={tile.img} alt={tile.name}/>
             <Link to={`/event/${tile.id}`}>
                 <GridListTileBar
                     title={tile.name}
