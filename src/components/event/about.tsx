@@ -69,7 +69,7 @@ export const EventAbout: React.FC = () => {
                   <Grid container alignItems='center'>
                     <Typography variant='body1'
                                 style={{wordBreak: 'break-all'}}>
-                        {secret ? `?secret=${secret}` : ''}
+                        {secret ? secret : ''}
                     </Typography>
                     <FlexSpace/>
                     <IconButton size='small' onClick={() => {

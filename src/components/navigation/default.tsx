@@ -69,11 +69,11 @@ export const DefaultMenu: React.FC<MenuProps> = ({onClick}) => {
         <EventLink onClick={onClick}/>
         {toRender}
         <Box height='100%'/>
-        <Box paddingLeft='32px' paddingTop='16px' paddingBottom='16px'>
-            <NavLink to='/feedback'>
-                Обратная связь
-            </NavLink>
-        </Box>
+        {/*<Box paddingLeft='32px' paddingTop='16px' paddingBottom='16px'>*/}
+        {/*    <NavLink to='/feedback'>*/}
+        {/*        Обратная связь*/}
+        {/*    </NavLink>*/}
+        {/*</Box>*/}
         <HostModeToggler/>
     </MenuBase>
 }
