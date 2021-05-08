@@ -14,7 +14,7 @@ export type NC = 'NewTeamNotification'
     | 'NewTeamLeadNotification'
     | 'NewVoteNotification'
     | 'EventWinners'
-    |'EventFinished'
+    | 'EventFinished'
 
 const keys = [
     'NewTeamNotification',
@@ -104,27 +104,27 @@ export const _useNotificationHandlers: () => {
 
     const handles = useGenerateHandles(
         () => {
-            setUpdates(updates + 1)
+            setUpdates(Math.random())
         }, keys, navigation
     ) as { [key in NC]: (m: Message) => void }
 
     const eventHandles = useGenerateHandles(
         () => {
-            setUpdates(updates + 1)
-            setEUpdates(eUpdates + 1)
+            setUpdates(Math.random())
+            setEUpdates(Math.random())
         }, ['EventWinners', 'EventFinished'], navigation
     ) as { [key in NC]: (m: Message) => void }
     return {
         update: () => {
-            setUpdates(updates + 1)
+            setUpdates(Math.random())
         },
         ...handles,
         ...eventHandles,
         NewDenyNotification: (m: Message) => {
-            setUpdates(updates + 1)
+            setUpdates(Math.random())
         },
         default: (m: Message) => {
-            setUpdates(updates + 1)
+            setUpdates(Math.random())
             if (m.message) {
                 enqueueSnackbar(JSON.stringify(m.message))
             }
