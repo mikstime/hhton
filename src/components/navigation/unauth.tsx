@@ -16,10 +16,10 @@ export const UnAuthMenu: React.FC<MenuProps> = ({onClick}) => {
             Регистрация
         </ExtLink>
         <Box height='100%'/>
-        <Box paddingLeft='32px' paddingTop='16px' paddingBottom='16px'>
-            <NavLink to='/feedback'>
-                Обратная связь
-            </NavLink>
-        </Box>
+        {/*<Box paddingLeft='32px' paddingTop='16px' paddingBottom='16px'>*/}
+        {/*    <NavLink to='/feedback'>*/}
+        {/*        Обратная связь*/}
+        {/*    </NavLink>*/}
+        {/*</Box>*/}
     </MenuBase>
 }

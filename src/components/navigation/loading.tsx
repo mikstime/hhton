@@ -6,10 +6,10 @@ export const LoadingMenu: React.FC<MenuProps> = ({onClick}) => {
     return <MenuBase onClick={onClick}>
         <EventLink onClick={onClick}/>
         <Box height='100%'/>
-        <Box paddingLeft='32px' paddingTop='16px' paddingBottom='16px'>
-            <NavLink to='/feedback'>
-                Обратная связь
-            </NavLink>
-        </Box>
+        {/*<Box paddingLeft='32px' paddingTop='16px' paddingBottom='16px'>*/}
+        {/*    <NavLink to='/feedback'>*/}
+        {/*        Обратная связь*/}
+        {/*    </NavLink>*/}
+        {/*</Box>*/}
     </MenuBase>
 }
