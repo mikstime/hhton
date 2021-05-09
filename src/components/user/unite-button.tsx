@@ -85,6 +85,15 @@ export const UniteButton: React.FC = () => {
         </PrimaryButton>
     }
 
+    if(cEvent.isFinished) {
+        return <Link to={`/event/${cEvent.id}`}
+                     style={{textDecoration: 'none'}}>
+            <SecondaryButton style={{width: '100%'}}>
+                К мероприятию
+            </SecondaryButton>
+        </Link>
+    }
+
     if (settings.isHostMode) {
         return <PrimaryButton style={{width: '100%'}} onClick={() => {
             settings.setIsHostMode(false)

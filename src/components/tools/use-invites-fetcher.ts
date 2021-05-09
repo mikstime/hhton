@@ -91,11 +91,13 @@ export const useInvitesFetcher = () => {
 
     useEffect(() => {
         (async () => {
-            const newEvent = await fetchEvent(cEvent.id)
-            if(newEvent) {
-                cEvent.change(newEvent)
-                if (event.id === newEvent.id) {
-                    event.change(newEvent)
+            if(cEvent.id !== '-1' && nc.eUpdates !== 0) {
+                const newEvent = await fetchEvent(cEvent.id)
+                if (newEvent) {
+                    cEvent.change(newEvent)
+                    if (event.id === newEvent.id) {
+                        event.change(newEvent)
+                    }
                 }
             }
         })()
