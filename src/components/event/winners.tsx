@@ -160,14 +160,14 @@ export const WinnersSection: React.FC = () => {
                                 spacing={1}>
                             <Place place={
                                 //@ts-ignore
-                                '3'
+                                '1'
                             } height={108}
                                    isNull={!winners[0]}
                                    toId={winners[0]?.members[0].id ?? ''}
                                    src={winners[0]?.members[0].avatar ?? ''}/>
                             <Place place={
                                 //@ts-ignore
-                                '3'
+                                '2'
                             } height={79}
                                    isNull={!winners[1]}
                                    toId={winners[1]?.members[0].id ?? ''}
