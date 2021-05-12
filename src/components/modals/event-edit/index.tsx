@@ -406,8 +406,8 @@ export const EventEditModal: React.FC<{ onSubmitClick: () => any } & MProps> = (
                         const didSave = await edit.onSubmit()
                         const newEvent = await fetchEvent(event.id)
                         if (newEvent) {
-                                event.set(newEvent)
-                                cEvent.set(newEvent)
+                                event.set({...newEvent, isParticipating: event.isParticipating})
+                                cEvent.set({...newEvent, isParticipating: cEvent.isParticipating})
                         } else {
                                 event.set({
                                     ...NULL_HACKATHON,
