@@ -84,7 +84,7 @@ const Winners: React.FC<{ winners: Team[], onClick?: (r: HTMLButtonElement) => v
         <Hidden mdUp><Box marginTop={2}/></Hidden>
         {
             winners.slice(0, 3).map((w, i) => (//@ts-ignore
-                <Winner key={i} label={w.name} index={w.prizes[0].place + 1}/>))
+                <Winner key={i} label={w.name} index={i + 1}/>))
         }
         <Grid item>
             <CardActionArea ref={setR} onClick={() => {
@@ -158,15 +158,23 @@ export const WinnersSection: React.FC = () => {
                           <Grid xs item container
                                 alignItems='flex-end'
                                 spacing={1}>
-                            <Place place='1' height={108}
+                            <Place place={
+                                //@ts-ignore
+                                '3'
+                            } height={108}
                                    isNull={!winners[0]}
                                    toId={winners[0]?.members[0].id ?? ''}
                                    src={winners[0]?.members[0].avatar ?? ''}/>
-                            <Place place='2' height={79}
+                            <Place place={
+                                //@ts-ignore
+                                '3'
+                            } height={79}
                                    isNull={!winners[1]}
                                    toId={winners[1]?.members[0].id ?? ''}
                                    src={winners[1]?.members[0].avatar ?? ''}/>
-                            <Place place='3' height={54}
+                            <Place place={
+                                //@ts-ignore
+                                '3'} height={54}
                                    isNull={!winners[2]}
                                    toId={winners[2]?.members[0].id ?? ''}
                                    src={winners[2]?.members[0].avatar ?? ''}/>
