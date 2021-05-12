@@ -68,10 +68,13 @@ export const useEventEdit = () => {
     const [addWinners, setAddWinners] = useState<{}>({})
     const [disabled, setDisabled] = useState(false)
     const [deletedPrizes, setDeletedPrizes] = useState([] as string[])
+    const [trId, setTrId] = useState('')
 
     useEffect(() => {
         (async () => {
-            if (event.isFinished) {
+            const tr = event.isFinished + event.id
+            if (event.isFinished && trId !== tr) {
+                setTrId(tr)
                 let teams = await getEventTeams(event.id)
                 let newOriginalWinners = {}
                 //@ts-ignore

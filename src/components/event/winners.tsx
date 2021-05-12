@@ -105,9 +105,12 @@ export const WinnersSection: React.FC = () => {
     const [winners, setWinners] = useState<Team[]>([])
     const nc = useNotificationHandlers()
 
+    const [trId, setTrId] = useState('')
     useEffect(() => {
         (async () => {
-            if (event.isFinished) {
+            const tr = event.isFinished + event.id + nc.eUpdates
+            if (event.isFinished && trId !== tr) {
+                setTrId(tr)
                 setIsLoading(true)
                 let teams = await getEventTeams(event.id)
                 //@ts-ignore
