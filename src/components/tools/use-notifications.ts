@@ -13,7 +13,7 @@ export const useNotifications = () => {
 
     useEffect(() => {
         if (cUser.id !== '-1' && !cUser.isNullUser) {
-            shouldReconnect.current = {value: true}
+            shouldReconnect.current.value = true
         }
     }, [cUser.id, cUser.isNullUser])
 
@@ -27,17 +27,17 @@ export const useNotifications = () => {
                     `${WS_DOMAIN}${PREFIX}/notification/channel/${cUser.id}`
                 )
                 client.current.onopen = () => {
-                    shouldReconnect.current = {value: false}
+                    shouldReconnect.current.value = false
                 }
                 client.current.onmessage = (m) => {
                     const json = JSON.parse(m.data as string) as Message
                     nc[json.status] ? nc[json.status](json) : nc.default(json)
                 }
                 client.current.onerror = () => {
-                    shouldReconnect.current = {value: true}
+                    shouldReconnect.current.value = true
                 }
                 client.current.onclose = () => {
-                    shouldReconnect.current = {value: true}
+                    shouldReconnect.current.value = true
                 }
             }
         }, 1000)
