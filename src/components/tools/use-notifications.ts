@@ -9,17 +9,17 @@ export const useNotifications = () => {
     const {cUser} = useAppState()
     const nc = useNotificationHandlers()
     const client = useRef<null | w3cwebsocket>(null)
-    const shouldReconnect = useRef(false)
+    const shouldReconnect = useRef({value: false})
 
     useEffect(() => {
         if (cUser.id !== '-1' && !cUser.isNullUser) {
-            shouldReconnect.current = true
+            shouldReconnect.current = {value: true}
         }
     }, [cUser.id, cUser.isNullUser])
 
     useEffect(() => {
         const id = setInterval(() => {
-            if (shouldReconnect.current) {
+            if (shouldReconnect.current.value) {
                 if (client.current) {
                     client.current.close()
                 }
@@ -27,17 +27,17 @@ export const useNotifications = () => {
                     `${WS_DOMAIN}${PREFIX}/notification/channel/${cUser.id}`
                 )
                 client.current.onopen = () => {
-                    shouldReconnect.current = false
+                    shouldReconnect.current = {value: false}
                 }
                 client.current.onmessage = (m) => {
                     const json = JSON.parse(m.data as string) as Message
                     nc[json.status] ? nc[json.status](json) : nc.default(json)
                 }
                 client.current.onerror = () => {
-                    shouldReconnect.current = true
+                    shouldReconnect.current = {value: true}
                 }
                 client.current.onclose = () => {
-                    shouldReconnect.current = true
+                    shouldReconnect.current = {value: true}
                 }
             }
         }, 1000)
