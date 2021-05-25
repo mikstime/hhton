@@ -202,7 +202,8 @@ export const FeedApp: React.FC = () => {
                 // const newUsers = await getFeed(cEvent.id, location.search, users[current])
                 // if (newUsers.length) {
                 // setUsers([...users, ...newUsers])
-                setUsers([...users])
+                const newUsers = await getFeed(cEvent.id, location.search, users[current])
+                setUsers([...newUsers])
                 newCurrent = -1
                 // }
                 setIsFetching(false)
