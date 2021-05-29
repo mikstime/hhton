@@ -33,3 +33,5 @@ export const copyTextToClipboard = (text: string) => {
     }
     navigator.clipboard.writeText(text).catch(e => console.error(e))
 }
+
+export const styledBorder = 'border: 3px solid rgba(0,0,0,.7);'
