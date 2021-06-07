@@ -212,7 +212,7 @@ const useVotingStyles = makeStyles((theme: Theme) =>
 )
 
 const VotingDesktop: React.FC<PlateProps> = (props) => {
-    return <Plate padding={16} elevation={4} {...props} style={{border: 0, ...(props.style||{})}}>
+    return <Plate padding={16} elevation={4} {...props}>
         <Grid container direction='column' wrap='nowrap'>
             <VotingHeader/>
             <Voting/>
